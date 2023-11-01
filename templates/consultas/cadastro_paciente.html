@@ -15,17 +15,19 @@
 <body>
 
 <h4>
-    Página inicial
+    Cadastro
 </h4>
+ <form action="" method="POST">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button type="submit" class="btn btn-sm btn-success">Enviar</button>
 
 
-<a class="btn btn-sucess" href="{% url 'pacienteCreate' %}">Cadastrar Paciente</a>
+        </form>
 <br>
-<a class="btn btn-sucess" href="{% url 'fila_espera' %}"> Fila de Espera</a>
 
-
-</a>
-
-
+<a class="btn btn-sucess" href="{% url 'home' %}"> Voltar </a>
 </body>
 </html>

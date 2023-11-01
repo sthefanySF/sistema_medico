@@ -1,12 +1,21 @@
 from django.shortcuts import render, redirect
-from .models import FilaEspera, Paciente
+from django.views.generic.edit import CreateView
+from consulta.models import FilaEspera, Paciente
 from datetime import date
-from .models import FilaEspera
+from consulta.models import FilaEspera
 from django.shortcuts import render
+from django.urls import reverse_lazy
+
+
+
+def home(request):
+    return render(request, 'home.html')
+
 
 def consultas_admissionais(request):
     # Lógica para as consultas admissionais para servidores externos
     return render(request, 'consultas/consultas_admissionais.html')
+
 
 def adicionar_paciente_fila(request, paciente_id):
     paciente = Paciente.objects.get(pk=paciente_id)
@@ -27,3 +36,10 @@ def fila_espera(request):
     # Ordene a fila para que pacientes com prioridade apareçam primeiro
     pacientes_na_fila = FilaEspera.objects.order_by('-prioridade', 'data_chegada')
     return render(request, 'consultas/fila_espera.html', {'pacientes_na_fila': pacientes_na_fila})
+
+
+class PacienteCreate(CreateView):
+    model = Paciente
+    fields = ['nome', 'data_nascimento']
+    template_name = 'consultas/cadastro_paciente.html'
+    success_url = reverse_lazy('home')

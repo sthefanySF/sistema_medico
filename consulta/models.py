@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import date
 
+
 class Paciente(models.Model):
     nome = models.CharField(max_length=100)
     data_nascimento = models.DateField()
@@ -12,6 +13,7 @@ class Paciente(models.Model):
 
     def __str__(self):
         return self.nome
+
 
 class FilaEspera(models.Model):
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
