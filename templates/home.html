@@ -1,31 +1,10 @@
-<!doctype html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+{% extends "base.html" %}
 
-    <title>Consultório Ufac</title>
+{% block title %}Página Inicial{% endblock %}
 
-</head>
-
-
-
-<body>
-
-<h4>
-    Página inicial
-</h4>
-
-
-<a class="btn btn-sucess" href="{% url 'pacienteCreate' %}">Cadastrar Paciente</a>
-<br>
-<a class="btn btn-sucess" href="{% url 'fila_espera' %}"> Fila de Espera</a>
-
-
-</a>
-
-
-</body>
-</html>
+{% block content %}
+<div class="jumbotron">
+    <h1>Bem-vindo à Página Inicial</h1>
+    <p>Este é o conteúdo da página inicial do seu site.</p>
+</div>
+{% endblock %}
