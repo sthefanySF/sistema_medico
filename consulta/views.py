@@ -40,6 +40,6 @@ def fila_espera(request):
 
 class PacienteCreate(CreateView):
     model = Paciente
-    fields = ['nome', 'data_nascimento']
+    fields = ['nome', 'data_nascimento','email','rg','cpf','sexo','matricula','tipo_paciente','cargo_funcao','cep','cidade','bairro', 'uf','numero','ddd_telefone', 'complemento']
     template_name = 'consultas/cadastro_paciente.html'
     success_url = reverse_lazy('home')
