@@ -5,7 +5,8 @@ from datetime import date
 class Paciente(models.Model):
     nome = models.CharField(max_length=100)
     data_nascimento = models.DateField()
-    
+   
+
     def idade(self):
         today = date.today()
         age = today.year - self.data_nascimento.year - ((today.month, today.day) < (self.data_nascimento.month, self.data_nascimento.day))

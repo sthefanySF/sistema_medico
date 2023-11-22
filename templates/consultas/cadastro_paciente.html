@@ -3,12 +3,12 @@
 {% block title %}Cadastro de Pacientes{% endblock %}
 
 {% block content %}
-<h4>Cadastro de Pacientes</h4>
-<form action="" method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-sm btn-success">Enviar</button>
-</form>
-<br>
-<a class="btn btn-success" href="{% url 'home' %}">Voltar</a>
+  <h4>Cadastro de Pacientes</h4>
+  <form action="" method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-sm btn-success">Enviar</button>
+  </form>
+  <br>
+  <a class="btn btn-success" href="{% url 'home' %}">Voltar</a>
 {% endblock %}
