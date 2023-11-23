@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Cadastro Administrativo{% endblock %}
+
+{% block content %}
+  <h4>Cadastro Administrativo</h4>
+  <form action="" method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-sm btn-success">Cadastrar</button>
+  </form>
+  <br>
+  <a class="btn btn-success" href="{% url 'home' %}">Voltar</a>
+{% endblock %}
