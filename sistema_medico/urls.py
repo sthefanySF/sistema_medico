@@ -26,7 +26,9 @@ urlpatterns = [
 
     # ... Outras URLs do seu aplicativo ...
     path('fila-de-espera/', fila_espera, name='fila_espera'),
-    path('cadastro/', PacienteCreate.as_view(), name='pacienteCreate'),
+    path('cadastro/paciente', PacienteCreate.as_view(), name='pacienteCreate'),
+    path('agendamento/form', AgendamentoCreate.as_view(), name='agendamentoCreate' ),
+    path('pacientes/', listar_pacientes, name= 'pacienteListagem' ),
     path('', views.home, name='home'),
 
 

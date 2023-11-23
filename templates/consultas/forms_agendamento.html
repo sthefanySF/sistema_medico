@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Agendamento de Pacientes{% endblock %}
+
+{% block content %}
+  <h4>Agendamento de Pacientes</h4>
+  <form action="{% url 'agendamentoCreate' %}" method="POST">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-sm btn-success">Agendar</button>
+  </form>
+  <br>
+  <a class="btn btn-success" href="{% url 'pacienteListagem' %}">Voltar</a>
+{% endblock %}
