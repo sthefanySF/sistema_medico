@@ -1,6 +1,7 @@
 from django import forms
 from .models import Paciente
 from .models import Administrativo
+from .models import Agendamento, Paciente
 
 class PacienteForm(forms.ModelForm):
     class Meta:
@@ -21,6 +22,7 @@ class PacienteForm(forms.ModelForm):
         widgets = {
             'sexo': forms.RadioSelect(choices=Paciente.SEXO_CHOICES),
         }
+
         
         
 class AdministrativoForm(forms.ModelForm):
@@ -41,5 +43,22 @@ class AdministrativoForm(forms.ModelForm):
         
         
         widgets = {
-            'sexo': forms.RadioSelect(choices=Administrativo.SEXO_CHOICES),
+            'sexo': forms.RadioSelect(choices=Administrativo.SEXO_CHOICES),}
+
+class AgendamentoForm(forms.ModelForm):
+    class Meta:
+        model = Agendamento
+        fields = ['paciente', 'medico', 'data_agendamento', 'prioridade_atendimento']
+
+        labels = {
+            'data_agendamento': 'Data do Agendamento',
+            'prioridade_atendimento': 'Prioridade de Atendimento',
+        }
+
+        widgets = {
+            'paciente': forms.Select(attrs={'class': 'form-control'}),
+            'medico': forms.Select(attrs={'class': 'form-control'}),
+            'data_agendamento': forms.DateTimeInput(attrs={'class': 'form-control'}),
+            'prioridade_atendimento': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+
         }

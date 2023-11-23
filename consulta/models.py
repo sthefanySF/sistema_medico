@@ -67,3 +67,13 @@ class FilaEspera(models.Model):
     
     def _str_(self):
         return self.paciente.nome
+    
+
+class Agendamento(models.Model):
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
+    medico = models.CharField(max_length=100)  # Supondo que o nome do médico seja uma string
+    data_agendamento = models.DateTimeField()
+    prioridade_atendimento = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Agendamento para {self.paciente.nome}"

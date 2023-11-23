@@ -1,0 +1,42 @@
+<!-- listar_pacientes.html -->
+{% extends "base.html" %}
+
+{% block title %}Lista de Pacientes{% endblock %}
+
+{% block content %}
+  <h4>Lista de Pacientes</h4>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Data de Nascimento</th>
+        <th>E-mail</th>
+        <th>RG</th>
+        <th>CPF</th>
+        <th>Tipo de paciente</th>
+        <th>Matricula</th>
+        <th>Sexo</th>
+        <th>Agendar</th>
+        <!-- Adicione mais colunas conforme necessário -->
+      </tr>
+    </thead>
+    <tbody>
+      {% for paciente in pacientes %}
+      <tr>
+        <td>{{ paciente.nome }}</td>
+        <td>{{ paciente.data_nascimento }}</td>
+        <td>{{ paciente.email }}</td>
+        <td>{{ paciente.rg }}</td>
+        <td>{{ paciente.cpf }}</td>
+        <td>{{ paciente.tipo_paciente }}</td>
+        <td>{{ paciente.matricula }}</td>
+        <td>{{ paciente.sexo }}</td>
+       
+    {% endfor %}
+  </tbody>
+</table>
+<div class="d-flex justify-content-between">
+  <a class="btn btn-success" href="{% url 'home' %}">Voltar</a>
+  <a class="btn btn-primary" href="{% url 'agendamentoCreate'  %}">Agendar</a>
+</div>
+{% endblock %}
