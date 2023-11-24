@@ -28,6 +28,7 @@ urlpatterns = [
 
     path('fila_de_espera/', fila_espera, name='fila_espera'),
     path('cadastro/administrativo/', AdministrativoCreate.as_view(), name='administrativoCreate'),
+    path('cadastro/profissionaldasaude/', ProfissionaldasaudeCreate.as_view(), name='profissionaldasaudeCreate'),
     path('fila-de-espera/', fila_espera, name='fila_espera'),
     path('cadastro/paciente', PacienteCreate.as_view(), name='pacienteCreate'),
     path('agendamento/form', AgendamentoCreate.as_view(), name='agendamentoCreate' ),
