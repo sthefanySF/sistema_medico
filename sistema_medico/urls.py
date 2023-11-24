@@ -25,11 +25,15 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # ... Outras URLs do seu aplicativo ...
+
+    path('fila_de_espera/', fila_espera, name='fila_espera'),
+    path('cadastro/administrativo/', AdministrativoCreate.as_view(), name='administrativoCreate'),
     path('fila-de-espera/', fila_espera, name='fila_espera'),
     path('cadastro/paciente', PacienteCreate.as_view(), name='pacienteCreate'),
     path('agendamento/form', AgendamentoCreate.as_view(), name='agendamentoCreate' ),
     path('pacientes/', listar_pacientes, name= 'pacienteListagem' ),
     path('', views.home, name='home'),
+    
 
 
 ]
