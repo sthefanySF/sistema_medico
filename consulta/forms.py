@@ -1,12 +1,13 @@
 from django import forms
 from .models import Paciente
 from .models import Administrativo
+from .models import Profissionaldasaude
 from .models import Agendamento, Paciente
 
 class PacienteForm(forms.ModelForm):
     class Meta:
         model = Paciente
-        fields = ['nome', 'data_nascimento', 'email', 'rg', 'cpf', 'sexo', 'matricula', 'tipo_paciente', 'cargo_funcao', 'cep', 'cidade', 'bairro', 'uf', 'numero', 'ddd_telefone', 'complemento']
+        fields = ['nome', 'data_nascimento', 'email', 'rg', 'cpf', 'sexo', 'matricula', 'tipo_paciente', 'cargo_funcao','ddd_telefone',  'uf','cep', 'cidade', 'bairro',  'numero',  'complemento']
 
         
         
@@ -28,7 +29,7 @@ class PacienteForm(forms.ModelForm):
 class AdministrativoForm(forms.ModelForm):
     class Meta:
         model = Administrativo
-        fields = ['nome', 'data_nascimento', 'email', 'rg', 'cpf', 'sexo', 'matricula_siape', 'cargo_funcao', 'cep', 'cidade', 'bairro', 'uf', 'numero', 'ddd_telefone', 'complemento','orgao','lotacao_de_exercicio']
+        fields = ['nome', 'data_nascimento', 'email', 'rg', 'cpf', 'sexo', 'matricula_siape', 'cargo_funcao','orgao','lotacao_de_exercicio', 'ddd_telefone','uf','cep', 'cidade', 'bairro',  'numero',  'complemento']
 
         
         
@@ -44,6 +45,29 @@ class AdministrativoForm(forms.ModelForm):
         
         widgets = {
             'sexo': forms.RadioSelect(choices=Administrativo.SEXO_CHOICES),}
+
+
+class Profissionaldasaude(forms.ModelForm):
+    class Meta:
+        model = Profissionaldasaude
+        fields = ['nome', 'data_nascimento', 'email', 'rg', 'cpf', 'sexo', 'identificacao_unica', 'area','unidade_siass','formacao','conselho','registro', 'ddd_telefone','uf','cep', 'cidade', 'bairro',  'numero',  'complemento']
+
+        
+        
+        labels = {
+            'data_nascimento': 'Data de Nascimento',
+            'identificacao_unica': 'Identificação Única',
+            'ddd_telefone': 'DDD Telefone',
+            'unidade_siass':'Unidade SIASS',
+          
+        }
+        
+        
+        
+        widgets = {
+            'sexo': forms.RadioSelect(choices=Profissionaldasaude.SEXO_CHOICES),}
+
+
 
 class AgendamentoForm(forms.ModelForm):
     class Meta:
