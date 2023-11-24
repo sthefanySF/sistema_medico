@@ -7,8 +7,8 @@
   <form action="{% url 'agendamentoCreate' %}" method="POST">
       {% csrf_token %}
       {{ form.as_p }}
-      <button type="submit" class="btn btn-sm btn-success">Agendar</button>
+      <button type="submit" class="btn btn-primary">Agendar</button>
   </form>
   <br>
-  <a class="btn btn-success" href="{% url 'pacienteListagem' %}">Voltar</a>
+  <a class="btn btn-primary" href="{% url 'pacienteListagem' %}">Voltar</a>
 {% endblock %}
