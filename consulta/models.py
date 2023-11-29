@@ -69,7 +69,7 @@ class Profissionaldasaude(models.Model):
     identificacao_unica = models.CharField(max_length=50, default='')
     cep = models.CharField(max_length=9)
     cidade = models.CharField(max_length=50)
-    bairro = models.CharField(max_length=50, default='nome')
+    bairro = models.CharField(max_length=50, default='')
     uf = models.CharField(max_length=2)
     numero = models.CharField(max_length=10)
     ddd_telefone = models.CharField(max_length=3)
@@ -103,7 +103,7 @@ class FilaEspera(models.Model):
 
 class Agendamento(models.Model):
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
-    medico = models.CharField(max_length=100)  # Supondo que o nome do médico seja uma string
+    profissional_saude = models.ForeignKey(Profissionaldasaude, on_delete=models.CASCADE)  # Supondo que o nome do médico seja uma string
     data_agendamento = models.DateTimeField()
     prioridade_atendimento = models.BooleanField(default=False)
 
