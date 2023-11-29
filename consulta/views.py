@@ -68,6 +68,6 @@ class ProfissionaldasaudeCreate(CreateView):
 
 class AgendamentoCreate(CreateView):
     model = Agendamento
-    fields = ['paciente','medico','data_agendamento','prioridade_atendimento']
+    fields = ['paciente','profissional_saude','data_agendamento','prioridade_atendimento']
     template_name = 'consultas/forms_agendamento.html'
     success_url = reverse_lazy('home')
