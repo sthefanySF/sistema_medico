@@ -10,6 +10,7 @@ from django.urls import reverse_lazy
 
 
 
+
 def home(request):
     return render(request, 'home.html')
 
@@ -18,6 +19,14 @@ def listar_pacientes(request):
     pacientes = Paciente.objects.all()
     return render(request, 'consultas/listagem_pacientes.html', {'pacientes': pacientes})
 
+def listar_administrativos(request):
+    administrativos = Administrativo.objects.all()
+    return render(request, 'consultas/listagem_administrativos.html', {'administrativo': administrativos})
+
+
+def listar_profissionaisdasaude(request):
+    profissionaisdasaude = Profissionaldasaude.objects.all()
+    return render(request, 'consultas/listagem_profissionaisdasaude.html', {'profissionaisdasaude': profissionaisdasaude})
 
 def consultas_admissionais(request):
     # Lógica para as consultas admissionais para servidores externos

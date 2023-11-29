@@ -33,8 +33,9 @@ urlpatterns = [
     path('cadastro/paciente', PacienteCreate.as_view(), name='pacienteCreate'),
     path('agendamento/form', AgendamentoCreate.as_view(), name='agendamentoCreate' ),
     path('pacientes/', listar_pacientes, name= 'pacienteListagem' ),
+    path('profissionaisdasaude/', listar_profissionaisdasaude, name= 'profissionaisdasaudeListagem'),
+    path('administrativos/', listar_administrativos, name= 'administrativosListagem'),
     path('', views.home, name='home'),
-    
 
 
 ]
