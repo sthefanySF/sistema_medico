@@ -22,8 +22,9 @@ class Paciente(models.Model):
 
 
 
-    def _str_(self):
+    def __str__(self):
         return self.nome
+
     
     
     def idade(self):
