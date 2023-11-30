@@ -23,7 +23,13 @@ class CampoProfissionaldasaude(admin.ModelAdmin):
     list_display = ('nome', 'data_nascimento', 'email')
 
 
+class CampoAgendamento(admin.ModelAdmin):
+    search_fields = ['paciente']
+    list_display = ('paciente', 'data_agendamento')    
+
+
 admin.site.register(Paciente, CampoPaciente)
 admin.site.register(FilaEspera, CampoFilaEspera)
 admin.site.register(Administrativo, CampoAdministrativo)
 admin.site.register(Profissionaldasaude, CampoProfissionaldasaude)
+admin.site.register(Agendamento, CampoAgendamento)
