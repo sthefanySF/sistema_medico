@@ -83,11 +83,41 @@ class AdministrativoCreate(CreateView):
     template_name = 'consultas/cadastro_administrativo.html'
     success_url = reverse_lazy('home')
     
+    
+    
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Administrativo cadastrado com sucesso!')
+        print("Administrativo cadastrado com sucesso!")
+        return response
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Erro ao cadastrar o administrativo. Verifique os dados e tente novamente.')
+        print("Erro ao cadastrar o administrativo.")
+        print(form.errors)  
+        return super().form_invalid(form)
+    
+
+    
 class ProfissionaldasaudeCreate(CreateView):
     model = Profissionaldasaude
     fields = ['nome', 'data_nascimento','email','rg','cpf','sexo','identificacao_unica','area','formacao','conselho','registro','unidade_siass','ddd_telefone','uf','cep','cidade','bairro','numero', 'complemento']
     template_name = 'consultas/cadastro_profissionaldasaude.html'
     success_url = reverse_lazy('home')
+    
+    
+    
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Profissional da saúde cadastrado com sucesso!')
+        print("Profissional da saúde cadastrado com sucesso!")
+        return response
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Erro ao cadastrar o profissional da saúde. Verifique os dados e tente novamente.')
+        print("Erro ao cadastrar o profissional da saúde.")
+        print(form.errors)  
+        return super().form_invalid(form)
 
 
 
