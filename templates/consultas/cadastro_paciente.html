@@ -48,6 +48,13 @@
             {{ form.matricula }}
         </div>
     </div>
+    <div class="mb-3 row">
+        <label for="{{ form.tipo_paciente.id_for_label }}" class="col-sm-2 col-form-label">Tipo de paciente</label>
+        <div class="col-sm-10">
+            {{ form.tipo_paciente }}
+        </div>
+    </div>
+
       <div class="mb-3 row">
           <label for="{{ form.cargo_funcao.id_for_label }}" class="col-sm-2 col-form-label">Cargo/Função</label>
           <div class="col-sm-10">
@@ -116,11 +123,12 @@
       </div>
 
       <div class="mb-3 row">
-          <div class="col-sm-2"></div>
-          <div class="col-sm-10">
-              <button type="submit" class="btn btn-primary">Cadastrar</button>
-              <a class="btn btn btn-primary ms-2" href="{% url 'pacienteListagem' %}">Voltar</a>
-          </div>
+        <div class="col-sm-2"></div>
+        <div class="col-sm-10">
+            <button type="submit" class="btn btn-primary">Cadastrar</button>
+            <a class="btn btn btn-primary ms-2" href="{% url 'pacienteListagem' %}">Voltar</a>
+        </div>
       </div>
+
   </form>
 {% endblock %}

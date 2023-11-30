@@ -7,6 +7,8 @@ from datetime import date
 from consulta.models import FilaEspera
 from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.contrib import messages
+
 
 
 
@@ -57,9 +59,23 @@ def fila_espera(request):
 
 class PacienteCreate(CreateView):
     model = Paciente
-    fields = ['nome', 'data_nascimento','email','rg','cpf','sexo','matricula','tipo_paciente','cargo_funcao','ddd_telefone','uf','cep','cidade','bairro','numero', 'complemento']
+    fields = ['nome', 'data_nascimento', 'email', 'rg', 'cpf', 'sexo', 'matricula', 'tipo_paciente',
+              'cargo_funcao', 'ddd_telefone', 'uf', 'cep', 'cidade', 'bairro', 'numero', 'complemento']
     template_name = 'consultas/cadastro_paciente.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('pacienteListagem')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Paciente cadastrado com sucesso!')
+        print("Paciente cadastrado com sucesso!")
+        return response
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Erro ao cadastrar o paciente. Verifique os dados e tente novamente.')
+        print("Erro ao cadastrar o paciente.")
+        print(form.errors)  
+        return super().form_invalid(form)
+
 
 class AdministrativoCreate(CreateView):
     model = Administrativo

@@ -86,7 +86,17 @@
         </div>
     </nav>
 
+
+    
+
     <div class="container mt-5" style="flex: 1;">
+        {% comment %} {% block messages %}
+        {% if messages %}
+            <div class="alert alert-success" role="alert">
+                {{ messages }}
+            </div>
+        {% endif %}
+        {% endblock %} {% endcomment %}
         {% block content %}{% endblock %}
     </div>
 
