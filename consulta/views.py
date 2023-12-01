@@ -21,9 +21,9 @@ def listar_pacientes(request):
     pacientes = Paciente.objects.all()
     return render(request, 'consultas/listagem_pacientes.html', {'pacientes': pacientes})
 
-def listar_administrativos(request):
-    administrativos = Administrativo.objects.all()
-    return render(request, 'consultas/listagem_administrativos.html', {'administrativo': administrativos})
+def listar_administrativo(request):
+    administrativo = Administrativo.objects.all()
+    return render(request, 'consultas/listagem_administrativo.html', {'administrativo': administrativo})
 
 
 def listar_profissionaisdasaude(request):
@@ -81,7 +81,7 @@ class AdministrativoCreate(CreateView):
     model = Administrativo
     fields = ['nome', 'data_nascimento','email','rg','cpf','sexo','matricula_siape','orgao','cargo_funcao','lotacao_de_exercicio','ddd_telefone','uf','cep','cidade','bairro','numero', 'complemento']
     template_name = 'consultas/cadastro_administrativo.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('administrativoListagem')
     
     
     

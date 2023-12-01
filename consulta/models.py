@@ -104,7 +104,7 @@ class FilaEspera(models.Model):
 
 class Agendamento(models.Model):
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
-    profissional_saude = models.ForeignKey(Profissionaldasaude, on_delete=models.CASCADE)  # Supondo que o nome do médico seja uma string
+    profissional_saude = models.ForeignKey(Profissionaldasaude, on_delete=models.CASCADE)  
     data_agendamento = models.DateTimeField()
     prioridade_atendimento = models.BooleanField(default=False)
 

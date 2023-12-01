@@ -34,7 +34,7 @@ urlpatterns = [
     path('agendamento/form', AgendamentoCreate.as_view(), name='agendamentoCreate' ),
     path('pacientes/', listar_pacientes, name= 'pacienteListagem' ),
     path('profissionaisdasaude/', listar_profissionaisdasaude, name= 'profissionaisdasaudeListagem'),
-    path('administrativos/', listar_administrativos, name= 'administrativosListagem'),
+    path('administrativo/', listar_administrativo, name= 'administrativoListagem'),
     path('', views.home, name='home'),
 
 
