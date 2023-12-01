@@ -103,7 +103,7 @@ class ProfissionaldasaudeCreate(CreateView):
     model = Profissionaldasaude
     fields = ['nome', 'data_nascimento','email','rg','cpf','sexo','identificacao_unica','area','formacao','conselho','registro','unidade_siass','ddd_telefone','uf','cep','cidade','bairro','numero', 'complemento']
     template_name = 'consultas/cadastro_profissionaldasaude.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('profissionaisdasaudeListagem')
     
     
     
