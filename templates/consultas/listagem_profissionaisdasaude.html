@@ -4,7 +4,7 @@
 
 {% block content %}
   <h4>Lista do Profissionais da Saude</h4>
-  <table class="table">
+  <table class="table table-bordered">
     <thead>
       <tr>
         <th>Nome</th>
@@ -38,6 +38,13 @@
         <td>{{ profissionaisdasaude.formacao }}</td>
         <td>{{ profissionaisdasaude.conselho }}</td>
         <td>{{ profissionaisdasaude.registro }}</td>
+        <td>
+          <div class="btn-group" role="group" aria-label="Ações">
+            <a href="#" class="btn btn-primary">Editar</a>
+            <a href="#" class="btn btn-danger">Excluir</a>
+          </div>
+        </td>
+      </tr>
       
        
     {% endfor %}
