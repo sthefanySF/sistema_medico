@@ -66,7 +66,7 @@ class Profissionaldasaude(models.Model):
     email = models.EmailField()
     rg = models.CharField(max_length=20)
     cpf = models.CharField(max_length=14)
-    sexo = models.CharField(max_length=1, choices=[('M', 'Masculino'), ('F', 'Feminino')])
+    sexo = models.CharField(max_length=1, choices=[('M', 'Masculino'), ('F', 'Feminino')]) #O parâmetro choices em um campo CharField ou IntegerField é usado para fornecer uma lista de escolhas para esse campo
     identificacao_unica = models.CharField(max_length=50, default='')
     cep = models.CharField(max_length=9)
     cidade = models.CharField(max_length=50)
@@ -74,7 +74,7 @@ class Profissionaldasaude(models.Model):
     uf = models.CharField(max_length=2)
     numero = models.CharField(max_length=10)
     ddd_telefone = models.CharField(max_length=3)
-    complemento = models.CharField(max_length=100, blank=True, null=True, default='')
+    complemento = models.CharField(max_length=100, blank=True, null=True, default='') # blank=True, null=True é pra dizer que não é obrigatorio 
     area = models.CharField(max_length=50, default='')
     unidade_siass = models.CharField(max_length=50, default='')
     formacao = models.CharField(max_length=20)
@@ -103,8 +103,10 @@ class FilaEspera(models.Model):
     
 
 class Agendamento(models.Model):
-    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
-    profissional_saude = models.ForeignKey(Profissionaldasaude, on_delete=models.CASCADE)  
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE) #contem referncia do objeto Paciente
+    #on_delete=models.CASCADE: Isso especifica o que acontecerá quando o objeto referenciado (Paciente) for excluído. 
+    #Neste caso, CASCADE significa que, se um objeto Paciente for excluído, todos os objetos que têm uma referência a ele no campo paciente também serão excluídos.
+    profissional_saude = models.ForeignKey(Profissionaldasaude, on_delete=models.CASCADE)  #contem referncia do objeto Profissionaldasaude
     data_agendamento = models.DateTimeField()
     prioridade_atendimento = models.BooleanField(default=False)
 
