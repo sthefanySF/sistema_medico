@@ -8,6 +8,9 @@ from consulta.models import FilaEspera
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.contrib import messages
+from .forms import PacienteUpdateForm
+from django.shortcuts import render, redirect, get_object_or_404
+
 
 
 
@@ -20,6 +23,31 @@ def home(request):
 def listar_pacientes(request):
     pacientes = Paciente.objects.all()
     return render(request, 'consultas/listagem_pacientes.html', {'pacientes': pacientes})
+
+
+def paciente_editar(request, pk):
+        paciente = get_object_or_404(Paciente, pk=pk)
+
+        if request.method == 'POST':
+            form = PacienteUpdateForm(request.POST, instance=paciente)
+            if form.is_valid():
+                form.save()
+               
+                return redirect('pacienteListagem')
+        else:
+            form = PacienteUpdateForm(instance=paciente)
+
+        return render(request, 'consultas/editar_paciente.html', {'form': form, 'paciente': paciente})
+
+def paciente_excluir(request, pk):
+    paciente = get_object_or_404(Paciente, pk=pk)
+
+    if request.method == 'POST':
+        paciente.delete()
+        
+        return redirect('pacienteListagem')
+
+    return render(request, 'consultas/excluir_paciente.html', {'paciente': paciente})
 
 def listar_administrativo(request):
     administrativo = Administrativo.objects.all()
@@ -76,6 +104,8 @@ class PacienteCreate(CreateView):
         print(form.errors)  
         return super().form_invalid(form)
 
+    
+    
 
 class AdministrativoCreate(CreateView):
     model = Administrativo

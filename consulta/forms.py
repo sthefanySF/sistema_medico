@@ -21,10 +21,24 @@ class PacienteForm(forms.ModelForm):
         
         
         widgets = {
-            'sexo': forms.RadioSelect(choices=Paciente.SEXO_CHOICES),
+            'sexo': forms.RadioSelect(choices=[('M', 'Masculino'), ('F', 'Feminino')]),
         }
 
-        
+class PacienteUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Paciente
+        fields = ['nome', 'data_nascimento', 'email', 'rg', 'cpf', 'sexo', 'matricula', 'tipo_paciente', 'cargo_funcao', 'ddd_telefone', 'uf', 'cep', 'cidade', 'bairro', 'numero', 'complemento']
+
+        labels = {
+            'data_nascimento': 'Data de Nascimento',
+            'tipo_paciente': 'Tipo de Paciente',
+            'cargo_funcao': 'Cargo/Função',
+            'ddd_telefone': 'DDD Telefone',
+        }
+
+        widgets = {
+            'sexo': forms.RadioSelect(choices=[('M', 'Masculino'), ('F', 'Feminino')]),
+        }
         
 class AdministrativoForm(forms.ModelForm):
     class Meta:
@@ -44,8 +58,8 @@ class AdministrativoForm(forms.ModelForm):
         
         
         widgets = {
-            'sexo': forms.RadioSelect(choices=Administrativo.SEXO_CHOICES),}
-
+            'sexo': forms.RadioSelect(choices=[('M', 'Masculino'), ('F', 'Feminino')]),
+        }
 
 class Profissionaldasaude(forms.ModelForm):
     class Meta:
@@ -65,8 +79,8 @@ class Profissionaldasaude(forms.ModelForm):
         
         
         widgets = {
-            'sexo': forms.RadioSelect(choices=Profissionaldasaude.SEXO_CHOICES),}
-
+            'sexo': forms.RadioSelect(choices=[('M', 'Masculino'), ('F', 'Feminino')]),
+        }
 
 
 class AgendamentoForm(forms.ModelForm):

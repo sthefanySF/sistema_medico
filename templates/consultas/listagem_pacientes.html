@@ -32,8 +32,8 @@
         <td>{{ paciente.sexo }}</td>
         <td>
           <div class="btn-group" role="group" aria-label="Ações">
-            <a href="#" class="btn btn-primary">Editar</a>
-            <a href="#" class="btn btn-danger">Excluir</a>
+            <a href="{% url 'pacienteEditar' paciente.id %}" class="btn btn-primary">Editar</a>
+            <a href="{% url 'pacienteExcluir' paciente.id %}" class="btn btn-danger">Excluir</a>
           </div>
         </td>
       </tr>

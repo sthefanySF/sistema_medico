@@ -13,11 +13,12 @@
         <th>RG</th>
         <th>CPF</th>
         <th>Sexo</th>
+        <th>Crago/Função</th>
         <th>Matricula SIAPE</th>
         <th>Órgão</th>
         <th>Lotação de Exercício</th>
-        <th>Cargo</th>
-        <th>Função</th>
+        <th>Ações</th>
+       
         
        
       </tr>
@@ -31,11 +32,10 @@
         <td>{{ administrativo.rg }}</td>
         <td>{{ administrativo.cpf }}</td>
         <td>{{ administrativo.sexo }}</td>
+        <td>{{ administrativo.cargo_funcao }}</td>
         <td>{{ administrativo.matricula_siape }}</td>
         <td>{{ administrativo.orgao }}</td>
         <td>{{ administrativo.lotacao_de_exercicio }}</td>
-        <td>{{ administrativo.cargo }}</td>
-        <td>{{ administrativo.funcao }}</td>
         <td>
           <div class="btn-group" role="group" aria-label="Ações">
             <a href="#" class="btn btn-primary">Editar</a>
@@ -43,9 +43,7 @@
           </div>
         </td>
       </tr>
-      
-       
-    {% endfor %}
+       {% endfor %}
   </tbody>
 </table>
 <div class="d-flex justify-content-between">
