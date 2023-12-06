@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
+{%load static%}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,7 +22,8 @@
         <div class="container-fluid">
             <!-- Adicione uma imagem ao lado da frase "Offcanvas navbar" -->
             <a class="navbar-brand text-white" href="#">
-                <img src="C:\Users\Ufac\Documents\GitHub\sistema_medico\templates\consultas\logoUfac.png" alt="Setor Médico Pericial" height="30" class="d-inline-block align-text-top">
+                <img src="{% static 'imagens/logoUfac.png' %}">
+                {% comment %} <img src="\static\img\logoUfac.png" alt="Setor Médico Pericial" height="30" class="d-inline-block align-text-top"> {% endcomment %}
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
                 <span class="navbar-toggler-icon" style="filter: brightness(0) invert(1);"></span>
