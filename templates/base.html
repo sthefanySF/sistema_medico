@@ -17,20 +17,20 @@
 </head>
 <body style="min-height: 100vh; display: flex; flex-direction: column;">
 
-    <!-- Incluindo o código do menu fornecido -->
+    
     <nav class="navbar" style="background-color: #0C4DA2; color: white;">
         <div class="container-fluid">
-            <!-- Adicione uma imagem ao lado da frase "Offcanvas navbar" -->
+            
             <a class="navbar-brand text-white" href="#" >
                 <img src="{% static 'imagens/logo_ufac_2.png' %}" style="margin: auto; display: flex ">
                 
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" style="color:#ffffff;">
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" >
                 <span class="navbar-toggler-icon" style="filter: brightness(0) invert(1);"></span>
             </button>
         </div>
 
-        <!-- Movido a div offcanvas para dentro da navbar -->
+       
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
             <div class="offcanvas-header">
                 <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
