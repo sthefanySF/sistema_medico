@@ -14,6 +14,7 @@
 
 
     <title>{% block title %}Seu Título Aqui{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css\estilos.css' %}">
 </head>
 <body style="min-height: 100vh; display: flex; flex-direction: column;">
 
@@ -21,11 +22,11 @@
     <nav class="navbar" style="background-color: #0C4DA2; color: white;">
         <div class="container-fluid">
             <!-- Adicione uma imagem ao lado da frase "Offcanvas navbar" -->
-            <a class="navbar-brand text-white" href="#">
-                <img src="{% static 'imagens/logoUfac.png' %}">
-                {% comment %} <img src="\static\img\logoUfac.png" alt="Setor Médico Pericial" height="30" class="d-inline-block align-text-top"> {% endcomment %}
+            <a class="navbar-brand text-white" href="#" >
+                <img src="{% static 'imagens/logo_ufac_2.png' %}" style="margin: auto; display: flex ">
+                
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" style="color:#ffffff;">
                 <span class="navbar-toggler-icon" style="filter: brightness(0) invert(1);"></span>
             </button>
         </div>

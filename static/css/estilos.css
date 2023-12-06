@@ -1,0 +1,9 @@
+.navbar-brand {
+    background-color: white; 
+    width: 55px; 
+    height: 74px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    border-radius: 10%;
+}
