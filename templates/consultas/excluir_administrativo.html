@@ -1,0 +1,15 @@
+
+
+{% extends "base.html" %}
+
+{% block title %}Excluir Profissional Administrativo{% endblock %}
+
+{% block content %}
+  <h4>Excluir Profissional Administrativo</h4>
+  <p>Você está prestes a excluir o Profissional Administrativo "{{ administrativo.id }}". Tem certeza?</p>
+  <form method="post" action="{% url 'administrativoExcluir' administrativo.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+  </form>
+  <a href="{% url 'administrativoListagem' %}" class="btn btn-primary">Cancelar</a>
+{% endblock %}

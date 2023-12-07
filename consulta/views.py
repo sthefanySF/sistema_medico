@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView
+from consulta.forms import AdministrativoForm, PacienteForm
 
 from consulta.models import FilaEspera, Paciente, Administrativo
 from consulta.models import Agendamento, FilaEspera, Paciente, Profissionaldasaude
@@ -8,7 +9,6 @@ from consulta.models import FilaEspera
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .forms import PacienteUpdateForm
 from django.shortcuts import render, redirect, get_object_or_404
 
 
@@ -29,13 +29,13 @@ def paciente_editar(request, pk):
         paciente = get_object_or_404(Paciente, pk=pk)
 
         if request.method == 'POST':
-            form = PacienteUpdateForm(request.POST, instance=paciente)
+            form = PacienteForm(request.POST, instance=paciente)
             if form.is_valid():
                 form.save()
                
                 return redirect('pacienteListagem')
         else:
-            form = PacienteUpdateForm(instance=paciente)
+            form = PacienteForm(instance=paciente)
 
         return render(request, 'consultas/editar_paciente.html', {'form': form, 'paciente': paciente})
 
@@ -52,6 +52,31 @@ def paciente_excluir(request, pk):
 def listar_administrativo(request):
     administrativo = Administrativo.objects.all()
     return render(request, 'consultas/listagem_administrativo.html', {'administrativo': administrativo})
+
+
+def administrativo_editar(request, pk):
+        administrativo = get_object_or_404(Administrativo, pk=pk)
+
+        if request.method == 'POST':
+            form = AdministrativoForm(request.POST, instance=administrativo)
+            if form.is_valid():
+                form.save()
+               
+                return redirect('administrativoListagem')
+        else:
+            form = AdministrativoForm(instance=administrativo)
+
+        return render(request, 'consultas/editar_administrativo.html', {'form': form, 'administrativo': administrativo})
+
+def administrativo_excluir(request, pk):
+    administrativo = get_object_or_404(Administrativo, pk=pk)
+
+    if request.method == 'POST':
+        administrativo.delete()
+        
+        return redirect('administrativoListagem')
+
+    return render(request, 'consultas/excluir_administrativo.html', {'administrativo': administrativo})
 
 
 def listar_profissionaisdasaude(request):

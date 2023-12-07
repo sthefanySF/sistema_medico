@@ -37,6 +37,8 @@ urlpatterns = [
     path('administrativo/', listar_administrativo, name= 'administrativoListagem'),
     path('paciente/<int:pk>/editar/', paciente_editar, name='pacienteEditar'),
     path('paciente/<int:pk>/excluir/', paciente_excluir, name='pacienteExcluir'),
+    path('administrativo/<int:pk>/editar/', administrativo_editar, name='administrativoEditar'),
+    path('administrativo/<int:pk>/excluir/', administrativo_excluir, name='administrativoExcluir'),
     path('', views.home, name='home'),
 
 
