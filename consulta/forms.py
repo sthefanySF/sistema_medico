@@ -47,7 +47,7 @@ class AdministrativoForm(forms.ModelForm):
             'sexo': forms.RadioSelect(choices=[('M', 'Masculino'), ('F', 'Feminino')]),
         }
 
-class Profissionaldasaude(forms.ModelForm):
+class ProfissionaldasaudeForm(forms.ModelForm):
     class Meta:
         model = Profissionaldasaude
         fields = ['nome', 'data_nascimento', 'email', 'rg', 'cpf', 'sexo', 'identificacao_unica', 'area','unidade_siass','formacao','conselho','registro', 'ddd_telefone','uf','cep', 'cidade', 'bairro',  'numero',  'complemento']

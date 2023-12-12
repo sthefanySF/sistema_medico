@@ -25,23 +25,23 @@
       </tr>
     </thead>
     <tbody>
-      {% for profissionaisdasaude in profissionaisdasaude %}
+      {% for profissionaldasaude in profissionaldasaude %}
       <tr>
-        <td>{{ profissionaisdasaude.nome }}</td>
-        <td>{{ profissionaisdasaude.data_nascimento }}</td>
-        <td>{{ profissionaisdasaude.email }}</td>
-        <td>{{ profissionaisdasaude.rg }}</td>
-        <td>{{ profissionaisdasaude.cpf }}</td>
-        <td>{{ profissionaisdasaude.sexo }}</td>
-        <td>{{ profissionaisdasaude.identificacao_unica }}</td>
-        <td>{{ profissionaisdasaude.area_rqe }}</td>
-        <td>{{ profissionaisdasaude.unidade_siass }}</td>
-        <td>{{ profissionaisdasaude.formacao }}</td>
-        <td>{{ profissionaisdasaude.conselho }}</td>
-        <td>{{ profissionaisdasaude.registro }}</td>
+        <td>{{ profissionaldasaude.nome }}</td>
+        <td>{{ profissionaldasaude.data_nascimento }}</td>
+        <td>{{ profissionaldasaude.email }}</td>
+        <td>{{ profissionaldasaude.rg }}</td>
+        <td>{{ profissionaldasaude.cpf }}</td>
+        <td>{{ profissionaldasaude.sexo }}</td>
+        <td>{{ profissionaldasaude.identificacao_unica }}</td>
+        <td>{{ profissionaldasaude.area_rqe }}</td>
+        <td>{{ profissionaldasaude.unidade_siass }}</td>
+        <td>{{ profissionaldasaude.formacao }}</td>
+        <td>{{ profissionaldasaude.conselho }}</td>
+        <td>{{ profissionaldasaude.registro }}</td>
         <td>
           <div class="btn-group" role="group" aria-label="Ações">
-            <a href="#" class="btn btn-primary">Editar</a>
+            <a href="{% url 'profissionaldasaudeEditar' profissionaldasaude.id %}" class="btn btn-primary">Editar</a>
             <a href="#" class="btn btn-danger ms-1">Excluir</a>
           </div>
         </td>

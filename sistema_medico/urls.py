@@ -33,12 +33,14 @@ urlpatterns = [
     path('cadastro/paciente', PacienteCreate.as_view(), name='pacienteCreate'),
     path('agendamento/form', AgendamentoCreate.as_view(), name='agendamentoCreate' ),
     path('pacientes/', listar_pacientes, name= 'pacienteListagem' ),
-    path('profissionaisdasaude/', listar_profissionaisdasaude, name= 'profissionaisdasaudeListagem'),
+    path('profissionaldasaude/', listar_profissionaldasaude, name= 'profissionaldasaudeListagem'),
     path('administrativo/', listar_administrativo, name= 'administrativoListagem'),
     path('paciente/<int:pk>/editar/', paciente_editar, name='pacienteEditar'),
     path('paciente/<int:pk>/excluir/', paciente_excluir, name='pacienteExcluir'),
     path('administrativo/<int:pk>/editar/', administrativo_editar, name='administrativoEditar'),
     path('administrativo/<int:pk>/excluir/', administrativo_excluir, name='administrativoExcluir'),
+    path('profissionaldasaude/<int:pk>/editar/', profissionaldasaude_editar, name='profissionaldasaudeEditar'),
+    # path('profissionaldasaude/<int:pk>/excluir/', profissionaldasaude_excluir, name='profissionaldasaudeExcluir'),
     path('', views.home, name='home'),
 
 

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView
-from consulta.forms import AdministrativoForm, PacienteForm
+from consulta.forms import AdministrativoForm, PacienteForm, ProfissionaldasaudeForm
 
 from consulta.models import FilaEspera, Paciente, Administrativo
 from consulta.models import Agendamento, FilaEspera, Paciente, Profissionaldasaude
@@ -79,9 +79,33 @@ def administrativo_excluir(request, pk):
     return render(request, 'consultas/excluir_administrativo.html', {'administrativo': administrativo})
 
 
-def listar_profissionaisdasaude(request):
-    profissionaisdasaude = Profissionaldasaude.objects.all()
-    return render(request, 'consultas/listagem_profissionaisdasaude.html', {'profissionaisdasaude': profissionaisdasaude})
+def listar_profissionaldasaude(request):
+    profissionaldasaude = Profissionaldasaude.objects.all()
+    return render(request, 'consultas/listagem_profissionaldasaude.html', {'profissionaldasaude': profissionaldasaude})
+
+
+
+def profissionaldasaude_editar(request, pk):
+    profissionaldasaude = get_object_or_404(Profissionaldasaude, pk=pk)
+
+    if request.method == 'POST':
+        form = ProfissionaldasaudeForm(request.POST, instance=profissionaldasaude)
+        if form.is_valid():
+            form.save()
+            return redirect('profissionaldasaudeListagem')
+    else:
+        form = ProfissionaldasaudeForm(instance=profissionaldasaude)
+
+    return render(request, 'consultas/editar_proSaude.html', {'form': form, 'profissionaldasaude': profissionaldasaude})
+# def profissionaldasaude_excluir(request, pk):
+#     administrativo = get_object_or_404(Administrativo, pk=pk)
+
+#     if request.method == 'POST':
+#         administrativo.delete()
+        
+#         return redirect('administrativoListagem')
+
+#     return render(request, 'consultas/excluir_administrativo.html', {'administrativo': administrativo})
 
 def consultas_admissionais(request):
     # Lógica para as consultas admissionais para servidores externos
@@ -158,7 +182,7 @@ class ProfissionaldasaudeCreate(CreateView):
     model = Profissionaldasaude
     fields = ['nome', 'data_nascimento','email','rg','cpf','sexo','identificacao_unica','area','formacao','conselho','registro','unidade_siass','ddd_telefone','uf','cep','cidade','bairro','numero', 'complemento']
     template_name = 'consultas/cadastro_profissionaldasaude.html'
-    success_url = reverse_lazy('profissionaisdasaudeListagem')
+    success_url = reverse_lazy('profissionaldasaudeListagem')
     
     
     
