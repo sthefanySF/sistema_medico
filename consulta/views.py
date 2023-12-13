@@ -109,6 +109,10 @@ def profissionaldasaude_excluir(request, pk):
     return render(request, 'consultas/excluir_proSaude.html', {'profissionaldasaude': profissionaldasaude})
 
 
+def listar_agendamentos(request):
+    agendamentos = Agendamento.objects.all()
+    return render(request, 'consultas/listagem_agendamentos.html', {'agendamentos': agendamentos})
+
 def consultas_admissionais(request):
     # Lógica para as consultas admissionais para servidores externos
     return render(request, 'consultas/consultas_admissionais.html')

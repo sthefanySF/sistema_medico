@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Lista de Agendamentos{% endblock %}
+
+{% block content %}
+  <h4>Lista de Agendamentos Gerais</h4>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Paciente</th>
+        <th scope="col">Profissional de Saúde</th>
+        <th scope="col">Data do Agendamento</th>
+        <th scope="col">Prioridade de Atendimento</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for agendamento in agendamentos %}
+        <tr>
+          <td>{{ agendamento.paciente.nome }}</td>
+          <td>{{ agendamento.profissional_saude.nome }}</td>
+          <td>{{ agendamento.data_agendamento }}</td>
+          <td>
+            {% if agendamento.prioridade_atendimento %}
+              <i class="fas fa-circle text-success">Sim</i>
+            {% else %}
+              <i class="fas fa-circle text-danger">Não</i>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
