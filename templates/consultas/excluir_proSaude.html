@@ -6,9 +6,9 @@
 {% block content %}
   <h4>Excluir profissional de Saúde</h4>
   <p>Você está prestes a excluir profissional de Saúde "{{profissionaldasaude.nome }}". Tem certeza?</p>
-  <form method="post" action="{% url 'pacienteExcluir' profissionaldasaude.id %}">
+  <form method="post" action="{% url 'profissionaldasaudeExcluir' profissionaldasaude.id %}">
     {% csrf_token %}
     <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
   </form>
-  <a href="{% url 'pacienteListagem' %}" class="btn btn-primary">Cancelar</a>
+  <a href="{% url 'profissionaldasaudeListagem' %}" class="btn btn-primary">Cancelar</a>
 {% endblock %}

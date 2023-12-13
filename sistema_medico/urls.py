@@ -40,7 +40,7 @@ urlpatterns = [
     path('administrativo/<int:pk>/editar/', administrativo_editar, name='administrativoEditar'),
     path('administrativo/<int:pk>/excluir/', administrativo_excluir, name='administrativoExcluir'),
     path('profissionaldasaude/<int:pk>/editar/', profissionaldasaude_editar, name='profissionaldasaudeEditar'),
-    # path('profissionaldasaude/<int:pk>/excluir/', profissionaldasaude_excluir, name='profissionaldasaudeExcluir'),
+    path('profissionaldasaude/<int:pk>/excluir/', profissionaldasaude_excluir, name='profissionaldasaudeExcluir'),
     path('', views.home, name='home'),
 
 

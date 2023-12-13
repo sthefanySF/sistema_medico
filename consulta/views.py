@@ -97,15 +97,17 @@ def profissionaldasaude_editar(request, pk):
         form = ProfissionaldasaudeForm(instance=profissionaldasaude)
 
     return render(request, 'consultas/editar_proSaude.html', {'form': form, 'profissionaldasaude': profissionaldasaude})
-# def profissionaldasaude_excluir(request, pk):
-#     administrativo = get_object_or_404(Administrativo, pk=pk)
 
-#     if request.method == 'POST':
-#         administrativo.delete()
+def profissionaldasaude_excluir(request, pk):
+    profissionaldasaude = get_object_or_404(Profissionaldasaude, pk=pk)
+
+    if request.method == 'POST':
+        profissionaldasaude.delete()
         
-#         return redirect('administrativoListagem')
+        return redirect('profissionaldasaudeListagem')
 
-#     return render(request, 'consultas/excluir_administrativo.html', {'administrativo': administrativo})
+    return render(request, 'consultas/excluir_proSaude.html', {'profissionaldasaude': profissionaldasaude})
+
 
 def consultas_admissionais(request):
     # Lógica para as consultas admissionais para servidores externos

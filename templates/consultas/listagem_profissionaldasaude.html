@@ -42,7 +42,7 @@
         <td>
           <div class="btn-group" role="group" aria-label="Ações">
             <a href="{% url 'profissionaldasaudeEditar' profissionaldasaude.id %}" class="btn btn-primary">Editar</a>
-            <a href="#" class="btn btn-danger ms-1">Excluir</a>
+            <a href="{% url 'profissionaldasaudeExcluir' profissionaldasaude.id %}" class="btn btn-danger ms-1">Excluir</a>
           </div>
         </td>
       </tr>
