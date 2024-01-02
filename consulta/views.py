@@ -127,15 +127,19 @@ def agendamento_editar(request, pk):
     
     return render(request, 'consultas/editar_agendamento.html', {'form': form, 'agendamento': agendamento})
 
-def agendamento_excluir(request, pk):
+def agendamento_confirmar(request, pk):
     agendamento = get_object_or_404(Agendamento, pk=pk)
-    
-    if request.method == 'POST':
-        agendamento.delete()
-        messages.success(request, 'Agendamento excluído com sucesso!')
-        return redirect('agendamentoListagem')
-    
-    return render(request, 'consultas/excluir_agendamento.html', {'agendamento': agendamento})
+    agendamento.status_atendimento = 'confirmado'
+    agendamento.save()
+    messages.success(request, 'Agendamento confirmado com sucesso!')
+    return redirect('agendamentoListagem')
+
+def agendamento_ausente(request, pk):
+    agendamento = get_object_or_404(Agendamento, pk=pk)
+    agendamento.status_atendimento = 'ausente'
+    agendamento.save()
+    messages.success(request, 'Agendamento marcado como ausente com sucesso!')
+    return redirect('agendamentoListagem')
 
 
 def consultas_admissionais(request):
@@ -235,4 +239,4 @@ class AgendamentoCreate(CreateView):
     model = Agendamento
     fields = ['paciente','profissional_saude','data_agendamento','prioridade_atendimento']
     template_name = 'consultas/forms_agendamento.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('agendamentoListagem')

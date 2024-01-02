@@ -103,6 +103,11 @@ class FilaEspera(models.Model):
     
 
 class Agendamento(models.Model):
+    status_atendimento = models.CharField(max_length=20, choices=[
+        ('confirmado', 'Confirmado'),
+        ('ausente', 'Ausente'),
+        ('pendente', 'Pendente'),
+    ], default='pendente')
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE) #contem referncia do objeto Paciente
     #on_delete=models.CASCADE: Isso especifica o que acontecerá quando o objeto referenciado (Paciente) for excluído. 
     #Neste caso, CASCADE significa que, se um objeto Paciente for excluído, todos os objetos que têm uma referência a ele no campo paciente também serão excluídos.

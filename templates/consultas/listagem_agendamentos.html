@@ -12,6 +12,7 @@
         <th scope="col">Data do Agendamento</th>
         <th scope="col">Prioridade de Atendimento</th>
         <th scope="col">Ações</th> <!-- Adicionando a coluna de Ações -->
+        <th scope="col">Status</th> <!-- Adicionando a coluna de Ações -->
       </tr>
     </thead>
     <tbody>
@@ -27,12 +28,29 @@
               <i class="fas fa-circle text-danger">Não</i>
             {% endif %}
           </td>
+          <!-- Coluna de Ação -->
           <td>
             <div class="btn-group" role="group" aria-label="Ações">
               <a href="{% url 'agendamentoEditar' agendamento.id %}" class="btn btn-primary">Editar</a>
-              <a href="{% url 'agendamentoExcluir' agendamento.id %}" class="btn btn-danger ms-1">Excluir</a>
             </div>
           </td>
+
+          <!-- Coluna de Status -->
+          <td>
+            {% if agendamento.status_atendimento == 'pendente' %}
+              <div class="btn-group" role="group" aria-label="Status">
+                <a href="{% url 'agendamentoConfirmar' agendamento.id %}" class="btn btn-success">Confirmar</a>
+                <a href="{% url 'agendamentoAusente' agendamento.id %}" class="btn btn-warning ms-1">Ausente</a>
+              </div>
+            {% elif agendamento.status_atendimento == 'confirmado' %}
+              Confirmado
+            {% elif agendamento.status_atendimento == 'ausente' %}
+              Ausente
+            {% else %}
+              <span class="text-success">Concluído</span>
+            {% endif %}
+          </td>
+
         </tr>
       {% endfor %}
     </tbody>

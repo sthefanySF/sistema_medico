@@ -72,7 +72,7 @@ class ProfissionaldasaudeForm(forms.ModelForm):
 class AgendamentoForm(forms.ModelForm):
     class Meta:
         model = Agendamento
-        fields = ['paciente', 'profissional_saude', 'data_agendamento', 'prioridade_atendimento']
+        fields = ['paciente', 'profissional_saude', 'data_agendamento', 'prioridade_atendimento', 'status_atendimento']
 
         labels = {
             'data_agendamento': 'Data do Agendamento',

@@ -36,10 +36,19 @@
     </div>
 
     <div class="mb-3 row">
-      <div class="col-sm-9 offset-sm-3">
-        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-        <a href="{% url 'agendamentoListagem' %}" class="btn btn-secondary">Cancelar</a>
+        <label for="{{ form.status_atendimento.id_for_label }}" class="col-sm-3 col-form-label">Status do Atendimento</label>
+        <div class="col-sm-9">
+          {{ form.status_atendimento }}
+        </div>
       </div>
-    </div>
-  </form>
-{% endblock %}
+  
+      <div class="mb-3 row">
+        <div class="col-sm-9 offset-sm-3">
+          <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+          <a href="{% url 'agendamentoListagem' %}" class="btn btn-secondary">Cancelar</a>
+          <a href="{% url 'agendamentoConfirmar' agendamento.id %}" class="btn btn-success">Confirmar Atendimento</a>
+          <a href="{% url 'agendamentoAusente' agendamento.id %}" class="btn btn-warning">Marcar Ausente</a>
+        </div>
+      </div>
+    </form>
+  {% endblock %}

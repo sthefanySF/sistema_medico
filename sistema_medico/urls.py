@@ -43,8 +43,8 @@ urlpatterns = [
     path('profissionaldasaude/<int:pk>/editar/', profissionaldasaude_editar, name='profissionaldasaudeEditar'),
     path('profissionaldasaude/<int:pk>/excluir/', profissionaldasaude_excluir, name='profissionaldasaudeExcluir'),
     path('agendamentos/<int:pk>/editar/', agendamento_editar, name='agendamentoEditar'),
-    path('agendamentos/<int:pk>/excluir/', agendamento_excluir, name='agendamentoExcluir'),
-
+    path('agendamentos/<int:pk>/confirmar/', agendamento_confirmar, name='agendamentoConfirmar'),
+    path('agendamentos/<int:pk>/ausente/', agendamento_ausente, name='agendamentoAusente'),
 
     path('', views.home, name='home'),
 
