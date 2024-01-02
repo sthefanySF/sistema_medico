@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView
-from consulta.forms import AdministrativoForm, PacienteForm, ProfissionaldasaudeForm
+from consulta.forms import AdministrativoForm, AgendamentoForm, PacienteForm, ProfissionaldasaudeForm
 
 from consulta.models import FilaEspera, Paciente, Administrativo
 from consulta.models import Agendamento, FilaEspera, Paciente, Profissionaldasaude
@@ -112,6 +112,31 @@ def profissionaldasaude_excluir(request, pk):
 def listar_agendamentos(request):
     agendamentos = Agendamento.objects.all()
     return render(request, 'consultas/listagem_agendamentos.html', {'agendamentos': agendamentos})
+
+def agendamento_editar(request, pk):
+    agendamento = get_object_or_404(Agendamento, pk=pk)
+    
+    if request.method == 'POST':
+        form = AgendamentoForm(request.POST, instance=agendamento)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Agendamento editado com sucesso!')
+            return redirect('agendamentoListagem')
+    else:
+        form = AgendamentoForm(instance=agendamento)
+    
+    return render(request, 'consultas/editar_agendamento.html', {'form': form, 'agendamento': agendamento})
+
+def agendamento_excluir(request, pk):
+    agendamento = get_object_or_404(Agendamento, pk=pk)
+    
+    if request.method == 'POST':
+        agendamento.delete()
+        messages.success(request, 'Agendamento excluído com sucesso!')
+        return redirect('agendamentoListagem')
+    
+    return render(request, 'consultas/excluir_agendamento.html', {'agendamento': agendamento})
+
 
 def consultas_admissionais(request):
     # Lógica para as consultas admissionais para servidores externos

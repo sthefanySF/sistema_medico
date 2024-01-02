@@ -73,7 +73,7 @@ class Profissionaldasaude(models.Model):
     bairro = models.CharField(max_length=50, default='')
     uf = models.CharField(max_length=2)
     numero = models.CharField(max_length=10)
-    ddd_telefone = models.CharField(max_length=3)
+    ddd_telefone = models.CharField(max_length=10)
     complemento = models.CharField(max_length=100, blank=True, null=True, default='') # blank=True, null=True é pra dizer que não é obrigatorio 
     area = models.CharField(max_length=50, default='')
     unidade_siass = models.CharField(max_length=50, default='')

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Excluir Agendamento{% endblock %}
+
+{% block content %}
+  <h4>Excluir Agendamento</h4>
+  <p>Você está prestes a excluir o agendamento para "{{ agendamento.paciente.nome }}". Tem certeza?</p>
+  <form method="post" action="{% url 'agendamentoExcluir' agendamento.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+  </form>
+  <a href="{% url 'agendamentoListagem' %}" class="btn btn-primary">Cancelar</a>
+{% endblock %}

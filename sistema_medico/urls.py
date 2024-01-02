@@ -24,7 +24,7 @@ from consulta import views
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # ... Outras URLs do seu aplicativo ...
+   
 
     path('fila_de_espera/', fila_espera, name='fila_espera'),
     path('cadastro/administrativo/', AdministrativoCreate.as_view(), name='administrativoCreate'),
@@ -42,6 +42,10 @@ urlpatterns = [
     path('administrativo/<int:pk>/excluir/', administrativo_excluir, name='administrativoExcluir'),
     path('profissionaldasaude/<int:pk>/editar/', profissionaldasaude_editar, name='profissionaldasaudeEditar'),
     path('profissionaldasaude/<int:pk>/excluir/', profissionaldasaude_excluir, name='profissionaldasaudeExcluir'),
+    path('agendamentos/<int:pk>/editar/', agendamento_editar, name='agendamentoEditar'),
+    path('agendamentos/<int:pk>/excluir/', agendamento_excluir, name='agendamentoExcluir'),
+
+
     path('', views.home, name='home'),
 
 

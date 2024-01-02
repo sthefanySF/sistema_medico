@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Agendamento{% endblock %}
+
+{% block content %}
+  <h4>Editar Agendamento</h4>
+  <form action="{% url 'agendamentoEditar' agendamento.id %}" method="POST" class="border p-3">
+    {% csrf_token %}
+    
+    <div class="mb-3 row">
+      <label for="{{ form.paciente.id_for_label }}" class="col-sm-3 col-form-label">Paciente</label>
+      <div class="col-sm-9">
+        {{ form.paciente }}
+      </div>
+    </div>
+
+    <div class="mb-3 row">
+      <label for="{{ form.profissional_saude.id_for_label }}" class="col-sm-3 col-form-label">Profissional de Saúde</label>
+      <div class="col-sm-9">
+        {{ form.profissional_saude }}
+      </div>
+    </div>
+
+    <div class="mb-3 row">
+      <label for="{{ form.data_agendamento.id_for_label }}" class="col-sm-3 col-form-label">Data do Agendamento</label>
+      <div class="col-sm-9">
+        {{ form.data_agendamento }}
+      </div>
+    </div>
+
+    <div class="mb-3 row">
+      <label for="{{ form.prioridade_atendimento.id_for_label }}" class="col-sm-3 col-form-label">Prioridade de Atendimento</label>
+      <div class="col-sm-9">
+        {{ form.prioridade_atendimento }}
+      </div>
+    </div>
+
+    <div class="mb-3 row">
+      <div class="col-sm-9 offset-sm-3">
+        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+        <a href="{% url 'agendamentoListagem' %}" class="btn btn-secondary">Cancelar</a>
+      </div>
+    </div>
+  </form>
+{% endblock %}
