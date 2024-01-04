@@ -42,9 +42,10 @@ urlpatterns = [
     path('administrativo/<int:pk>/excluir/', administrativo_excluir, name='administrativoExcluir'),
     path('profissionaldasaude/<int:pk>/editar/', profissionaldasaude_editar, name='profissionaldasaudeEditar'),
     path('profissionaldasaude/<int:pk>/excluir/', profissionaldasaude_excluir, name='profissionaldasaudeExcluir'),
-    path('agendamentos/<int:pk>/editar/', agendamento_editar, name='agendamentoEditar'),
     path('agendamentos/<int:pk>/confirmar/', agendamento_confirmar, name='agendamentoConfirmar'),
     path('agendamentos/<int:pk>/ausente/', agendamento_ausente, name='agendamentoAusente'),
+    path('reagendar/agendamento/<int:pk>/', views.reagendar_agendamento, name='reagendarAgendamento'),
+    # path('cancelar/agendamento/<int:pk>/', views.cancelar_agendamento, name='cancelarAgendamento'),
 
     path('', views.home, name='home'),
 

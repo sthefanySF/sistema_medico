@@ -86,3 +86,23 @@ class AgendamentoForm(forms.ModelForm):
             'prioridade_atendimento': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
 
         }
+
+class AgendamentoReagendarForm(forms.ModelForm):
+    class Meta:
+        model = Agendamento
+        fields = ['profissional_saude', 'data_agendamento', 'prioridade_atendimento']
+
+        labels = {
+            'data_agendamento': 'Nova Data do Agendamento',
+            'prioridade_atendimento': 'Prioridade de Atendimento',
+        }
+
+        widgets = {
+            'profissional_saude': forms.Select(attrs={'class': 'form-control'}),
+            'data_agendamento': forms.DateTimeInput(attrs={'class': 'form-control'}),
+            'prioridade_atendimento': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+class PesquisaAgendamentoForm(forms.Form):
+    cpf = forms.CharField(label='', required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Pesquise por CPF'}))
+    data_agendamento = forms.DateField(label='', required=False, widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}))
+

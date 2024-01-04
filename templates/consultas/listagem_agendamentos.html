@@ -4,21 +4,42 @@
 
 {% block content %}
   <h4>Lista de Agendamentos Gerais</h4>
+
+
+  <form method="get">
+    <div class="row">
+        <div class="col">
+            {{ form.cpf }}
+        </div>
+        <div class="col">
+            {{ form.data_agendamento }}
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary">Pesquisar</button>
+        </div>
+    </div>
+</form>
+
+
+  
+
   <table class="table">
     <thead>
       <tr>
         <th scope="col">Paciente</th>
+        <th scope="col">CPF</th>
         <th scope="col">Profissional de Saúde</th>
         <th scope="col">Data do Agendamento</th>
         <th scope="col">Prioridade de Atendimento</th>
-        <th scope="col">Ações</th> <!-- Adicionando a coluna de Ações -->
-        <th scope="col">Status</th> <!-- Adicionando a coluna de Ações -->
+        <th scope="col">Status</th> 
+        <th scope="col">Ações</th> 
       </tr>
     </thead>
     <tbody>
       {% for agendamento in agendamentos %}
         <tr>
           <td>{{ agendamento.paciente.nome }}</td>
+          <td>{{ agendamento.paciente.cpf }}</td>
           <td>{{ agendamento.profissional_saude.nome }}</td>
           <td>{{ agendamento.data_agendamento }}</td>
           <td>
@@ -28,14 +49,8 @@
               <i class="fas fa-circle text-danger">Não</i>
             {% endif %}
           </td>
-          <!-- Coluna de Ação -->
-          <td>
-            <div class="btn-group" role="group" aria-label="Ações">
-              <a href="{% url 'agendamentoEditar' agendamento.id %}" class="btn btn-primary">Editar</a>
-            </div>
-          </td>
-
-          <!-- Coluna de Status -->
+      
+        
           <td>
             {% if agendamento.status_atendimento == 'pendente' %}
               <div class="btn-group" role="group" aria-label="Status">
@@ -50,6 +65,16 @@
               <span class="text-success">Concluído</span>
             {% endif %}
           </td>
+            <!-- Coluna de Ação -->
+            <td>
+              <div class="btn-group" role="group" aria-label="Ações">
+                <a href="{% url 'reagendarAgendamento' agendamento.id %}" class="btn btn-primary">Reagendar</a>
+                <button type="button" class="btn btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#cancelarModal{{ agendamento.id }}" >
+                  Cancelar 
+                </button>
+              </div>
+            </td>
+  
 
         </tr>
       {% endfor %}
