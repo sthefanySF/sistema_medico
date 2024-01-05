@@ -90,7 +90,7 @@ class AgendamentoForm(forms.ModelForm):
 class AgendamentoReagendarForm(forms.ModelForm):
     class Meta:
         model = Agendamento
-        fields = ['profissional_saude', 'data_agendamento', 'prioridade_atendimento']
+        fields = ['profissional_saude', 'data_agendamento', 'prioridade_atendimento', 'justificativa_cancelamento']
 
         labels = {
             'data_agendamento': 'Nova Data do Agendamento',
@@ -106,3 +106,5 @@ class PesquisaAgendamentoForm(forms.Form):
     cpf = forms.CharField(label='', required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Pesquise por CPF'}))
     data_agendamento = forms.DateField(label='', required=False, widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}))
 
+class JustificativaCancelamentoForm(forms.Form):
+    justificativa = forms.CharField(widget=forms.Textarea(attrs={'rows': 4, 'placeholder': 'Digite a justificativa aqui'}))

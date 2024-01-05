@@ -67,9 +67,31 @@
           <td>
             <div class="btn-group" role="group" aria-label="Ações">
               <a href="{% url 'reagendarAgendamento' agendamento.id %}" class="btn btn-primary">Reagendar</a>
-              <button type="button" class="btn btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#cancelarModal{{ agendamento.id }}">
+              <button type="button" class="btn btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#cancelarModal{{ agendamento.id }}" onclick="confirmarCancelamento('{{ agendamento.id }}')">
                 Cancelar
               </button>
+            <!-- Modal de Cancelamento -->
+            <div class="modal fade" id="cancelarModal{{ agendamento.id }}" tabindex="-1" aria-labelledby="cancelarModalLabel{{ agendamento.id }}" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="cancelarModalLabel{{ agendamento.id }}">Cancelar Agendamento</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <p>Informe a justificativa para o cancelamento:</p>
+                          <form id="cancelarForm{{ agendamento.id }}" method="post" action="{% url 'cancelar_agendamento' agendamento.id %}">
+                            {% csrf_token %}
+                            {{ form.justificativa_cancelamento }}
+                            <textarea name="justificativa_cancelamento" class="form-control" rows="4" placeholder="Digite a justificativa aqui"></textarea>
+                            <button type="submit" class="btn btn-danger mt-3">Confirmar Cancelamento</button>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+
             </div>
           </td>
         </tr>

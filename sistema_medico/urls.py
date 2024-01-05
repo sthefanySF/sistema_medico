@@ -17,19 +17,13 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-
 from consulta.views import *
 from consulta import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
-   
-
-    path('fila_de_espera/', fila_espera, name='fila_espera'),
     path('cadastro/administrativo/', AdministrativoCreate.as_view(), name='administrativoCreate'),
     path('cadastro/profissionaldasaude/', ProfissionaldasaudeCreate.as_view(), name='profissionaldasaudeCreate'),
-    path('fila-de-espera/', fila_espera, name='fila_espera'),
     path('cadastro/paciente', PacienteCreate.as_view(), name='pacienteCreate'),
     path('agendamento/form', AgendamentoCreate.as_view(), name='agendamentoCreate' ),
     path('agendamento/lista', listar_agendamentos, name='agendamentoListagem'),
@@ -45,8 +39,9 @@ urlpatterns = [
     path('agendamentos/<int:pk>/confirmar/', agendamento_confirmar, name='agendamentoConfirmar'),
     path('agendamentos/<int:pk>/ausente/', agendamento_ausente, name='agendamentoAusente'),
     path('reagendar/agendamento/<int:pk>/', views.reagendar_agendamento, name='reagendarAgendamento'),
-    # path('cancelar/agendamento/<int:pk>/', views.cancelar_agendamento, name='cancelarAgendamento'),
+    path('cancelar_agendamento/<int:agendamento_id>/', views.cancelar_agendamento, name='cancelar_agendamento'),
 
+    # path('cancelar/agendamento/<int:pk>/', views.cancelar_agendamento, name='cancelarAgendamento'),
     path('', views.home, name='home'),
 
 

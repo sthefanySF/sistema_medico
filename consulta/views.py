@@ -1,6 +1,7 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView
-from consulta.forms import AdministrativoForm, AgendamentoForm, AgendamentoReagendarForm, PacienteForm, PesquisaAgendamentoForm, ProfissionaldasaudeForm
+from consulta.forms import AdministrativoForm, AgendamentoForm, AgendamentoReagendarForm, JustificativaCancelamentoForm, PacienteForm, PesquisaAgendamentoForm, ProfissionaldasaudeForm
 
 from consulta.models import FilaEspera, Paciente, Administrativo
 from consulta.models import Agendamento, FilaEspera, Paciente, Profissionaldasaude
@@ -151,6 +152,11 @@ def reagendar_agendamento(request, pk):
         form = AgendamentoReagendarForm(request.POST, instance=agendamento)
         if form.is_valid():
             form.save()
+            
+            # Após salvar o formulário, atualize o status para 'pendente'
+            agendamento.status_atendimento = 'pendente'
+            agendamento.save()
+
             messages.success(request, 'Agendamento reagendado com sucesso!')
             return redirect('agendamentoListagem')
     else:
@@ -158,34 +164,23 @@ def reagendar_agendamento(request, pk):
 
     return render(request, 'consultas/reagendar_agendamento.html', {'form': form, 'agendamento': agendamento})
 
+def cancelar_agendamento(request, agendamento_id):
+    agendamento = get_object_or_404(Agendamento, pk=agendamento_id)
 
+    if request.method == 'POST':
+        form = JustificativaCancelamentoForm(request.POST)
+        if form.is_valid():
+            agendamento.justificativa_cancelamento = form.cleaned_data['justificativa']
+            agendamento.status_atendimento = 'cancelado'
+            agendamento.save()
 
+            # Retorna uma resposta JSON
+            return JsonResponse({'success': True, 'message': 'Agendamento cancelado com sucesso.'})
 
-def consultas_admissionais(request):
-    # Lógica para as consultas admissionais para servidores externos
-    return render(request, 'consultas/consultas_admissionais.html')
-
-
-def adicionar_paciente_fila(request, paciente_id):
-    paciente = Paciente.objects.get(pk=paciente_id)
-    idade = paciente.idade()
-
-    # Verifique se o paciente é idoso e defina a prioridade
-    if idade >= 65:
-        prioridade = True
     else:
-        prioridade = False
+        form = JustificativaCancelamentoForm()
 
-    fila = FilaEspera(paciente=paciente, prioridade=prioridade)
-    fila.save()
-    return redirect('fila_espera')
-
-
-def fila_espera(request):
-    # Ordene a fila para que pacientes com prioridade apareçam primeiro
-    pacientes_na_fila = FilaEspera.objects.order_by('-prioridade', 'data_chegada')
-    return render(request, 'consultas/fila_espera.html', {'pacientes_na_fila': pacientes_na_fila})
-
+    return render(request, 'consulta/cancelar_agendamento.html', {'form': form, 'agendamento': agendamento})
 
 
 class PacienteCreate(CreateView):

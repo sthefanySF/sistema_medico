@@ -114,6 +114,7 @@ class Agendamento(models.Model):
     profissional_saude = models.ForeignKey(Profissionaldasaude, on_delete=models.CASCADE)  #contem referncia do objeto Profissionaldasaude
     data_agendamento = models.DateTimeField()
     prioridade_atendimento = models.BooleanField(default=False)
+    justificativa_cancelamento = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"Agendamento para {self.paciente.nome}"
