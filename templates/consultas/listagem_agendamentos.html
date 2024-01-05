@@ -79,7 +79,7 @@
                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
-                          <p>Informe a justificativa para o cancelamento:</p>
+                          <p>Informe a justificativa para o Cancelamento:</p>
                           <form id="cancelarForm{{ agendamento.id }}" method="post" action="{% url 'cancelar_agendamento' agendamento.id %}">
                             {% csrf_token %}
                             {{ form.justificativa_cancelamento }}
@@ -90,6 +90,7 @@
                   </div>
               </div>
           </div>
+
 
 
             </div>
