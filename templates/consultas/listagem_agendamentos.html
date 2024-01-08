@@ -41,7 +41,7 @@
           <td>{{ agendamento.paciente.nome }}</td>
           <td>{{ agendamento.paciente.cpf }}</td>
           <td>{{ agendamento.profissional_saude.nome }}</td>
-          <td>{{ agendamento.data_agendamento }}</td>
+          <td>{{ agendamento.data_agendamento | date:"d/m/Y "   }}</td>
           <td>
             {% if agendamento.prioridade_atendimento %}
               <i class="fas fa-circle text-success">Sim</i>
