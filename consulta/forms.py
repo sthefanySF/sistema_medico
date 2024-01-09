@@ -22,6 +22,7 @@ class PacienteForm(forms.ModelForm):
         
         widgets = {
             'sexo': forms.RadioSelect(choices=[('M', 'Masculino'), ('F', 'Feminino')]),
+            'tipo_paciente': forms.Select(choices=Paciente.TIPO_PACIENTE_CHOICES),
         }
 
 

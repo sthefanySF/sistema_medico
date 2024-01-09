@@ -27,11 +27,11 @@
       {% for administrativo in administrativo %}
       <tr>
         <td>{{ administrativo.nome }}</td>
-        <td>{{ administrativo.data_nascimento }}</td>
+        <td>{{ administrativo.data_nascimento | date:"d/m/Y " }}</td>
         <td>{{ administrativo.email }}</td>
         <td>{{ administrativo.rg }}</td>
         <td>{{ administrativo.cpf }}</td>
-        <td>{{ administrativo.sexo }}</td>
+        <td>{{ administrativo.get_sexo_display }}</td>
         <td>{{ administrativo.cargo_funcao }}</td>
         <td>{{ administrativo.matricula_siape }}</td>
         <td>{{ administrativo.orgao }}</td>

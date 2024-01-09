@@ -28,11 +28,11 @@
       {% for profissionaldasaude in profissionaldasaude %}
       <tr>
         <td>{{ profissionaldasaude.nome }}</td>
-        <td>{{ profissionaldasaude.data_nascimento }}</td>
+        <td>{{ profissionaldasaude.data_nascimento | date:"d/m/Y " }}</td>
         <td>{{ profissionaldasaude.email }}</td>
         <td>{{ profissionaldasaude.rg }}</td>
         <td>{{ profissionaldasaude.cpf }}</td>
-        <td>{{ profissionaldasaude.sexo }}</td>
+        <td>{{ profissionaldasaude.get_sexo_display }}</td>
         <td>{{ profissionaldasaude.identificacao_unica }}</td>
         <td>{{ profissionaldasaude.area_rqe }}</td>
         <td>{{ profissionaldasaude.unidade_siass }}</td>

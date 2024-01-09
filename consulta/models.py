@@ -10,7 +10,13 @@ class Paciente(models.Model):
     cpf = models.CharField(max_length=14)
     sexo = models.CharField(max_length=1, choices=[('M', 'Masculino'), ('F', 'Feminino')])
     matricula = models.CharField(max_length=20)
-    tipo_paciente = models.CharField(max_length=20)
+    TIPO_PACIENTE_CHOICES = [
+        ('Aluno', 'Aluno'),
+        ('Servidor', 'Servidor'),
+        ('Outro', 'Outro'),
+    ]
+
+    tipo_paciente = models.CharField(max_length=20, choices=TIPO_PACIENTE_CHOICES)
     cargo_funcao = models.CharField(max_length=50, default='')
     cep = models.CharField(max_length=9)
     cidade = models.CharField(max_length=50)
