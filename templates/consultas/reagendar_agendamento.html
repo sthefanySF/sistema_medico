@@ -1,4 +1,3 @@
-<!-- reagendar_agendamento.html -->
 {% extends "base.html" %}
 
 {% block title %}Reagendar Agendamento{% endblock %}
@@ -7,8 +6,24 @@
   <h4>Reagendar Agendamento</h4>
   <form action="{% url 'reagendarAgendamento' agendamento.id %}" method="POST" class="needs-validation border p-3" novalidate>
     {% csrf_token %}
-    {{ form.profissional_saude }}
-    {{ form.data_agendamento }}
+
+    <div class="mb-3">
+      <label for="{{ form.profissional_saude.id_for_label }}">{{ form.profissional_saude.label }}</label>
+      {{ form.profissional_saude }}
+    </div>
+
+    <div class="mb-3">
+      <label for="{{ form.data_agendamento.id_for_label }}">{{ form.data_agendamento.label }}</label>
+      {{ form.data_agendamento }}
+    </div>
+
+    <div class="mb-3 form-check">
+      {{ form.prioridade_atendimento }}
+      <label class="form-check-label" for="{{ form.prioridade_atendimento.id_for_label }}">
+        {{ form.prioridade_atendimento.label }}
+      </label>
+    </div>
+
     <button type="submit" class="btn btn-primary">Reagendar</button>
     <a class="btn btn-primary ms-2" href="{% url 'agendamentoListagem' %}">Cancelar</a>
   </form>

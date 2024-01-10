@@ -94,7 +94,8 @@ class AgendamentoReagendarForm(forms.ModelForm):
         fields = ['profissional_saude', 'data_agendamento', 'prioridade_atendimento', 'justificativa_cancelamento']
 
         labels = {
-            'data_agendamento': 'Nova Data do Agendamento',
+            'profissional_saude': 'Selecionar um novo profissional de saúde',
+            'data_agendamento': 'Selecionar uma nova data de agendamento',
             'prioridade_atendimento': 'Prioridade de Atendimento',
         }
 
