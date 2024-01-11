@@ -15,14 +15,35 @@
     color:#ffffff;
 }
 
-/* Estilo para as bordas da tabela */
-.table-bordered th,
-.table-bordered td {
-    border: 2px solid #d62121; /* Ajuste a cor conforme necessário */
-    box-shadow: 2px 2px 5px #888888; /* Adicione sombra conforme necessário */
+/* Estilo para as bordas arredondadas da tabela */
+.custom-table {
+    border-collapse: separate;
+    border-spacing: 0 7px; /* Espaço entre as células */
 }
 
-.table-bordered thead th {
-    border-bottom-width: 3px;
+.custom-table th,
+.custom-table td {
+    border: 2px solid #b8b0b0; /* Ajuste a cor conforme necessário */
+    border-radius: 5px; /* Bordas arredondadas */
+    box-shadow: 2px 2px 5px #9b9b9b; /* Adicione sombra conforme necessário */
 }
+
+.custom-table thead th {
+    border-bottom-width: 2px;
+    background-color: #e0e0e0; /* Cor do cabeçalho */
+}
+
+/* Estilo para o título */
+.custom-title {
+    font-size: 24px; /* Ajuste o tamanho da fonte conforme necessário */
+    font-weight: bold;
+    color: #0a0101; /* Cor do texto */
+    background-color: #e0e0e0; /* Cor de fundo */
+    padding: 10px; /* Espaçamento interno */
+    border: 2px solid #b8b0b0; /* Cor da borda */
+    border-radius: 5px; /* Arredondamento das bordas */
+    box-shadow: 2px 2px 5px #888888; /* Sombra */
+    margin-bottom: 10px; /* Espaçamento abaixo do título */
+}
+
 

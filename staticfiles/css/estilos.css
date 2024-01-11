@@ -1,0 +1,28 @@
+/* Estilo para a classe .navbar-brand que é da logo/imagem*/
+
+.navbar-brand { 
+    background-color: white; 
+    width: 55px; 
+    height: 74px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    border-radius: 10%;
+}
+
+
+.navbar-toggler{
+    color:#ffffff;
+}
+
+/* Estilo para as bordas da tabela */
+.custom-table th,
+.custom-table td {
+    border: 2px solid #d62121; /* Ajuste a cor conforme necessário */
+    box-shadow: 2px 2px 5px #888888; /* Adicione sombra conforme necessário */
+}
+
+.custom-table thead th {
+    border-bottom-width: 3px;
+}
+
