@@ -2,6 +2,10 @@
 
 {% block title %}Lista de Agendamentos{% endblock %}
 
+{% load static %}
+<link rel="stylesheet" type="text/css" href="/static/css/estilos.css">
+
+
 {% block content %}
   <div class="text-center mb-4">
     <h4>Lista de Agendamentos Gerais</h4>
@@ -23,82 +27,83 @@
     </form>
   </div>
 
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">Paciente</th>
-        <th scope="col">CPF</th>
-        <th scope="col">Profissional de Saúde</th>
-        <th scope="col">Data do Agendamento</th>
-        <th scope="col">Prioridade de Atendimento</th>
-        <th scope="col">Status</th>
-        <th scope="col">Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for agendamento in agendamentos %}
+
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead>
         <tr>
-          <td>{{ agendamento.paciente.nome }}</td>
-          <td>{{ agendamento.paciente.cpf }}</td>
-          <td>{{ agendamento.profissional_saude.nome }}</td>
-          <td>{{ agendamento.data_agendamento | date:"d/m/Y "   }}</td>
-          <td>
-            {% if agendamento.prioridade_atendimento %}
-              <i class="fas fa-circle text-success">Sim</i>
-            {% else %}
-              <i class="fas fa-circle text-danger">Não</i>
-            {% endif %}
-          </td>
-          <td>
-            {% if agendamento.status_atendimento == 'pendente' %}
-              <div class="btn-group" role="group" aria-label="Status">
-                <a href="{% url 'agendamentoConfirmar' agendamento.id %}" class="btn btn-success">Confirmar</a>
-                <a href="{% url 'agendamentoAusente' agendamento.id %}" class="btn btn-warning ms-1">Ausente</a>
-              </div>
-            {% elif agendamento.status_atendimento == 'confirmado' %}
-              Confirmado
-            {% elif agendamento.status_atendimento == 'ausente' %}
-              Ausente
-            {% else %}
-              <span class="text-success">Concluído</span>
-            {% endif %}
-          </td>
-          <!-- Coluna de Ação -->
-          <td>
-            <div class="btn-group" role="group" aria-label="Ações">
-              <a href="{% url 'reagendarAgendamento' agendamento.id %}" class="btn btn-primary">Reagendar</a>
-              <button type="button" class="btn btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#cancelarModal{{ agendamento.id }}" onclick="confirmarCancelamento('{{ agendamento.id }}')">
-                Cancelar
-              </button>
-            <!-- Modal de Cancelamento -->
-            <div class="modal fade" id="cancelarModal{{ agendamento.id }}" tabindex="-1" aria-labelledby="cancelarModalLabel{{ agendamento.id }}" aria-hidden="true">
-              <div class="modal-dialog">
-                  <div class="modal-content">
-                      <div class="modal-header">
-                          <h5 class="modal-title" id="cancelarModalLabel{{ agendamento.id }}">Cancelar Agendamento</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                          <p>Informe a justificativa para o Cancelamento:</p>
-                          <form id="cancelarForm{{ agendamento.id }}" method="post" action="{% url 'cancelar_agendamento' agendamento.id %}">
-                            {% csrf_token %}
-                            {{ form.justificativa_cancelamento }}
-                            <textarea name="justificativa_cancelamento" class="form-control" rows="4" placeholder="Digite a justificativa aqui"></textarea>
-                            <button type="submit" class="btn btn-danger mt-3">Confirmar Cancelamento</button>
-                          </form>
-                      </div>
-                  </div>
-              </div>
-          </div>
-
-
-
-            </div>
-          </td>
+          <th scope="col" class="text-center">Paciente</th>
+          <th scope="col" class="text-center">CPF</th>
+          <th scope="col" class="text-center">Profissional de Saúde</th>
+          <th scope="col" class="text-center">Data do Agendamento</th>
+          <th scope="col" class="text-center">Prioridade de Atendimento</th>
+          <th scope="col" class="text-center">Status</th>
+          <th scope="col" class="text-center">Ações</th>
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {% for agendamento in agendamentos %}
+          <tr>
+            <td>{{ agendamento.paciente.nome }}</td>
+            <td>{{ agendamento.paciente.cpf }}</td>
+            <td>{{ agendamento.profissional_saude.nome }}</td>
+            <td>{{ agendamento.data_agendamento | date:"d/m/Y "   }}</td>
+            <td>
+              {% if agendamento.prioridade_atendimento %}
+                <i class="fas fa-circle text-success">Sim</i>
+              {% else %}
+                <i class="fas fa-circle text-danger">Não</i>
+              {% endif %}
+            </td>
+            <td>
+              {% if agendamento.status_atendimento == 'pendente' %}
+                <div class="btn-group" role="group" aria-label="Status">
+                  <a href="{% url 'agendamentoConfirmar' agendamento.id %}" class="btn btn-success">Confirmar</a>
+                  <a href="{% url 'agendamentoAusente' agendamento.id %}" class="btn btn-warning ms-1">Ausente</a>
+                </div>
+              {% elif agendamento.status_atendimento == 'confirmado' %}
+                Confirmado
+              {% elif agendamento.status_atendimento == 'ausente' %}
+                Ausente
+              {% else %}
+                <span class="text-success">Concluído</span>
+              {% endif %}
+            </td>
+            <!-- Coluna de Ação -->
+            <td>
+              <div class="btn-group" role="group" aria-label="Ações">
+                <a href="{% url 'reagendarAgendamento' agendamento.id %}" class="btn btn-primary">Reagendar</a>
+                <button type="button" class="btn btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#cancelarModal{{ agendamento.id }}" onclick="confirmarCancelamento('{{ agendamento.id }}')">
+                  Cancelar
+                </button>
+                <a href="#" class="btn btn-success ms-1">Atender</a>
+              </div>
+              <!-- Modal de Cancelamento -->
+              <div class="modal fade" id="cancelarModal{{ agendamento.id }}" tabindex="-1" aria-labelledby="cancelarModalLabel{{ agendamento.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="cancelarModalLabel{{ agendamento.id }}">Cancelar Agendamento</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Informe a justificativa para o Cancelamento:</p>
+                            <form id="cancelarForm{{ agendamento.id }}" method="post" action="{% url 'cancelar_agendamento' agendamento.id %}">
+                              {% csrf_token %}
+                              {{ form.justificativa_cancelamento }}
+                              <textarea name="justificativa_cancelamento" class="form-control" rows="4" placeholder="Digite a justificativa aqui"></textarea>
+                              <button type="submit" class="btn btn-danger mt-3">Confirmar Cancelamento</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 
   <div class="d-flex justify-content-between">
     <a class="btn btn-primary" href="{% url 'home' %}">Voltar</a>

@@ -15,4 +15,14 @@
     color:#ffffff;
 }
 
+/* Estilo para as bordas da tabela */
+.table-bordered th,
+.table-bordered td {
+    border: 2px solid #d62121; /* Ajuste a cor conforme necessário */
+    box-shadow: 2px 2px 5px #888888; /* Adicione sombra conforme necessário */
+}
+
+.table-bordered thead th {
+    border-bottom-width: 3px;
+}
 
