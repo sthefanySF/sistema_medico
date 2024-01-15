@@ -1,12 +1,11 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView
-from consulta.forms import AdministrativoForm, AgendamentoForm, AgendamentoReagendarForm, JustificativaCancelamentoForm, PacienteForm, PesquisaAgendamentoForm, ProfissionaldasaudeForm
+from consulta.forms import AdministrativoForm, AgendamentoReagendarForm, JustificativaCancelamentoForm, PacienteForm, PesquisaAgendamentoForm, ProfissionaldasaudeForm
 
-from consulta.models import FilaEspera, Paciente, Administrativo
-from consulta.models import Agendamento, FilaEspera, Paciente, Profissionaldasaude
+from consulta.models import Paciente, Administrativo
+from consulta.models import Agendamento, Paciente, Profissionaldasaude
 from datetime import date
-from consulta.models import FilaEspera
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.contrib import messages
