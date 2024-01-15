@@ -119,15 +119,25 @@ class Agendamento(models.Model):
     
 
 class Atendimento(models.Model):
-    profissional_saude = models.ForeignKey('Profissionaldasaude', on_delete=models.CASCADE)
-    paciente = models.ForeignKey('Paciente', on_delete=models.CASCADE)
-    data_atendimento = models.DateTimeField(auto_now_add=True)
+    agendamento = models.OneToOneField('Agendamento', on_delete=models.CASCADE)
     anamnese = models.TextField()
     exame_fisico = models.TextField()
     exames_complementares = models.TextField()
     pdf_exames = models.FileField(upload_to='exames_pdfs/', null=True, blank=True)
     diagnostico = models.TextField()
     conduta = models.TextField()
+
+    @property
+    def profissional_saude(self):
+        return self.agendamento.profissional_saude
+
+    @property
+    def paciente(self):
+        return self.agendamento.paciente
+
+    @property
+    def data_atendimento(self):
+        return self.agendamento.data_agendamento
 
     def __str__(self):
         return f"Atendimento para {self.paciente.nome} em {self.data_atendimento}"

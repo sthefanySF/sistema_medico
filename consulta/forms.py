@@ -1,5 +1,5 @@
 from django import forms
-from .models import Paciente
+from .models import Atendimento, Paciente
 from .models import Administrativo
 from .models import Profissionaldasaude
 from .models import Agendamento, Paciente
@@ -110,3 +110,9 @@ class PesquisaAgendamentoForm(forms.Form):
 
 class JustificativaCancelamentoForm(forms.Form):
     justificativa = forms.CharField(widget=forms.Textarea(attrs={'rows': 4, 'placeholder': 'Digite a justificativa aqui'}))
+
+
+class AtendimentoForm(forms.ModelForm):
+    class Meta:
+        model = Atendimento
+        fields = ['anamnese', 'exame_fisico', 'exames_complementares', 'pdf_exames', 'diagnostico', 'conduta']

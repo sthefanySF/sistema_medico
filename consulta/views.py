@@ -1,9 +1,10 @@
+from audioop import reverse
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView
-from consulta.forms import AdministrativoForm, AgendamentoReagendarForm, JustificativaCancelamentoForm, PacienteForm, PesquisaAgendamentoForm, ProfissionaldasaudeForm
+from consulta.forms import AdministrativoForm, AgendamentoReagendarForm, AtendimentoForm, JustificativaCancelamentoForm, PacienteForm, PesquisaAgendamentoForm, ProfissionaldasaudeForm
 
-from consulta.models import Paciente, Administrativo
+from consulta.models import Atendimento, Paciente, Administrativo
 from consulta.models import Agendamento, Paciente, Profissionaldasaude
 from datetime import date
 from django.shortcuts import render
@@ -255,3 +256,30 @@ class AgendamentoCreate(CreateView):
     fields = ['paciente','profissional_saude','data_agendamento','prioridade_atendimento']
     template_name = 'consultas/forms_agendamento.html'
     success_url = reverse_lazy('agendamentoListagem')
+
+
+class AtendimentoCreate(CreateView):
+    model = Atendimento
+    form_class = AtendimentoForm
+    template_name = 'consultas/atendimento.html'
+
+    def form_valid(self, form):
+        # Antes de salvar o atendimento, obtenha o agendamento associado
+        agendamento_id = self.kwargs['agendamento_id']
+        agendamento = get_object_or_404(Agendamento, id=agendamento_id)
+        
+        # Associe o agendamento ao atendimento
+        form.instance.agendamento = agendamento
+
+        response = super().form_valid(form)
+        messages.success(self.request, 'Atendimento criado com sucesso!')
+        return response
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Erro ao criar o atendimento. Verifique os dados e tente novamente.')
+        return super().form_invalid(form)
+
+    def get_success_url(self):
+        # Após a criação do atendimento, redirecione para a tela de detalhes do agendamento
+        agendamento_id = self.kwargs['agendamento_id']
+        return reverse('agendamentoListagem', kwargs={'pk': agendamento_id})
