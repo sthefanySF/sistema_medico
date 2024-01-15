@@ -10,9 +10,6 @@ class CampoPaciente(admin.ModelAdmin):
 
 
 
-class CampoFilaEspera(admin.ModelAdmin):
-    search_fields = ['paciente']
-    
 class CampoAdministrativo(admin.ModelAdmin):
     search_fields = ['nome']
     list_display = ('nome', 'data_nascimento','email')
@@ -29,7 +26,6 @@ class CampoAgendamento(admin.ModelAdmin):
 
 
 admin.site.register(Paciente, CampoPaciente)
-admin.site.register(FilaEspera, CampoFilaEspera)
 admin.site.register(Administrativo, CampoAdministrativo)
 admin.site.register(Profissionaldasaude, CampoProfissionaldasaude)
 admin.site.register(Agendamento, CampoAgendamento)

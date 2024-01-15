@@ -18,7 +18,7 @@
 /* Estilo para as bordas arredondadas da tabela */
 .custom-table {
     border-collapse: separate;
-    border-spacing: 0 7px; /* Espaço entre as células */
+    border-spacing: 0 5px; /* Espaço entre as células */
 }
 
 .custom-table th,
@@ -42,7 +42,7 @@
     padding: 10px; /* Espaçamento interno */
     border: 2px solid #b8b0b0; /* Cor da borda */
     border-radius: 5px; /* Arredondamento das bordas */
-    box-shadow: 2px 2px 5px #888888; /* Sombra */
+    box-shadow: 2px 2px 5px #9b9b9b; /* Sombra */
     margin-bottom: 10px; /* Espaçamento abaixo do título */
 }
 

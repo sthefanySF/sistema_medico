@@ -17,7 +17,7 @@ class Paciente(models.Model):
     ]
 
     tipo_paciente = models.CharField(max_length=20, choices=TIPO_PACIENTE_CHOICES)
-    cargo_funcao = models.CharField(max_length=50, default='')
+    cargo_funcao = models.CharField(max_length=50, default='', blank=True, null=True,)
     cep = models.CharField(max_length=9)
     cidade = models.CharField(max_length=50)
     bairro = models.CharField(max_length=50, default='')
@@ -98,15 +98,7 @@ class Profissionaldasaude(models.Model):
         age = today.year - self.data_nascimento.year - ((today.month, today.day) < (self.data_nascimento.month, self.data_nascimento.day))
         return age 
     
-    
-class FilaEspera(models.Model):
-    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
-    data_chegada = models.DateTimeField(auto_now_add=True)
-    prioridade = models.BooleanField(default=False)
-    
-    def _str_(self):
-        return self.paciente.nome
-    
+
 
 class Agendamento(models.Model):
     status_atendimento = models.CharField(max_length=20, choices=[
@@ -124,3 +116,22 @@ class Agendamento(models.Model):
 
     def __str__(self):
         return f"Agendamento para {self.paciente.nome}"
+    
+
+class Atendimento(models.Model):
+    profissional_saude = models.ForeignKey('Profissionaldasaude', on_delete=models.CASCADE)
+    paciente = models.ForeignKey('Paciente', on_delete=models.CASCADE)
+    data_atendimento = models.DateTimeField(auto_now_add=True)
+    anamnese = models.TextField()
+    exame_fisico = models.TextField()
+    exames_complementares = models.TextField()
+    pdf_exames = models.FileField(upload_to='exames_pdfs/', null=True, blank=True)
+    diagnostico = models.TextField()
+    conduta = models.TextField()
+
+    def __str__(self):
+        return f"Atendimento para {self.paciente.nome} em {self.data_atendimento}"
+
+
+
+ 

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Atendimento{% endblock %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h2>Atendimento para {{ paciente.nome }}</h2>
+
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="pills-anamnese-tab" data-toggle="pill" href="#pills-anamnese" role="tab" aria-controls="pills-anamnese" aria-selected="true">Anamnese</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="pills-exames-tab" data-toggle="pill" href="#pills-exames" role="tab" aria-controls="pills-exames" aria-selected="false">Exames</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="pills-diagnostico-tab" data-toggle="pill" href="#pills-diagnostico" role="tab" aria-controls="pills-diagnostico" aria-selected="false">Diagnóstico</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="pills-conduta-tab" data-toggle="pill" href="#pills-conduta" role="tab" aria-controls="pills-conduta" aria-selected="false">Conduta</a>
+      </li>
+    </ul>
+
+    <div class="tab-content" id="pills-tabContent">
+      <div class="tab-pane fade show active" id="pills-anamnese" role="tabpanel" aria-labelledby="pills-anamnese-tab">
+        <form method="post">
+          {% csrf_token %}
+          {{ form.anamnese }}
+          <button type="submit" class="btn btn-success mt-3">Salvar Anamnese</button>
+        </form>
+      </div>
+
+      <div class="tab-pane fade" id="pills-exames" role="tabpanel" aria-labelledby="pills-exames-tab">
+        <form method="post">
+          {% csrf_token %}
+          {{ form.exame_fisico }}
+          {{ form.exames_complementares }}
+          {{ form.pdf_exames }}
+          <button type="submit" class="btn btn-success mt-3">Salvar Exames</button>
+        </form>
+      </div>
+
+      <div class="tab-pane fade" id="pills-diagnostico" role="tabpanel" aria-labelledby="pills-diagnostico-tab">
+        <form method="post">
+          {% csrf_token %}
+          {{ form.diagnostico }}
+          <button type="submit" class="btn btn-success mt-3">Salvar Diagnóstico</button>
+        </form>
+      </div>
+
+      <div class="tab-pane fade" id="pills-conduta" role="tabpanel" aria-labelledby="pills-conduta-tab">
+        <form method="post">
+          {% csrf_token %}
+          {{ form.conduta }}
+          <button type="submit" class="btn btn-success mt-3">Salvar Conduta</button>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
