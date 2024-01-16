@@ -101,16 +101,20 @@ class Profissionaldasaude(models.Model):
 
 
 class Agendamento(models.Model):
+    TURNO_CHOICES = [
+        ('manha', 'Manhã'),
+        ('tarde', 'Tarde'),
+    ]
+
     status_atendimento = models.CharField(max_length=20, choices=[
         ('confirmado', 'Confirmado'),
         ('ausente', 'Ausente'),
         ('pendente', 'Pendente'),
     ], default='pendente')
-    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE) #contem referncia do objeto Paciente
-    #on_delete=models.CASCADE: Isso especifica o que acontecerá quando o objeto referenciado (Paciente) for excluído. 
-    #Neste caso, CASCADE significa que, se um objeto Paciente for excluído, todos os objetos que têm uma referência a ele no campo paciente também serão excluídos.
-    profissional_saude = models.ForeignKey(Profissionaldasaude, on_delete=models.CASCADE)  #contem referncia do objeto Profissionaldasaude
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
+    profissional_saude = models.ForeignKey(Profissionaldasaude, on_delete=models.CASCADE)
     data_agendamento = models.DateTimeField()
+    turno = models.CharField(max_length=10, choices=TURNO_CHOICES)
     prioridade_atendimento = models.BooleanField(default=False)
     justificativa_cancelamento = models.TextField(blank=True, null=True)
 
