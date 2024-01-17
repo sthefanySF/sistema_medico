@@ -40,7 +40,7 @@ urlpatterns = [
     path('agendamentos/<int:pk>/ausente/', agendamento_ausente, name='agendamentoAusente'),
     path('reagendar/agendamento/<int:pk>/', views.reagendar_agendamento, name='reagendarAgendamento'),
     path('cancelar_agendamento/<int:agendamento_id>/', cancelar_agendamento, name='cancelar_agendamento'),
-    path('atendimento/criar/', AtendimentoCreate.as_view(), name='criar_atendimento'),
+    path('atendimento/criar/<int:agendamento_id>', AtendimentoCreate.as_view(), name='criar_atendimento'),
 
     # path('cancelar/agendamento/<int:pk>/', views.cancelar_agendamento, name='cancelarAgendamento'),
     path('', views.home, name='home'),

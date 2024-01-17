@@ -76,7 +76,7 @@
                 <button type="button" class="btn btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#cancelarModal{{ agendamento.id }}" onclick="confirmarCancelamento('{{ agendamento.id }}')">
                   Cancelar
                 </button>
-                <a href="{% url 'criar_atendimento' %}" class="btn btn-success ms-1">Atender</a>
+                <a href="{% url 'criar_atendimento' agendamento.id %}" class="btn btn-success ms-1">Atender</a>
 
 
               </div>
