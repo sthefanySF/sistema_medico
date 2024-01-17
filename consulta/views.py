@@ -2,7 +2,7 @@ from audioop import reverse
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView
-from consulta.forms import AdministrativoForm, AgendamentoReagendarForm, AtendimentoForm, JustificativaCancelamentoForm, PacienteForm, PesquisaAgendamentoForm, ProfissionaldasaudeForm
+from consulta.forms import AdministrativoForm, AgendamentoForm, AgendamentoReagendarForm, AtendimentoForm, JustificativaCancelamentoForm, PacienteForm, PesquisaAgendamentoForm, ProfissionaldasaudeForm
 
 from consulta.models import Atendimento, Paciente, Administrativo
 from consulta.models import Agendamento, Paciente, Profissionaldasaude
@@ -253,9 +253,24 @@ class ProfissionaldasaudeCreate(CreateView):
 
 class AgendamentoCreate(CreateView):
     model = Agendamento
-    fields = ['paciente','profissional_saude','data_agendamento','prioridade_atendimento']
+    form_class = AgendamentoForm
     template_name = 'consultas/forms_agendamento.html'
     success_url = reverse_lazy('agendamentoListagem')
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Agendamento realizado com sucesso!')
+        print("Agendamento realizado com sucesso!")
+        return response
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Erro ao realizar o agendamento. Verifique os dados e tente novamente.')
+        print("Erro ao realizar o agendamento.")
+        print(form.errors)  
+        return super().form_invalid(form)
+
+
+
 
 
 class AtendimentoCreate(CreateView):

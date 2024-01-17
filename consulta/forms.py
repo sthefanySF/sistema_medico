@@ -69,11 +69,10 @@ class ProfissionaldasaudeForm(forms.ModelForm):
             'sexo': forms.RadioSelect(choices=[('M', 'Masculino'), ('F', 'Feminino')]),
         }
 
-
 class AgendamentoForm(forms.ModelForm):
     class Meta:
         model = Agendamento
-        fields = ['paciente', 'profissional_saude', 'data_agendamento', 'prioridade_atendimento', 'status_atendimento']
+        exclude = ['id']  # Exclui o campo 'id' do formulário
 
         labels = {
             'data_agendamento': 'Data do Agendamento',
@@ -84,9 +83,12 @@ class AgendamentoForm(forms.ModelForm):
             'paciente': forms.Select(attrs={'class': 'form-control'}),
             'profissional_saude': forms.Select(attrs={'class': 'form-control'}),
             'data_agendamento': forms.DateTimeInput(attrs={'class': 'form-control'}),
+            'turno': forms.Select(attrs={'class': 'form-control'}),  # Adicione esta linha
             'prioridade_atendimento': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-
+            'status_atendimento': forms.HiddenInput(attrs={'value': 'pendente'}),  # Defina o valor padrão aqui
         }
+
+
 
 class AgendamentoReagendarForm(forms.ModelForm):
     class Meta:
