@@ -8,86 +8,85 @@
       <h4>Atendimento</h4>
     </div>
     
-    <dl class="row">
-      <dt class="col-sm-3">Nome do paciente:</dt>
-      <dd class="col-sm-9">{{ agendamento.paciente.nome }}</dd>
+    <dl class="row border p-3 align-items-start">
+      <dt class="col-sm-3 border-bottom">Nome do paciente:</dt>
+      <dd class="col-sm-9 border-bottom">{{ agendamento.paciente.nome }}</dd>
       
-      <dt class="col-sm-3">Tipo de paciente:</dt>
-      <dd class="col-sm-9">{{ agendamento.paciente.tipo_paciente }}</dd>
+      <dt class="col-sm-3 border-bottom">Tipo de paciente:</dt>
+      <dd class="col-sm-9 border-bottom">{{ agendamento.paciente.tipo_paciente }}</dd>
       
-      <dt class="col-sm-3">Data do Agendamento:</dt>
-      <dd class="col-sm-9">{{ agendamento.data_agendamento|date:"d/m/Y H:i" }}</dd>
+      <dt class="col-sm-3 border-bottom">Data do Agendamento:</dt>
+      <dd class="col-sm-9 border-bottom">{{ agendamento.data_agendamento|date:"d/m/Y" }}</dd>
       
-      <dt class="col-sm-3">Prioridade de Atendimento:</dt>
-      <dd class="col-sm-9">
-        {% if agendamento.prioridade_atendimento %}
-          Sim
-        {% else %}
-          Não
-        {% endif %}
+      <dt class="col-sm-3 border-bottom">Prioridade de Atendimento:</dt>
+      <dd class="col-sm-9 border-bottom">
+          {% if agendamento.prioridade_atendimento %}
+              Sim
+          {% else %}
+              Não
+          {% endif %}
       </dd>
+  
+      <dt class="col-sm-3 border-bottom">Turno:</dt>
+      <dd class="col-sm-9 border-bottom">
+          {% if agendamento.turno == 'manha' %}
+              Manhã
+          {% elif agendamento.turno == 'tarde' %}
+              Tarde
+          {% else %}
+              <!-- Adicione um caso padrão se necessário -->
+              {{ agendamento.turno }}
+          {% endif %}
+      </dd>
+  </dl>
+  
+    </div>
+
+
+    <nav class="nav nav-pills flex-column flex-sm-row">
+      <a class="flex-sm-fill text-sm-center nav-link active" href="#" id="link-anamnese">Anamnese</a>
+      <a class="flex-sm-fill text-sm-center nav-link" href="#" id="link-exames">Exames</a>
+      <ul class="nav flex-column ml-3">
+        <li class="nav-item">
+          <a class="nav-link" href="#" id="link-exame-fisico-sub">Exame Físico</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" id="link-exames-complementares">Exames Complementares</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" id="link-pdf-exames">PDF Exames</a>
+        </li>
+      </ul>
+      <a class="flex-sm-fill text-sm-center nav-link" href="#" id="link-diagnostico">Diagnóstico</a>
+      <a class="flex-sm-fill text-sm-center nav-link" href="#" id="link-conduta">Conduta</a>
     
-      <dt class="col-sm-3">Turno:</dt>
-      <dd class="col-sm-9">{{ agendamento.turno }}</dd>
-    </dl>
-
-    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-      <li class="nav-item">
-        <a class="nav-link active" id="pills-anamnese-tab" data-toggle="pill" href="#pills-anamnese" role="tab" aria-controls="pills-anamnese" aria-selected="true">Anamnese</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" id="pills-exames-tab" data-toggle="pill" href="#pills-exames" role="tab" aria-controls="pills-exames" aria-selected="false">Exames</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" id="pills-diagnostico-tab" data-toggle="pill" href="#pills-diagnostico" role="tab" aria-controls="pills-diagnostico" aria-selected="false">Diagnóstico</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" id="pills-conduta-tab" data-toggle="pill" href="#pills-conduta" role="tab" aria-controls="pills-conduta" aria-selected="false">Conduta</a>
-      </li>
-    </ul>
-
-    <div class="tab-content" id="pills-tabContent">
-      <div class="tab-pane fade show active" id="pills-anamnese" role="tabpanel" aria-labelledby="pills-anamnese-tab">
-        <form method="post">
-          {% csrf_token %}
+    </nav>
+    
+    <div class="container mt-3">
+      <form method="post" id="form-atendimento">
+        {% csrf_token %}
+        <!-- Adicione campos de preenchimento para cada seção -->
+        <div id="campo-anamnese">
           {{ form.anamnese }}
-          <button type="submit" class="btn btn-success mt-3">Salvar Anamnese</button>
-        </form>
-      </div>
-
-      <div class="tab-pane fade" id="pills-exames" role="tabpanel" aria-labelledby="pills-exames-tab">
-        <form method="post">
-          {% csrf_token %}
+        </div>
+        <div id="campo-exame-fisico" style="display: none;">
           {{ form.exame_fisico }}
+        </div>
+        <div id="campo-exames" style="display: none;">
           {{ form.exames_complementares }}
           {{ form.pdf_exames }}
-          <button type="submit" class="btn btn-success mt-3">Salvar Exames</button>
-        </form>
-      </div>
-
-      <div class="tab-pane fade" id="pills-diagnostico" role="tabpanel" aria-labelledby="pills-diagnostico-tab">
-        <form method="post">
-          {% csrf_token %}
+        </div>
+        <div id="campo-diagnostico" style="display: none;">
           {{ form.diagnostico }}
-          <button type="submit" class="btn btn-success mt-3">Salvar Diagnóstico</button>
-        </form>
-      </div>
-
-      <div class="tab-pane fade" id="pills-conduta" role="tabpanel" aria-labelledby="pills-conduta-tab">
-        <form method="post">
-          {% csrf_token %}
+        </div>
+        <div id="campo-conduta" style="display: none;">
           {{ form.conduta }}
-          <button type="submit" class="btn btn-success mt-3">Salvar Conduta</button>
-        </form>
-      </div>
-
-      <div class="tab-pane fade" id="pills-finalizar" role="tabpanel" aria-labelledby="pills-finalizar-tab">
-        <form method="post">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-primary mt-3">Finalizar Atendimento</button>
-        </form>
-      </div>
-
+        </div>
+        <!-- Adicione outros campos conforme necessário -->
+        
+        <button type="button" class="btn btn-primary mt-3" onclick="salvarFormulario()">Finalizar Atendimento</button>
+      </form>
     </div>
-  </div>
+   
+    
 {% endblock %}

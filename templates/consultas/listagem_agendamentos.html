@@ -56,7 +56,14 @@
                 <i class="fas fa-circle text-danger">Não</i>
               {% endif %}
             </td>
-            <td>{{ agendamento.turno }}</td>
+            <td> {% if agendamento.turno == 'manha' %}
+                Manhã
+            {% elif agendamento.turno == 'tarde' %}
+                Tarde
+            {% else %}
+                {{ agendamento.turno }}
+            {% endif %}
+          </td>
             <td>
               {% if agendamento.status_atendimento == 'pendente' %}
                 <div class="btn-group" role="group" aria-label="Status">
