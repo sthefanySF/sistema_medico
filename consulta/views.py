@@ -278,6 +278,14 @@ class AtendimentoCreate(CreateView):
     form_class = AtendimentoForm
     template_name = 'consultas/atendimento.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Recupere o agendamento associado ao atendimento
+        agendamento_id = self.kwargs['agendamento_id']
+        agendamento = get_object_or_404(Agendamento, id=agendamento_id)
+        context['agendamento'] = agendamento
+        return context
+
     def form_valid(self, form):
         # Antes de salvar o atendimento, obtenha o agendamento associado
         agendamento_id = self.kwargs['agendamento_id']
@@ -289,12 +297,3 @@ class AtendimentoCreate(CreateView):
         response = super().form_valid(form)
         messages.success(self.request, 'Atendimento criado com sucesso!')
         return response
-
-    def form_invalid(self, form):
-        messages.error(self.request, 'Erro ao criar o atendimento. Verifique os dados e tente novamente.')
-        return super().form_invalid(form)
-
-    def get_success_url(self):
-        # Após a criação do atendimento, redirecione para a tela de detalhes do agendamento
-        agendamento_id = self.kwargs['agendamento_id']
-        return reverse('agendamentoListagem', kwargs={'pk': agendamento_id})
