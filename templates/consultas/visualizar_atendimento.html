@@ -17,8 +17,30 @@
       
       <dt class="col-sm-3 border-bottom">Data do Agendamento:</dt>
       <dd class="col-sm-9 border-bottom">{{ atendimento.agendamento.data_agendamento|date:"d/m/Y" }}</dd>
-      
+
+      <dt class="col-sm-3 border-bottom">Anamnese:</dt>
+    <dd class="col-sm-9 border-bottom">{{ atendimento.anamnese }}</dd>
+
+    <dt class="col-sm-3 border-bottom">Exames Físicos:</dt>
+    <dd class="col-sm-9 border-bottom">{{ atendimento.exame_fisico }}</dd>
+
+    <dt class="col-sm-3 border-bottom">Exames Complementares:</dt>
+    <dd class="col-sm-9 border-bottom">{{ atendimento.exames_complementares }}</dd>
+
+    <dt class="col-sm-3 border-bottom">pdf exames:</dt>
+    <dd class="col-sm-9 border-bottom">{{ atendimento.pdf_exames }}</dd>
+
+    <dt class="col-sm-3 border-bottom">Diagnostico:</dt>
+    <dd class="col-sm-9 border-bottom">{{ atendimento.diagnostico }}</dd>
+
+    <dt class="col-sm-3 border-bottom">Conduta:</dt>
+    <dd class="col-sm-9 border-bottom">{{ atendimento.conduta }}</dd>
+    
  
     </dl>
+
+    <div class="text-center mt-3">
+        <a href="{% url 'listaAtendimentos' %}" class="btn btn-primary">Voltar para Lista de Atendimentos</a>
+      </div>
   </div>
 {% endblock %}
