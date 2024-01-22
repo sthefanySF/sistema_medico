@@ -58,3 +58,23 @@
 }
 
 
+/* Estilo para labels acima dos campos */
+.label-title {
+    display: block;
+    margin-bottom: 5px;
+    text-align: center; /* Centraliza o texto */
+    font-weight: bold;
+}
+
+/* Estilo para labels dos campos do formulário */
+.label-form {
+    display: block;
+    margin-bottom: 3px;
+    text-align: center; /* Centraliza o texto */
+}
+
+/* Efeito de hover nas labels dos campos do formulário */
+.row .col-md-4:hover .label-form {
+    background-color: #c0c0c0; /* Altere a cor conforme necessário */
+    cursor: pointer; /* Muda o cursor para indicar que é clicável */
+}
