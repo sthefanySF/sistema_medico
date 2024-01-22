@@ -39,54 +39,44 @@
           {% endif %}
       </dd>
   </dl>
-  
-    </div>
-
-
-    <nav class="nav nav-pills flex-column flex-sm-row">
-      <a class="flex-sm-fill text-sm-center nav-link active" href="#" id="link-anamnese">Anamnese</a>
-      <a class="flex-sm-fill text-sm-center nav-link" href="#" id="link-exames">Exames</a>
-      <ul class="nav flex-column ml-3">
-        <li class="nav-item">
-          <a class="nav-link" href="#" id="link-exame-fisico-sub">Exame Físico</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#" id="link-exames-complementares">Exames Complementares</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#" id="link-pdf-exames">PDF Exames</a>
-        </li>
-      </ul>
-      <a class="flex-sm-fill text-sm-center nav-link" href="#" id="link-diagnostico">Diagnóstico</a>
-      <a class="flex-sm-fill text-sm-center nav-link" href="#" id="link-conduta">Conduta</a>
+</div>
+<div class="container mt-3">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
     
-    </nav>
-    
-    <div class="container mt-3">
-      <form method="post" id="form-atendimento">
-        {% csrf_token %}
-        <!-- Adicione campos de preenchimento para cada seção -->
-        <div id="campo-anamnese">
-          {{ form.anamnese }}
-        </div>
-        <div id="campo-exame-fisico" style="display: none;">
-          {{ form.exame_fisico }}
-        </div>
-        <div id="campo-exames" style="display: none;">
-          {{ form.exames_complementares }}
-          {{ form.pdf_exames }}
-        </div>
-        <div id="campo-diagnostico" style="display: none;">
-          {{ form.diagnostico }}
-        </div>
-        <div id="campo-conduta" style="display: none;">
-          {{ form.conduta }}
-        </div>
-        <!-- Adicione outros campos conforme necessário -->
-        
-        <button type="button" class="btn btn-primary mt-3" onclick="salvarFormulario()">Finalizar Atendimento</button>
-      </form>
+    <div class="mb-3">
+      <label for="{{ form.anamnese.id_for_label }}" class="form-label">Anamnese</label>
+      {{ form.anamnese }}
     </div>
+    
+    <div class="mb-3">
+      <label for="{{ form.exame_fisico.id_for_label }}" class="form-label">Exame Físico</label>
+      {{ form.exame_fisico }}
+    </div>
+    
+    <div class="mb-3">
+      <label for="{{ form.exames_complementares.id_for_label }}" class="form-label">Exames Complementares</label>
+      {{ form.exames_complementares }}
+    </div>
+    
+    <div class="mb-3">
+      <label for="{{ form.pdf_exames.id_for_label }}" class="form-label">PDF Exames</label>
+      {{ form.pdf_exames }}
+    </div>
+    
+    <div class="mb-3">
+      <label for="{{ form.diagnostico.id_for_label }}" class="form-label">Diagnóstico</label>
+      {{ form.diagnostico }}
+    </div>
+    
+    <div class="mb-3">
+      <label for="{{ form.conduta.id_for_label }}" class="form-label">Conduta</label>
+      {{ form.conduta }}
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Salvar Atendimento</button>
+  </form>
+</div>
+</div>
    
-    
-{% endblock %}
+    {% endblock %}

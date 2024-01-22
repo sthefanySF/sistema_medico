@@ -297,3 +297,8 @@ class AtendimentoCreate(CreateView):
         response = super().form_valid(form)
         messages.success(self.request, 'Atendimento criado com sucesso!')
         return response
+    
+    def get_success_url(self):
+        # Redireciona para a página de detalhes do agendamento após a criação do atendimento
+        agendamento_id = self.kwargs['agendamento_id']
+        return reverse_lazy('criar_atendimento', kwargs={'agendamento_id': agendamento_id})
