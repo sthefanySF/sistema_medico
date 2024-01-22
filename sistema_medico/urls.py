@@ -41,6 +41,9 @@ urlpatterns = [
     path('reagendar/agendamento/<int:pk>/', views.reagendar_agendamento, name='reagendarAgendamento'),
     path('cancelar_agendamento/<int:agendamento_id>/', cancelar_agendamento, name='cancelar_agendamento'),
     path('atendimento/criar/<int:agendamento_id>', AtendimentoCreate.as_view(), name='criar_atendimento'),
+    path('atendimentos/', lista_atendimentos, name='listaAtendimentos'),
+    # path('atendimentos/<int:atendimento_id>/', visualizar_atendimento, name='visualizarAtendimento'),
+   
 
     # path('cancelar/agendamento/<int:pk>/', views.cancelar_agendamento, name='cancelarAgendamento'),
     path('', views.home, name='home'),

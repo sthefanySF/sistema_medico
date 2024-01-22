@@ -182,7 +182,16 @@ def cancelar_agendamento(request, agendamento_id):
     else:
         form = JustificativaCancelamentoForm()
 
-    return render(request, 'consulta/cancelar_agendamento.html', {'form': form, 'agendamento': agendamento})
+    return render(request, 'consultas/cancelar_agendamento.html', {'form': form, 'agendamento': agendamento})
+
+
+# def visualizar_atendimento(request, atendimento_id):
+#     atendimento = get_object_or_404(Atendimento, id=atendimento_id)
+#     return render(request, 'visualizar_atendimento.html', {'atendimento': atendimento})
+
+def lista_atendimentos(request):
+    atendimentos = Atendimento.objects.all()
+    return render(request, 'consultas/lista_atendimentos.html')
 
 
 class PacienteCreate(CreateView):

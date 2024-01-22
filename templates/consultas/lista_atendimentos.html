@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Lista de Atendimentos{% endblock %}
+
+{% block content %}
+  <div class="container mt-5">
+    <div class="text-center mb-4 custom-title">
+      <h4>Lista de Atendimentos</h4>
+    </div>
+
+    <ul class="list-group">
+      {% for atendimento in atendimentos %}
+        <li class="list-group-item">
+          <a href="{% url 'visualizarAtendimento' atendimento.id %}">{{ atendimento.agendamento.paciente.nome }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}
