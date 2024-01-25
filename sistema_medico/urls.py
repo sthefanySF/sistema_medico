@@ -43,7 +43,7 @@ urlpatterns = [
     path('atendimento/criar/<int:agendamento_id>', AtendimentoCreate.as_view(), name='criar_atendimento'),
     path('atendimentos/', lista_atendimentos, name='listaAtendimentos'),
     path('atendimentos/<int:atendimento_id>/', visualizar_atendimento, name='visualizarAtendimento'),
-   
+    path('login/', user_login, name='login'),
 
     # path('cancelar/agendamento/<int:pk>/', views.cancelar_agendamento, name='cancelarAgendamento'),
     path('', views.home, name='home'),

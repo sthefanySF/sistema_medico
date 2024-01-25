@@ -1,4 +1,6 @@
 from audioop import reverse
+from imaplib import _Authenticator
+from multiprocessing import AuthenticationError
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView
@@ -12,6 +14,9 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
 
 
 
@@ -193,6 +198,19 @@ def lista_atendimentos(request):
     atendimentos = Atendimento.objects.all()
     return render(request, 'consultas/lista_atendimentos.html', {'atendimentos': atendimentos})
 
+def user_login(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user:
+                login(request, user)
+                return redirect('home')  
+    else:
+        form = AuthenticationForm()
+    return render(request, 'consultas/login.html', {'form': form})
 
 class PacienteCreate(CreateView):
     model = Paciente
