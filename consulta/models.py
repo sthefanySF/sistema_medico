@@ -1,5 +1,7 @@
 from django.db import models
 from datetime import date
+from django.contrib.auth.models import User
+from django.forms import ValidationError
 
 
 class Paciente(models.Model):
@@ -38,12 +40,21 @@ class Paciente(models.Model):
         age = today.year - self.data_nascimento.year - ((today.month, today.day) < (self.data_nascimento.month, self.data_nascimento.day))
         return age 
 
+def validate_unique_cpf(value):
+    if Administrativo.objects.filter(cpf=value).exists():
+        raise ValidationError('CPF já cadastrado.')
+
+def validate_unique_email(value):
+    if Administrativo.objects.filter(email=value).exists():
+        raise ValidationError('Email já cadastrado.')
+
 class Administrativo(models.Model):
+    usuario = models.OneToOneField(User, on_delete=models.SET_NULL, blank=True, null=True)
     nome = models.CharField(max_length=100)
     data_nascimento = models.DateField()
-    email = models.EmailField()
+    email = models.EmailField(validators=[validate_unique_email])
     rg = models.CharField(max_length=20)
-    cpf = models.CharField(max_length=14)
+    cpf = models.CharField(max_length=14, validators=[validate_unique_cpf])
     sexo = models.CharField(max_length=1, choices=[('M', 'Masculino'), ('F', 'Feminino')])
     cargo_funcao = models.CharField(max_length=50, default='')
     cep = models.CharField(max_length=9)
@@ -60,6 +71,7 @@ class Administrativo(models.Model):
     def __str__(self):
         return self.nome
     
+    
     def idade(self):
         today = date.today()
         age = today.year - self.data_nascimento.year - ((today.month, today.day) < (self.data_nascimento.month, self.data_nascimento.day))
@@ -67,6 +79,7 @@ class Administrativo(models.Model):
     
     
 class Profissionaldasaude(models.Model):
+    usuario = models.ForeignKey(User,models.SET_NULL,blank=True,null=True,)
     nome = models.CharField(max_length=100)
     data_nascimento = models.DateField()
     email = models.EmailField()

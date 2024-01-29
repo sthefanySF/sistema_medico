@@ -17,6 +17,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 
 
 
@@ -240,20 +242,24 @@ class AdministrativoCreate(CreateView):
     template_name = 'consultas/cadastro_administrativo.html'
     success_url = reverse_lazy('administrativoListagem')
     
-    
-    
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, 'Administrativo cadastrado com sucesso!')
-        print("Administrativo cadastrado com sucesso!")
+        
+        #usuário com base nos dados do formulário
+        username = form.cleaned_data['cpf']  
+        email = form.cleaned_data['email']
+        password = User.objects.make_random_password()  # Gera uma senha aleatória
+        #usuário associado ao Administrativo
+        usuario = User.objects.create_user(username=username, email=email, password=password)
+        #Associa o usuário criado ao campo 'usuario' do modelo Administrativo
+        self.object.usuario = usuario
+        #Armazena a senha no objeto Administrativo
+        self.object.senha_gerada = password
+        usuario.save()
+        self.object.save()
+        messages.success(self.request, 'Administrativo cadastrado com sucesso! Um email foi enviado para definir a senha.')
+        
         return response
-
-    def form_invalid(self, form):
-        messages.error(self.request, 'Erro ao cadastrar o administrativo. Verifique os dados e tente novamente.')
-        print("Erro ao cadastrar o administrativo.")
-        print(form.errors)  
-        return super().form_invalid(form)
-    
 
     
 class ProfissionaldasaudeCreate(CreateView):
