@@ -295,18 +295,14 @@ class AgendamentoCreate(CreateView):
     def form_valid(self, form):
         response = super().form_valid(form)
 
-        # Gera o PDF e adiciona ao response
-        pdf_file = self.generate_pdf(self.object)
-        response = HttpResponse(pdf_file.read(), content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename=Comprovante_Agendamento_{self.object.id}.pdf'
-
-        return response
+        # Redireciona para a tela de confirmação
+        return redirect('confirmAgendamento', pk=self.object.pk)
 
     def form_invalid(self, form):
         messages.error(self.request, 'Erro ao realizar o agendamento. Verifique os dados e tente novamente.')
         print("Erro ao realizar o agendamento.")
         print(form.errors)  
-        return super().form_invalid(form)
+        return redirect('confirmAgendamento', pk=self.object.pk)
 
     def generate_pdf(self, agendamento):
         html_content = render_to_string('consultas/comprovantePdf_agendamento.html', {'agendamento': agendamento})
@@ -319,7 +315,25 @@ class AgendamentoCreate(CreateView):
 
         pdf_file.seek(0)
         return pdf_file
+    
+def confirm_agendamento(request, pk):
+    agendamento = get_object_or_404(Agendamento, pk=pk)
+    return render(request, 'consultas/confirm_agendamento.html', {'agendamento': agendamento})
 
+def download_comprovante(request, pk):
+    agendamento = get_object_or_404(Agendamento, pk=pk)
+
+    html_content = render_to_string('consultas/comprovantePdf_agendamento.html', {'agendamento': agendamento})
+
+    pdf_file = io.BytesIO()
+    pisa.CreatePDF(html_content, dest=pdf_file)
+
+    pdf_file.seek(0)
+
+    response = HttpResponse(pdf_file.read(), content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename=Comprovante_Agendamento_{agendamento.id}.pdf'
+
+    return response
 
 class AtendimentoCreate(CreateView):
     model = Atendimento
