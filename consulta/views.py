@@ -1,7 +1,7 @@
 from audioop import reverse
 from imaplib import _Authenticator
 from multiprocessing import AuthenticationError
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView
 from consulta.forms import AdministrativoForm, AgendamentoForm, AgendamentoReagendarForm, AtendimentoForm, JustificativaCancelamentoForm, PacienteForm, PesquisaAgendamentoForm, ProfissionaldasaudeForm
@@ -20,7 +20,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 
-
+from django.template.loader import render_to_string
+from xhtml2pdf import pisa
+import io
 
 
 
@@ -292,8 +294,12 @@ class AgendamentoCreate(CreateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, 'Agendamento realizado com sucesso!')
-        print("Agendamento realizado com sucesso!")
+
+        # Gera o PDF e adiciona ao response
+        pdf_file = self.generate_pdf(self.object)
+        response = HttpResponse(pdf_file.read(), content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename=Comprovante_Agendamento_{self.object.id}.pdf'
+
         return response
 
     def form_invalid(self, form):
@@ -302,8 +308,17 @@ class AgendamentoCreate(CreateView):
         print(form.errors)  
         return super().form_invalid(form)
 
+    def generate_pdf(self, agendamento):
+        html_content = render_to_string('consultas/comprovantePdf_agendamento.html', {'agendamento': agendamento})
 
+        pdf_file = io.BytesIO()
+        pisa_status = pisa.CreatePDF(html_content, dest=pdf_file)
 
+        if pisa_status.err:
+            raise Exception("Erro ao gerar PDF.")
+
+        pdf_file.seek(0)
+        return pdf_file
 
 
 class AtendimentoCreate(CreateView):
