@@ -4,23 +4,27 @@
 {% block title %}Confirmação de Agendamento{% endblock %}
 
 {% block content %}
-    <h1>Confirmação de Agendamento</h1>
-    <p><strong>Paciente:</strong> {{ agendamento.paciente.nome }}</p>
-    <p><strong>Profissional de Saúde:</strong> {{ agendamento.profissional_saude.nome }}</p>
-    <p><strong>Data do Agendamento:</strong> {{ agendamento.data_agendamento|date:"d/m/Y" }}</p>
-    <p><strong>Turno:</strong> {{ agendamento.get_turno_display }}</p>
-    <p><strong>Prioridade de Atendimento:</strong>
-        {% if agendamento.prioridade_atendimento %}
-            Sim
-        {% else %}
-            Não
-        {% endif %}
-    </p>
-    <div class="d-flex">
-        <form method="post" action="{% url 'downloadComprovante' pk=agendamento.pk %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-primary me-2">Baixar Comprovante</button>
-        </form>
-        <a class="btn btn-primary" href="{% url 'agendamentoCreate' %}">Voltar para Agendamento</a>
+    <div class="container mt-4">
+        <h2 class="text-center mb-4 custom-title">Confirmação de Agendamento</h2>
+        <div class="card p-4">
+            <p><strong>Paciente:</strong> {{ agendamento.paciente.nome }}</p>
+            <p><strong>Profissional de Saúde:</strong> {{ agendamento.profissional_saude.nome }}</p>
+            <p><strong>Data do Agendamento:</strong> {{ agendamento.data_agendamento|date:"d/m/Y" }}</p>
+            <p><strong>Turno:</strong> {{ agendamento.get_turno_display }}</p>
+            <p><strong>Prioridade de Atendimento:</strong>
+                {% if agendamento.prioridade_atendimento %}
+                    Sim
+                {% else %}
+                    Não
+                {% endif %}
+            </p>
+            <div class="d-flex justify-content-between mt-3">
+                <form method="post" action="{% url 'downloadComprovante' pk=agendamento.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Baixar Comprovante</button>
+                </form>
+                <a class="btn btn-primary" href="{% url 'agendamentoCreate' %}">Voltar para Agendamento</a>
+            </div>
+        </div>
     </div>
 {% endblock %}
