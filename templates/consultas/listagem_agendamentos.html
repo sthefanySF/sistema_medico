@@ -78,15 +78,27 @@
                 <span class="text-success">Concluído</span>
               {% endif %}
             </td>
+
             <!-- Coluna de Ação -->
             <td>
               <div class="btn-group" role="group" aria-label="Ações">
-                <a href="{% url 'reagendarAgendamento' agendamento.id %}" class="btn btn-primary">Reagendar</a>
-                <button type="button" class="btn btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#cancelarModal{{ agendamento.id }}" onclick="confirmarCancelamento('{{ agendamento.id }}')">
-                  Cancelar
-                </button>
-                <a href="{% url 'criar_atendimento' agendamento.id %}" class="btn btn-success ms-1">Atender</a>
+                <a href="{% url 'reagendarAgendamento' agendamento.id %}" class="btn btn-primary">
+                    Reagendar
+                </a>
 
+                <button type="button" class="btn btn-danger ms-1" data-bs-toggle="modal"
+                        data-bs-target="#cancelarModal{{ agendamento.id }}"
+                        onclick="confirmarCancelamento('{{ agendamento.id }}')">
+                    Cancelar
+                </button>
+
+                <a href="{% url 'criar_atendimento' agendamento.id %}" class="btn btn-success ms-1">
+                    Atender <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                </a>
+
+                <a href="{% url 'confirmAgendamento' agendamento.id %}" class="btn btn-info ms-1">
+                  Visualizar <i class="fa fa-eye" aria-hidden="true"></i>
+                </a>
 
               </div>
               <!-- Modal de Cancelamento -->
