@@ -3,7 +3,8 @@
 {% block title %}Reagendar Agendamento{% endblock %}
 
 {% block content %}
-  <h4>Reagendar Agendamento</h4>
+  
+    <h4>Reagendar Agendamento</h4>
   <form action="{% url 'reagendarAgendamento' agendamento.id %}" method="POST" class="needs-validation border p-3" novalidate>
     {% csrf_token %}
 
