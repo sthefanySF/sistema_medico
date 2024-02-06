@@ -11,21 +11,37 @@
     <h4>Lista de Agendamentos Gerais</h4>
   </div>
 
-  <div class="mb-4">
-    <form method="get" class="mx-auto" style="max-width: 600px;">
-      <div class="row">
-        <div class="col">
-          {{ form.cpf }}
-        </div>
-        <div class="col">
-          {{ form.data_agendamento }}
-        </div>
-        <div class="col">
-          <button type="submit" class="btn btn-primary">Pesquisar</button>
-        </div>
-      </div>
-    </form>
-  </div>
+
+    {#  Botões  #}
+    <div class="d-flex justify-content-between">
+        <a class="btn btn-danger" href="{% url 'home' %}" style="margin-bottom: 3px">
+            Voltar
+        </a>
+        <a class="btn btn-primary" href="{% url 'agendamentoCreate' %}" style="margin-bottom: 3px">
+            Agendar
+        </a>
+    </div>
+
+
+    <div class="mb-4">
+        <form method="get" class="mx-auto" style="max-width: 600px;">
+            <div class="row">
+
+                <div class="col" style="margin-bottom: 3px">
+                    {{ form.cpf }}
+                </div>
+
+                <div class="col" style="margin-bottom: 3px">
+                    {{ form.data_agendamento }}
+                </div>
+
+                <div class="col">
+                    <button type="submit" class="btn btn-primary">Pesquisar</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
 
 
   <div class="table-responsive">
