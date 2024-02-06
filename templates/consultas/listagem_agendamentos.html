@@ -7,6 +7,9 @@
 
 
 {% block content %}
+
+{#    {% if messages %}{% include 'messages.html' %}{% endif %}#}
+
   <div class="text-center mb-4 custom-title">
     <h4>Lista de Agendamentos Gerais</h4>
   </div>
@@ -97,15 +100,16 @@
 
             <!-- Coluna de Ação -->
             <td>
-              <div class="btn-group" role="group" aria-label="Ações">
+                 <div class="btn-group" role="group" aria-label="Ações">
                 <a href="{% url 'reagendarAgendamento' agendamento.id %}" class="btn btn-primary">
-                    Reagendar
+                    Reagendar<i class="fa fa-calendar-o" aria-hidden="true"></i>
                 </a>
+
 
                 <button type="button" class="btn btn-danger ms-1" data-bs-toggle="modal"
                         data-bs-target="#cancelarModal{{ agendamento.id }}"
                         onclick="confirmarCancelamento('{{ agendamento.id }}')">
-                    Cancelar
+                  Cancelar <i class="fa fa-times" aria-hidden="true"></i>
                 </button>
 
                 <a href="{% url 'criar_atendimento' agendamento.id %}" class="btn btn-success ms-1">
@@ -113,10 +117,12 @@
                 </a>
 
                 <a href="{% url 'confirmAgendamento' agendamento.id %}" class="btn btn-info ms-1">
-                  Visualizar <i class="fa fa-eye" aria-hidden="true"></i>
+                    Visualizar <i class="fa fa-eye" aria-hidden="true"></i>
                 </a>
 
               </div>
+
+
               <!-- Modal de Cancelamento -->
               <div class="modal fade" id="cancelarModal{{ agendamento.id }}" tabindex="-1" aria-labelledby="cancelarModalLabel{{ agendamento.id }}" aria-hidden="true">
                 <div class="modal-dialog">
@@ -126,7 +132,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <p>Informe a justificativa para o Cancelamento:</p>
+                            <p>Informe a justificativa para o cancelamento:</p>
                             <form id="cancelarForm{{ agendamento.id }}" method="post" action="{% url 'cancelar_agendamento' agendamento.id %}">
                               {% csrf_token %}
                               {{ form.justificativa_cancelamento }}
@@ -144,8 +150,4 @@
     </table>
   </div>
 
-  <div class="d-flex justify-content-between">
-    <a class="btn btn-primary" href="{% url 'home' %}">Voltar</a>
-    <a class="btn btn-primary" href="{% url 'agendamentoCreate'  %}">Agendar</a>
-  </div>
 {% endblock %}
