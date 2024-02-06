@@ -67,9 +67,9 @@
             <td>{{ agendamento.data_agendamento | date:"d/m/Y "   }}</td>
             <td>
               {% if agendamento.prioridade_atendimento %}
-                <i class="fas fa-circle text-success">Sim</i>
+                <i class="fa fa-circle text-success">Sim</i>
               {% else %}
-                <i class="fas fa-circle text-danger">Não</i>
+                <i class="fa fa-circle text-danger">Não</i>
               {% endif %}
             </td>
             <td> {% if agendamento.turno == 'manha' %}
