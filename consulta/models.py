@@ -126,7 +126,7 @@ class Agendamento(models.Model):
     ], default='pendente')
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
     profissional_saude = models.ForeignKey(Profissionaldasaude, on_delete=models.CASCADE)
-    data_agendamento = models.DateTimeField()
+    data_agendamento = models.DateTimeField(u'Data Agendamento', blank=False, null=False)
     turno = models.CharField(max_length=10, choices=TURNO_CHOICES)
     prioridade_atendimento = models.BooleanField(default=False)
     justificativa_cancelamento = models.TextField(blank=True, null=True)

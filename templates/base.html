@@ -43,6 +43,9 @@
 
 {# Maskedput #}
     <script type="text/javascript" src='{% static 'jquery/jquery.mask.min.js' %}'></script>
+
+{#  CSS  #}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/estilos.css' %}">
     
 </head>
 
@@ -153,16 +156,79 @@
 
 
  <script>
-
+{#  Máscara de formatação Jquery  #}
+        {#  Essa função jquery adicona uma máscara ao id selecionado.  #}
+        {#  Essa primeira 'força' a formatação 99/99/9999 do campo data_agendamento.  #}
         $(function ($){
             $('#id_data_agendamento').mask('99/99/9999');
 
 
-        })
+
+        });
 
 
 
-    </script>
+{# Botão de voltar ao topo #}
+
+    if($('#btnTopo').length > 0) {
+
+        window.onscroll = function () {
+            scroll();
+        }
+
+        /* Botão aparece quando o scroll é rolado. Função scroll é chamada e pega a id do elemento.
+        *  O if verifica se a propriedade scrollTop do elemento html 'document.documentElement' é maior que 100px.
+        *  Caso seja, a propriedade 'display' do btn será referenciada e o botão irá aparecer.
+        *  Caso seja menor que 100px, a proriedade none é quem será referenciada.   */
+
+        function scroll() {
+            var btn = document.getElementById("btnTopo");
+            if (document.documentElement.scrollTop > 100) {
+                btn.style.display = "block";
+            } else {
+                btn.style.display = "none";
+            }
+        }
+
+
+        /*  Propriedade scrollTop definido como 0. Essa propriedade representa a quantidade de pixels que o elemento da
+         página foi rolado a partir do topo. Quando clicar no botão de voltar ao topo a página irá rolar automaticamente
+         até o início, voltando efetivamente ao valor 0.*/
+        function voltarTopo() {
+            document.documentElement.scrollTop = 0;
+        }
+}
+{#  FIM  #}
+
+
+{#  Desaparecer Messages automaticamente  #}
+
+    {#  Pega o elemento de classe 'alert'  #}
+    document.getElementsByClassName('alert')
+    {
+        {# Chama a propriedade fadeout (desaparecer) e define como slow (lendo), fazendo o elemento desaparecer da  #}
+        {# página lentamente  #}
+        setTimeout(function () {
+            $(".alert").fadeOut("slow", function (){
+                $(this).alert("close");
+            });
+
+        }, 4000);
+        {# Tempo que deve desaparecer. Por volta de 4 segundos #}
+    }
+
+    {#  Pega o elemento de classe 'alert'  #}
+    document.getElementsByClassName('errorlist')
+    {
+        setTimeout(function () {
+            $(".errorlist").fadeOut("slow", function (){
+                $(this).alert("close");
+            });
+
+        }, 6000);
+    }
+
+</script>
 
 
 </body>

@@ -12,6 +12,8 @@
   <h4>Lista de Agendamentos Gerais</h4>
 </div>
 
+     {#  Botões  #}
+
 <div class="d-flex justify-content-between">
   <a class="btn btn-danger" href="{% url 'home' %}" style="margin-bottom: 3px">
     Voltar
@@ -138,6 +140,10 @@
 
 
 </div>
+    {#  Chama função de voltar ao topo  #}
+    <button onclick="voltarTopo()" id="btnTopo">
+        <i id="arrow" class="fa fa-arrow-up fa-lg"></i>
+    </button>
 
 <script>
   function redirecionar(url) {
