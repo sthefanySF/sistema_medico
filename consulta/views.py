@@ -168,8 +168,12 @@ def reagendar_agendamento(request, pk):
             agendamento.status_atendimento = 'pendente'
             agendamento.save()
 
-            messages.success(request, 'Agendamento reagendado com sucesso!')
+            messages.warning(request, 'Reagendado com sucesso!')
             return redirect('agendamentoListagem')
+        else:
+            messages.error(request, 'Informe uma data válida!')
+            # Solicita uma data válida  para o formato da data.
+
     else:
         form = AgendamentoReagendarForm(instance=agendamento)
 

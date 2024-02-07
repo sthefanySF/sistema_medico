@@ -1,3 +1,13 @@
+/* Essa propriedade controla o comportamento do scrolling da página.
+O valor smooth faz a rolagem da página de forma suave. */
+
+* {
+    scroll-behavior: smooth ;
+}
+
+
+
+
 /* Estilo para a classe .navbar-brand que é da logo/imagem*/
 
 .navbar-brand { 
@@ -129,4 +139,30 @@
 .btn-primary:hover {
     background-color: #0056b3; /* Cor de fundo do botão ao passar o mouse */
     border-color: #0056b3; /* Cor da borda do botão ao passar o mouse */
+}
+
+
+/* Botão de voltar ao topo da página */
+#btnTopo {
+    position: fixed; !important;
+    right: 10px ;
+    margin: 0;
+    padding: 0;
+    opacity: 0.8;
+    bottom: 12rem;
+    height: 40px;
+    width: 41px;
+    background: #b5b8ba;
+    border: 2px solid #979797;
+    border-radius: 100%;
+    display: none;
+    overflow: hidden;
+
+
+}
+
+/* Muda a aparência do botão quando passa o cursor em cima */
+#btnTopo:hover {
+    background: #9ca0a3;
+    border: none;
 }

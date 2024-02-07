@@ -1,22 +1,35 @@
+
 {% for message in messages %}
-  {% if message.tags == 'success' %}
-    <div class="alert alert-success">
-      <strong>{{ message }}</strong>
-    </div>
-  {% endif %}
+{#    <div class="messages" style="padding-left: 0 !important;">#}
+    {% if message.tags == 'success' %}
+         <ul class="list-unstyled">
+                <li class="list-group-item-success">
+                    <strong>{{ message }}</strong>
+                </li>
+            </ul>
+    {% endif %}
 
-  {% if message.tags == 'error' %}
-    <div class="alert alert-danger">
-      <strong>{{ message }}</strong>
-    </div>
-  {% endif %}
+    {% if message.tags == 'error' %}
+        <div class="alert alert-danger">
+
+                    <strong>{{ message }}</strong>
+
+        </div>
+    {% endif %}
+
+        {% if message.tags == 'warning' %}
+        <div class="alert alert-warning">
+            <ul class="list-unstyled">
+                <li class="list-group-item-warning">
+                    <strong>{{ message }}</strong>
+                </li>
+            </ul>
+        </div>
+    {% endif %}
 
 
-  {% if message.tags == 'warning' %}
-    <div class="alert alert-warning">
-        <strong>{{ message }}</strong>
-    </div>
 
-  {%endif%}
+{#    </div>#}
+
 
 {% endfor %}
