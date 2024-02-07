@@ -42,14 +42,14 @@
 
 <div class="table-responsive">
 
-  <table id="example" class="table table-striped nowrap" style="width:100%">
+  <table id="example" class="table table-striped nowrap table-bordered" style="width:100%">
     <thead>
       <tr class="custom-table-row">
         <th scope="col" class="text-center">Paciente</th>
         <th scope="col" class="text-center">CPF</th>
         <th scope="col" class="text-center">Profissional de Saúde</th>
         <th scope="col" class="text-center">Data do Agendamento</th>
-        <th scope="col" class="text-center">Prioridade de Atendimento</th>
+        <th scope="col" class="text-center">P.A</th>
         <th scope="col" class="text-center">Turno</th>
         <th scope="col" class="text-center">Status</th>
         <th scope="col" class="text-center">Ações</th>
@@ -65,9 +65,9 @@
         <td>{{ agendamento.data_agendamento | date:"d/m/Y " }}</td>
         <td>
           {% if agendamento.prioridade_atendimento %}
-          <i class="fa fa-circle text-success"> Sim</i>
+          <i class="fa fa-circle text-success text-center" ></i>
           {% else %}
-          <i class="fa fa-circle text-danger"> Não</i>
+          <i class="fa fa-circle text-danger text-center" ></i>
           {% endif %}
         </td>
 
@@ -99,10 +99,12 @@
 
         <td>
           <div class="btn-group" role="group" aria-label="Ações">
-            <a href="{% url 'reagendarAgendamento' agendamento.id %}" class="btn btn-primary">Reagendar<i class="fa fa-calendar-o" aria-hidden="true"></i></a>
-            <button type="button" class="btn btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#cancelarModal{{ agendamento.id }}" onclick="confirmarCancelamento('{{ agendamento.id }}')">Cancelar <i class="fa fa-times" aria-hidden="true"></i></button>
-            <a href="{% url 'criar_atendimento' agendamento.id %}" class="btn btn-success ms-1">Atender <i class="fa fa-check-square-o" aria-hidden="true"></i></a>
-            <a href="{% url 'confirmAgendamento' agendamento.id %}" class="btn btn-info ms-1">Visualizar <i class="fa fa-eye" aria-hidden="true"></i></a>
+            
+            <button type="button" class="btn btn-secondary ms-1 btn-md custom-btn" onclick="redirecionar('{% url 'reagendarAgendamento' agendamento.id %}')" title='Reagendar'><i class="fa fa-calendar-o" aria-hidden="true"></i> </button>
+            <button type="button" class="btn btn-danger ms-1 btn-md custom-btn" data-bs-toggle="modal" data-bs-target="#cancelarModal{{ agendamento.id }}" title="Cancelar" onclick="confirmarCancelamento('{{ agendamento.id }}')"><i class="fa fa-times" aria-hidden="true"></i></button>
+            <button type="button" class="btn btn-success ms-1 btn-md custom-btn" onclick="redirecionar('{% url 'criar_atendimento' agendamento.id %}')" title="Atender"><i class="fa fa-check-square-o" aria-hidden="true"></i></button>
+            <button type="button" class="btn btn-info ms-1 btn-md custom-btn" onclick="redirecionar('{% url 'confirmAgendamento' agendamento.id %}')" title="Visualizar"><i class="fa fa-eye" aria-hidden="true"></i></button>
+
           </div>
 
           <div class="modal fade" id="cancelarModal{{ agendamento.id }}" tabindex="-1" aria-labelledby="cancelarModalLabel{{ agendamento.id }}" aria-hidden="true">
@@ -134,115 +136,15 @@
 
   </table>
 
-<<<<<<< HEAD
+
 </div>
-=======
-  <div class="table-responsive">
-    <table class="table table-bordered custom-table">
-      <thead>
-        <tr class="custom-table-row">
-          <th scope="col" class="text-center">Paciente</th>
-          <th scope="col" class="text-center">CPF</th>
-          <th scope="col" class="text-center">Profissional de Saúde</th>
-          <th scope="col" class="text-center">Data do Agendamento</th>
-          <th scope="col" class="text-center">Prioridade de Atendimento</th>
-          <th scope="col" class="text-center">Turno</th>
-          <th scope="col" class="text-center">Status</th>
-          <th scope="col" class="text-center">Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for agendamento in agendamentos %}
-          <tr>
-            <td>{{ agendamento.paciente.nome }}</td>
-            <td>{{ agendamento.paciente.cpf }}</td>
-            <td>{{ agendamento.profissional_saude.nome }}</td>
-            <td>{{ agendamento.data_agendamento | date:"d/m/Y "   }}</td>
-            <td>
-              {% if agendamento.prioridade_atendimento %}
-                <i class="fa fa-circle text-success">Sim</i>
-              {% else %}
-                <i class="fa fa-circle text-danger">Não</i>
-              {% endif %}
-            </td>
-            <td> {% if agendamento.turno == 'manha' %}
-                Manhã
-            {% elif agendamento.turno == 'tarde' %}
-                Tarde
-            {% else %}
-                {{ agendamento.turno }}
-            {% endif %}
-          </td>
-            <td>
-              {% if agendamento.status_atendimento == 'pendente' %}
-                <div class="btn-group" role="group" aria-label="Status">
-                  <a href="{% url 'agendamentoConfirmar' agendamento.id %}" class="btn btn-success">Confirmar</a>
-                  <a href="{% url 'agendamentoAusente' agendamento.id %}" class="btn btn-warning ms-1">Ausente</a>
-                </div>
-              {% elif agendamento.status_atendimento == 'confirmado' %}
-                Confirmado
-              {% elif agendamento.status_atendimento == 'ausente' %}
-                Ausente
-              {% else %}
-                <span class="text-success">Concluído</span>
-              {% endif %}
-            </td>
 
-            <!-- Coluna de Ação -->
-            <td>
-                 <div class="btn-group" role="group" aria-label="Ações">
-                <a href="{% url 'reagendarAgendamento' agendamento.id %}" class="btn btn-primary">
-                    Reagendar <i class="fa fa-calendar-o" aria-hidden="true"></i>
-                </a>
+<script>
+  function redirecionar(url) {
+      window.location.href = url;
+  }
+</script>
 
-
-                <button type="button" class="btn btn-danger ms-1" data-bs-toggle="modal"
-                        data-bs-target="#cancelarModal{{ agendamento.id }}"
-                        onclick="confirmarCancelamento('{{ agendamento.id }}')">
-                  Cancelar <i class="fa fa-times" aria-hidden="true"></i>
-                </button>
-
-                <a href="{% url 'criar_atendimento' agendamento.id %}" class="btn btn-success ms-1">
-                    Atender <i class="fa fa-check-square-o" aria-hidden="true"></i>
-                </a>
-
-                <a href="{% url 'confirmAgendamento' agendamento.id %}" class="btn btn-info ms-1">
-                    Visualizar <i class="fa fa-eye" aria-hidden="true"></i>
-                </a>
-
-              </div>
-
-
-              <!-- Modal de Cancelamento -->
-              <div class="modal fade" id="cancelarModal{{ agendamento.id }}" tabindex="-1" aria-labelledby="cancelarModalLabel{{ agendamento.id }}" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="cancelarModalLabel{{ agendamento.id }}">Cancelar Agendamento</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Informe a justificativa para o cancelamento:</p>
-                            <form id="cancelarForm{{ agendamento.id }}" method="post" action="{% url 'cancelar_agendamento' agendamento.id %}">
-                              {% csrf_token %}
-                              {{ form.justificativa_cancelamento }}
-                              <textarea name="justificativa_cancelamento" class="form-control" rows="4" placeholder="Digite a justificativa aqui"></textarea>
-                              <button type="submit" class="btn btn-danger mt-3">Confirmar Cancelamento</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-              </div>
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
->>>>>>> 5cb3828b9e1604907b24d5287c04c889833f56f4
-
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<link rel="stylesheet" type="text/css" href="{% static 'css/estilos.css' %}">
 <script>
   new DataTable('#example', {
     responsive: true
