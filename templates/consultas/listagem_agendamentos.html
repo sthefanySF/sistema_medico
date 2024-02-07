@@ -21,7 +21,7 @@
   </a>
 </div>
 
-<div class="mb-4">
+{% comment %} <div class="mb-4">
   <form method="get" class="mx-auto" style="max-width: 600px;">
     <div class="row">
       <div class="col" style="margin-bottom: 3px">
@@ -37,7 +37,7 @@
       </div>
     </div>
   </form>
-</div>
+</div> {% endcomment %}
 
 
 <div class="table-responsive">
@@ -146,8 +146,10 @@
 </script>
 
 <script>
-  new DataTable('#example', {
-    responsive: true
-});
+  document.addEventListener("DOMContentLoaded", function() {
+    new DataTable("#example", {
+      responsive: true
+    });
+  });
 </script>
 {% endblock %}
