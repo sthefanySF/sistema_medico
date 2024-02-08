@@ -122,8 +122,11 @@ def profissionaldasaude_excluir(request, pk):
 def listar_agendamentos(request):
     form = PesquisaAgendamentoForm(request.GET)
     agendamentos = Agendamento.objects.all()
+    profissionais_saude = Profissionaldasaude.objects.all()
 
-    if form.is_valid():
+    profissional_id = request.GET.get('profissional_saude')
+
+    if form.is_valid() and profissional_id and profissional_id != 'todos':
         cpf = form.cleaned_data.get('cpf')
         data_agendamento = form.cleaned_data.get('data_agendamento')
 
@@ -133,13 +136,14 @@ def listar_agendamentos(request):
         if data_agendamento:
             agendamentos = agendamentos.filter(data_agendamento__date=data_agendamento)
 
-    else:
-        agendamentos = Agendamento.objects.all()
+        agendamentos = agendamentos.filter(profissional_saude_id=profissional_id)
 
     # Ordenar os agendamentos pela data em ordem decrescente
     agendamentos = agendamentos.order_by('-data_agendamento')
 
-    return render(request, 'consultas/listagem_agendamentos.html', {'form': form, 'agendamentos': agendamentos})
+    return render(request, 'consultas/listagem_agendamentos.html', {'form': form, 'agendamentos': agendamentos, 'profissionais_saude': profissionais_saude})
+
+
 
 
 def agendamento_confirmar(request, pk):

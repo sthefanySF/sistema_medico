@@ -6,7 +6,7 @@
 
 {% block content %}
 
-{% if messages %}{% include 'mensagens.html' %}{% endif %}
+{% if messages %}{% include 'messages.html' %}{% endif %}
 
 <div class="text-center mb-4 custom-title">
   <h4>Lista de Agendamentos Gerais</h4>
@@ -23,23 +23,39 @@
   </a>
 </div>
 
-{% comment %} <div class="mb-4">
+<div class="mb-4">
   <form method="get" class="mx-auto" style="max-width: 600px;">
     <div class="row">
-      <div class="col" style="margin-bottom: 3px">
-        {{ form.cpf }}
+      {% comment %} <div class="col" style="margin-bottom: 3px">
+        <input type="text" name="cpf" class="form-control" placeholder="CPF do paciente">
       </div>
 
       <div class="col" style="margin-bottom: 3px">
-        {{ form.data_agendamento }}
-      </div>
+        <input type="date" name="data_agendamento" class="form-control" placeholder="Data do agendamento">
+      </div> {% endcomment %}
 
-      <div class="col">
-        <button type="submit" class="btn btn-primary">Pesquisar</button>
+      <div class="row align-items-end">
+        <div class="col-md-6 mb-3">
+          <label for="profissional_saude" class="form-label">Profissional de Saúde:</label>
+          <select name="profissional_saude" id="profissional_saude" class="form-select">
+            <option value="" selected>Selecione um profissional</option>
+            <option value="todos" class="destacado">Listar Todos</option>
+            {% for profissional in profissionais_saude %}
+              <option value="{{ profissional.id }}" class="destacado">{{ profissional.nome }}</option>
+            {% endfor %}
+          </select>
+        </div>
       </div>
-    </div>
+      
+      
+        {% comment %} <div class="col-md-6">
+          <button type="submit" class="btn btn-primary">Pesquisar</button>
+        </div> {% endcomment %}
+      </div>
+      
   </form>
-</div> {% endcomment %}
+</div>
+
 
 
 <div class="table-responsive">
@@ -102,10 +118,10 @@
         <td>
           <div class="btn-group" role="group" aria-label="Ações">
             
-            <button type="button" class="btn btn-secondary ms-1 btn-md custom-btn" onclick="redirecionar('{% url 'reagendarAgendamento' agendamento.id %}')" title='Reagendar'><i class="fa fa-calendar-o" aria-hidden="true"></i> </button>
-            <button type="button" class="btn btn-danger ms-1 btn-md custom-btn" data-bs-toggle="modal" data-bs-target="#cancelarModal{{ agendamento.id }}" title="Cancelar" onclick="confirmarCancelamento('{{ agendamento.id }}')"><i class="fa fa-times" aria-hidden="true"></i></button>
-            <button type="button" class="btn btn-success ms-1 btn-md custom-btn" onclick="redirecionar('{% url 'criar_atendimento' agendamento.id %}')" title="Atender"><i class="fa fa-check-square-o" aria-hidden="true"></i></button>
-            <button type="button" class="btn btn-info ms-1 btn-md custom-btn" onclick="redirecionar('{% url 'confirmAgendamento' agendamento.id %}')" title="Visualizar"><i class="fa fa-eye" aria-hidden="true"></i></button>
+            <button type="button" class="btn btn-secondary ms-1 btn-lg custom-btn" onclick="redirecionar('{% url 'reagendarAgendamento' agendamento.id %}')" title='Reagendar'><i class="fa fa-calendar-o" aria-hidden="true"></i> </button>
+            <button type="button" class="btn btn-danger ms-1 btn-lg custom-btn" data-bs-toggle="modal" data-bs-target="#cancelarModal{{ agendamento.id }}" title="Cancelar" onclick="confirmarCancelamento('{{ agendamento.id }}')"><i class="fa fa-times" aria-hidden="true"></i></button>
+            <button type="button" class="btn btn-success ms-1 btn-lg custom-btn" onclick="redirecionar('{% url 'criar_atendimento' agendamento.id %}')" title="Atender"><i class="fa fa-check-square-o" aria-hidden="true"></i></button>
+            <button type="button" class="btn btn-info ms-1 btn-lg custom-btn" onclick="redirecionar('{% url 'confirmAgendamento' agendamento.id %}')" title="Visualizar"><i class="fa fa-eye" aria-hidden="true"></i></button>
 
           </div>
 
@@ -158,4 +174,13 @@
     });
   });
 </script>
+<script>
+  $(document).ready(function() {
+    $('#profissional_saude').change(function() {
+      // Envie automaticamente o formulário quando o valor do campo de seleção for alterado
+      $(this).closest('form').submit();
+    });
+  });
+</script>
+
 {% endblock %}
