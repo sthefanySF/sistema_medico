@@ -1,3 +1,13 @@
+/* Essa propriedade controla o comportamento do scrolling da página.
+O valor smooth faz a rolagem da página de forma suave. */
+
+* {
+    scroll-behavior: smooth ;
+}
+
+
+
+
 /* Estilo para a classe .navbar-brand que é da logo/imagem*/
 
 .navbar-brand { 
@@ -15,14 +25,144 @@
     color:#ffffff;
 }
 
-/* Estilo para as bordas da tabela */
+/* Estilo para as bordas arredondadas da tabela */
+.custom-table {
+    border-collapse: separate;
+    border-spacing: 0 5px; /* Espaço entre as células */
+}
+
 .custom-table th,
 .custom-table td {
-    border: 2px solid #d62121; /* Ajuste a cor conforme necessário */
-    box-shadow: 2px 2px 5px #888888; /* Adicione sombra conforme necessário */
+    border: 2px solid #b8b0b0; /* Ajuste a cor conforme necessário */
+    border-radius: 5px; /* Bordas arredondadas */
+    box-shadow: 2px 2px 5px #9b9b9b; /* Adicione sombra conforme necessário */
 }
 
 .custom-table thead th {
-    border-bottom-width: 3px;
+    border-bottom-width: 2px;
+    background-color: #e0e0e0; /* Cor do cabeçalho */
 }
 
+/* Estilo para o título */
+.custom-title {
+    font-size: 24px; /* Ajuste o tamanho da fonte conforme necessário */
+    font-weight: bold;
+    color: #0a0101; /* Cor do texto */
+    background-color: #e0e0e0; /* Cor de fundo */
+    padding: 10px; /* Espaçamento interno */
+    border: 2px solid #b8b0b0; /* Cor da borda */
+    border-radius: 5px; /* Arredondamento das bordas */
+    box-shadow: 2px 2px 5px #9b9b9b; /* Sombra */
+    margin-bottom: 5px; /* Espaçamento abaixo do título */
+}
+
+
+.topo {
+    color: white!important;
+    font-weight: 500;
+    margin-top: 12px;
+    padding: 0;
+    font-size: 22px;
+    text-shadow: 1px 0.2px #146C2D;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+
+/* Estilo para labels acima dos campos */
+.label-title {
+    display: block;
+    margin-bottom: 5px;
+    text-align: center; /* Centraliza o texto */
+    font-weight: bold;
+}
+
+/* Estilo para labels dos campos do formulário */
+.label-form {
+    display: block;
+    margin-bottom: 3px;
+    text-align: center; /* Centraliza o texto */
+}
+
+/* Efeito de hover nas labels dos campos do formulário */
+.row .col-md-4:hover .label-form {
+    background-color: #c0c0c0; /* Altere a cor conforme necessário */
+    cursor: pointer; /* Muda o cursor para indicar que é clicável */
+}
+
+
+/* Estilo para a lista de atendimentos */
+.custom-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* Estilo para os links da lista de atendimentos */
+.atendimento-link {
+    text-decoration: none;
+    color: #000000; /* Cor do link padrão */
+    transition: color 0.3s ease; /* Transição de cor suave */
+    display: block;
+    padding: 10px;
+    text-align: center; /* Centraliza o texto */
+    font-weight: bold;
+    position: relative; /* Posição relativa para posicionamento da borda */
+}
+
+.atendimento-link:hover {
+    color: #0056b3; /* Cor do link ao passar o mouse */
+    background-color: #f0f0f0; /* Cor de fundo ao passar o mouse */
+    border-radius: 5px; /* Arredondamento das bordas ao passar o mouse */
+    font-weight: bold;
+}
+
+/* Estilo para o texto "Atendido por" */
+.profissional-text {
+    color: #0056b3; /* Nova cor para indicar o profissional de saúde */
+    font-weight: bold;
+    margin-left: 10px; /* Espaçamento à esquerda para separar do nome do paciente */
+    border-left: 2px solid #0056b3; /* Borda à esquerda do texto "Atendido por" */
+    padding-left: 10px; /* Espaçamento à esquerda da borda */
+}
+
+/* Estilo para o botão de voltar */
+.btn-primary {
+    background-color: #007bff; /* Cor de fundo do botão */
+    color: #fff; /* Cor do texto do botão */
+    border: 1px solid #007bff; /* Borda do botão */
+    border-radius: 5px; /* Bordas arredondadas */
+    padding: 10px 20px; /* Espaçamento interno do botão */
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease; /* Transição de cor suave */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; /* Cor de fundo do botão ao passar o mouse */
+    border-color: #0056b3; /* Cor da borda do botão ao passar o mouse */
+}
+
+
+/* Botão de voltar ao topo da página */
+#btnTopo {
+    position: fixed; !important;
+    right: 10px ;
+    margin: 0;
+    padding: 0;
+    opacity: 0.8;
+    bottom: 12rem;
+    height: 40px;
+    width: 41px;
+    background: #b5b8ba;
+    border: 2px solid #979797;
+    border-radius: 100%;
+    display: none;
+    overflow: hidden;
+
+
+}
+
+/* Muda a aparência do botão quando passa o cursor em cima */
+#btnTopo:hover {
+    background: #9ca0a3;
+    border: none;
+}
