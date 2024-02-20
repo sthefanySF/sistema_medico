@@ -169,6 +169,6 @@ O valor smooth faz a rolagem da página de forma suave. */
 
 /*estilo para as opçoes de profissional de saude em agendamento*/
 .destacado {
-    font-weight: bold; /* Deixa o texto em negrito */
-    color: rgb(0, 0, 0); /* Define a cor do texto como azul */
+    font-weight: bold; 
+    color: rgb(28,28,28);
 }

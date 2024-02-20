@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprovante de Atendimento</title>
+</head>
+<body>
+    <h1>Comprovante de Atendimento</h1>
+    <p>Data do Atendimento: {{ atendimento.agendamento.data_agendamento }}</p>
+    <p>Nome do Paciente: {{ atendimento.paciente.nome }}</p>
+    <p>anamnese: {{ atendimento.exame_fisico }}</p>
+    <p>Exames Complementares: {{ atendimento.exames_complementares }}</p>
+    <p>Exames pdf: {{ atendimento.pdf_exames }}</p>
+    <p>Diagnostico: {{ atendimento.diagnostico }}</p>
+  
+</body>
+</html>

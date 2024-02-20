@@ -11,6 +11,8 @@ from consulta.models import Agendamento, Paciente, Profissionaldasaude
 from datetime import date
 from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.urls import reverse
+
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -19,7 +21,7 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-
+from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from xhtml2pdf import pisa
 import io
@@ -350,25 +352,41 @@ class AtendimentoCreate(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Recupere o agendamento associado ao atendimento
         agendamento_id = self.kwargs['agendamento_id']
         agendamento = get_object_or_404(Agendamento, id=agendamento_id)
         context['agendamento'] = agendamento
         return context
 
     def form_valid(self, form):
-        # Antes de salvar o atendimento, obtenha o agendamento associado
         agendamento_id = self.kwargs['agendamento_id']
         agendamento = get_object_or_404(Agendamento, id=agendamento_id)
-        
-        # Associe o agendamento ao atendimento
         form.instance.agendamento = agendamento
+        
+        # Salva o atendimento
+        atendimento = form.save()
 
-        response = super().form_valid(form)
-        messages.success(self.request, 'Atendimento criado com sucesso!')
-        return response
+        # Redireciona para a tela de confirmação de atendimento com o ID do Atendimento
+        return redirect('confirmar_atendimento', agendamento_id=agendamento_id)
+
+def confirmar_atendimento(request, agendamento_id):
+    agendamento = get_object_or_404(Agendamento, id=agendamento_id)
+    atendimento = agendamento.atendimento
+    return render(request, 'consultas/confirmar_atendimento.html', {'atendimento': atendimento})
+
+
+def download_comprovante_atendimento(request, atendimento_id):
+    atendimento = get_object_or_404(Atendimento, id=atendimento_id)
+
+    # Renderiza o template para HTML
+    html_content = render_to_string('consultas/comprovantePdf_atendimento.html', {'atendimento': atendimento})
     
-    def get_success_url(self):
-        # Redireciona para a página de detalhes do agendamento após a criação do atendimento
-        agendamento_id = self.kwargs['agendamento_id']
-        return reverse_lazy('criar_atendimento', kwargs={'agendamento_id': agendamento_id})
+    # Converte HTML para PDF
+    pdf_file = io.BytesIO()
+    pisa.CreatePDF(html_content, dest=pdf_file)
+    
+    # Configura o conteúdo do PDF para download
+    pdf_file.seek(0)
+    response = HttpResponse(pdf_file, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename=comprovante_atendimento_{atendimento_id}.pdf'
+    
+    return response

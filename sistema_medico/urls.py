@@ -47,6 +47,9 @@ urlpatterns = [
     path('agendamento/<int:pk>/confirmar/', confirm_agendamento, name='confirmAgendamento'),
     path('agendamento/<int:pk>/confirmar/', confirm_agendamento, name='confirmAgendamento'),
     path('agendamento/<int:pk>/download/', download_comprovante, name='downloadComprovante'),
+    path('confirmar-atendimento/<int:agendamento_id>/', confirmar_atendimento, name='confirmar_atendimento'),
+    path('download-comprovante-atendimento/<int:atendimento_id>/', download_comprovante_atendimento, name='download_comprovante_atendimento'),
+
     # path('cancelar/agendamento/<int:pk>/', views.cancelar_agendamento, name='cancelarAgendamento'),
     path('', views.home, name='home'),
 

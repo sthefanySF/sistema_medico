@@ -1,0 +1,37 @@
+<!-- consulta/templates/consulta/confirmar_atendimento.html -->
+{% extends "base.html" %}
+
+{% block title %}Confirmação de Atendimento{% endblock %}
+
+{% block content %}
+{# Verifica se há mensagens na view e mostra, caso existam #}
+{% if messages %}{% include 'message.html' %}{% endif %}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4 custom-title">Confirmação de Atendimento</h2>
+    <div class="card p-4">
+        <p><strong>Paciente:</strong> {{ atendimento.agendamento.paciente.nome }}</p>
+        <p><strong>Profissional de Saúde:</strong> {{ atendimento.agendamento.profissional_saude.nome }}</p>
+        <p><strong>Data do Atendimento:</strong> {{ atendimento.data_atendimento|date:"d/m/Y" }}</p>
+        <p><strong>Descrição:</strong> {{ atendimento.descricao }}</p>
+        <!-- Adicione mais informações conforme necessário -->
+
+        <div class="d-flex justify-content-between mt-2">
+            <a type="submit" class="btn btn-primary btn-sm" style="margin-bottom: 2px"
+                methods="POST" href="{% url 'download_comprovante_atendimento' atendimento_id=atendimento.pk %}">
+                    
+                    Baixar Comprovante &nbsp;<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+
+            </a>
+
+
+        
+            <a style="justify-content: right; margin-bottom: 2px" class="btn btn-warning" href="{% url 'agendamentoListagem' %}">
+        
+                <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>&nbsp;Voltar para agendamento
+        
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
