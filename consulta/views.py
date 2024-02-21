@@ -17,19 +17,65 @@ from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
-from xhtml2pdf import pisa
+# from xhtml2pdf import pisa
 import io
 
 
 
 def home(request):
     return render(request, 'home.html')
+
+
+def logar(request):
+    if request.user.is_authenticated:
+        return redirect('agendamentoListagem')
+    if request.method == 'POST':
+        # form = AuthenticationForm(request, request.POST)
+        usuario = request.POST['usuario']
+        usuario = usuario.replace('.', '').replace('-', '')
+        senha = request.POST['senha']
+        user = authenticate(request, username=usuario, password=senha)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                if request.GET.get('next'):
+                    return redirect(request.GET.get('next'))
+                return redirect('agendamentoListagem')
+            else:
+                messages.error(request, 'Usuário inativo')
+        else:
+            messages.error(request, 'Usuário ou senha inválidos!')
+    return render(request, 'consultas/login.html', locals())
+
+
+@login_required()
+def sair(request):
+    logout(request)
+    return redirect('home')
+
+# def login(request):
+#     if request.method == 'POST':
+#         form = AuthenticationForm(request, request.POST)
+#         if form.is_valid():
+#             username = form.cleaned_data.get('username')
+#             password = form.cleaned_data.get('password')
+#             user = authenticate(request, username=username, password=password)
+#             if user:
+#                 login(request, user)
+#                 return redirect('home')
+#     else:
+#         form = AuthenticationForm()
+#     return render(request, 'consultas/login.html', {'form': form})
+# #
+
+
 
 
 def listar_pacientes(request):
@@ -152,14 +198,14 @@ def agendamento_confirmar(request, pk):
     agendamento = get_object_or_404(Agendamento, pk=pk)
     agendamento.status_atendimento = 'confirmado'
     agendamento.save()
-    messages.success(request, 'Agendamento confirmado com sucesso!')
+    messages.success(request, 'Agendamento confirmado!')
     return redirect('agendamentoListagem')
 
 def agendamento_ausente(request, pk):
     agendamento = get_object_or_404(Agendamento, pk=pk)
     agendamento.status_atendimento = 'ausente'
     agendamento.save()
-    messages.success(request, 'Agendamento marcado como ausente com sucesso!')
+    messages.warning(request, 'Agendamento definido como ausente!')
     return redirect('agendamentoListagem')
 
 def reagendar_agendamento(request, pk):

@@ -22,11 +22,19 @@ from consulta import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),
+
+    # Login
+    path('login/', logar, name='login'),
+    path('logout/', sair, name='sair'),
+
     path('cadastro/administrativo/', AdministrativoCreate.as_view(), name='administrativoCreate'),
     path('cadastro/profissionaldasaude/', ProfissionaldasaudeCreate.as_view(), name='profissionaldasaudeCreate'),
     path('cadastro/paciente', PacienteCreate.as_view(), name='pacienteCreate'),
+
     path('agendamento/form', AgendamentoCreate.as_view(), name='agendamentoCreate' ),
     path('agendamento/lista', listar_agendamentos, name='agendamentoListagem'),
+
     path('pacientes/', listar_pacientes, name= 'pacienteListagem' ),
     path('profissionaldasaude/', listar_profissionaldasaude, name= 'profissionaldasaudeListagem'),
     path('administrativo/', listar_administrativo, name= 'administrativoListagem'),

@@ -96,8 +96,8 @@ class AgendamentoReagendarForm(forms.ModelForm):
         fields = ['profissional_saude', 'data_agendamento', 'prioridade_atendimento', 'justificativa_cancelamento']
 
         labels = {
-            'profissional_saude': 'Selecionar um novo profissional de saúde',
-            'data_agendamento': 'Selecionar uma nova data de agendamento',
+            'profissional_saude': 'Selecionar profissional de saúde:',
+            'data_agendamento': 'Selecionar nova data:',
             'prioridade_atendimento': 'Prioridade de Atendimento',
         }
 
@@ -106,6 +106,16 @@ class AgendamentoReagendarForm(forms.ModelForm):
             'data_agendamento': forms.DateTimeInput(attrs={'class': 'form-control'}),
             'prioridade_atendimento': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
+
+        # def __init__(self, *args, **kwargs):
+        #     super(AgendamentoReagendarForm, self).__init__(*args, **kwargs)
+        #     # data = datetime.now()
+        #
+        #     self.fields['data_agendamento'].required = True
+        #     self.fields['data_agendamento'].widget.attrs['class'] = 'form-control'
+        #     # self.fields['data_agendamento'].error_messages = {'required': 'Email é um campo obrigatório.'}
+
+
 class PesquisaAgendamentoForm(forms.Form):
     cpf = forms.CharField(label='', required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Pesquise por CPF'}))
     data_agendamento = forms.DateField(label='', required=False, widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}))

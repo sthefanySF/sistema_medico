@@ -172,3 +172,11 @@ O valor smooth faz a rolagem da página de forma suave. */
     font-weight: bold; 
     color: rgb(28,28,28);
 }
+
+
+.jumbotron {
+    background-color: #eee;
+    padding: 2rem 1rem;
+    margin-bottom: 2rem;
+    border-radius: 0.3rem;
+}

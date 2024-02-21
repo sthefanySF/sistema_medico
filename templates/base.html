@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 {%load static%}
 
@@ -7,8 +7,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Seu Título Aqui{% endblock %}</title>
-
-
 
 
  {# Bootstrap versão 5.3.2 CSS #}
@@ -24,6 +22,7 @@
 {# FontAwesome - ADICIONA ÍCONES #}
 
     <link rel="stylesheet" href="{% static 'font-awesome-4.6.3/css/font-awesome.css' %}">
+
 
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
@@ -52,92 +51,7 @@
 
 <body style="min-height: 100vh; display: flex; flex-direction: column;">
 
-    
-    <nav class="navbar" style="background-color: #0C4DA2; color: white;">
-        <div class="container-fluid">
-
-            <div class="navbar ">
-                <a class="navbar-brand text-white" href="#">
-                    <img src="{% static 'imagens/logo_ufac_2.png' %}" style="margin: auto; display: flex ">
-                </a>
-
-                <span class="topo">
-                    Universidade Federal do Acre <br>
-                    Sistema Médico pericial<br>
-                </span>
-
-            </div>
-
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-                    aria-controls="offcanvasNavbar" >
-                <span class="navbar-toggler-icon" style="filter: brightness(0) invert(1);"></span>
-            </button>
-        </div>
-
-       
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-            <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
-                <ul class="navbar-nav flex-grow-1 pe-3">
-                    <li class="nav-item border-bottom">
-                        <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
-                    </li>
-                    <li class="nav-item border-bottom">
-                        <a class="nav-link active" aria-current="page" href="#">Relatórios</a>
-                    </li>
-                    <li class="nav-item border-bottom">
-                        <a class="nav-link active" aria-current="page" href="{% url 'agendamentoListagem' %}">Agendamentos</a>
-                    </li>
-                    <li class="nav-item border-bottom">
-                        <a class="nav-link active" aria-current="page" href="{% url 'pacienteListagem' %}">Pacientes</a>
-                    </li>
-                    <li class="nav-item border-bottom">
-                        <a class="nav-link active" aria-current="page" href="{% url 'profissionaldasaudeListagem' %}">Profissional de Saúde</a>
-                    </li>
-                    <li class="nav-item border-bottom">
-                        <a class="nav-link active" aria-current="page" href="{% url 'administrativoListagem' %}">Administrativo</a>
-                    </li>
-                   <li class="nav-item border-bottom">   
-                        <a class="nav-link active" aria-current="page" href="{% url 'listaAtendimentos' %}">Atendimentos</a>
-                    </li> 
-                    <li class="nav-item border-bottom">
-                        <a class="nav-link active" aria-current="page" href="#">Meu Perfil</a>
-                    </li>
-                    <li class="nav-item border-bottom">
-                        <a class="nav-link active" aria-current="page" href="#">Sair</a>
-                    </li>
-                    
-                    {% comment %} <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                    </li> {% endcomment %}
-                    {% comment %} <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Dropdown
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        </ul>
-                    </li> {% endcomment %}
-                </ul>
-                {% comment %} <form class="d-flex mt-3" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form> {% endcomment %}
-            </div>
-        </div>
-    </nav>
-
-
-    
+{% include 'linha_usuario.html' %}
 
     <div class="container mt-5" style="flex: 1;">
         {% comment %} {% block messages %}
