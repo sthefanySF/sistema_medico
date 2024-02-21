@@ -51,6 +51,7 @@
 
 <body style="min-height: 100vh; display: flex; flex-direction: column;">
 
+{# Inclui o cabeçalho das páginas #}
 {% include 'linha_usuario.html' %}
 
     <div class="container mt-5" style="flex: 1;">
@@ -73,13 +74,11 @@
 {#  Máscara de formatação Jquery  #}
         {#  Essa função jquery adicona uma máscara ao id selecionado.  #}
         {#  Essa primeira 'força' a formatação 99/99/9999 do campo data_agendamento.  #}
+
         $(function ($){
             $('#id_data_agendamento').mask('99/99/9999');
 
-
-
         });
-
 
 
 {# Botão de voltar ao topo #}
@@ -90,10 +89,10 @@
             scroll();
         }
 
-        /* Botão aparece quando o scroll é rolado. Função scroll é chamada e pega a id do elemento.
-        *  O if verifica se a propriedade scrollTop do elemento html 'document.documentElement' é maior que 100px.
+        /* Botão aparece quando o scroll é rolado. Função scroll é chamada e seleciona a id do elemento.
+        *  O if verifica se a propriedade 'scrollTop' do elemento html 'document.documentElement' é maior que 100px.
         *  Caso seja, a propriedade 'display' do btn será referenciada e o botão irá aparecer.
-        *  Caso seja menor que 100px, a proriedade none é quem será referenciada.   */
+        *  Caso seja menor que 100px, a proriedade 'none' é quem será referenciada e o botão desaparecerá.   */
 
         function scroll() {
             var btn = document.getElementById("btnTopo");
@@ -105,9 +104,10 @@
         }
 
 
-        /*  Propriedade scrollTop definido como 0. Essa propriedade representa a quantidade de pixels que o elemento da
-         página foi rolado a partir do topo. Quando clicar no botão de voltar ao topo a página irá rolar automaticamente
-         até o início, voltando efetivamente ao valor 0.*/
+        /*  Propriedade 'scrollTop' definido como 0. Essa propriedade representa a quantidade de pixels que o elemento
+        da página foi rolado a partir do topo. Quando o botão de 'voltar ao topo' for acionado a página irá rolar
+        automaticamente até o início, voltando efetivamente ao valor 0.  */
+
         function voltarTopo() {
             document.documentElement.scrollTop = 0;
         }
@@ -131,7 +131,7 @@
         {# Tempo que deve desaparecer. Por volta de 4 segundos #}
     }
 
-    {#  Pega o elemento de classe 'alert'  #}
+    {#  Pega o elemento de classe 'errorlist'  #}
     document.getElementsByClassName('errorlist')
     {
         setTimeout(function () {

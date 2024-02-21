@@ -1,112 +1,120 @@
 <nav class="navbar" style="background-color: #0C4DA2; color: white;">
-{% load static %}
+    {% load static %}
 
-        <div class="container-fluid">
-            <div class="navbar ">
-                <a class="navbar-brand text-white" href="#">
-                    <img src="{% static 'imagens/logo_ufac_2.png' %}" style="margin: auto; display: flex ">
-                </a>
+    <div class="container-fluid">
+        <div class="navbar ">
+            <a class="navbar-brand text-white" href="#">
+                <img src="{% static 'imagens/logo_ufac_2.png' %}" style="margin: auto; display: flex ">
+            </a>
 
-                <span class="topo">
+            <span class="topo">
                     Universidade Federal do Acre <br>
                     Sistema Médico pericial<br>
                 </span>
 
-            </div>
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-                    aria-controls="offcanvasNavbar" >
-                <span class="navbar-toggler-icon" style="filter: brightness(0) invert(1);"></span>
-            </button>
         </div>
 
-
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-            <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-
-            <div class="offcanvas-body">
-                <ul class="navbar-nav flex-grow-1 pe-3">
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+                aria-controls="offcanvasNavbar">
+            <span class="navbar-toggler-icon" style="filter: brightness(0) invert(1);"></span>
+        </button>
+    </div>
 
 
-                    {#  USUÁRIO AUTENTICADO  #}
-                    {% if user.is_authenticated %}
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
 
-                         <li class="nav-item border-bottom">
-                            <a class="nav-link active" aria-current="page" href="#">Meu Perfil&nbsp;
-                                <i class="fa fa-user" aria-hidden="true"></i></a>
-                        </li>
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
 
-                        <li class="nav-item border-bottom">
-                            <a class="nav-link active" aria-current="page" href="{% url 'agendamentoListagem' %}">
-                                Agendamentos
-                            </a>
-                        </li>
-
-                        <li class="nav-item border-bottom">
-                            <a class="nav-link active" aria-current="page" href="{% url 'listaAtendimentos' %}">
-                                Atendimentos
-                            </a>
-                        </li>
-
-                        <li class="nav-item border-bottom">
-                            <a class="nav-link active" aria-current="page" href="{% url 'administrativoListagem' %}">
-                                Administrativo
-                            </a>
-                        </li>
-
-                        <li class="nav-item border-bottom">
-                            <a class="nav-link active" aria-current="page"
-                               href="{% url 'pacienteListagem' %}">Pacientes</a>
-                        </li>
-
-                       <li class="nav-item border-bottom">
-                            <a class="nav-link active" aria-current="page"
-                               href="{% url 'profissionaldasaudeListagem' %}">Profissional de Saúde</a>
-                        </li>
-
-                        <li class="nav-item border-bottom">
-                            <a class="nav-link active" aria-current="page" href="#">Relatórios</a>
-                        </li>
+        <div class="offcanvas-body">
+            <ul class="navbar-nav flex-grow-1 pe-3">
 
 
-                        <li class="nav-item border-bottom">
-                            <a class="nav-link active" aria-current="page" href="{% url 'sair' %}">
-                                Sair&nbsp;<i class="fa fa-sign-out" aria-hidden="true"></i> </a>
-                        </li>
-
-
-
-
-                    {% else %}
-
-                        <li class="nav-item border-bottom">
-                            <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home&nbsp;
-                                <i class="fa fa-home" aria-hidden="true"></i></a>
-                        </li>
-
-
-                         <li class="nav-item border-bottom">
-                            <a class="nav-link active" aria-current="page" href="{% url 'login' %}">
-                                Acessar&nbsp;<i class="fa fa-sign-in" aria-hidden="true"></i> </a>
-                        </li>
-                    {% endif %}
-
-                <br>
+                {#  USUÁRIO AUTENTICADO  #}
+                {% if user.is_authenticated %}
 
                     <li class="nav-item border-bottom">
-                        <a class="nav-link active" aria-current="page" href="#">
-                        Dúvidas ou sugestões?
+                        <a class="nav-link active" aria-current="page" href="#">Meu Perfil&nbsp;
+                            <i class="fa fa-user" aria-hidden="true"></i></a>
+                    </li>
+
+                    <li class="nav-item border-bottom">
+                        <a class="nav-link active" aria-current="page" href="{% url 'agendamentoListagem' %}">
+                            Agendamentos
                         </a>
                     </li>
 
-                </ul>
-                {% comment %} <form class="d-flex mt-3" role="search">
+                    <li class="nav-item border-bottom">
+                        <a class="nav-link active" aria-current="page" href="{% url 'listaAtendimentos' %}">
+                            Atendimentos
+                        </a>
+                    </li>
+
+                    <li class="nav-item border-bottom">
+                        <a class="nav-link active" aria-current="page" href="{% url 'administrativoListagem' %}">
+                            Administrativo
+                        </a>
+                    </li>
+
+                    <li class="nav-item border-bottom">
+                        <a class="nav-link active" aria-current="page"
+                           href="{% url 'pacienteListagem' %}">Pacientes</a>
+                    </li>
+
+                    <li class="nav-item border-bottom">
+                        <a class="nav-link active" aria-current="page"
+                           href="{% url 'profissionaldasaudeListagem' %}">Profissional de Saúde</a>
+                    </li>
+
+                    <li class="nav-item border-bottom">
+                        <a class="nav-link active" aria-current="page" href="#">Relatórios</a>
+                    </li>
+
+
+                    <li class="nav-item border-bottom">
+                        <a class="nav-link active" aria-current="page" href="{% url 'sair' %}">
+                            Sair&nbsp;<i class="fa fa-sign-out" aria-hidden="true"></i> </a>
+                    </li>
+
+
+
+
+                {% else %}
+
+                    <li class="nav-item border-bottom">
+                        <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home&nbsp;
+                            <i class="fa fa-home" aria-hidden="true"></i></a>
+                    </li>
+
+
+                    <li class="nav-item border-bottom">
+                        <a class="nav-link active" aria-current="page" href="{% url 'login' %}">
+                            Acessar&nbsp;<i class="fa fa-sign-in" aria-hidden="true"></i> </a>
+                    </li>
+
+                {% endif %}
+
+                <br>
+
+                <li class="nav-item border-bottom">
+                    <a class="nav-link active" aria-current="page" href="#">
+                        Dúvidas ou sugestões?
+                    </a>
+                </li>
+
+                <li class="nav-item border-bottom">
+                    <a class="nav-link active" aria-current="page" href="#">
+                        Suporte
+                    </a>
+                </li>
+
+            </ul>
+            {% comment %} <form class="d-flex mt-3" role="search">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Search</button>
                 </form> {% endcomment %}
-            </div>
         </div>
-    </nav>
+    </div>
+</nav>

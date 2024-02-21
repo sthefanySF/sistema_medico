@@ -49,9 +49,9 @@ def logar(request):
                     return redirect(request.GET.get('next'))
                 return redirect('agendamentoListagem')
             else:
-                messages.error(request, 'Usuário inativo')
+                messages.error(request, 'Usuário inativo. Entre em contato com a administração do sistema.')
         else:
-            messages.error(request, 'Usuário ou senha inválidos!')
+            messages.error(request, 'Usuário ou senha inválidos! Tente novamente.')
     return render(request, 'consultas/login.html', locals())
 
 
