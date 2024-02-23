@@ -4,8 +4,10 @@
 {% block title %}Confirmação de Agendamento{% endblock %}
 
 {% block content %}
+{%load static  %}
+
 {#  Verifica se há message na views e mostra caso true  #}
-{% if messages %}{% include 'message.html' %}{% endif %}
+{% if messages %}{% include 'messages.html' %}{% endif %}
 
 
 {#  Código da Raquel  #}

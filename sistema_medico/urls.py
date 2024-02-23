@@ -53,7 +53,6 @@ urlpatterns = [
     path('atendimentos/<int:atendimento_id>/', visualizar_atendimento, name='visualizarAtendimento'),
     path('login/', user_login, name='login'),
     path('agendamento/<int:pk>/confirmar/', confirm_agendamento, name='confirmAgendamento'),
-    path('agendamento/<int:pk>/confirmar/', confirm_agendamento, name='confirmAgendamento'),
     path('agendamento/<int:pk>/download/', download_comprovante, name='downloadComprovante'),
     path('confirmar-atendimento/<int:agendamento_id>/', confirmar_atendimento, name='confirmar_atendimento'),
     path('download-comprovante-atendimento/<int:atendimento_id>/', download_comprovante_atendimento, name='download_comprovante_atendimento'),

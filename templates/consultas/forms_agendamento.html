@@ -4,7 +4,7 @@
 
 {% block content %}
   <h4>Agendamento de Pacientes</h4>
-  <form action="{% url 'agendamentoCreate' %}" method="POST" class="needs-validation border p-3" novalidate>
+  <form action="{% url 'agendamentoCreate' %}" method="POST" class="needs-validation border p-3">
       {% csrf_token %}
       <!-- Adicione o campo status_atendimento como um campo oculto -->
       <input type="hidden" name="status_atendimento" value="pendente">

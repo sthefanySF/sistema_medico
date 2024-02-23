@@ -24,7 +24,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
-# from xhtml2pdf import pisa
+from xhtml2pdf import pisa
 import io
 
 
