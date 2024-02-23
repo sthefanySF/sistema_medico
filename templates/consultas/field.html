@@ -1,0 +1,14 @@
+
+{# RETORNA MENSAGENS DE ERROS #}
+
+{{ field }}
+{% if field.errors %}
+    <div class=" alert alert-danger text-center" style="padding: 5px; margin-top: 3px" >
+{#    Verifica se a variável small está definida e, se sim, inclui um <small> com um tamanho de fonte de 10 pixels. #}
+{#    Isso é útil para diminuir o tamanho da fonte se necessário.#}
+
+
+        {{ field.errors|striptags }}
+
+    </div>
+{% endif %}

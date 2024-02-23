@@ -1,8 +1,8 @@
+
 from django import forms
-from .models import Atendimento, Paciente
-from .models import Administrativo
-from .models import Profissionaldasaude
-from .models import Agendamento, Paciente
+from .models import Atendimento, Administrativo, Profissionaldasaude, Agendamento, Paciente
+
+from django.contrib.auth.models import User
 
 class PacienteForm(forms.ModelForm):
     class Meta:
@@ -48,26 +48,48 @@ class AdministrativoForm(forms.ModelForm):
             'sexo': forms.RadioSelect(choices=[('M', 'Masculino'), ('F', 'Feminino')]),
         }
 
+
+# class UserForm(forms.ModelForm):
+#     class Meta:
+#         model = User
+#         # fields = ('username', 'email', 'password', 'confirme_senha')
+#         fields = ('username',)
+
+
 class ProfissionaldasaudeForm(forms.ModelForm):
     class Meta:
         model = Profissionaldasaude
-        fields = ['nome', 'data_nascimento', 'email', 'rg', 'cpf', 'sexo', 'identificacao_unica', 'area','unidade_siass','formacao','conselho','registro', 'ddd_telefone','uf','cep', 'cidade', 'bairro',  'numero',  'complemento']
+
+        exclude = ('usuario')
+        # fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(ProfissionaldasaudeForm, self).__init__(*args, **kwargs)
+
+        for f in self.fields:
+            self.fields[f].widget.attrs['class'] = 'form-control'
+
+
+        # fields = ['nome', 'data_nascimento', 'email', 'rg', 'cpf', 'sexo', 'identificacao_unica', 'area',
+        #           'unidade_siass','formacao','conselho','registro', 'ddd_telefone','uf','cep', 'cidade', 'bairro',
+        #           'numero',  'complemento']
 
         
-        
-        labels = {
-            'data_nascimento': 'Data de Nascimento',
-            'identificacao_unica': 'Identificação Única',
-            'ddd_telefone': 'DDD Telefone',
-            'unidade_siass':'Unidade SIASS',
-          
-        }
-        
-        
-        
-        widgets = {
-            'sexo': forms.RadioSelect(choices=[('M', 'Masculino'), ('F', 'Feminino')]),
-        }
+        # labels = {
+        #     'data_nascimento': 'Data de Nascimento',
+        #     'identificacao_unica': 'Identificação Única',
+        #     'ddd_telefone': 'DDD Telefone',
+        #     'unidade_siass':'Unidade SIASS',
+        #
+        # }
+        #
+        #
+        #
+        # widgets = {
+        #     'sexo': forms.RadioSelect(choices=[('M', 'Masculino'), ('F', 'Feminino')]),
+        # }
+
+
 
 class AgendamentoForm(forms.ModelForm):
     class Meta:

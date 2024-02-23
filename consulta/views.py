@@ -2,31 +2,32 @@ from audioop import reverse
 from imaplib import _Authenticator
 from multiprocessing import AuthenticationError
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView
-from consulta.forms import AdministrativoForm, AgendamentoForm, AgendamentoReagendarForm, AtendimentoForm, JustificativaCancelamentoForm, PacienteForm, PesquisaAgendamentoForm, ProfissionaldasaudeForm
+
+# from consulta.forms import AdministrativoForm, AgendamentoForm, AgendamentoReagendarForm, AtendimentoForm,
+# JustificativaCancelamentoForm, PacienteForm, PesquisaAgendamentoForm, ProfissionaldasaudeForm
+from consulta.forms import *
 
 from consulta.models import Atendimento, Paciente, Administrativo
 from consulta.models import Agendamento, Paciente, Profissionaldasaude
 from datetime import date
 from django.shortcuts import render
-from django.urls import reverse_lazy
-from django.urls import reverse
+from django.urls import reverse_lazy, reverse
 
 from django.contrib import messages
-from django.shortcuts import render, redirect, get_object_or_404
 
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-from django.shortcuts import redirect
+
 from django.template.loader import render_to_string
 from xhtml2pdf import pisa
 import io
 
+from django.template.response import TemplateResponse
 
 
 def home(request):
@@ -319,26 +320,51 @@ class AdministrativoCreate(CreateView):
         
         return response
 
-    
-class ProfissionaldasaudeCreate(CreateView):
-    model = Profissionaldasaude
-    fields = ['nome', 'data_nascimento','email','rg','cpf','sexo','identificacao_unica','area','formacao','conselho','registro','unidade_siass','ddd_telefone','uf','cep','cidade','bairro','numero', 'complemento']
-    template_name = 'consultas/cadastro_profissionaldasaude.html'
-    success_url = reverse_lazy('profissionaldasaudeListagem')
-    
-    
-    
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        messages.success(self.request, 'Profissional da saúde cadastrado com sucesso!')
-        print("Profissional da saúde cadastrado com sucesso!")
-        return response
 
-    def form_invalid(self, form):
-        messages.error(self.request, 'Erro ao cadastrar o profissional da saúde. Verifique os dados e tente novamente.')
-        print("Erro ao cadastrar o profissional da saúde.")
-        print(form.errors)  
-        return super().form_invalid(form)
+# CÓDIGO DA RAQUEL
+def ProfissionaldasaudeCreate(request):
+
+    if request.method == 'POST':
+        formps = ProfissionaldasaudeForm(request.POST)
+        # formu = UserForm
+        # if formps.is_valid() and formu.is_valid():
+        if formps.is_valid():
+            ps = formps.save(commit=False)
+            ps.save()
+            # fu = formu.save(commit=False)
+            messages.success(request, 'Cadastrado com sucesso!')
+            return redirect(reverse_lazy('profissionaldasaudeListagem'))
+        else:
+            messages.error(request, 'Corrija o formulário!')
+
+    else:
+        formps = ProfissionaldasaudeForm()
+
+    return TemplateResponse(request, 'consultas/cadastro_profissionaldasaude.html', locals())
+
+
+
+
+
+# class ProfissionaldasaudeCreate(CreateView):
+#     model = Profissionaldasaude
+#     fields = ['nome', 'data_nascimento','email','rg','cpf','sexo','identificacao_unica','area','formacao','conselho','registro','unidade_siass','ddd_telefone','uf','cep','cidade','bairro','numero', 'complemento']
+#     template_name = 'consultas/cadastro_profissionaldasaude.html'
+#     success_url = reverse_lazy('profissionaldasaudeListagem')
+#
+#
+#
+#     def form_valid(self, form):
+#         response = super().form_valid(form)
+#         messages.success(self.request, 'Profissional da saúde cadastrado com sucesso!')
+#         print("Profissional da saúde cadastrado com sucesso!")
+#         return response
+#
+#     def form_invalid(self, form):
+#         messages.error(self.request, 'Erro ao cadastrar o profissional da saúde. Verifique os dados e tente novamente.')
+#         print("Erro ao cadastrar o profissional da saúde.")
+#         print(form.errors)
+#         return super().form_invalid(form)
 
 
 

@@ -80,8 +80,8 @@ class Administrativo(models.Model):
     
 class Profissionaldasaude(models.Model):
     usuario = models.ForeignKey(User,models.SET_NULL,blank=True,null=True,)
-    nome = models.CharField(max_length=100)
-    data_nascimento = models.DateField()
+    nome = models.CharField('Nome Completo', max_length=100)
+    data_nascimento = models.DateField(u'Data de Nascimento',)
     email = models.EmailField()
     rg = models.CharField(max_length=20)
     cpf = models.CharField(max_length=14)
