@@ -375,6 +375,7 @@ class AgendamentoCreate(CreateView):
     success_url = reverse_lazy('agendamentoListagem')
 
     def form_valid(self, form):
+        # Criar o objeto apenas se o formulário for válido
         response = super().form_valid(form)
 
         # Redireciona para a tela de confirmação
@@ -384,7 +385,15 @@ class AgendamentoCreate(CreateView):
         messages.error(self.request, 'Erro ao realizar o agendamento. Verifique os dados e tente novamente.')
         print("Erro ao realizar o agendamento.")
         print(form.errors)  
-        return redirect('confirmAgendamento', pk=self.object.pk)
+        
+        # Renderizar o template novamente com o formulário inválido
+        return self.render_to_response(self.get_context_data(form=form))
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['messages'] = messages.get_messages(self.request)
+        return context
+    
 
     def generate_pdf(self, agendamento):
         html_content = render_to_string('consultas/comprovantePdf_agendamento.html', {'agendamento': agendamento})

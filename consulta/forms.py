@@ -1,7 +1,9 @@
 
+
+from datetime import datetime
+from django.utils import timezone
 from django import forms
 from .models import Atendimento, Administrativo, Profissionaldasaude, Agendamento, Paciente
-
 from django.contrib.auth.models import User
 
 class PacienteForm(forms.ModelForm):
@@ -60,7 +62,7 @@ class ProfissionaldasaudeForm(forms.ModelForm):
     class Meta:
         model = Profissionaldasaude
 
-        exclude = ('usuario')
+        exclude = ('usuario',)
         # fields = '__all__'
 
     def __init__(self, *args, **kwargs):
@@ -92,6 +94,18 @@ class ProfissionaldasaudeForm(forms.ModelForm):
 
 
 class AgendamentoForm(forms.ModelForm):
+    def clean_data_agendamento(self):
+        # Obtém a data de agendamento do formulário
+        data_agendamento = self.cleaned_data.get('data_agendamento')
+        
+        # Verifica se a data de agendamento é no passado
+        if data_agendamento.date() < datetime.now().date():
+            # Se for no passado, levanta uma exceção de ValidationError
+            raise forms.ValidationError("A data do agendamento não pode ser no passado.")
+        
+        # Retorna a data de agendamento se tudo estiver válido
+        return data_agendamento
+
     class Meta:
         model = Agendamento
         exclude = ['id']  # Exclui o campo 'id' do formulário
@@ -109,6 +123,7 @@ class AgendamentoForm(forms.ModelForm):
             'prioridade_atendimento': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'status_atendimento': forms.HiddenInput(attrs={'value': 'pendente'}),  # Defina o valor padrão aqui
         }
+
 
 
 
