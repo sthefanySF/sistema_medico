@@ -100,6 +100,7 @@ class AgendamentoForm(forms.ModelForm):
         
         # Verifica se a data de agendamento é no passado
         if data_agendamento.date() < datetime.now().date():
+
             # Se for no passado, levanta uma exceção de ValidationError
             raise forms.ValidationError("A data do agendamento não pode ser no passado.")
         

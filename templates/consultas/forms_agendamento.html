@@ -3,6 +3,9 @@
 {% block title %}Agendamento de Pacientes{% endblock %}
 
 {% block content %}
+{% if messages %}{% include 'messages.html' %}{% endif %}
+
+
     <div class="container mt-3">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -10,6 +13,7 @@
                     <div class="card-header" style="border-bottom: 1px solid #0d6efd;">
                         <h4 class="card-titler text-center  mb-3">Agendamento de Pacientes</h4>
                     </div>
+                   
                     <div class="card-body">
                         <form action="{% url 'agendamentoCreate' %}" method="POST" class="form-control  border p-3">
 
@@ -29,7 +33,7 @@
                             </div>
 
                             <div class="mb-3 row">
-                                <label for="{{ form.profissional_saude.id_for_label }}" class="col-sm-2 col-form-label">Profissional
+                            <label for="{{ form.profissional_saude.id_for_label }}" class="col-sm-2 col-form-label">Profissional
                                     de Saúde</label>
                                 <div class="col-sm-10">
                                     {{ form.profissional_saude }}
@@ -42,16 +46,20 @@
                             <div class="mb-3 row">
                                 <label for="{{ form.data_agendamento.id_for_label }}" class="col-sm-2 col-form-label">Data da consulta</label>
                                 <div class="col-sm-10">
-                                    {{ form.data_agendamento }}
+                                    {% comment %} {{ form.data_agendamento }}
                                     {% if form.data_agendamento.errors %}
-                                        <div class="invalid-feedback">
+                                        <div>
                                             {{ form.data_agendamento.errors|first }}
                                         </div>
                                     {% else %}
-                                        <div class="invalid-feedback">
-                                            Por favor, forneça uma data de agendamento válida.
+                                    {% endif %} {% endcomment %}
+                                        <div >
+                                            
+                                            {% with form.data_agendamento as field %} 
+                                                {% include 'field.html' %}
+                                            {% endwith %}
                                         </div>
-                                    {% endif %}
+                                   
                                 </div>
                             </div>
 

@@ -273,6 +273,7 @@ def user_login(request):
         form = AuthenticationForm()
     return render(request, 'consultas/login.html', {'form': form})
 
+
 class PacienteCreate(CreateView):
     model = Paciente
     fields = ['nome', 'data_nascimento', 'email', 'rg', 'cpf', 'sexo', 'matricula', 'tipo_paciente',
