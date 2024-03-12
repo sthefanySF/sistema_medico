@@ -3,7 +3,9 @@
 {% block title %}Atendimento{% endblock %}
 
 {% block content %}
+
   <div class="container mt-5">
+    
     <div class="text-center mb-4 custom-title">
       <h4>Atendimento</h4>
     </div>
@@ -28,6 +30,7 @@
       </dd>
   
       <dt class="col-sm-3 border-bottom label-title">Turno:</dt>
+
       <dd class="col-sm-9 border-bottom">
           {% if agendamento.turno == 'manha' %}
               Manhã
@@ -38,6 +41,7 @@
               {{ agendamento.turno }}
           {% endif %}
       </dd>
+
     </dl>
 
     <div class="container mt-3">

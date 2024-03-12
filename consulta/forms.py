@@ -129,6 +129,15 @@ class AgendamentoForm(forms.ModelForm):
 
 
 class AgendamentoReagendarForm(forms.ModelForm):
+    def clean_data_agendamento(self):
+        data_agendamento = self.cleaned_data.get('data_agendamento')
+
+        if data_agendamento.date() < datetime.now().date():
+            raise forms.ValidationError("A data do reagendamento não pode ser no passado.")
+
+        return data_agendamento
+
+
     class Meta:
         model = Agendamento
         fields = ['profissional_saude', 'data_agendamento', 'prioridade_atendimento', 'justificativa_cancelamento']

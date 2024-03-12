@@ -427,6 +427,7 @@ def download_comprovante(request, pk):
 
     return response
 
+
 class AtendimentoCreate(CreateView):
     model = Atendimento
     form_class = AtendimentoForm
