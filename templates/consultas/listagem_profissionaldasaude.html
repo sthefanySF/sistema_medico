@@ -3,58 +3,74 @@
 {% block title %}Lista do Profissionais da Saude{% endblock %}
 
 {% block content %}
-{#  Verifica se há message na views e mostra caso true  #}
-{% if messages %}{% include 'messages.html' %}{% endif %}
-  <h4 class="text-center mb-4 custom-title">Lista do Profissionais da Saude</h4>
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>Nome</th>
-        <th>Data de Nascimento</th>
-        <th>E-mail</th>
-        <th>RG</th>
-        <th>CPF</th>
-        <th>Sexo</th>
-        <th>Identificação Única</th>
-        <th>Área/Rqe</th>
-        <th>Unidade SIASS</th>
-        <th>Formação</th>
-        <th>Função</th>
-        <th>Conselho</th>
-        <th>Ações</th>
-        
-       
-      </tr>
-    </thead>
-    <tbody>
-      {% for profissionaldasaude in profissionaldasaude %}
-      <tr>
-        <td>{{ profissionaldasaude.nome }}</td>
-        <td>{{ profissionaldasaude.data_nascimento | date:"d/m/Y " }}</td>
-        <td>{{ profissionaldasaude.email }}</td>
-        <td>{{ profissionaldasaude.rg }}</td>
-        <td>{{ profissionaldasaude.cpf }}</td>
-        <td>{{ profissionaldasaude.get_sexo_display }}</td>
-        <td>{{ profissionaldasaude.identificacao_unica }}</td>
-        <td>{{ profissionaldasaude.area }}</td>
-        <td>{{ profissionaldasaude.unidade_siass }}</td>
-        <td>{{ profissionaldasaude.formacao }}</td>
-        <td>{{ profissionaldasaude.conselho }}</td>
-        <td>{{ profissionaldasaude.registro }}</td>
-        <td>
-          <div class="btn-group" role="group" aria-label="Ações">
-            <a href="{% url 'profissionaldasaudeEditar' profissionaldasaude.id %}" class="btn btn-primary">Editar</a>
-            <a href="{% url 'profissionaldasaudeExcluir' profissionaldasaude.id %}" class="btn btn-danger ms-1">Excluir</a>
-          </div>
-        </td>
-      </tr>
-      
-       
-    {% endfor %}
-  </tbody>
-</table>
-<div class="d-flex justify-content-between">
-  <a class="btn btn-primary" href="{% url 'home' %}">Voltar</a>
-  <a class="btn btn-primary" href="{% url 'profissionaldasaudeCreate'  %}">Cadastrar</a>
-</div>
+    {#  Verifica se há message na views e mostra caso true  #}
+    {% if messages %}{% include 'messages.html' %}{% endif %}
+
+    <div class="container mt-3">
+
+        <h4 class="text-center mb-4 custom-title">Lista do Profissionais da Saude</h4>
+
+        <div class="card border-primary">
+            <div class="card card-body">
+
+                <div class="d-flex justify-content-between">
+                    <a class="btn btn-primary" href="{% url 'home' %}">Voltar</a>
+                    <a class="btn btn-primary" href="{% url 'profissionaldasaudeCreate' %}">Cadastrar</a>
+                </div>
+                <div class="card-body table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Data de Nascimento</th>
+                            <th>E-mail</th>
+                            <th>RG</th>
+                            <th>CPF</th>
+                            <th>Sexo</th>
+                            <th>Identificação Única</th>
+                            <th>Área/Rqe</th>
+                            <th>Unidade SIASS</th>
+                            <th>Formação</th>
+                            <th>Função</th>
+                            <th>Conselho</th>
+                            <th>Ações</th>
+
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for profissionaldasaude in profissionaldasaude %}
+                            <tr>
+                                <td>{{ profissionaldasaude.nome }}</td>
+                                <td>{{ profissionaldasaude.data_nascimento | date:"d/m/Y " }}</td>
+                                <td>{{ profissionaldasaude.email }}</td>
+                                <td>{{ profissionaldasaude.rg }}</td>
+                                <td>{{ profissionaldasaude.cpf }}</td>
+                                <td>{{ profissionaldasaude.get_sexo_display }}</td>
+                                <td>{{ profissionaldasaude.identificacao_unica }}</td>
+                                <td>{{ profissionaldasaude.area }}</td>
+                                <td>{{ profissionaldasaude.unidade_siass }}</td>
+                                <td>{{ profissionaldasaude.formacao }}</td>
+                                <td>{{ profissionaldasaude.conselho }}</td>
+                                <td>{{ profissionaldasaude.registro }}</td>
+                                <td>
+                                    <div class="btn-group" role="group" aria-label="Ações">
+                                        <a href="{% url 'profissionaldasaudeEditar' profissionaldasaude.id %}"
+                                           class="btn btn-primary">Editar</a>
+                                        <a href="{% url 'profissionaldasaudeExcluir' profissionaldasaude.id %}"
+                                           class="btn btn-danger ms-1">Excluir</a>
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 {% endblock %}

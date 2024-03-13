@@ -71,6 +71,12 @@ class ProfissionaldasaudeForm(forms.ModelForm):
         for f in self.fields:
             self.fields[f].widget.attrs['class'] = 'form-control'
 
+    def clean_data_nascimento(self):
+        data_nascimeto = self.cleaned_data.get('data_nascimento')
+        if data_nascimeto > datetime.now().date():
+            raise forms.ValidationError('Informe uma data válida.')
+        return data_nascimeto
+
 
         # fields = ['nome', 'data_nascimento', 'email', 'rg', 'cpf', 'sexo', 'identificacao_unica', 'area',
         #           'unidade_siass','formacao','conselho','registro', 'ddd_telefone','uf','cep', 'cidade', 'bairro',

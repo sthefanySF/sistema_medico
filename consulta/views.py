@@ -151,6 +151,7 @@ def profissionaldasaude_editar(request, pk):
         form = ProfissionaldasaudeForm(request.POST, instance=profissionaldasaude)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Cadastro atualizado.')
             return redirect('profissionaldasaudeListagem')
     else:
         form = ProfissionaldasaudeForm(instance=profissionaldasaude)

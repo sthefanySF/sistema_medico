@@ -15,9 +15,12 @@
     </div>
 
     <div class="mb-3 row">
-      <label for="{{ form.data_nascimento.id_for_label }}" class="col-sm-3 col-form-label">Data de Nascimento</label>
+      <label for="{{ form.data_nascimento.id_for_label }}" class="col-sm-3 col-form-label">
+          Data de Nascimento
+      </label>
+
       <div class="col-sm-9">
-        {{ form.data_nascimento }}
+        {% with form.data_nascimento as field %} {% include 'field.html' %}{% endwith %}
       </div>
     </div>
 
