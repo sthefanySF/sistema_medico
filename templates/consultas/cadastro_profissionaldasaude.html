@@ -8,168 +8,182 @@
 {% block content %}
     {% if messages %} {% include 'messages.html' %} {% endif %}
 
-    <h4 class="text-center mb-5 ">Cadastrar Profissional da Saúde</h4>
+    <div class="container mt-3">
 
-    <form action="" method="POST" class=" ">
-        <div class="col-md-10 offset-md-1">
-            {% csrf_token %}
-{#                            {{ formps.errors }}#}
-            {#                {{ formps }}#}
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card">
 
-            <div class=" card card-body ">
-
-                <div class=" m-2 jumbotron">
-                    <div class=" m-2">
-                        <div class="mb-3 row">
-                            <label for="{{ formps.nome.id.label_tag }}" class="col-sm-2 "><b>Nome</b></label>
-                            <div class="col-sm-4">
-                                {{ formps.nome }}
-                            </div>
-
-                            <label for="{{ formps.data_nascimento.id_for_label }}" class="col-sm-2 ">
-                                <b>Data de Nascimento</b>
-                            </label>
-                            <div class="col-sm-4">
-                                {% with formps.data_nascimento as field %}
-                                    {% include 'field.html' %}
-                                    
-                                {% endwith %}
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label for="{{ formps.email.id_for_label }}"
-                                   class="col-sm-2 col-form-label"><b>E-mail</b></label>
-                            <div class="col-sm-4">
-                                {{ formps.email }}
-                            </div>
-
-                            <label for="{{ formps.rg.id_for_label }}" class="col-sm-2 col-form-label"><b>RG</b></label>
-                            <div class="col-sm-4">
-                                {{ formps.rg }}
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label for="{{ formps.cpf.id_for_label }}"
-                                   class="col-sm-2 col-form-label"><b>CPF</b></label>
-                            <div class="col-sm-4">
-                                {{ formps.cpf }}
-                            </div>
-
-                            <label for="{{ formps.sexo.id_for_label }}"
-                                   class="col-sm-2 col-form-label"><b>Sexo</b></label>
-                            <div class="col-sm-4">
-                                {{ formps.sexo }}
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label for="{{ formps.identificacao_unica.id_for_label }}"
-                                   class="col-sm-2 col-form-label"><b>Identificação
-                                Única</b></label>
-                            <div class="col-sm-4">
-                                {{ formps.identificacao_unica }}
-                            </div>
-
-                            <label for="{{ formps.cep.id_for_label }}"
-                                   class="col-sm-2 col-form-label"><b>CEP</b></label>
-                            <div class="col-sm-4">
-                                {% with formps.cep as field %}{% include 'field.html' %}{% endwith %}
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label for="{{ formps.cidade.id_for_label }}"
-                                   class="col-sm-2 col-form-label"><b>Cidade</b></label>
-                            <div class="col-sm-4">
-                                {{ formps.cidade }}
-                            </div>
-
-                            <label for="{{ formps.bairro.id_for_label }}"
-                                   class="col-sm-2 col-form-label"><b>Bairro</b></label>
-                            <div class="col-sm-4">
-                                {{ formps.bairro }}
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label for="{{ formps.uf.id_for_label }}" class="col-sm-2 col-form-label"><b>UF</b></label>
-                            <div class="col-sm-4">
-                                {{ formps.uf }}
-                            </div>
-
-                            <label for="{{ formps.numero.id_for_label }}"
-                                   class="col-sm-2 col-form-label"><b>Número</b></label>
-                            <div class="col-sm-4">
-                                {{ formps.numero }}
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label for="{{ formps.ddd_telefone.id_for_label }}"
-                                   class="col-sm-2 col-form-label"><b>Telefone</b></label>
-                            <div class="col-sm-4">
-                                {{ formps.ddd_telefone }}
-                            </div>
-
-                            <label for="{{ formps.complemento.id_for_label }}"
-                                   class="col-sm-2 col-form-label"><b>Complemento</b></label>
-                            <div class="col-sm-4">
-                                {{ formps.complemento }}
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label for="{{ formps.area.id_for_label }}"
-                                   class="col-sm-2 col-form-label"><b>Área</b></label>
-                            <div class="col-sm-4">
-                                {{ formps.area }}
-                            </div>
-
-                            <label for="{{ formps.unidade_siass.id_for_label }}"
-                                   class="col-sm-2 col-form-label"><b>Unidade
-                                SIASS</b></label>
-                            <div class="col-sm-4">
-                                {{ formps.unidade_siass }}
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label for="{{ formps.formacao.id_for_label }}"
-                                   class="col-sm-2 col-form-label"><b>Formação</b></label>
-                            <div class="col-sm-4">
-                                {{ formps.formacao }}
-                            </div>
-
-                            <label for="{{ formps.conselho.id_for_label }}"
-                                   class="col-sm-2 col-form-label"><b>Conselho</b></label>
-                            <div class="col-sm-4">
-                                {{ formps.conselho }}
-                            </div>
-                        </div>
-
-                        <div class="mb-3 row">
-                            <label for="{{ formps.registro.id_for_label }}"
-                                   class="col-sm-2 col-form-label"><b>Registro</b></label>
-                            <div class="col-sm-4">
-                                {{ formps.registro }}
-                            </div>
-                        </div>
+                    <div class="card-header mb-4">
+                        <h4 class="text-center m-3 card-title">Cadastrar Profissional da Saúde</h4>
                     </div>
 
-                    <br>
+                    <form action="" method="POST" class="mb-4">
+                        <div class="col-md-10 offset-md-1">
 
-                    <div class="mb-3 text-center">
-                        <button type="submit" class="btn btn-primary">Cadastrar</button>
-                        <a class="btn btn-danger" href="{% url 'profissionaldasaudeListagem' %}">Cancelar</a>
-                    </div>
+                            {% csrf_token %}
+
+                            <div class=" m-2 jumbotron">
+                                <div class=" m-2">
+                                    <div class="mb-3 row">
+                                        <label for="{{ formps.nome.id.label_tag }}"
+                                               class="col-sm-2 "><b>Nome</b></label>
+                                        <div class="col-sm-4">
+                                            {{ formps.nome }}
+                                        </div>
+
+                                        <label for="{{ formps.data_nascimento.id_for_label }}" class="col-sm-2 ">
+                                            <b>Data de Nascimento</b>
+                                        </label>
+                                        <div class="col-sm-4">
+                                            {% with formps.data_nascimento as field %}
+                                                {% include 'field.html' %}{% endwith %}
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3 row">
+                                        <label for="{{ formps.email.id_for_label }}"
+                                               class="col-sm-2 col-form-label"><b>E-mail</b></label>
+                                        <div class="col-sm-4">
+                                            {{ formps.email }}
+                                        </div>
+
+                                        <label for="{{ formps.rg.id_for_label }}"
+                                               class="col-sm-2 col-form-label"><b>RG</b></label>
+                                        <div class="col-sm-4">
+                                            {{ formps.rg }}
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3 row">
+                                        <label for="{{ formps.cpf.id_for_label }}"
+                                               class="col-sm-2 col-form-label"><b>CPF</b></label>
+                                        <div class="col-sm-4">
+                                            {{ formps.cpf }}
+                                        </div>
+
+                                        <label for="{{ formps.sexo.id_for_label }}"
+                                               class="col-sm-2 col-form-label"><b>Sexo</b></label>
+                                        <div class="col-sm-4">
+                                            {{ formps.sexo }}
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3 row">
+                                        <label for="{{ formps.identificacao_unica.id_for_label }}"
+                                               class="col-sm-2 col-form-label"><b>Identificação
+                                            Única</b></label>
+                                        <div class="col-sm-4">
+                                            {{ formps.identificacao_unica }}
+                                        </div>
+
+                                        <label for="{{ formps.cep.id_for_label }}"
+                                               class="col-sm-2 col-form-label"><b>CEP</b></label>
+                                        <div class="col-sm-4">
+                                            {% with formps.cep as field %}{% include 'field.html' %}{% endwith %}
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3 row">
+                                        <label for="{{ formps.cidade.id_for_label }}"
+                                               class="col-sm-2 col-form-label"><b>Cidade</b></label>
+                                        <div class="col-sm-4">
+                                            {{ formps.cidade }}
+                                        </div>
+
+                                        <label for="{{ formps.bairro.id_for_label }}"
+                                               class="col-sm-2 col-form-label"><b>Bairro</b></label>
+                                        <div class="col-sm-4">
+                                            {{ formps.bairro }}
+                                        </div>
+                                    </div>
+
+
+                                    <div class="mb-3 row">
+                                        <label for="{{ formps.uf.id_for_label }}"
+                                               class="col-sm-2 col-form-label"><b>UF</b></label>
+                                        <div class="col-sm-4">
+                                            {{ formps.uf }}
+                                        </div>
+
+                                        <label for="{{ formps.numero.id_for_label }}"
+                                               class="col-sm-2 col-form-label"><b>Número</b></label>
+                                        <div class="col-sm-4">
+                                            {{ formps.numero }}
+                                        </div>
+                                    </div>
+
+
+                                    <div class="mb-3 row">
+                                        <label for="{{ formps.ddd_telefone.id_for_label }}"
+                                               class="col-sm-2 col-form-label"><b>Telefone</b></label>
+                                        <div class="col-sm-4">
+                                            {{ formps.ddd_telefone }}
+                                        </div>
+
+                                        <label for="{{ formps.complemento.id_for_label }}"
+                                               class="col-sm-2 col-form-label"><b>Complemento</b></label>
+                                        <div class="col-sm-4">
+                                            {{ formps.complemento }}
+                                        </div>
+                                    </div>
+
+
+                                    <div class="mb-3 row">
+                                        <label for="{{ formps.area.id_for_label }}"
+                                               class="col-sm-2 col-form-label"><b>Área</b></label>
+                                        <div class="col-sm-4">
+                                            {{ formps.area }}
+                                        </div>
+
+                                        <label for="{{ formps.unidade_siass.id_for_label }}"
+                                               class="col-sm-2 col-form-label"><b>Unidade
+                                            SIASS</b></label>
+                                        <div class="col-sm-4">
+                                            {{ formps.unidade_siass }}
+                                        </div>
+                                    </div>
+
+
+                                    <div class="mb-3 row">
+                                        <label for="{{ formps.formacao.id_for_label }}"
+                                               class="col-sm-2 col-form-label"><b>Formação</b></label>
+                                        <div class="col-sm-4">
+                                            {{ formps.formacao }}
+                                        </div>
+
+                                        <label for="{{ formps.conselho.id_for_label }}"
+                                               class="col-sm-2 col-form-label"><b>Conselho</b></label>
+                                        <div class="col-sm-4">
+                                            {{ formps.conselho }}
+                                        </div>
+                                    </div>
+
+
+                                    <div class="mb-3 row">
+                                        <label for="{{ formps.registro.id_for_label }}"
+                                               class="col-sm-2 col-form-label"><b>Registro</b></label>
+                                        <div class="col-sm-4">
+                                            {{ formps.registro }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <br>
+
+                                <div class="mb-3 text-center">
+                                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                                    <a class="btn btn-danger"
+                                       href="{% url 'profissionaldasaudeListagem' %}">Cancelar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
                 </div>
             </div>
         </div>
-    </form>
-
-
+    </div>
 {% endblock %}
 
 

@@ -3,6 +3,8 @@ from datetime import date
 from django.contrib.auth.models import User
 from django.forms import ValidationError
 
+from consulta.choices import *
+
 
 class Paciente(models.Model):
     nome = models.CharField(max_length=100)
@@ -90,7 +92,7 @@ class Profissionaldasaude(models.Model):
     cep = models.CharField(max_length=9)
     cidade = models.CharField(max_length=50)
     bairro = models.CharField(max_length=50, default='')
-    uf = models.CharField(max_length=2)
+    uf = models.CharField('UF', max_length=2, choices=UF_CHOICE, default='AC')
     numero = models.CharField(max_length=10)
     ddd_telefone = models.CharField(max_length=10)
     complemento = models.CharField(max_length=100, blank=True, null=True, default='') # blank=True, null=True é pra dizer que não é obrigatorio 
