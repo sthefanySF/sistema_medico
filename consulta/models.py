@@ -62,9 +62,9 @@ class Administrativo(models.Model):
     cep = models.CharField(max_length=9)
     cidade = models.CharField(max_length=50)
     bairro = models.CharField(max_length=50, default='')
-    uf = models.CharField(max_length=2)
+    uf = models.CharField('UF', max_length=2, choices=UF_CHOICE, default='AC')
     numero = models.CharField(max_length=10)
-    ddd_telefone = models.CharField(max_length=3)
+    ddd_telefone = models.CharField('Telefone Celular', max_length=14, help_text='Com DDD.')
     complemento = models.CharField(max_length=100, blank=True, null=True, default='')
     orgao = models.CharField(max_length=50, default='')
     lotacao_de_exercicio = models.CharField(max_length=50, default='')
@@ -81,7 +81,7 @@ class Administrativo(models.Model):
     
     
 class Profissionaldasaude(models.Model):
-    usuario = models.ForeignKey(User,models.SET_NULL,blank=True,null=True,)
+    usuario = models.ForeignKey(User, models.SET_NULL, blank=True, null=True,)
     nome = models.CharField('Nome Completo', max_length=100)
     data_nascimento = models.DateField(u'Data de Nascimento',)
     email = models.EmailField()
@@ -94,16 +94,14 @@ class Profissionaldasaude(models.Model):
     bairro = models.CharField(max_length=50, default='')
     uf = models.CharField('UF', max_length=2, choices=UF_CHOICE, default='AC')
     numero = models.CharField(max_length=10)
-    ddd_telefone = models.CharField(max_length=10)
+    ddd_telefone = models.CharField('Telefone Celular', max_length=14, help_text='Com DDD.')
     complemento = models.CharField(max_length=100, blank=True, null=True, default='') # blank=True, null=True é pra dizer que não é obrigatorio 
     area = models.CharField(max_length=50, default='')
     unidade_siass = models.CharField(max_length=50, default='')
     formacao = models.CharField(max_length=20)
     conselho = models.CharField(max_length=20)
     registro = models.CharField(max_length=20)
-    
 
-  
 
     def __str__(self):
         return self.nome
@@ -112,7 +110,12 @@ class Profissionaldasaude(models.Model):
         today = date.today()
         age = today.year - self.data_nascimento.year - ((today.month, today.day) < (self.data_nascimento.month, self.data_nascimento.day))
         return age 
-    
+
+    class Meta:
+        # db_table = 'PROFISSIONALDASAUDE'
+        ordering = ['nome', ]
+        verbose_name = 'Profissonal de saúde'
+        verbose_name_plural = 'Profissonais de saúde'
 
 
 class Agendamento(models.Model):
@@ -137,7 +140,13 @@ class Agendamento(models.Model):
 
     def __str__(self):
         return f"Agendamento para {self.paciente.nome}"
-    
+
+
+    class Meta:
+        ordering = ['-data_agendamento', 'paciente__nome']
+        verbose_name = 'Agendamento'
+        verbose_name_plural = 'Agendamentos'
+
 
 class Atendimento(models.Model):
     agendamento = models.OneToOneField('Agendamento', on_delete=models.CASCADE)
@@ -164,5 +173,5 @@ class Atendimento(models.Model):
         return f"Atendimento para {self.paciente.nome} em {self.data_atendimento}"
 
 
-
- 
+    class Meta:
+        ordering = ['agendamento', ]

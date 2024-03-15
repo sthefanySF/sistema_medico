@@ -17,14 +17,14 @@
 
           <label for="{{ form.data_nascimento.id_for_label }}" class="col-sm-2 col-form-label">Data de Nascimento</label>
           <div class="col-sm-4">
-              {{ form.data_nascimento }}
+               {% with form.data_nascimento as field %}{% include 'field.html'%}{% endwith %}
           </div>
       </div>
       
       <div class="mb-3 row">
           <label for="{{ form.email.id_for_label }}" class="col-sm-2 col-form-label">E-mail</label>
           <div class="col-sm-4">
-              {{ form.email }}
+              {% with form.email as field %} {% include 'field.html' %} {% endwith %}
           </div>
 
           <label for="{{ form.rg.id_for_label }}" class="col-sm-2 col-form-label">{{ form.fields.rg.label }}</label>

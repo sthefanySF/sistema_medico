@@ -137,13 +137,13 @@ def administrativo_excluir(request, pk):
 
     return render(request, 'consultas/excluir_administrativo.html', {'administrativo': administrativo})
 
-
+@login_required
 def listar_profissionaldasaude(request):
     profissionaldasaude = Profissionaldasaude.objects.all()
     return render(request, 'consultas/listagem_profissionaldasaude.html', {'profissionaldasaude': profissionaldasaude})
 
 
-
+@login_required
 def profissionaldasaude_editar(request, pk):
     profissionaldasaude = get_object_or_404(Profissionaldasaude, pk=pk)
 
@@ -304,6 +304,7 @@ class AdministrativoCreate(CreateView):
     success_url = reverse_lazy('administrativoListagem')
     
     def form_valid(self, form):
+        messages.success(self.request, 'Cadastrado com sucesso! Um email foi enviado para definir a senha.')
         response = super().form_valid(form)
         
         #usuário com base nos dados do formulário
@@ -318,9 +319,13 @@ class AdministrativoCreate(CreateView):
         self.object.senha_gerada = password
         usuario.save()
         self.object.save()
-        messages.success(self.request, 'Administrativo cadastrado com sucesso! Um email foi enviado para definir a senha.')
+
         
         return response
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Erro! Verifique os campos preenchidos e tente novamente.')
+        return super().form_invalid(form)
 
 
 # CÓDIGO DA RAQUEL

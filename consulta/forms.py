@@ -32,8 +32,9 @@ class PacienteForm(forms.ModelForm):
 class AdministrativoForm(forms.ModelForm):
     class Meta:
         model = Administrativo
-        fields = ['nome', 'data_nascimento', 'email', 'rg', 'cpf', 'sexo', 'matricula_siape', 'cargo_funcao','orgao','lotacao_de_exercicio', 'ddd_telefone','uf','cep', 'cidade', 'bairro',  'numero',  'complemento']
-
+        # fields = ['nome', 'data_nascimento', 'email', 'rg', 'cpf', 'sexo', 'matricula_siape', 'cargo_funcao','orgao',
+        #           'lotacao_de_exercicio', 'ddd_telefone','uf','cep', 'cidade', 'bairro',  'numero',  'complemento']
+        exclude = ('usuario',)
         
         
         labels = {
