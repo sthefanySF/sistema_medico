@@ -36,7 +36,9 @@
       <div class="mb-3 row">
           <label for="{{ form.cpf.id_for_label }}" class="col-sm-2 col-form-label">{{ form.fields.cpf.label }}</label>
           <div class="col-sm-4">
-              {{ form.cpf }}
+            {% with form.cpf as field %} 
+                {% include 'field.html' %}
+             {% endwith %}
           </div>
 
           <label for="{{ form.sexo.id_for_label }}" class="col-sm-2 col-form-label">{{ form.fields.sexo.label }}</label>

@@ -5,13 +5,20 @@ from django.forms import ValidationError
 
 from consulta.choices import *
 
+from validate_docbr import CPF
+from django.core.exceptions import ValidationError
+
+def validate_cpf(value):
+    cpf = CPF()
+    if not cpf.validate(value):
+        raise ValidationError('CPF inválido.')
 
 class Paciente(models.Model):
     nome = models.CharField(max_length=100)
     data_nascimento = models.DateField()
     email = models.EmailField()
     rg = models.CharField(max_length=20)
-    cpf = models.CharField(max_length=14)
+    cpf = models.CharField(max_length=14, validators=[validate_cpf])
     sexo = models.CharField(max_length=1, choices=[('M', 'Masculino'), ('F', 'Feminino')])
     matricula = models.CharField(max_length=20)
     TIPO_PACIENTE_CHOICES = [
@@ -56,7 +63,7 @@ class Administrativo(models.Model):
     data_nascimento = models.DateField()
     email = models.EmailField(validators=[validate_unique_email])
     rg = models.CharField(max_length=20)
-    cpf = models.CharField(max_length=14, validators=[validate_unique_cpf])
+    cpf = models.CharField(max_length=14, validators=[validate_cpf])
     sexo = models.CharField(max_length=1, choices=[('M', 'Masculino'), ('F', 'Feminino')])
     cargo_funcao = models.CharField(max_length=50, default='')
     cep = models.CharField(max_length=9)
@@ -86,7 +93,7 @@ class Profissionaldasaude(models.Model):
     data_nascimento = models.DateField(u'Data de Nascimento',)
     email = models.EmailField()
     rg = models.CharField(max_length=20)
-    cpf = models.CharField(max_length=14)
+    cpf = models.CharField(max_length=14, validators=[validate_cpf])
     sexo = models.CharField(max_length=1, choices=[('M', 'Masculino'), ('F', 'Feminino')]) #O parâmetro choices em um campo CharField ou IntegerField é usado para fornecer uma lista de escolhas para esse campo
     identificacao_unica = models.CharField(max_length=50, default='')
     cep = models.CharField(max_length=9)

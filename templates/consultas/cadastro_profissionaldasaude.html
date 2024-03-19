@@ -59,8 +59,11 @@
                                         <label for="{{ formps.cpf.id_for_label }}"
                                                class="col-sm-2 col-form-label"><b>CPF</b></label>
                                         <div class="col-sm-4">
-                                            {{ formps.cpf }}
+                                            {% with formps.cpf as field %} 
+                                                {% include 'field.html' %}
+                                         {% endwith %}
                                         </div>
+                                        
 
                                         <label for="{{ formps.sexo.id_for_label }}"
                                                class="col-sm-2 col-form-label"><b>Sexo</b></label>
