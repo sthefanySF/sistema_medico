@@ -27,6 +27,12 @@ class PacienteForm(forms.ModelForm):
             'tipo_paciente': forms.Select(choices=Paciente.TIPO_PACIENTE_CHOICES),
         }
 
+    def clean_data_nascimento(self):
+        data_nascimeto = self.cleaned_data.get('data_nascimento')
+        if data_nascimeto > datetime.now().date():
+            raise forms.ValidationError('Informe uma data válida.')
+        return data_nascimeto
+
 
         
 class AdministrativoForm(forms.ModelForm):
@@ -50,6 +56,12 @@ class AdministrativoForm(forms.ModelForm):
         widgets = {
             'sexo': forms.RadioSelect(choices=[('M', 'Masculino'), ('F', 'Feminino')]),
         }
+
+    def clean_data_nascimento(self):
+        data_nascimeto = self.cleaned_data.get('data_nascimento')
+        if data_nascimeto > datetime.now().date():
+            raise forms.ValidationError('Informe uma data válida.')
+        return data_nascimeto
 
 
 # class UserForm(forms.ModelForm):
