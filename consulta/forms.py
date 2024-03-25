@@ -57,6 +57,14 @@ class AdministrativoForm(forms.ModelForm):
             'sexo': forms.RadioSelect(choices=[('M', 'Masculino'), ('F', 'Feminino')]),
         }
 
+
+    def __init__(self, *args, **kwargs):
+        super(AdministrativoForm, self).__init__(*args, **kwargs)
+        # self.fields['data_nascimento'].error_messages = {'required': 'Email é um campo obrigatório.'}
+
+        for f in self.fields:
+            self.fields[f].widget.attrs['class'] = 'form-control'
+
     def clean_data_nascimento(self):
         data_nascimeto = self.cleaned_data.get('data_nascimento')
         if data_nascimeto > datetime.now().date():
