@@ -21,32 +21,38 @@
                             {% csrf_token %}
 
                             <div class=" m-2 jumbotron">
+
                                 <div class=" m-2">
                                     <div class="mb-3 row">
                                         <label for="{{ form.nome.id_for_label }}"
-                                               class="col-sm-2 "><b>Nome</b></label>
+                                               class="col-sm-2 "><b>Nome</b>
+                                        </label>
                                         <div class="col-sm-4">
                                             {{ form.nome }}
                                         </div>
 
+
                                         <label for="{{ form.data_nascimento.id_for_label }}" class="col-sm-2 ">
                                             <b>Data de Nascimento</b>
                                         </label>
-                                        <div class="col-sm-4">
+                                        <div class="col-sm-2">
                                             {% with form.data_nascimento as field %}
                                                 {% include 'field.html' %}{% endwith %}
                                         </div>
                                     </div>
 
+
                                     <div class="mb-3 row">
                                         <label for="{{ form.email.id_for_label }}"
-                                               class="col-sm-2 col-form-label"><b>E-mail</b></label>
+                                               class="col-sm-2 col-form-label"><b>E-mail</b>
+                                        </label>
                                         <div class="col-sm-4">
                                             {% with form.email as field %} {% include 'field.html' %} {% endwith %}
                                         </div>
 
                                         <label for="{{ form.rg.id_for_label }}"
-                                               class="col-sm-2 col-form-label"><b>RG</b></label>
+                                               class="col-sm-2 col-form-label"><b>RG</b>
+                                        </label>
                                         <div class="col-sm-4">
                                             {{ form.rg }}
                                         </div>
@@ -54,7 +60,9 @@
 
                                     <div class="mb-3 row">
                                         <label for="{{ form.cpf.id_for_label }}"
-                                               class="col-sm-2 col-form-label"><b>CPF</b></label>
+                                               class="col-sm-2 col-form-label">
+                                        </label>
+
                                         <div class="col-sm-4">
                                             {% with form.cpf as field %}
                                                 {% include 'field.html' %}
@@ -163,4 +171,24 @@
             </div>
         </div>
     </div>
+
+
+     <script>
+
+        const q = (e) => document.querySelector(e);
+        const qA = (e) => document.querySelectorAll(e);
+        q("body").onload = () => {
+            const itensModificar = ["input[type='text']", "input[type='email']", "select", "input[type='file']"];
+            itensModificar.forEach((seletor, index) => {
+                let itens = qA(seletor);
+                itens.forEach((item, index) => {
+                    item.classList.add("form-control");
+                });
+            });
+        }
+
+    </script>
+
+
+
 {% endblock %}
