@@ -35,19 +35,23 @@
                                         <label for="{{ form.data_nascimento.id_for_label }}" class="col-sm-2 ">
                                             <b>Data de Nascimento</b>
                                         </label>
-                                        <div class="col-sm-2">
+                                        <div class="col-sm-4">
                                             {% with form.data_nascimento as field %}
-                                                {% include 'field.html' %}{% endwith %}
+                                                {% include 'field.html' %}
+                                            {% endwith %}
                                         </div>
                                     </div>
 
 
                                     <div class="mb-3 row">
-                                        <label for="{{ form.email.id_for_label }}"
-                                               class="col-sm-2 col-form-label"><b>E-mail</b>
+                                        <label for="{{ form.cpf.id_for_label }}"
+                                               class="col-sm-2 col-form-label"><b>CPF</b>
                                         </label>
+
                                         <div class="col-sm-4">
-                                            {% with form.email as field %} {% include 'field.html' %} {% endwith %}
+                                            {% with form.cpf as field %}
+                                                {% include 'field.html' %}
+                                            {% endwith %}
                                         </div>
 
                                         <label for="{{ form.rg.id_for_label }}"
@@ -59,15 +63,13 @@
                                     </div>
 
                                     <div class="mb-3 row">
-                                        <label for="{{ form.cpf.id_for_label }}"
-                                               class="col-sm-2 col-form-label">
+                                        <label for="{{ form.email.id_for_label }}"
+                                               class="col-sm-2 col-form-label"><b>E-mail</b>
                                         </label>
-
                                         <div class="col-sm-4">
-                                            {% with form.cpf as field %}
-                                                {% include 'field.html' %}
-                                            {% endwith %}
+                                            {% with form.email as field %} {% include 'field.html' %} {% endwith %}
                                         </div>
+
 
                                         <label for="{{ form.sexo.id_for_label }}"
                                                class="col-sm-2 col-form-label"><b>Sexo</b></label>
@@ -77,24 +79,28 @@
                                     </div>
 
                                     <div class="mb-3 row">
-                                        <label for="{{ form.cargo_funcao.id_for_label }}"
-                                               class="col-sm-2 col-form-label"><b>Cargo/Função</b></label>
+                                        <label for="{{ form.uf.id_for_label }}"
+                                               class="col-sm-2 col-form-label"><b>UF</b>
+                                        </label>
                                         <div class="col-sm-4">
-                                            {{ form.cargo_funcao }}
+                                            {{ form.uf }}
                                         </div>
 
-                                        <label for="{{ form.cep.id_for_label }}"
-                                               class="col-sm-2 col-form-label"><b>CEP</b></label>
-                                        <div class="col-sm-4">
-                                            {{ form.cep }}
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3 row">
                                         <label for="{{ form.cidade.id_for_label }}"
                                                class="col-sm-2 col-form-label"><b>Cidade</b></label>
                                         <div class="col-sm-4">
                                             {{ form.cidade }}
+                                        </div>
+
+
+
+                                    </div>
+
+                                    <div class="mb-3 row">
+                                         <label for="{{ form.cep.id_for_label }}"
+                                               class="col-sm-2 col-form-label"><b>CEP</b></label>
+                                        <div class="col-sm-4">
+                                            {{ form.cep }}
                                         </div>
 
                                         <label for="{{ form.bairro.id_for_label }}"
@@ -105,24 +111,25 @@
                                     </div>
 
                                     <div class="mb-3 row">
-                                        <label for="{{ form.uf.id_for_label }}"
-                                               class="col-sm-2 col-form-label"><b>UF</b></label>
-                                        <div class="col-sm-4">
-                                            {{ form.uf }}
-                                        </div>
 
                                         <label for="{{ form.numero.id_for_label }}"
                                                class="col-sm-2 col-form-label"><b>Número</b></label>
                                         <div class="col-sm-4">
                                             {{ form.numero }}
                                         </div>
-                                    </div>
 
-                                    <div class="mb-3 row">
                                         <label for="{{ form.ddd_telefone.id_for_label }}"
                                                class="col-sm-2 col-form-label"><b>Telefone</b></label>
                                         <div class="col-sm-4">
                                             {{ form.ddd_telefone }}
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3 row">
+                                         <label for="{{ form.cargo_funcao.id_for_label }}"
+                                               class="col-sm-2 col-form-label"><b>Cargo/Função</b></label>
+                                        <div class="col-sm-4">
+                                            {{ form.cargo_funcao }}
                                         </div>
 
                                         <label for="{{ form.orgao.id_for_label }}"
@@ -154,12 +161,17 @@
                                         </div>
                                     </div>
 
-                                    <div class="mb-3 row">
-                                        <div class="col-sm-2"></div>
-                                        <div class="col-sm-10">
-                                            <button type="submit" class="btn btn-primary">Cadastrar</button>
-                                            <a class="btn btn-primary ms-2"
-                                               href="{% url 'administrativoListagem' %}">Voltar</a>
+                                <br>
+                                <br>
+
+                                    <div class="mb-3 row" style="justify-content: center">
+                                        <div class="btn btn-group" style="max-width: 60%;
+                                    justify-content: center">
+                                            <button type="submit" class="btn btn-primary"><b>Cadastrar</b></button>
+                                            <a class="btn btn-secondary "
+                                               href="{% url 'administrativoListagem' %}"
+                                               style="line-height: 2"><b>Voltar</b>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -172,8 +184,7 @@
         </div>
     </div>
 
-
-     <script>
+    <script>
 
         const q = (e) => document.querySelector(e);
         const qA = (e) => document.querySelectorAll(e);
@@ -188,7 +199,4 @@
         }
 
     </script>
-
-
-
 {% endblock %}
