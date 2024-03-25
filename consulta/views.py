@@ -91,6 +91,7 @@ def paciente_editar(request, pk):
             form = PacienteForm(request.POST, instance=paciente)
             if form.is_valid():
                 form.save()
+                messages.success(request, 'Cadastrado atualizado!')
                
                 return redirect('pacienteListagem')
         else:
@@ -103,6 +104,7 @@ def paciente_excluir(request, pk):
 
     if request.method == 'POST':
         paciente.delete()
+        messages.error(request, 'Paciente excluido')
         
         return redirect('pacienteListagem')
 
