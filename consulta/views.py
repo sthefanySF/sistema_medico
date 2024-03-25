@@ -123,6 +123,7 @@ def administrativo_editar(request, pk):
             form = AdministrativoForm(request.POST, instance=administrativo)
             if form.is_valid():
                 form.save()
+                messages.success(request, 'Cadastrado atualizado!')
                
                 return redirect('administrativoListagem')
         else:
