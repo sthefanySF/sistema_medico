@@ -3,6 +3,9 @@
 {% block title %}Lista do  administrativo{% endblock %}
 
 {% block content %}
+
+{% if messages %}{% include 'messages.html' %}{% endif %}
+
   <h4 class="text-center mb-4 custom-title">Lista do administrativo</h4>
   <table class="table table-bordered">
     <thead>

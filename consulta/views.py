@@ -136,6 +136,7 @@ def administrativo_excluir(request, pk):
 
     if request.method == 'POST':
         administrativo.delete()
+        messages.error(request, 'Administrativo excluido')
         
         return redirect('administrativoListagem')
 
@@ -167,6 +168,7 @@ def profissionaldasaude_excluir(request, pk):
 
     if request.method == 'POST':
         profissionaldasaude.delete()
+        messages.error(request, 'Profissional de saúde excluido')
         
         return redirect('profissionaldasaudeListagem')
 

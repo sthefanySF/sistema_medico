@@ -67,7 +67,7 @@ class Administrativo(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.SET_NULL, blank=True, null=True)
     nome = models.CharField(max_length=100, verbose_name='Nome Completo')
     data_nascimento = models.DateField(verbose_name='Data de nascimento', validators=[data_nasc_valida])
-    email = models.EmailField(validators=[validate_unique_email])
+    email = models.EmailField()
     rg = models.CharField(max_length=20)
     cpf = models.CharField(max_length=14, validators=[validate_cpf, MinLengthValidator(11)])
     sexo = models.CharField(max_length=1, choices=[('M', 'Masculino'), ('F', 'Feminino')])
