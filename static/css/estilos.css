@@ -144,7 +144,7 @@ O valor smooth faz a rolagem da página de forma suave. */
 
 /* Botão de voltar ao topo da página */
 #btnTopo {
-    position: fixed; !important;
+    position: fixed !important;
     right: 10px ;
     margin: 0;
     padding: 0;
