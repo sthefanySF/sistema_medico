@@ -84,6 +84,8 @@ class ProfissionaldasaudeForm(forms.ModelForm):
         for f in self.fields:
             self.fields[f].widget.attrs['class'] = 'form-control'
 
+
+    # Verifica se a data de nascimento não é menor que a data atual
     def clean_data_nascimento(self):
         data_nascimeto = self.cleaned_data.get('data_nascimento')
         if data_nascimeto > datetime.now().date():

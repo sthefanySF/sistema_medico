@@ -78,12 +78,12 @@ def sair(request):
 
 
 
-
+@login_required
 def listar_pacientes(request):
     pacientes = Paciente.objects.all()
     return render(request, 'consultas/listagem_pacientes.html', {'pacientes': pacientes})
 
-
+@login_required
 def paciente_editar(request, pk):
         paciente = get_object_or_404(Paciente, pk=pk)
 
@@ -108,11 +108,14 @@ def paciente_excluir(request, pk):
 
     return render(request, 'consultas/excluir_paciente.html', {'paciente': paciente})
 
+
+@login_required
 def listar_administrativo(request):
     administrativo = Administrativo.objects.all()
     return render(request, 'consultas/listagem_administrativo.html', {'administrativo': administrativo})
 
 
+@login_required
 def administrativo_editar(request, pk):
         administrativo = get_object_or_404(Administrativo, pk=pk)
 

@@ -1,24 +1,30 @@
 from django.db import models
-from datetime import date
+from datetime import date, datetime
 from django.contrib.auth.models import User
-from django.forms import ValidationError
 
 from consulta.choices import *
 
 from validate_docbr import CPF
 from django.core.exceptions import ValidationError
+from django.core.validators import MinLengthValidator
 
 def validate_cpf(value):
     cpf = CPF()
     if not cpf.validate(value):
         raise ValidationError('CPF inválido.')
 
+
+def data_nasc_valida(value):
+    if value > datetime.now().date():
+        raise ValidationError('Informe uma data de nascimento válida.')
+
+
 class Paciente(models.Model):
     nome = models.CharField(max_length=100)
-    data_nascimento = models.DateField()
+    data_nascimento = models.DateField(verbose_name='Data de Nascimento', validators=[data_nasc_valida])
     email = models.EmailField()
     rg = models.CharField(max_length=20)
-    cpf = models.CharField(max_length=14, validators=[validate_cpf])
+    cpf = models.CharField(max_length=14, validators=[validate_cpf, MinLengthValidator(11)])
     sexo = models.CharField(max_length=1, choices=[('M', 'Masculino'), ('F', 'Feminino')])
     matricula = models.CharField(max_length=20)
     TIPO_PACIENTE_CHOICES = [
@@ -32,7 +38,7 @@ class Paciente(models.Model):
     cep = models.CharField(max_length=9)
     cidade = models.CharField(max_length=50)
     bairro = models.CharField(max_length=50, default='')
-    uf = models.CharField(max_length=2)
+    uf = models.CharField('UF', max_length=2, choices=UF_CHOICE, default='AC')
     numero = models.CharField(max_length=10)
     ddd_telefone = models.CharField(max_length=3)
     complemento = models.CharField(max_length=100, blank=True, null=True, default='')  # Adicionando o valor padrão aqui
@@ -59,11 +65,11 @@ def validate_unique_email(value):
 
 class Administrativo(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.SET_NULL, blank=True, null=True)
-    nome = models.CharField(max_length=100)
-    data_nascimento = models.DateField()
+    nome = models.CharField(max_length=100, verbose_name='Nome Completo')
+    data_nascimento = models.DateField(verbose_name='Data de nascimento', validators=[data_nasc_valida])
     email = models.EmailField(validators=[validate_unique_email])
     rg = models.CharField(max_length=20)
-    cpf = models.CharField(max_length=14, validators=[validate_cpf])
+    cpf = models.CharField(max_length=14, validators=[validate_cpf, MinLengthValidator(11)])
     sexo = models.CharField(max_length=1, choices=[('M', 'Masculino'), ('F', 'Feminino')])
     cargo_funcao = models.CharField(max_length=50, default='')
     cep = models.CharField(max_length=9)
@@ -85,15 +91,20 @@ class Administrativo(models.Model):
         today = date.today()
         age = today.year - self.data_nascimento.year - ((today.month, today.day) < (self.data_nascimento.month, self.data_nascimento.day))
         return age 
-    
+
+    class Meta:
+        ordering = ['nome']
+        verbose_name = 'Administrativo'
+        verbose_name_plural = 'Administrativo'
+
     
 class Profissionaldasaude(models.Model):
     usuario = models.ForeignKey(User, models.SET_NULL, blank=True, null=True,)
     nome = models.CharField('Nome Completo', max_length=100)
-    data_nascimento = models.DateField(u'Data de Nascimento',)
+    data_nascimento = models.DateField(u'Data de Nascimento', validators=[data_nasc_valida])
     email = models.EmailField()
     rg = models.CharField(max_length=20)
-    cpf = models.CharField(max_length=14, validators=[validate_cpf])
+    cpf = models.CharField(max_length=14, validators=[validate_cpf, MinLengthValidator(11)])
     sexo = models.CharField(max_length=1, choices=[('M', 'Masculino'), ('F', 'Feminino')]) #O parâmetro choices em um campo CharField ou IntegerField é usado para fornecer uma lista de escolhas para esse campo
     identificacao_unica = models.CharField(max_length=50, default='')
     cep = models.CharField(max_length=9)
