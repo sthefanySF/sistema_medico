@@ -268,19 +268,19 @@ def lista_atendimentos(request):
     atendimentos = Atendimento.objects.all()
     return render(request, 'consultas/lista_atendimentos.html', {'atendimentos': atendimentos})
 
-def user_login(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(request, request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(request, username=username, password=password)
-            if user:
-                login(request, user)
-                return redirect('home')  
-    else:
-        form = AuthenticationForm()
-    return render(request, 'consultas/login.html', {'form': form})
+# def user_login(request):
+#     if request.method == 'POST':
+#         form = AuthenticationForm(request, request.POST)
+#         if form.is_valid():
+#             username = form.cleaned_data.get('username')
+#             password = form.cleaned_data.get('password')
+#             user = authenticate(request, username=username, password=password)
+#             if user:
+#                 login(request, user)
+#                 return redirect('home')
+#     else:
+#         form = AuthenticationForm()
+#     return render(request, 'consultas/login.html', {'form': form})
 
 
 class PacienteCreate(CreateView):
