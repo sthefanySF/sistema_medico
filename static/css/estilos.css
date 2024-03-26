@@ -198,4 +198,17 @@ O valor smooth faz a rolagem da página de forma suave. */
 
 .table-responsive::-webkit-scrollbar-track {
     background-color: #f0f0f0; /* Cor de fundo da pista da barra de rolagem */
+    
 }
+
+#profissionais-table{
+    right: 13%;
+    width: 99em;
+    /* border: 1px solid #193cdb;     */
+}
+
+#border-none {
+    --bs-card-border-width: none !important;
+}
+
+
