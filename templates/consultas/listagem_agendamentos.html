@@ -15,11 +15,9 @@
      {#  Botões  #}
 
 <div class="d-flex justify-content-between">
-
   <a class="btn btn-danger" href="{% url 'home' %}" style="margin-bottom: 3px">
     Voltar
   </a>
-  
   <a class="btn btn-primary" href="{% url 'agendamentoCreate' %}" style="margin-bottom: 3px">
     Agendar
   </a>
@@ -48,15 +46,16 @@
           </select>
         </div>
       </div>
-      
-      
+
+
         {% comment %} <div class="col-md-6">
           <button type="submit" class="btn btn-primary">Pesquisar</button>
         </div> {% endcomment %}
       </div>
-      
+
   </form>
 </div>
+
 
 
 
@@ -119,15 +118,38 @@
 
         <td>
           <div class="btn-group" role="group" aria-label="Ações">
-            
-            <button type="button" class="btn btn-secondary ms-1 btn-lg custom-btn" onclick="redirecionar('{% url 'reagendarAgendamento' agendamento.id %}')" title='Reagendar'><i class="fa fa-calendar-o" aria-hidden="true"></i> </button>
-            <button type="button" class="btn btn-danger ms-1 btn-lg custom-btn" data-bs-toggle="modal" data-bs-target="#cancelarModal{{ agendamento.id }}" title="Cancelar" onclick="confirmarCancelamento('{{ agendamento.id }}')"><i class="fa fa-times" aria-hidden="true"></i></button>
-            <button type="button" class="btn btn-success ms-1 btn-lg custom-btn" onclick="redirecionar('{% url 'criar_atendimento' agendamento.id %}')" title="Atender"><i class="fa fa-check-square-o" aria-hidden="true"></i></button>
-            <button type="button" class="btn btn-info ms-1 btn-lg custom-btn" onclick="redirecionar('{% url 'confirmAgendamento' agendamento.id %}')" title="Visualizar"><i class="fa fa-eye" aria-hidden="true"></i></button>
+
+            <button type="button" class="btn btn-secondary ms-1 btn-lg custom-btn"
+                    onclick="redirecionar('{% url 'reagendarAgendamento' agendamento.id %}')"
+                    data-bs-toggle="tooltip" data-bs-placement="top" title='Reagendar'>
+                <i class="fa fa-calendar-o" aria-hidden="true"></i>
+            </button>
+
+            <button type="button" class="btn btn-danger ms-1 btn-lg custom-btn" data-bs-toggle="modal"
+                    data-bs-target="#cancelarModal{{ agendamento.id }}"
+                    >
+                <span data-bs-toggle="tooltip" data-bs-placement="top" title='Cancelar'>
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </span>
+
+            </button>
+
+            <button type="button" class="btn btn-success ms-1 btn-lg custom-btn"
+                    onclick="redirecionar('{% url 'criar_atendimento' agendamento.id %}')"
+                    data-bs-toggle="tooltip" data-bs-placement="top" title="Atender">
+                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+            </button>
+
+            <button type="button" class="btn btn-info ms-1 btn-lg custom-btn"
+                    onclick="redirecionar('{% url 'confirmAgendamento' agendamento.id %}')"
+                    data-bs-toggle="tooltip" data-bs-placement="top" title="Visualizar">
+                <i class="fa fa-eye" aria-hidden="true"></i>
+            </button>
 
           </div>
 
-          <div class="modal fade" id="cancelarModal{{ agendamento.id }}" tabindex="-1" aria-labelledby="cancelarModalLabel{{ agendamento.id }}" aria-hidden="true">
+          <div class="modal fade" id="cancelarModal{{ agendamento.id }}" tabindex="-1"
+               aria-labelledby="cancelarModalLabel{{ agendamento.id }}" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
@@ -141,7 +163,9 @@
                   <form id="cancelarForm{{ agendamento.id }}" method="post" action="{% url 'cancelar_agendamento' agendamento.id %}">
                     {% csrf_token %}
                     {{ form.justificativa_cancelamento }}
-                    <textarea name="justificativa_cancelamento" class="form-control" rows="4" placeholder="Digite a justificativa aqui"></textarea>
+                    <textarea name="justificativa_cancelamento" class="form-control" rows="4" placeholder="Digite a justificativa aqui">
+
+                    </textarea>
                     <button type="submit" class="btn btn-danger mt-3">Confirmar Cancelamento</button>
                   </form>
 
@@ -151,23 +175,27 @@
           </div>
         </td>
       </tr>
+
       {% endfor %}
     </tbody>
 
   </table>
 
-
 </div>
-    {#  Chama função de voltar ao topo  #}
-    <button onclick="voltarTopo()" id="btnTopo">
-        <i id="arrow" class="fa fa-arrow-up fa-lg"></i>
-    </button>
+
+
+{#  Chama função de voltar ao topo  #}
+<button onclick="voltarTopo()" id="btnTopo">
+    <i id="arrow" class="fa fa-arrow-up fa-lg"></i>
+</button>
+
 
 <script>
   function redirecionar(url) {
       window.location.href = url;
   }
 </script>
+
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
@@ -179,7 +207,7 @@
 <script>
   $(document).ready(function() {
     $('#profissional_saude').change(function() {
-      // Envie automaticamente o formulário quando o valor do campo de seleção for alterado
+      // Envia automaticamente o formulário quando o valor do campo de seleção for alterado
       $(this).closest('form').submit();
     });
   });

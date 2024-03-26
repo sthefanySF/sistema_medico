@@ -30,6 +30,11 @@ import io
 from django.template.response import TemplateResponse
 
 
+# PARA ENVIAR E-MAIL
+from django.core.mail import send_mail
+from sistema_medico.settings import EMAIL_HOST_USER
+
+
 def home(request):
     return render(request, 'home.html')
 
@@ -341,13 +346,38 @@ def ProfissionaldasaudeCreate(request):
 
     if request.method == 'POST':
         formps = ProfissionaldasaudeForm(request.POST)
-        # formu = UserForm
-        # if formps.is_valid() and formu.is_valid():
         if formps.is_valid():
             ps = formps.save(commit=False)
             ps.save()
-            # fu = formu.save(commit=False)
-            messages.success(request, 'Cadastrado com sucesso!')
+
+            # Enviar e-mail de confirmação
+
+            # Variável obtendo campo 'email' do formulário
+            mail = request.POST.get('email')
+
+            # Assunto no email
+            assunto = 'Sistema Médico Pericial - UFAC - Confirmação de Cadastro '
+
+            # Corpo do email
+            message = u'Olá %s! Seu cadastro foi confirmado com sucesso! ' \
+                      u'Seu login é o seu CPF. \n Por favor, clique no link abaixo para ' \
+                      u'redefinir sua senha: \n' \
+                      u'www.google.com.br' % (request.POST.get('nome'))
+
+            # Estrutura de controle try-except do python.
+            try:
+                # send_mail: função do django para envio de emails e seus argumentos.
+                # EMAIL_HOST_USER é o remetente.
+
+                send_mail(assunto, message, EMAIL_HOST_USER, [mail])
+                msg = 'Cadastrado com sucesso! Enviamos um e-mail de recuperação de senha.'
+
+            except:
+                # Em caso de falha e o e-mail não for encaminhado
+                msg = 'Cadastro realizado com sucesso!'
+
+
+            messages.success(request, msg)
             return redirect(reverse_lazy('profissionaldasaudeListagem'))
         else:
             messages.error(request, 'Corrija o formulário!')

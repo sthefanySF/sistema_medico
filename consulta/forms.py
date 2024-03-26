@@ -40,7 +40,7 @@ class AdministrativoForm(forms.ModelForm):
         model = Administrativo
         # fields = ['nome', 'data_nascimento', 'email', 'rg', 'cpf', 'sexo', 'matricula_siape', 'cargo_funcao','orgao',
         #           'lotacao_de_exercicio', 'ddd_telefone','uf','cep', 'cidade', 'bairro',  'numero',  'complemento']
-        exclude = ('usuario',)
+        fields = '__all__'
         
         
         labels = {
@@ -83,8 +83,8 @@ class ProfissionaldasaudeForm(forms.ModelForm):
     class Meta:
         model = Profissionaldasaude
 
-        exclude = ('usuario',)
-        # fields = '__all__'
+        # exclude = ('usuario',)
+        fields = '__all__'
 
     def __init__(self, *args, **kwargs):
         super(ProfissionaldasaudeForm, self).__init__(*args, **kwargs)

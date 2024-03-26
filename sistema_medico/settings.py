@@ -27,6 +27,15 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = u'smtp.gmail.com'
+EMAIL_HOST_USER = u'ufac.sistemas@gmail.com'
+EMAIL_HOST_PASSWORD = u'stnxqpugmztheugg'
+EMAIL_PORT = 587
+EMAIL_SUBJECT_PREFIX = 'Sistema de inscrições da Ufac'
+
+
 
 # Application definition
 
