@@ -10,15 +10,15 @@
 
         <h4 class="text-center mb-4 custom-title">Lista do Profissionais da Saude</h4>
 
-        <div class="card border-primary">
-            <div class="card card-body">
+        <div id="border-none" class="card border-primary">
+            <div id="profissionais-table" class="card card-body">
 
-                <div class="d-flex justify-content-between">
+                 <div class="d-flex justify-content-around"> {% comment %} d-flex justify-content-between {% endcomment %}
                     <a class="btn btn-primary" href="{% url 'home' %}">Voltar</a>
                     <a class="btn btn-primary" href="{% url 'profissionaldasaudeCreate' %}">Cadastrar</a>
                 </div>
-                <div class="card-body table-responsive">
-                    <table class="table table-bordered">
+                <div  class="card-body table-responsive">
+                    <table  class="table table-bordered">
                         <thead>
                         <tr>
                             <th>Nome</th>
@@ -34,8 +34,6 @@
                             <th>Função</th>
                             <th>Conselho</th>
                             <th>Ações</th>
-
-
                         </tr>
                         </thead>
                         <tbody>
@@ -62,8 +60,6 @@
                                     </div>
                                 </td>
                             </tr>
-
-
                         {% endfor %}
                         </tbody>
                     </table>
