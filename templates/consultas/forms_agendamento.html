@@ -37,22 +37,13 @@
                                     de Saúde</label>
                                 <div class="col-sm-10">
                                     {{ form.profissional_saude }}
-                                    <div class="invalid-feedback">
-                                        Por favor, Profissional de Saúde.
-                                    </div>
                                 </div>
                             </div>
 
                             <div class="mb-3 row">
                                 <label for="{{ form.data_agendamento.id_for_label }}" class="col-sm-2 col-form-label">Data da consulta</label>
                                 <div class="col-sm-10">
-                                    {% comment %} {{ form.data_agendamento }}
-                                    {% if form.data_agendamento.errors %}
-                                        <div>
-                                            {{ form.data_agendamento.errors|first }}
-                                        </div>
-                                    {% else %}
-                                    {% endif %} {% endcomment %}
+
                                         <div >
                                             
                                             {% with form.data_agendamento as field %} 

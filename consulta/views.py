@@ -30,6 +30,11 @@ import io
 from django.template.response import TemplateResponse
 
 
+# PARA ENVIAR E-MAIL
+from django.core.mail import send_mail
+from sistema_medico.settings import EMAIL_HOST_USER
+
+
 def home(request):
     return render(request, 'home.html')
 
@@ -91,6 +96,7 @@ def paciente_editar(request, pk):
             form = PacienteForm(request.POST, instance=paciente)
             if form.is_valid():
                 form.save()
+                messages.success(request, 'Cadastrado atualizado!')
                
                 return redirect('pacienteListagem')
         else:
@@ -103,6 +109,7 @@ def paciente_excluir(request, pk):
 
     if request.method == 'POST':
         paciente.delete()
+        messages.error(request, 'Paciente excluido')
         
         return redirect('pacienteListagem')
 
@@ -266,19 +273,19 @@ def lista_atendimentos(request):
     atendimentos = Atendimento.objects.all()
     return render(request, 'consultas/lista_atendimentos.html', {'atendimentos': atendimentos})
 
-def user_login(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(request, request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(request, username=username, password=password)
-            if user:
-                login(request, user)
-                return redirect('home')  
-    else:
-        form = AuthenticationForm()
-    return render(request, 'consultas/login.html', {'form': form})
+# def user_login(request):
+#     if request.method == 'POST':
+#         form = AuthenticationForm(request, request.POST)
+#         if form.is_valid():
+#             username = form.cleaned_data.get('username')
+#             password = form.cleaned_data.get('password')
+#             user = authenticate(request, username=username, password=password)
+#             if user:
+#                 login(request, user)
+#                 return redirect('home')
+#     else:
+#         form = AuthenticationForm()
+#     return render(request, 'consultas/login.html', {'form': form})
 
 
 class PacienteCreate(CreateView):
@@ -339,13 +346,38 @@ def ProfissionaldasaudeCreate(request):
 
     if request.method == 'POST':
         formps = ProfissionaldasaudeForm(request.POST)
-        # formu = UserForm
-        # if formps.is_valid() and formu.is_valid():
         if formps.is_valid():
             ps = formps.save(commit=False)
             ps.save()
-            # fu = formu.save(commit=False)
-            messages.success(request, 'Cadastrado com sucesso!')
+
+            # Enviar e-mail de confirmação
+
+            # Variável obtendo campo 'email' do formulário
+            mail = request.POST.get('email')
+
+            # Assunto no email
+            assunto = 'Sistema Médico Pericial - UFAC - Confirmação de Cadastro '
+
+            # Corpo do email
+            message = u'Olá %s! Seu cadastro foi confirmado com sucesso! ' \
+                      u'Seu login é o seu CPF. \n Por favor, clique no link abaixo para ' \
+                      u'redefinir sua senha: \n' \
+                      u'www.google.com.br' % (request.POST.get('nome'))
+
+            # Estrutura de controle try-except do python.
+            try:
+                # send_mail: função do django para envio de emails e seus argumentos.
+                # EMAIL_HOST_USER é o remetente.
+
+                send_mail(assunto, message, EMAIL_HOST_USER, [mail])
+                msg = 'Cadastrado com sucesso! Enviamos um e-mail de recuperação de senha.'
+
+            except:
+                # Em caso de falha e o e-mail não for encaminhado
+                msg = 'Cadastro realizado com sucesso!'
+
+
+            messages.success(request, msg)
             return redirect(reverse_lazy('profissionaldasaudeListagem'))
         else:
             messages.error(request, 'Corrija o formulário!')

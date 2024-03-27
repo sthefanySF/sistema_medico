@@ -5,53 +5,76 @@
 
 {% block content %}
     {% if messages %}{% include 'messages.html' %}{% endif %}
-    <div class="container mt-5">
-        <div class="jumbotron">
+    <div class="container mt-6">
+        <div class="jumbotron ">
 
 
-            <h2 class="display-4 mt-5">Bem-vindo ao meu sistema médico da UFAC</h2>
+            <div class="m-3">
+                <div class="text-center">
+                    <span class=" display-6 "><b>Setor Médico Pericial - Consultas</b>
+                        <i class="fa fa-heartbeat fa-2x" style=" margin: auto; float: left"></i>
+                    </span>
 
-            <hr class="my-4">
-            <p>É técnico ou médico? Faça seu login para ter acesso ao sistema.</p>
-            <a class="btn btn-primary btn-lg" href="#" role="button">Saiba mais</a>
+                <hr class="my-4">
+                     <span style="font-size: 20px">
+                         Você é técnico ou médico do setor? Faça seu login para ter acesso ao sistema.
+                     </span>
+                </div>
+                <br><br>
+{#                <a class="btn btn-primary btn-lg" href="#" role="button">Saiba mais</a>#}
 
-            <div class="row justify-content-center">
-                <div class="col-md-4 col-md-offset-2" style="border-color: #007bff">
-                    <div class="card border-primary">
-                        <div class="card-header" style="background-color: #007bff;">
-                            <h5 class="card-title ">Faça login para acessar o sistema</h5>
-                        </div>
-                        <div class="card-body">
+                <div class="row justify-content-center mt-4">
+                    <div class="col-md-4 col-md-offset-2" style="border-color: #007bff">
+                        <div class="card border-primary">
+                            <div class="card-header">
+                                {#                            <h5 class="card-title ">Faça login para acessar o sistema</h5>#}
+                                <i class="fa fa-user-md fa-3x" style="float: right"></i>
 
-                            <form method="post" role="form">
-                                {% csrf_token %}
+                            </div>
+                            <div class="card-body">
 
-                                <div>
-                                    <input class="form-control" placeholder="Usuário" name="usuario" id="usuario"
-                                           autofocus>
-                                    {#                                </div>#}
+                                <form method="post" role="form">
+                                    {% csrf_token %}
 
-                                    <br>
+                                    <div>
+                                        <input class="form-control" placeholder="Usuário" name="usuario" id="usuario"
+                                               autofocus required>
+                                        {#                                </div>#}
+
+                                        <br>
 
 
-                                    <input class="form-control" placeholder="Senha" name="senha" type="password"
-                                           value="">
+                                        <input class="form-control" placeholder="Senha" name="senha" type="password"
+                                               value="" required>
 
-                                    <br>
-                                    <div class="text-center">
-                                        <button class="btn btn-primary center-block" type="submit">Acessar <span
-                                                class="fa fa-sign-in"></span></button>
+                                        <br>
+                                        <div class="text-center">
+                                            <button class="btn btn-primary center-block" type="submit">
+                                                <b>Acessar&nbsp;<span class="fa fa-sign-in"></span></b>
+                                            </button>
+
+                                        </div>
+                                        <hr>
+
                                     </div>
-                                    <hr>
 
-                                </div>
+                                </form>
 
-                            </form>
-
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="text-center">
+                <button type="button" class="btn btn-warning " data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        title="Recuperação de senha" >
+{#                        title="Recuperação de senha" onclick="window.location='{% url 'password_reset' %}'">#}
+                    <b>Esqueceu sua senha?</b>
+                </button>
+            </div>
+
         </div>
+
     </div>
+
 {% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %} Desculpe. Encontramos um erro! {% endblock %}
+
+{% block content %}
+    {% include 'messages.html' %}
+<div style="display: flex; justify-content: center;">
+    <div class="col-lg-6">
+        <div class="card border-secondary">
+            <div class="card-body text-center">
+
+                <div class="form-group ">
+                    <label>
+                        <br>
+                        <span style="font-size: 1.5rem">
+                            <i class="fa fa-meh-o  fa-4x" aria-hidden="true"></i> <br><br>
+
+                            <b class="mb-5" >A página que você tentou acessar não existe!</b> <br>
+                        </span>
+                    </label> <br>
+                </div>
+
+                <div class="text-center m-4">
+                    <input class="btn  btn-secondary " type="submit" value="Tela de Login"
+                           onclick="javascript:window.location='{% url 'login' %}' ">
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -99,7 +99,7 @@ class Administrativo(models.Model):
 
     
 class Profissionaldasaude(models.Model):
-    usuario = models.ForeignKey(User, models.SET_NULL, blank=True, null=True,)
+    usuario = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
     nome = models.CharField('Nome Completo', max_length=100)
     data_nascimento = models.DateField(u'Data de Nascimento', validators=[data_nasc_valida])
     email = models.EmailField()

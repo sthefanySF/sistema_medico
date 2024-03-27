@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{#{% block titulo %} Acesso negado {% endblock %}#}
+
+{% block content %}
+    {% include 'messages.html' %}
+    <div class="row" style="display: flex; justify-content: center;">
+        <div class="col-lg-6 mt-3">
+            <div class="card border-dark p-4">
+                <div class="panel-heading text-center"> <br>
+                    <i class="fa fa-exclamation-circle  fa-5x" aria-hidden="true"></i>
+                    <br>
+                    <h2>Acesso negado!</h2>
+                    <h4>
+                        Você não tem permissão para executar essa solicitação!
+                        <br><br>
+
+                        <div class="text-center">
+                            <input class="btn btn-secondary" type="submit"
+                                   value="Página inicial" style="font-weight: bold"
+                                   onclick="javascript:window.location='{% url 'login' %}' ">
+                        </div>
+                    </h4>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
