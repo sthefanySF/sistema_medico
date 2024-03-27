@@ -16,11 +16,14 @@
                     </div>
                     <div class="card-body">
                         <div class="form-group">
-                            <label>
-                                {#         <a>Email:</a> <br><br>#}
-                            </label>
-                            {{ form.email }}
-                        </div>
+                                    <label>
+{#                                        <a>Email:</a> <br><br>#}
+                                    </label>
+                                    {% with form.email as field %}
+
+                                        {% include 'field.html' %}
+                                    {% endwith %}
+                                </div>
 
                         <div class="row">
                             <div class="text-center">
