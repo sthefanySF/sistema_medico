@@ -1,0 +1,22 @@
+
+
+{% load i18n %}{% autoescape off %}
+
+Você está recebendo este e-mail porque pediu uma nova senha para sua conta em {{ protocol }}://{{ domain }}{% url 'login' %}.
+
+Por favor, acesse a seguinte página e escolha uma nova senha:
+
+{% block reset_link %}
+{{ protocol }}://{{ domain }}{% url 'redefinir_senha_confirmacao' uidb64=uid token=token %}
+{% endblock %}
+{% translate 'Your username, in case you’ve forgotten:' %} {{ user.get_username }}
+
+
+
+Obrigado por usar nossa plataforma!
+
+
+Coordenadora de Sistemas de Informação.
+
+
+{% endautoescape %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Redefinição de Senha{% endblock %}
+
+{% block content %}
+    {% if messages %}{% include 'messages.html' %}{% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card border-primary">
+                    <div class="card-header">
+                        <p class="text-primary mt-2"><b>Insira seu e-mail</b></p>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>
+                                {#         <a>Email:</a> <br><br>#}
+                            </label>
+                            {{ form.email }}
+                        </div>
+
+                        <div class="row">
+                            <div class="text-center">
+                                <br>
+                                <button class="btn btn-primary" type="submit">
+                                    <b>Enviar</b>
+                                </button>
+                                <button class="btn btn-warning" type="button"
+                                        onclick="window.location='{% url 'login' %}'" style="line-height: 2;">
+                                    <b>Retornar</b>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

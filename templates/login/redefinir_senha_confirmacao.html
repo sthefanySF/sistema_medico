@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Redefinição de Senha{% endblock %}
+
+{% block content %}
+    {% if messages %}{% include 'messages.html' %}{% endif %}
+
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card border-primary">
+
+                {% if validlink %}
+                    <div class="card-header text-primary">
+                        <b>Preencha os campos abaixo</b>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+
+                            <form method="post">
+                                {% csrf_token %}
+                                <b>Nova senha:</b>
+                                {% with form.new_password1 as field %}
+                                    {% include 'field.html' %}
+                                {% endwith %}
+
+                                <br/>
+
+                                <b>Confirmação de senha:</b>
+                                {% with form.new_password2 as field %}
+                                    {% include 'field.html' %}
+                                {% endwith %}
+
+                                <br/>
+                                <input class="btn btn-primary" type="submit" value="Alterar Senha">
+
+                                <script>
+                                    $(document).ready(function () {
+                                        $("#{{ form.new_password1.id_for_label }}").addClass('form-control');
+                                        $("#{{ form.new_password2.id_for_label }}").addClass('form-control');
+
+                                    })
+
+                                </script>
+
+                            </form>
+                        </div>
+                    </div>
+
+                {% else %}
+
+                    <div class="card-header text-center">
+                        <b style="font-size: 20px">Atenção!</b> &nbsp;
+                   <i class="fa fa-exclamation-triangle fa-2x"></i>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group text-center">
+                                    <b>Link de redefinição de senha inválido. Possivelmente já foi utilizado.
+                                        Por favor, faça uma nova solicitação.</b>
+                                    <br/><br/>
+                                    <input class="btn btn-primary" type="submit" value="Redefinir senha"
+                                           onclick="window.location.href='{% url 'redefinir_senha' %}' ">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

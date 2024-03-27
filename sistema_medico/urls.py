@@ -20,6 +20,8 @@ from django.urls import path, include
 from consulta.views import *
 from consulta import views
 
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
@@ -27,6 +29,10 @@ urlpatterns = [
     # Login
     path('login/', logar, name='login'),
     path('logout/', sair, name='sair'),
+
+    # Recuperar senha
+    path('login/', include('login.urls')),
+
 
     path('cadastro/administrativo/', AdministrativoCreate.as_view(), name='administrativoCreate'),
 
