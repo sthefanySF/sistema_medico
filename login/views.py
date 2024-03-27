@@ -33,7 +33,7 @@ def redefinir_senha(request):
                 form.full_clean()
 
             except:
-                messages.error(request, 'E-mail não localizado!')
+                messages.error(request, 'E-mail não localizado! Tente novamente.')
                 return TemplateResponse(request, 'login/redefinir_senha.html', locals())
 
             opts = {
