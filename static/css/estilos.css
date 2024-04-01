@@ -211,4 +211,59 @@ O valor smooth faz a rolagem da página de forma suave. */
     --bs-card-border-width: none !important;
 }
 
+.table-sm td,
+  .table-sm th {
+    padding: .8rem;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .info-block {
+    width: 100%; 
+    margin-bottom: 10px; 
+    word-wrap: break-word;
+  }
 
+  .info-block p {
+    margin: 0; 
+  }
+
+  #card-body {
+    display: flex;
+    flex-direction: row;
+  }
+
+  
+  .accordion-toggle:after {
+    content: "\002b"; /* Defina o ícone padrão como '+' */
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.6em;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    float: right;
+    transition: transform .25s linear;
+    -webkit-transition: -webkit-transform .25s linear;
+  }
+
+  .accordion-toggle[aria-expanded="true"]:after {
+    content: "\2212"; /* Altere o ícone para '-' quando expandido */
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+  }
+
+
+
+
+
+
+
+
+  
