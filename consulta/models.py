@@ -21,11 +21,11 @@ def data_nasc_valida(value):
 
 class Paciente(models.Model):
     nome = models.CharField(max_length=100)
-    data_nascimento = models.DateField(verbose_name='Data de Nascimento', validators=[data_nasc_valida])
-    email = models.EmailField()
-    rg = models.CharField(max_length=20)
+    data_nascimento = models.DateField(verbose_name='Data de Nascimento', validators=[data_nasc_valida], blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    rg = models.CharField(max_length=20, blank=True, null=True)
     cpf = models.CharField(max_length=14, validators=[validate_cpf, MinLengthValidator(11)])
-    sexo = models.CharField(max_length=1, choices=[('M', 'Masculino'), ('F', 'Feminino')])
+    sexo = models.CharField(max_length=1, choices=[('M', 'Masculino'), ('F', 'Feminino')], blank=True, null=True)
     matricula = models.CharField(max_length=20)
     TIPO_PACIENTE_CHOICES = [
         ('Aluno', 'Aluno'),
@@ -34,15 +34,20 @@ class Paciente(models.Model):
     ]
 
     tipo_paciente = models.CharField(max_length=20, choices=TIPO_PACIENTE_CHOICES)
-    cargo_funcao = models.CharField(max_length=50, default='', blank=True, null=True,)
-    cep = models.CharField(max_length=9)
-    cidade = models.CharField(max_length=50)
-    bairro = models.CharField(max_length=50, default='')
-    uf = models.CharField('UF', max_length=2, choices=UF_CHOICE, default='AC')
-    numero = models.CharField(max_length=10)
+    cargo_funcao = models.CharField(max_length=50, default='', blank=True, null=True)
+    cep = models.CharField(max_length=9, blank=True, null=True)
+    cidade = models.CharField(max_length=50, blank=True, null=True)
+    bairro = models.CharField(max_length=50, default='', blank=True, null=True)
+    uf = models.CharField('UF', max_length=2, choices=UF_CHOICE, default='AC', blank=True, null=True)
+    numero = models.CharField(max_length=10, blank=True, null=True)
     ddd_telefone = models.CharField(max_length=3)
     complemento = models.CharField(max_length=100, blank=True, null=True, default='')  # Adicionando o valor padrão aqui
 
+    def save(self, *args, **kwargs):
+        # Se o sexo não for fornecido, defina-o como None
+        if not self.sexo:
+            self.sexo = None
+        super().save(*args, **kwargs)
 
 
     def __str__(self):
