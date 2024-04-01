@@ -312,7 +312,7 @@ class PacienteCreate(CreateView):
 
 class AdministrativoCreate(CreateView):
     model = Administrativo
-    fields = ['nome', 'data_nascimento','email','rg','cpf','sexo','matricula_siape','orgao','cargo_funcao','lotacao_de_exercicio','ddd_telefone','uf','cep','cidade','bairro','numero', 'complemento']
+    fields = ['nome', 'data_nascimento','email','rg','cpf','sexo','matricula_siape','cargo_funcao','lotacao_de_exercicio','ddd_telefone','uf','cep','cidade','bairro','numero', 'complemento']
     template_name = 'consultas/cadastro_administrativo.html'
     success_url = reverse_lazy('administrativoListagem')
     

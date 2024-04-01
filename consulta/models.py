@@ -84,7 +84,6 @@ class Administrativo(models.Model):
     numero = models.CharField(max_length=10)
     ddd_telefone = models.CharField('Telefone Celular', max_length=14, help_text='Com DDD.')
     complemento = models.CharField(max_length=100, blank=True, null=True, default='')
-    orgao = models.CharField(max_length=50, default='')
     lotacao_de_exercicio = models.CharField(max_length=50, default='')
     matricula_siape = models.CharField(max_length=20)
 
