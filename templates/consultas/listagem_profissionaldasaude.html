@@ -1,72 +1,115 @@
 {% extends "base.html" %}
 
-{% block title %}Lista do Profissionais da Saude{% endblock %}
+{% block title %}
+    Lista de Profissionais de Saúde
+{% endblock %}
 
 {% block content %}
-    {#  Verifica se há message na views e mostra caso true  #}
-    {% if messages %}{% include 'messages.html' %}{% endif %}
+    {# Verifica se há mensagens na views e mostra caso verdadeiro #}
+    {% if messages %}
+        {% include 'messages.html' %}
+    {% endif %}
 
     <div class="container mt-3">
+        <h4 class="text-center mb-4 custom-title">Lista de Profissionais de Saúde</h4>
 
-        <h4 class="text-center mb-4 custom-title">Lista do Profissionais da Saude</h4>
-
-        <div id="border-none" class="card border-primary">
-            <div id="profissionais-table" class="card card-body">
-
-                 <div class="d-flex justify-content-around"> {% comment %} d-flex justify-content-between {% endcomment %}
-                    <a class="btn btn-primary" href="{% url 'home' %}">Voltar</a>
-                    <a class="btn btn-primary" href="{% url 'profissionaldasaudeCreate' %}">Cadastrar</a>
-                </div>
-                <div  class="card-body table-responsive">
-                    <table  class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Data de Nascimento</th>
-                            <th>E-mail</th>
-                            <th>RG</th>
-                            <th>CPF</th>
-                            <th>Sexo</th>
-                            <th>Identificação Única</th>
-                            <th>Área/Rqe</th>
-                            <th>Unidade SIASS</th>
-                            <th>Formação</th>
-                            <th>Função</th>
-                            <th>Conselho</th>
-                            <th>Ações</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for profissionaldasaude in profissionaldasaude %}
-                            <tr>
-                                <td>{{ profissionaldasaude.nome }}</td>
-                                <td>{{ profissionaldasaude.data_nascimento | date:"d/m/Y " }}</td>
-                                <td>{{ profissionaldasaude.email }}</td>
-                                <td>{{ profissionaldasaude.rg }}</td>
-                                <td>{{ profissionaldasaude.cpf }}</td>
-                                <td>{{ profissionaldasaude.get_sexo_display }}</td>
-                                <td>{{ profissionaldasaude.identificacao_unica }}</td>
-                                <td>{{ profissionaldasaude.area }}</td>
-                                <td>{{ profissionaldasaude.unidade_siass }}</td>
-                                <td>{{ profissionaldasaude.formacao }}</td>
-                                <td>{{ profissionaldasaude.conselho }}</td>
-                                <td>{{ profissionaldasaude.registro }}</td>
-                                <td>
-                                    <div class="btn-group" role="group" aria-label="Ações">
-                                        <a href="{% url 'profissionaldasaudeEditar' profissionaldasaude.id %}"
-                                           class="btn btn-primary">Editar</a>
-                                        <a href="{% url 'profissionaldasaudeExcluir' profissionaldasaude.id %}"
-                                           class="btn btn-danger ms-1">Excluir</a>
-                                    </div>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <div class="d-flex justify-content-between pb-3">
+            <a class="btn btn-primary" href="{% url 'home' %}">Voltar</a>
+            <a class="btn btn-primary" href="{% url 'profissionaldasaudeCreate' %}">Cadastrar</a>
         </div>
+
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Pesquisar profissional de saúde..." id="searchInput">
+            <button class="btn btn-outline-secondary" type="button" id="searchButton">Pesquisar</button>
+        </div>
+
+        <table class="table table-bordered table-sm" id="border-none">
+            <thead>
+                <tr>
+                    <th colspan="3" style="text-align: center;">Nome</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for profissionaldasaude in profissionaldasaude %}
+                    <tr data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
+                        <td class="profissionaldasaude-nome" colspan="3">
+                            {{ profissionaldasaude.nome }}
+                            <span style="color: #bbbbbb"> - {{ profissionaldasaude.area }}</span>
+                            <a href="#" aria-expanded="false" class="accordion-toggle"></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="border: transparent;">
+                            <div class="collapse" id="collapse{{ forloop.counter }}">
+                                <div class="card card-body" id="card-body">
+                                    <div class="info-block">
+                                        <p>Data de Nascimento: {{ profissionaldasaude.data_nascimento | date:"d/m/Y" }}</p>
+                                        <p>E-mail: {{ profissionaldasaude.email }}</p>
+                                    </div>
+                                    <div class="info-block">
+                                        <p>RG: {{ profissionaldasaude.rg }}</p>
+                                        <p>CPF: {{ profissionaldasaude.cpf }}</p>
+                                    </div>
+                                    <div class="info-block">
+                                        <p>Identificação Única: {{ profissionaldasaude.identificacao_unica }}</p>
+                                        <p>Área/Rqe: {{ profissionaldasaude.area }}</p>
+                                    </div>
+                                    <div class="info-block">
+                                        <p>Unidade SIASS: {{ profissionaldasaude.unidade_siass }}</p>
+                                        <p>Conselho: {{ profissionaldasaude.conselho }}</p>
+                                    </div>
+                                    <div class="btn-group" role="group" aria-label="Ações">
+                                        <a href="{% url 'profissionaldasaudeEditar' profissionaldasaude.id %}" class="btn btn-primary">Editar</a>
+                                        <a href="{% url 'profissionaldasaudeExcluir' profissionaldasaude.id %}" class="btn btn-danger ms-1">Excluir</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const toggles = document.querySelectorAll('.accordion-toggle');
+            const nomeDivs = document.querySelectorAll('.profissionaldasaude-nome');
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
 
+            // Adiciona evento de clique ao botão de pesquisa
+            searchButton.addEventListener('click', function() {
+                const searchTerm = searchInput.value.trim().toLowerCase();
+
+                // Percorre os nomes dos profissionais de saúde e exibe ou oculta de acordo com o termo de pesquisa
+                nomeDivs.forEach(function(nomeDiv) {
+                    const nome = nomeDiv.textContent.trim().toLowerCase();
+                    const parentRow = nomeDiv.parentElement;
+
+                    if (nome.includes(searchTerm)) {
+                        parentRow.style.display = '';
+                    } else {
+                        parentRow.style.display = 'none';
+                    }
+                });
+            });
+
+            // Adiciona evento de pressionar Enter no campo de entrada para iniciar a pesquisa
+            searchInput.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    searchButton.click();
+                }
+            });
+
+            // Adiciona evento de clique aos nomes dos profissionais de saúde para expandir/collapse as informações
+            nomeDivs.forEach(function(nomeDiv, index) {
+                nomeDiv.addEventListener('click', function() {
+                    const toggle = toggles[index];
+                    const expanded = toggle.getAttribute('aria-expanded') === 'true';
+                    toggle.setAttribute('aria-expanded', !expanded);
+                });
+            });
+        });
+    </script>
 {% endblock %}

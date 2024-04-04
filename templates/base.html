@@ -1,100 +1,69 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 {%load static%}
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Seu Título Aqui{% endblock %}</title>
 
+    {# Bootstrap versão 5.3.2 CSS #}
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap5.3.2/css/bootstrap.css' %}">
 
- {# Bootstrap versão 5.3.2 CSS #}
-    <link rel="stylesheet" type="text/css"  href="{% static 'bootstrap5.3.2/css/bootstrap.css' %}" >
-   
-    <script type="text/javascript" src="{% static 'bootstrap5.3.2/js/bootstrap.bundle.min.js' %}"></script>
-
-
-{#  CSS  #}
+    {# CSS #}
     <link rel="stylesheet" type="text/css" href="{% static 'css/estilos.css' %}">
-   
-
-{# FontAwesome - ADICIONA ÍCONES #}
-
     <link rel="stylesheet" href="{% static 'font-awesome-4.6.3/css/font-awesome.css' %}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
 
-
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css"></script>
-    <script src="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css"></script>
-    <script src="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css"></script>
-    
-
-{# Jquery #}
-    <script type="text/javascript" src="{% static 'jquery/jquery-3.7.1.js' %}"></script>
-
-{# Maskedput #}
-    <script type="text/javascript" src='{% static 'jquery/jquery.mask.min.js' %}'></script>
-
-{#  CSS  #}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/estilos.css' %}">
-    
 </head>
-
 
 <body style="min-height: 100vh; display: flex; flex-direction: column;">
 
 {# Inclui o cabeçalho das páginas #}
 {% include 'linha_usuario.html' %}
 
-    <div class="container mt-5" style="flex: 1;">
-        {% comment %} {% block messages %}
-        {% if messages %}
-            <div class="alert alert-success" role="alert">
-                {{ messages }}
-            </div>
-        {% endif %}
-        {% endblock %} {% endcomment %}
-        {% block content %}{% endblock %}
-    </div>
+<div class="container mt-5" style="flex: 1;">
+    {% comment %} {% block messages %}
+    {% if messages %}
+        <div class="alert alert-success" role="alert">
+            {{ messages }}
+        </div>
+    {% endif %}
+    {% endblock %} {% endcomment %}
+    {% block content %}{% endblock %}
+</div>
 
-    <footer class="text-center mt-4" style="background-color: #0C4DA2; color: white; padding: 10px;">
-        <p>&copy; {{ year }} Universidade Federal do Acre | Rodovia BR 364, km 04 | Email: medico@.com | Telefone: 68999212325</p>
-    </footer>
+<footer class="text-center mt-4" style="background-color: #0C4DA2; color: white; padding: 10px;">
+    <p>&copy; {{ year }} Universidade Federal do Acre | Rodovia BR 364, km 04 | Email: medico@.com | Telefone: 68999212325</p>
+</footer>
 
+{# jQuery #}
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+{# Bootstrap versão 5.3.2 JavaScript #}
+<script src="{% static 'bootstrap5.3.2/js/bootstrap.bundle.min.js' %}"></script>
 
- <script>
-{#  Máscara de formatação Jquery  #}
-        {#  Essa função jquery adicona uma máscara ao id selecionado.  #}
-        {#  Essa primeira 'força' a formatação 99/99/9999 do campo data_agendamento.  #}
+{# Maskedput #}
+<script type="text/javascript" src="{% static 'jquery/jquery.mask.min.js' %}"></script>
 
-        $(function ($){
-            $('#id_data_agendamento').mask('99/99/9999');
-            $('#id_data_nascimento').mask('99/99/9999');
-            $("#id_cep").mask("99999-999");
+{# DataTables JavaScript #}
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
 
-        });
+<script>
+    {# Máscara de formatação Jquery #}
+    $(function ($) {
+        $('#id_data_agendamento').mask('99/99/9999');
+        $('#id_data_nascimento').mask('99/99/9999');
+        $("#id_cep").mask("99999-999");
+    });
 
-
-{# Botão de voltar ao topo #}
-
-    if($('#btnTopo').length > 0) {
-
+    {# Botão de voltar ao topo #}
+    if ($('#btnTopo').length > 0) {
         window.onscroll = function () {
             scroll();
         }
-
-        /* Botão aparece quando o scroll é rolado. Função scroll é chamada e seleciona a id do elemento.
-        *  O if verifica se a propriedade 'scrollTop' do elemento html 'document.documentElement' é maior que 100px.
-        *  Caso seja, a propriedade 'display' do btn será referenciada e o botão irá aparecer.
-        *  Caso seja menor que 100px, a proriedade 'none' é quem será referenciada e o botão desaparecerá.   */
 
         function scroll() {
             var btn = document.getElementById("btnTopo");
@@ -105,47 +74,25 @@
             }
         }
 
-
-        /*  Propriedade 'scrollTop' definido como 0. Essa propriedade representa a quantidade de pixels que o elemento
-        da página foi rolado a partir do topo. Quando o botão de 'voltar ao topo' for acionado a página irá rolar
-        automaticamente até o início, voltando efetivamente ao valor 0.  */
-
         function voltarTopo() {
             document.documentElement.scrollTop = 0;
         }
-}
-{#  FIM  #}
-
-
-{#  Desaparecer Messages automaticamente  #}
-
-    {#  Pega o elemento de classe 'alert'  #}
-    document.getElementsByClassName('alert')
-    {
-        {# Chama a propriedade fadeout (desaparecer) e define como slow (lendo), fazendo o elemento desaparecer da  #}
-        {# página lentamente  #}
-        setTimeout(function () {
-            $(".alert").fadeOut("slow", function (){
-                $(this).alert("close");
-            });
-
-        }, 4000);
-        {# Tempo que deve desaparecer. Por volta de 4 segundos #}
     }
 
-    {#  Pega o elemento de classe 'errorlist'  #}
-    document.getElementsByClassName('errorlist')
-    {
-        setTimeout(function () {
-            $(".errorlist").fadeOut("slow", function (){
-                $(this).alert("close");
-            });
+    {# Desaparecer Messages automaticamente #}
+    setTimeout(function () {
+        $(".alert").fadeOut("slow", function () {
+            $(this).alert("close");
+        });
+    }, 4000);
 
-        }, 6000);
-    }
-
+    setTimeout(function () {
+        $(".errorlist").fadeOut("slow", function () {
+            $(this).alert("close");
+        });
+    }, 6000);
 </script>
 
-
 </body>
+
 </html>
