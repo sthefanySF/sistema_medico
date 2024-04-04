@@ -9,6 +9,12 @@
 {#  Verifica se há message na views e mostra caso true  #}
 {% if messages %}{% include 'messages.html' %}{% endif %}
   <h4 class="text-center mb-4 custom-title">Lista de Pacientes</h4>
+  
+  <div class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="Pesquisar paciente..." id="searchInput">
+    <button class="btn btn-outline-secondary" type="button" id="searchButton">Pesquisar</button>
+  </div>
+  
 <table class="table table-bordered table-sm" id="border-none">
   <thead>
     <tr>
@@ -57,20 +63,48 @@
     <a class="btn btn-primary" href="{% url 'pacienteCreate'  %}">Cadastrar</a>
   </div>
 
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const toggles = document.querySelectorAll('.accordion-toggle');
-    const nomeDivs = document.querySelectorAll('.paciente-nome');
-    
-    nomeDivs.forEach(function(nomeDiv, index) {
-      nomeDiv.addEventListener('click', function() {
-        const toggle = toggles[index];
-        const expanded = toggle.getAttribute('aria-expanded') === 'true';
-        toggle.setAttribute('aria-expanded', !expanded);
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const toggles = document.querySelectorAll('.accordion-toggle');
+      const nomeDivs = document.querySelectorAll('.paciente-nome');
+      const searchInput = document.getElementById('searchInput');
+      const searchButton = document.getElementById('searchButton');
+  
+      // Adiciona evento de clique ao botão de pesquisa
+      searchButton.addEventListener('click', function() {
+        const searchTerm = searchInput.value.trim().toLowerCase();
+  
+        // Percorre os nomes dos pacientes e exibe ou oculta de acordo com o termo de pesquisa
+        nomeDivs.forEach(function(nomeDiv) {
+          const nome = nomeDiv.textContent.trim().toLowerCase();
+          const parentRow = nomeDiv.parentElement;
+  
+          if (nome.includes(searchTerm)) {
+            parentRow.style.display = '';
+          } else {
+            parentRow.style.display = 'none';
+          }
+        });
+      });
+  
+      // Adiciona evento de pressionar Enter no campo de entrada para iniciar a pesquisa
+      searchInput.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+          searchButton.click();
+        }
+      });
+  
+      // Adiciona evento de clique aos nomes dos pacientes para expandir/collapse as informações
+      nomeDivs.forEach(function(nomeDiv, index) {
+        nomeDiv.addEventListener('click', function() {
+          const toggle = toggles[index];
+          const expanded = toggle.getAttribute('aria-expanded') === 'true';
+          toggle.setAttribute('aria-expanded', !expanded);
+        });
       });
     });
-  });
-</script>
+  </script>
+  
 
 
 

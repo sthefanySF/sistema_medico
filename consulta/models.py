@@ -25,7 +25,7 @@ class Paciente(models.Model):
     email = models.EmailField(blank=True, null=True)
     rg = models.CharField(max_length=20, blank=True, null=True)
     cpf = models.CharField(max_length=14, validators=[validate_cpf, MinLengthValidator(11)])
-    sexo = models.CharField(max_length=1, choices=[('M', 'Masculino'), ('F', 'Feminino')], blank=True, null=True)
+    sexo = models.CharField(max_length=1, choices=[('M', 'Masculino'), ('F', 'Feminino')])
     matricula = models.CharField(max_length=20)
     TIPO_PACIENTE_CHOICES = [
         ('Aluno', 'Aluno'),
@@ -40,7 +40,7 @@ class Paciente(models.Model):
     bairro = models.CharField(max_length=50, default='', blank=True, null=True)
     uf = models.CharField('UF', max_length=2, choices=UF_CHOICE, default='AC', blank=True, null=True)
     numero = models.CharField(max_length=10, blank=True, null=True)
-    ddd_telefone = models.CharField(max_length=3)
+    ddd_telefone = models.CharField(max_length=8)
     complemento = models.CharField(max_length=100, blank=True, null=True, default='')  # Adicionando o valor padrão aqui
 
     def save(self, *args, **kwargs):
