@@ -2,7 +2,7 @@
 O valor smooth faz a rolagem da página de forma suave. */
 
 * {
-    scroll-behavior: smooth ;
+  scroll-behavior: smooth;
 }
 
 
@@ -10,260 +10,361 @@ O valor smooth faz a rolagem da página de forma suave. */
 
 /* Estilo para a classe .navbar-brand que é da logo/imagem*/
 
-.navbar-brand { 
-    background-color: white; 
-    width: 55px; 
-    height: 74px; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    border-radius: 10%;
+.navbar-brand {
+  background-color: white;
+  width: 55px;
+  height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10%;
 }
 
 
-.navbar-toggler{
-    color:#ffffff;
+.navbar-toggler {
+  color: #ffffff;
 }
 
 /* Estilo para as bordas arredondadas da tabela */
 .custom-table {
-    border-collapse: separate;
-    border-spacing: 0 5px; /* Espaço entre as células */
+  border-collapse: separate;
+  border-spacing: 0 5px;
+  /* Espaço entre as células */
 }
 
 .custom-table th,
 .custom-table td {
-    border: 2px solid #b8b0b0; /* Ajuste a cor conforme necessário */
-    border-radius: 5px; /* Bordas arredondadas */
-    box-shadow: 2px 2px 5px #9b9b9b; /* Adicione sombra conforme necessário */
+  border: 2px solid #b8b0b0;
+  /* Ajuste a cor conforme necessário */
+  border-radius: 5px;
+  /* Bordas arredondadas */
+  box-shadow: 2px 2px 5px #9b9b9b;
+  /* Adicione sombra conforme necessário */
 }
 
 .custom-table thead th {
-    border-bottom-width: 2px;
-    background-color: #e0e0e0; /* Cor do cabeçalho */
+  border-bottom-width: 2px;
+  background-color: #e0e0e0;
+  /* Cor do cabeçalho */
 }
 
 /* Estilo para o título */
 .custom-title {
-    font-size: 24px; /* Ajuste o tamanho da fonte conforme necessário */
-    font-weight: bold;
-    color: #0a0101; /* Cor do texto */
-    background-color: #e0e0e0; /* Cor de fundo */
-    padding: 10px; /* Espaçamento interno */
-    border: 2px solid #b8b0b0; /* Cor da borda */
-    border-radius: 5px; /* Arredondamento das bordas */
-    box-shadow: 2px 2px 5px #9b9b9b; /* Sombra */
-    margin-bottom: 5px; /* Espaçamento abaixo do título */
+  font-size: 24px;
+  /* Ajuste o tamanho da fonte conforme necessário */
+  font-weight: bold;
+  color: #0a0101;
+  /* Cor do texto */
+  background-color: #e0e0e0;
+  /* Cor de fundo */
+  padding: 10px;
+  /* Espaçamento interno */
+  border: 2px solid #b8b0b0;
+  /* Cor da borda */
+  border-radius: 5px;
+  /* Arredondamento das bordas */
+  box-shadow: 2px 2px 5px #9b9b9b;
+  /* Sombra */
+  margin-bottom: 5px;
+  /* Espaçamento abaixo do título */
 }
 
 
 .topo {
-    color: white!important;
-    font-weight: 500;
-    margin-top: 12px;
-    padding: 0;
-    font-size: 22px;
-    text-shadow: 1px 0.2px #146C2D;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: white !important;
+  font-weight: 500;
+  margin-top: 12px;
+  padding: 0;
+  font-size: 22px;
+  text-shadow: 1px 0.2px #146C2D;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 
 /* Estilo para labels acima dos campos */
 .label-title {
-    display: block;
-    margin-bottom: 5px;
-    text-align: center; /* Centraliza o texto */
-    font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+  text-align: center;
+  /* Centraliza o texto */
+  font-weight: bold;
 }
 
 /* Estilo para labels dos campos do formulário */
 .label-form {
-    display: block;
-    margin-bottom: 3px;
-    text-align: center; /* Centraliza o texto */
+  display: block;
+  margin-bottom: 3px;
+  text-align: center;
+  /* Centraliza o texto */
 }
 
 /* Efeito de hover nas labels dos campos do formulário */
 .row .col-md-4:hover .label-form {
-    background-color: #c0c0c0; /* Altere a cor conforme necessário */
-    cursor: pointer; /* Muda o cursor para indicar que é clicável */
+  background-color: #c0c0c0;
+  /* Altere a cor conforme necessário */
+  cursor: pointer;
+  /* Muda o cursor para indicar que é clicável */
 }
 
 
 /* Estilo para a lista de atendimentos */
 .custom-list {
-    list-style-type: none;
-    padding: 0;
+  list-style-type: none;
+  padding: 0;
 }
 
 /* Estilo para os links da lista de atendimentos */
 .atendimento-link {
-    text-decoration: none;
-    color: #000000; /* Cor do link padrão */
-    transition: color 0.3s ease; /* Transição de cor suave */
-    display: block;
-    padding: 10px;
-    text-align: center; /* Centraliza o texto */
-    font-weight: bold;
-    position: relative; /* Posição relativa para posicionamento da borda */
+  text-decoration: none;
+  color: #000000;
+  /* Cor do link padrão */
+  transition: color 0.3s ease;
+  /* Transição de cor suave */
+  display: flex;
+  padding: 10px;
+  text-align: center;
+  /* Centraliza o texto */
+  font-weight: bold;
+  position: relative;
+  /* Posição relativa para posicionamento da borda */
 }
 
 .atendimento-link:hover {
-    color: #0056b3; /* Cor do link ao passar o mouse */
-    background-color: #f0f0f0; /* Cor de fundo ao passar o mouse */
-    border-radius: 5px; /* Arredondamento das bordas ao passar o mouse */
-    font-weight: bold;
+  background-color: #f0f0f0;
+  /* Cor de fundo ao passar o mouse */
+  border-radius: 5px;
+  /* Arredondamento das bordas ao passar o mouse */
 }
 
 /* Estilo para o texto "Atendido por" */
 .profissional-text {
-    color: #0056b3; /* Nova cor para indicar o profissional de saúde */
-    font-weight: bold;
-    margin-left: 10px; /* Espaçamento à esquerda para separar do nome do paciente */
-    border-left: 2px solid #0056b3; /* Borda à esquerda do texto "Atendido por" */
-    padding-left: 10px; /* Espaçamento à esquerda da borda */
+  color: #8194a8;
+  /* Nova cor para indicar o profissional de saúde */
+  font-weight: 200;
+  padding-left: 10px;
+  /* Espaçamento à esquerda da borda */
 }
 
 /* Estilo para o botão de voltar */
 .btn-primary {
-    background-color: #007bff; /* Cor de fundo do botão */
-    color: #fff; /* Cor do texto do botão */
-    border: 1px solid #007bff; /* Borda do botão */
-    border-radius: 5px; /* Bordas arredondadas */
-    padding: 10px 20px; /* Espaçamento interno do botão */
-    text-decoration: none;
-    display: inline-block;
-    transition: background-color 0.3s ease; /* Transição de cor suave */
+  background-color: #007bff;
+  /* Cor de fundo do botão */
+  color: #fff;
+  /* Cor do texto do botão */
+  border: 1px solid #007bff;
+  /* Borda do botão */
+  border-radius: 5px;
+  /* Bordas arredondadas */
+  padding: 10px 20px;
+  /* Espaçamento interno do botão */
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+  /* Transição de cor suave */
 }
 
 .btn-primary:hover {
-    background-color: #0056b3; /* Cor de fundo do botão ao passar o mouse */
-    border-color: #0056b3; /* Cor da borda do botão ao passar o mouse */
+  background-color: #0056b3;
+  /* Cor de fundo do botão ao passar o mouse */
+  border-color: #0056b3;
+  /* Cor da borda do botão ao passar o mouse */
 }
 
 
 /* Botão de voltar ao topo da página */
 #btnTopo {
-    position: fixed !important;
-    right: 10px ;
-    margin: 0;
-    padding: 0;
-    opacity: 0.8;
-    bottom: 12rem;
-    height: 40px;
-    width: 41px;
-    background: #b5b8ba;
-    border: 2px solid #979797;
-    border-radius: 100%;
-    display: none;
-    overflow: hidden;
+  position: fixed !important;
+  right: 10px;
+  margin: 0;
+  padding: 0;
+  opacity: 0.8;
+  bottom: 12rem;
+  height: 40px;
+  width: 41px;
+  background: #b5b8ba;
+  border: 2px solid #979797;
+  border-radius: 100%;
+  display: none;
+  overflow: hidden;
 
 
 }
 
 /* Muda a aparência do botão quando passa o cursor em cima */
 #btnTopo:hover {
-    background: #9ca0a3;
-    border: none;
+  background: #9ca0a3;
+  border: none;
 }
 
 /*estilo para as opçoes de profissional de saude em agendamento*/
 .destacado {
-    font-weight: bold; 
-    color: rgb(28,28,28);
+  font-weight: bold;
+  color: rgb(28, 28, 28);
 }
 
 
 .jumbotron {
-    background-color: #f3f3f3;
-    padding: 2rem 1rem;
-    margin-bottom: 2rem;
-    border: solid 1px #d3d2d2;
-    border-radius: 0.3rem;
+  background-color: #f3f3f3;
+  padding: 2rem 1rem;
+  margin-bottom: 2rem;
+  border: solid 1px #d3d2d2;
+  border-radius: 0.3rem;
 }
 
 
 /* Personalização da barra de rolagem de table*/
 .table-responsive::-webkit-scrollbar {
-    height: 14px;
-    /*background-color: #f0f0f0;*/
+  height: 14px;
+  /*background-color: #f0f0f0;*/
 }
 
 
 .table-responsive::-webkit-scrollbar-thumb {
-    background-color: #888; /* Cor do botão de rolagem */
-    border-radius: 6px;
+  background-color: #888;
+  /* Cor do botão de rolagem */
+  border-radius: 6px;
 }
 
 
 .table-responsive::-webkit-scrollbar-track {
-    background-color: #f0f0f0; /* Cor de fundo da pista da barra de rolagem */
-    
+  background-color: #f0f0f0;
+  /* Cor de fundo da pista da barra de rolagem */
+
 }
 
-#profissionais-table{
-    right: 13%;
-    width: 99em;
-    /* border: 1px solid #193cdb;     */
+#profissionais-table {
+  right: 13%;
+  width: 99em;
+  /* border: 1px solid #193cdb;     */
 }
 
 #border-none {
-    --bs-card-border-width: none !important;
+  --bs-card-border-width: none !important;
 }
 
 .table-sm td,
-  .table-sm th {
-    padding: .8rem;
-    max-width: 200px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .info-block {
-    width: 100%; 
-    margin-bottom: 10px; 
-    word-wrap: break-word;
-  }
+.table-sm th {
+  padding: .8rem;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
-  .info-block p {
-    margin: 0; 
-  }
+.info-block {
+  width: 100%;
+  margin-bottom: 10px;
+  word-wrap: break-word;
+}
 
-  #card-body {
-    display: flex;
-    flex-direction: row;
-  }
+.info-block p {
+  margin: 0;
+}
 
-  
-  .accordion-toggle:after {
-    content: "\002b"; /* Defina o ícone padrão como '+' */
-    position: relative;
-    top: 1px;
-    display: inline-block;
-    font-family: 'Glyphicons Halflings';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 1.6em;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    float: right;
-    transition: transform .25s linear;
-    -webkit-transition: -webkit-transform .25s linear;
-  }
+#card-body {
+  display: flex;
+  flex-direction: row;
+}
 
-  .accordion-toggle[aria-expanded="true"]:after {
-    content: "\2212"; /* Altere o ícone para '-' quando expandido */
-    -webkit-transform: rotate(180deg);
-    transform: rotate(180deg);
-  }
+/* simbolos de mais e menos no accordion  */
+.accordion-toggle:after {
+  content: "\002b";
+  /* Define o ícone '+' */
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 1.6em;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  float: right;
+  transition: transform .25s linear;
+  -webkit-transition: -webkit-transform .25s linear;
+}
+
+.accordion-toggle[aria-expanded="true"]:after {
+  content: "\2212";
+  /* Altere o ícone para '-' quando expandido */
+  -webkit-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+
+/* campo para enviar arquivos pdf pagina de atendimento */
+.custum-file-upload {
+  height: 250px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: space-between;
+  gap: 20px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #cacaca;
+  background-color: rgba(255, 255, 255, 1);
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0px 48px 35px -48px rgba(0, 0, 0, 0.1);
+}
+
+.custum-file-upload .icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custum-file-upload .icon svg {
+  height: 80px;
+  fill: rgba(75, 85, 99, 1);
+}
+
+.custum-file-upload .text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custum-file-upload .text span {
+  font-weight: 400;
+  color: rgba(75, 85, 99, 1);
+}
+
+.custum-file-upload input {
+  display: none;
+}
 
 
+/* organização da pagina detalhes do atendimento */
+.detalhes-atendimentos {
+  margin: 20px;
+}
 
+.detalhes-atendimentos dl {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  padding: 10px;
+}
 
+.detalhes-atendimentos dt {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
 
+.detalhes-atendimentos dd {
+  margin-bottom: 10px;
+}
 
-
-
-  
+.detalhes-atendimentos h6 {
+  /* background-color: #abd0f7; */
+  color: #000000;
+  border-radius: 5px;
+  padding: 10px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  border-bottom: 2px solid;
+  border-image: linear-gradient(to right, #f8f9fa 25%, #81beff 50%, #f8f9fa 75%) 1;
+}
