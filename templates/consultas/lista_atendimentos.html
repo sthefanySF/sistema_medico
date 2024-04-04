@@ -16,7 +16,7 @@
           <a href="{% url 'visualizarAtendimento' atendimento.id %}" class="atendimento-link">
             {{ atendimento.agendamento.paciente.nome }}
             {% if atendimento.profissional_saude %}
-              <span class="profissional-text">Atendido por: {{ atendimento.profissional_saude.nome }}</span>
+              <span class="profissional-text"> - Dr(a): {{ atendimento.profissional_saude.nome }}</span>
             {% endif %}
           </a>
         </li>

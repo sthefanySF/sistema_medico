@@ -1,61 +1,68 @@
 <!-- listar_pacientes.html -->
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
-{% block title %}Lista de Pacientes{% endblock %}
-
-
+{% block title %}
+  Lista de Pacientes
+{% endblock %}
 
 {% block content %}
-{#  Verifica se há message na views e mostra caso true  #}
-{% if messages %}{% include 'messages.html' %}{% endif %}
+  {# Verifica se há message na views e mostra caso true #}
+  {% if messages %}{% include 'messages.html' %}{% endif %}
   <h4 class="text-center mb-4 custom-title">Lista de Pacientes</h4>
-  
+
+  <div class="d-flex justify-content-between pb-3">
+    <a class="btn btn-primary" href="{% url 'home' %}">Voltar</a>
+    <a class="btn btn-primary" href="{% url 'pacienteCreate' %}">Cadastrar</a>
+  </div>
+
+    
   <div class="input-group mb-3">
     <input type="text" class="form-control" placeholder="Pesquisar paciente..." id="searchInput">
     <button class="btn btn-outline-secondary" type="button" id="searchButton">Pesquisar</button>
   </div>
   
 <table class="table table-bordered table-sm" id="border-none">
-  <thead>
-    <tr>
-      <th colspan="3" style="text-align: center;">Nome</th> 
-    </tr>
-  </thead>
-  <tbody>
-    {% for paciente in pacientes %}
-    <tr data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
-      <td class="paciente-nome" colspan="3">{{ paciente.nome }}
-        <span style="color: #bbbbbb"> - {{ paciente.get_sexo_display }}</span>
-        <a href="#" aria-expanded="false" class="accordion-toggle"></a> 
-      </td>
-    </tr>
-    <tr>
-      <td colspan="3" style="border: transparent;">
-        <div class="collapse" id="collapse{{ forloop.counter }}" >
-          <div class="card card-body" id="card-body">
-            <div class="info-block">
-              <p>Data de Nascimento: {{ paciente.data_nascimento | date:"d/m/Y" }}</p>
-              <p>E-mail: {{ paciente.email }}</p>
+    <thead>
+      <tr>
+        <th colspan="3" style="text-align: center;">Nome</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for paciente in pacientes %}
+        <tr data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
+          <td class="paciente-nome" colspan="3">
+            {{ paciente.nome }}
+            <span style="color: #bbbbbb">- {{ paciente.get_sexo_display }}</span>
+            <a href="#" aria-expanded="false" class="accordion-toggle"></a>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3" style="border: transparent;">
+            <div class="collapse" id="collapse{{ forloop.counter }}">
+              <div class="card card-body" id="card-body">
+                <div class="info-block">
+                  <p>Data de Nascimento: {{ paciente.data_nascimento|date:'d/m/Y' }}</p>
+                  <p>E-mail: {{ paciente.email }}</p>
+                </div>
+                <div class="info-block">
+                  <p>RG: {{ paciente.rg }}</p>
+                  <p>CPF: {{ paciente.cpf }}</p>
+                </div>
+                <div class="info-block">
+                  <p>Tipo de paciente: {{ paciente.tipo_paciente }}</p>
+                  <p>Matrícula: {{ paciente.matricula }}</p>
+                </div>
+                <div class="btn-group" role="group" aria-label="Ações">
+                  <a href="{% url 'pacienteEditar' paciente.id %}" class="btn btn-primary">Editar</a>
+                  <a href="{% url 'pacienteExcluir' paciente.id %}" class="btn btn-danger ms-1">Excluir</a>
+                </div>
+              </div>
             </div>
-            <div class="info-block">
-              <p>RG: {{ paciente.rg }}</p>
-              <p>CPF: {{ paciente.cpf }}</p>
-            </div>
-            <div class="info-block">
-              <p>Tipo de paciente: {{ paciente.tipo_paciente }}</p>
-              <p>Matrícula: {{ paciente.matricula }}</p>
-            </div>
-            <div class="btn-group" role="group" aria-label="Ações">
-              <a href="{% url 'pacienteEditar' paciente.id %}" class="btn btn-primary">Editar</a>
-              <a href="{% url 'pacienteExcluir' paciente.id %}" class="btn btn-danger ms-1">Excluir</a>
-            </div>
-          </div>
-        </div>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
 
   <div class="d-flex justify-content-between">
@@ -105,11 +112,20 @@
     });
   </script>
   
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const toggles = document.querySelectorAll('.accordion-toggle')
+      const nomeDivs = document.querySelectorAll('.paciente-nome')
+    
+      nomeDivs.forEach(function (nomeDiv, index) {
+        nomeDiv.addEventListener('click', function () {
+          const toggle = toggles[index]
+          const expanded = toggle.getAttribute('aria-expanded') === 'true'
+          toggle.setAttribute('aria-expanded', !expanded)
+        })
+      })
+    })
+  </script>
 
-
-
-<style>
-</style>
-
-
+  <style></style>
 {% endblock %}

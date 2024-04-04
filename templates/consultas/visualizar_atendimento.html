@@ -1,49 +1,63 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
-{% block title %}Visualizar Atendimento{% endblock %}
+{% block title %}
+  Visualizar Atendimento
+{% endblock %}
 
 {% block content %}
   <div class="container mt-5">
     <div class="text-center mb-4 custom-title">
       <h4>Detalhes do Atendimento</h4>
     </div>
-    
-    <dl class="row border p-3 align-items-start">
-      <dt class="col-sm-3 border-bottom">Profissional de Saúde:</dt>
-      <dd class="col-sm-9 border-bottom">{{ atendimento.agendamento.profissional_saude.nome }}</dd>
 
-      <dt class="col-sm-3 border-bottom">Nome do paciente:</dt>
-      <dd class="col-sm-9 border-bottom">{{ atendimento.agendamento.paciente.nome }}</dd>
-      
-      <dt class="col-sm-3 border-bottom">Tipo de paciente:</dt>
-      <dd class="col-sm-9 border-bottom">{{ atendimento.agendamento.paciente.tipo_paciente }}</dd>
-      
-      <dt class="col-sm-3 border-bottom">Data do Agendamento:</dt>
-      <dd class="col-sm-9 border-bottom">{{ atendimento.agendamento.data_agendamento|date:"d/m/Y" }}</dd>
+    <div class="detalhes-atendimentos">
+      <div class="">
+        <div class="">
+          <dl class="row border p-3 align-items-start">
+            <dt class="col-sm-2 border-bottom">Profissional de Saúde:</dt>
+            <dd class="col-sm-10 border-bottom">{{ atendimento.agendamento.profissional_saude.nome }}</dd>
 
-      <dt class="col-sm-3 border-bottom">Anamnese:</dt>
-    <dd class="col-sm-9 border-bottom">{{ atendimento.anamnese }}</dd>
+            <dt class="col-sm-2 border-bottom">Nome do paciente:</dt>
+            <dd class="col-sm-4 border-bottom">{{ atendimento.agendamento.paciente.nome }}</dd>
 
-    <dt class="col-sm-3 border-bottom">Exames Físicos:</dt>
-    <dd class="col-sm-9 border-bottom">{{ atendimento.exame_fisico }}</dd>
+            <dt class="col-sm-2 border-bottom">Tipo de paciente:</dt>
+            <dd class="col-sm-4 border-bottom">{{ atendimento.agendamento.paciente.tipo_paciente }}</dd>
 
-    <dt class="col-sm-3 border-bottom">Exames Complementares:</dt>
-    <dd class="col-sm-9 border-bottom">{{ atendimento.exames_complementares }}</dd>
+            <dt class="col-sm-3 border-bottom">Data do Agendamento:</dt>
+            <dd class="col-sm-3 border-bottom">{{ atendimento.agendamento.data_agendamento|date:'d/m/Y' }}</dd>
 
-    <dt class="col-sm-3 border-bottom">pdf exames:</dt>
-    <dd class="col-sm-9 border-bottom">{{ atendimento.pdf_exames }}</dd>
+            <dt class="col-sm-2 border-bottom">pdf exames:</dt>
+            <dd class="col-sm-4 border-bottom">{{ atendimento.pdf_exames }}</dd>
 
-    <dt class="col-sm-3 border-bottom">Diagnostico:</dt>
-    <dd class="col-sm-9 border-bottom">{{ atendimento.diagnostico }}</dd>
+            <h6 class="d-flex justify-content-center py-3"> DIAGNÓSTICOS </h6>
 
-    <dt class="col-sm-3 border-bottom">Conduta:</dt>
-    <dd class="col-sm-9 border-bottom">{{ atendimento.conduta }}</dd>
-    
- 
-    </dl>
+            <dl class=" p-3">
+              <dt class="border-bottom">Anamnese:</dt>
+              <dd class="border-bottom">{{ atendimento.anamnese }}</dd>
+
+              <dt class="border-bottom">Exames Físicos:</dt>
+              <dd class="border-bottom">{{ atendimento.exame_fisico }}</dd>
+
+              <dt class="border-bottom">Exames Complementares:</dt>
+              <dd class="border-bottom">{{ atendimento.exames_complementares }}</dd>
+
+              <dt class="border-bottom">Diagnóstico:</dt>
+              <dd class="border-bottom">{{ atendimento.diagnostico }}</dd>
+
+              <dt class="border-bottom">Conduta:</dt>
+              <dd>{{ atendimento.conduta }}</dd>
+            </dl>
+          </dl>
+        </div>
+      </div>
+    </div>
 
     <div class="text-center mt-3">
-        <a href="{% url 'listaAtendimentos' %}" class="btn btn-primary">Voltar para Lista de Atendimentos</a>
-      </div>
+      <a href="{% url 'listaAtendimentos' %}" class="btn btn-primary">Voltar para Lista de Atendimentos</a>
+    </div>
   </div>
+
+
+
+  
 {% endblock %}
