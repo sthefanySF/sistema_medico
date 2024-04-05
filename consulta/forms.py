@@ -203,4 +203,4 @@ class JustificativaCancelamentoForm(forms.Form):
 class AtendimentoForm(forms.ModelForm):
     class Meta:
         model = Atendimento
-        fields = ['anamnese', 'exame_fisico', 'exames_complementares', 'pdf_exames', 'diagnostico', 'conduta']
+        fields = ['agendamento', 'anamnese', 'exame_fisico', 'exames_complementares', 'pdf_exames', 'diagnostico', 'conduta']

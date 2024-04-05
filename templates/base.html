@@ -1,57 +1,59 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-{%load static%}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Seu Título Aqui{% endblock %}</title>
+  {% load static %}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% block title %}
+        Seu Título Aqui
+      {% endblock %}
+    </title>
 
     {# Bootstrap versão 5.3.2 CSS #}
-    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap5.3.2/css/bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap5.3.2/css/bootstrap.css' %}" />
 
     {# CSS #}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/estilos.css' %}">
-    <link rel="stylesheet" href="{% static 'font-awesome-4.6.3/css/font-awesome.css' %}">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/estilos.css' %}" />
+    <link rel="stylesheet" href="{% static 'font-awesome-4.6.3/css/font-awesome.css' %}" />
 
-</head>
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" />
+  </head>
 
-<body style="min-height: 100vh; display: flex; flex-direction: column;">
+  <body style="min-height: 100vh; display: flex; flex-direction: column;">
+    {# Inclui o cabeçalho das páginas #}
+    {% include 'linha_usuario.html' %}
 
-{# Inclui o cabeçalho das páginas #}
-{% include 'linha_usuario.html' %}
+    <div class="container mt-5" style="flex: 1;">
+      {% comment %} {% block messages %}
+        {% if messages %}
+          <div class="alert alert-success" role="alert">{{ messages }}</div>
+        {% endif %}
+      {% endblock %} {% endcomment %}
+      {% block content %}
 
-<div class="container mt-5" style="flex: 1;">
-    {% comment %} {% block messages %}
-    {% if messages %}
-        <div class="alert alert-success" role="alert">
-            {{ messages }}
-        </div>
-    {% endif %}
-    {% endblock %} {% endcomment %}
-    {% block content %}{% endblock %}
-</div>
+      {% endblock %}
+    </div>
 
-<footer class="text-center mt-4" style="background-color: #0C4DA2; color: white; padding: 10px;">
-    <p>&copy; {{ year }} Universidade Federal do Acre | Rodovia BR 364, km 04 | Email: medico@.com | Telefone: 68999212325</p>
-</footer>
+    <footer class="text-center mt-4" style="background-color: #0C4DA2; color: white; padding: 10px;">
+      <p>&copy; {{ year }} Universidade Federal do Acre | Rodovia BR 364, km 04 | Email: medico@.com | Telefone: 68999212325</p>
+    </footer>
 
-{# jQuery #}
-<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-{# Bootstrap versão 5.3.2 JavaScript #}
-<script src="{% static 'bootstrap5.3.2/js/bootstrap.bundle.min.js' %}"></script>
+    {# jQuery #}
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    {# Bootstrap versão 5.3.2 JavaScript #}
+    <script src="{% static 'bootstrap5.3.2/js/bootstrap.bundle.min.js' %}"></script>
 
-{# Maskedput #}
-<script type="text/javascript" src="{% static 'jquery/jquery.mask.min.js' %}"></script>
+    {# Maskedput #}
+    <script type="text/javascript" src="{% static 'jquery/jquery.mask.min.js' %}"></script>
 
-{# DataTables JavaScript #}
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+    {# DataTables JavaScript #}
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
 
-<script>
+    <script>
     {# Máscara de formatação Jquery #}
     $(function ($) {
         $('#id_data_agendamento').mask('99/99/9999');
@@ -92,7 +94,5 @@
         });
     }, 6000);
 </script>
-
-</body>
-
+  </body>
 </html>

@@ -1,47 +1,46 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
-{% block title %}Atendimento{% endblock %}
+{% block title %}
+  Atendimento
+{% endblock %}
 
 {% block content %}
-
   <div class="container mt-5">
-    
     <div class="text-center mb-4 custom-title">
       <h4>Atendimento</h4>
     </div>
-    
+
     <dl class="row border p-3 align-items-start">
       <dt class="col-sm-3 border-bottom label-title">Nome do paciente:</dt>
       <dd class="col-sm-9 border-bottom">{{ agendamento.paciente.nome }}</dd>
-      
+
       <dt class="col-sm-3 border-bottom label-title">Tipo de paciente:</dt>
       <dd class="col-sm-9 border-bottom">{{ agendamento.paciente.tipo_paciente }}</dd>
-      
+
       <dt class="col-sm-3 border-bottom label-title">Data do Agendamento:</dt>
-      <dd class="col-sm-9 border-bottom">{{ agendamento.data_agendamento|date:"d/m/Y" }}</dd>
-      
+      <dd class="col-sm-9 border-bottom">{{ agendamento.data_agendamento|date:'d/m/Y' }}</dd>
+
       <dt class="col-sm-3 border-bottom label-title">Prioridade de Atendimento:</dt>
       <dd class="col-sm-9 border-bottom">
-          {% if agendamento.prioridade_atendimento %}
-              Sim
-          {% else %}
-              Não
-          {% endif %}
+        {% if agendamento.prioridade_atendimento %}
+          Sim
+        {% else %}
+          Não
+        {% endif %}
       </dd>
-  
+
       <dt class="col-sm-3 border-bottom label-title">Turno:</dt>
 
       <dd class="col-sm-9 border-bottom">
-          {% if agendamento.turno == 'manha' %}
-              Manhã
-          {% elif agendamento.turno == 'tarde' %}
-              Tarde
-          {% else %}
-              <!-- Adicione um caso padrão se necessário -->
-              {{ agendamento.turno }}
-          {% endif %}
+        {% if agendamento.turno == 'manha' %}
+          Manhã
+        {% elif agendamento.turno == 'tarde' %}
+          Tarde
+        {% else %}
+          <!-- Adicione um caso padrão se necessário -->
+          {{ agendamento.turno }}
+        {% endif %}
       </dd>
-
     </dl>
 
     <div class="container mt-3">
@@ -69,19 +68,35 @@
         </div>
 
         <div class="row">
+          {% comment %} <div class="col-md-4 mb-3">
+            <h6>PDF Exames</h6>
+            <div class="custum-file-upload">
+              <label for="{{ form.pdf_exames.id_for_label }}" class="form-label mb-3 label-title">
+                <div class="icon"></div>
+                <div class="text">
+                  <span id="file-name">Clique para escolher o(s) arquivo(s)</span>
+                </div>
+              </label>
+              <input type="file" id="{{ form.pdf_exames.id_for_label }}" name="{{ form.pdf_exames.name }}" multiple />
+            </div>
+          </div> {% endcomment %}
 
           <div class="col-md-4 mb-3">
-            <h6>PDF Exames</h6>
-            <label for="{{ form.pdf_exames.id_for_label }}" class="form-label mb-3 label-title custum-file-upload">
+          <h6>PDF Exames</h6>
+          <div class="content">                       
+            <div class="actions">
               <div class="icon">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="" viewBox="0 0 24 24"><g stroke-width="0" id="SVGRepo_bgCarrier"></g><g stroke-linejoin="round" stroke-linecap="round" id="SVGRepo_tracerCarrier"></g><g id="SVGRepo_iconCarrier"> <path fill="" d="M10 1C9.73478 1 9.48043 1.10536 9.29289 1.29289L3.29289 7.29289C3.10536 7.48043 3 7.73478 3 8V20C3 21.6569 4.34315 23 6 23H7C7.55228 23 8 22.5523 8 22C8 21.4477 7.55228 21 7 21H6C5.44772 21 5 20.5523 5 20V9H10C10.5523 9 11 8.55228 11 8V3H18C18.5523 3 19 3.44772 19 4V9C19 9.55228 19.4477 10 20 10C20.5523 10 21 9.55228 21 9V4C21 2.34315 19.6569 1 18 1H10ZM9 7H6.41421L9 4.41421V7ZM14 15.5C14 14.1193 15.1193 13 16.5 13C17.8807 13 19 14.1193 19 15.5V16V17H20C21.1046 17 22 17.8954 22 19C22 20.1046 21.1046 21 20 21H13C11.8954 21 11 20.1046 11 19C11 17.8954 11.8954 17 13 17H14V16V15.5ZM16.5 11C14.142 11 12.2076 12.8136 12.0156 15.122C10.2825 15.5606 9 17.1305 9 19C9 21.2091 10.7909 23 13 23H20C22.2091 23 24 21.2091 24 19C24 17.1305 22.7175 15.5606 20.9844 15.122C20.7924 12.8136 18.858 11 16.5 11Z" clip-rule="evenodd" fill-rule="evenodd"></path> </g></svg>
               </div>
-              <div class="text">
-                 <span id="file-name">Clique para escolher o arquivo</span>
-                 </div>
-            </label>
-            {{ form.pdf_exames }}
+              <label for="{{ form.pdf_exames.id_for_label }}" class="button upload-btn">Escolha o(s) arquivo(s)
+                <input hidden type="file" id="{{ form.pdf_exames.id_for_label }}" name="{{ form.pdf_exames.name }}" multiple />
+              </label>
+            </div>
+            <div class="result-container"></div>
           </div>
+
+          </div>
+
 
           <div class="col-md-4 mb-3">
             <h6>Diagnóstico</h6>
@@ -95,23 +110,20 @@
             {{ form.conduta }}
           </div>
         </div>
-        
+
         <button type="submit" class="btn btn-primary">Salvar Atendimento</button>
       </form>
     </div>
   </div>
 
   <style>
-
     textarea {
       border-radius: 10px;
     }
+    
 
-    #id_pdf_exames {
-      display: none;
-    }
-
-    h6{
+    
+    h6 {
       text-align: center;
       margin-right: 5.5em;
     }
@@ -119,17 +131,44 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      var fileInput = document.querySelector("#id_pdf_exames");
-      var fileNameDisplay = document.querySelector("#file-name");
+      const fileInput = document.getElementById('{{ form.pdf_exames.id_for_label }}');
+      const resultContainer = document.querySelector('.result-container');
   
-      fileInput.addEventListener("change", function() {
-        if (fileInput.files.length > 0) {
-          fileNameDisplay.textContent = fileInput.files[0].name;
-        } else {
-          fileNameDisplay.textContent = "Clique para escolher o arquivo";
+      fileInput.addEventListener('change', function(event) {
+        const files = event.target.files;
+  
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          const resultDiv = document.createElement('div');
+          resultDiv.classList.add('result');
+  
+          const fileSpan = document.createElement('span');
+          fileSpan.classList.add('file-uploaded');
+          fileSpan.innerHTML = `
+            <span class="close" data-index="${i}">X</span>
+            <span>${file.name}</span>
+          `;
+  
+          resultDiv.appendChild(fileSpan);
+          resultContainer.appendChild(resultDiv);
+        }
+      });
+  
+      // Event listener para remover o arquivo
+      resultContainer.addEventListener('click', function(event) {
+        if (event.target.classList.contains('close')) {
+          const resultDiv = event.target.closest('.result');
+          const index = event.target.dataset.index;
+          resultDiv.removeChild(resultDiv.children[0]); // Remove apenas o primeiro filho (o arquivo)
+          if (resultDiv.children.length === 0) { // Verifica se a div result está vazia
+            resultContainer.removeChild(resultDiv); // Remove a div result vazia
+          }
+          
+          // Reseta o valor do input file para permitir selecionar o mesmo arquivo novamente
+          fileInput.value = null;
         }
       });
     });
   </script>
-  
+
 {% endblock %}

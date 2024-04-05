@@ -175,9 +175,12 @@ class Atendimento(models.Model):
     anamnese = models.TextField()
     exame_fisico = models.TextField()
     exames_complementares = models.TextField()
-    pdf_exames = models.FileField(upload_to='exames_pdfs/', null=True, blank=True)
+    pdf_exames = models.ManyToManyField('ArquivoExame', blank=True)
     diagnostico = models.TextField()
     conduta = models.TextField()
+    
+    class ArquivoExame(models.Model):
+        arquivo = models.FileField(upload_to='exames_pdfs/')
 
     @property
     def profissional_saude(self):
