@@ -3,8 +3,10 @@
 from datetime import datetime
 from django.utils import timezone
 from django import forms
+import json
 from .models import Atendimento, Administrativo, Profissionaldasaude, Agendamento, Paciente
 from django.contrib.auth.models import User
+
 
 class PacienteForm(forms.ModelForm):
     class Meta:
@@ -203,4 +205,5 @@ class JustificativaCancelamentoForm(forms.Form):
 class AtendimentoForm(forms.ModelForm):
     class Meta:
         model = Atendimento
-        fields = ['agendamento', 'anamnese', 'exame_fisico', 'exames_complementares', 'pdf_exames', 'diagnostico', 'conduta']
+        fields = ['anamnese', 'exame_fisico', 'exames_complementares', 'pdf_exames', 'diagnostico', 'conduta']
+

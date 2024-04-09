@@ -31,15 +31,10 @@ class CampoAgendamento(admin.ModelAdmin):
     nome_profissional.short_description = 'Profissional'
 
 
+
 class CampoAtendimento(admin.ModelAdmin):
-    search_fields = ['paciente__nome']
-    list_display = ('agendamento', 'anamnese', 'exame_fisico', 'exames_complementares', 'mostrar_pdf_exames', 'diagnostico', 'conduta')    
-
-    def mostrar_pdf_exames(self, obj):
-        return obj.pdf_exames.url if obj.pdf_exames else 'N/A'
-
-    mostrar_pdf_exames.short_description = 'PDF Exames'
-   
+    search_fields = ['paciente__nome']  # Substitua 'paciente__nome' pelo campo correto
+    list_display = ('paciente', 'data_atendimento', 'anamnese', 'exame_fisico')    
 
 
 admin.site.register(Paciente, CampoPaciente)
