@@ -495,6 +495,7 @@ class AtendimentoCreate(CreateView):
         # Redireciona para a tela de confirmação de atendimento com o ID do Atendimento
         return redirect('confirmar_atendimento', agendamento_id=agendamento_id)
 
+
 def confirmar_atendimento(request, agendamento_id):
     agendamento = get_object_or_404(Agendamento, id=agendamento_id)
     atendimento = agendamento.atendimento
