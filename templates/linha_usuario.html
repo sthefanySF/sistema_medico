@@ -14,7 +14,7 @@
 
         </div>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+        <button class="navbar-toggler fixed-button" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
                 aria-controls="offcanvasNavbar">
             <span class="navbar-toggler-icon" style="filter: brightness(0) invert(1);"></span>
         </button>
@@ -118,3 +118,13 @@
         </div>
     </div>
 </nav>
+
+
+<style>
+    .fixed-button {
+        position: fixed;
+        right: 20px; /
+        z-index: 999;
+        background-color: #0C4DA2;
+    }
+</style>
