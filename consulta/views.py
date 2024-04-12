@@ -188,6 +188,9 @@ def listar_agendamentos(request):
     profissionais_saude = Profissionaldasaude.objects.all()
 
     profissional_id = request.GET.get('profissional_saude')
+     # Atualiza os status dos agendamentos
+    for agendamento in agendamentos:
+        agendamento.atualizar_status()
 
     if form.is_valid() and profissional_id and profissional_id != 'todos':
         cpf = form.cleaned_data.get('cpf')
@@ -231,20 +234,21 @@ def reagendar_agendamento(request, pk):
         if form.is_valid():
             form.save()
             
-            # Após salvar o formulário, atualize o status para 'pendente'
-            agendamento.status_atendimento = 'pendente'
-            agendamento.save()
+            # Verifique se o status atual é 'ausente' e mude para 'pendente' se for o caso
+            if agendamento.status_atendimento == 'ausente':
+                agendamento.status_atendimento = 'pendente'
+                agendamento.save()
 
             messages.warning(request, 'Reagendado com sucesso!')
             return redirect('agendamentoListagem')
         else:
             messages.error(request, 'Informe uma data válida!')
-            # Solicita uma data válida  para o formato da data.
 
     else:
         form = AgendamentoReagendarForm(instance=agendamento)
 
     return render(request, 'consultas/reagendar_agendamento.html', {'form': form, 'agendamento': agendamento})
+
 
 def cancelar_agendamento(request, agendamento_id):
     agendamento = get_object_or_404(Agendamento, pk=agendamento_id)

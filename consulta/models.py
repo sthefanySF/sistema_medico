@@ -7,6 +7,8 @@ from consulta.choices import *
 from validate_docbr import CPF
 from django.core.exceptions import ValidationError
 from django.core.validators import MinLengthValidator
+from django.utils import timezone
+
 
 def validate_cpf(value):
     cpf = CPF()
@@ -163,7 +165,12 @@ class Agendamento(models.Model):
     def __str__(self):
         return f"Agendamento para {self.paciente.nome}"
 
-
+    def atualizar_status(self):
+        now = timezone.now().date()  # Obtém apenas a data atual
+        if self.data_agendamento.date() < now:
+            # Se a data do agendamento for anterior à data atual
+            self.status_atendimento = 'ausente'
+            self.save()
     class Meta:
         ordering = ['-data_agendamento', 'paciente__nome']
         verbose_name = 'Agendamento'
