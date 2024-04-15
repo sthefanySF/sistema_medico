@@ -15,8 +15,9 @@
 
         <div class="d-flex justify-content-between pb-3">
             <a class="btn btn-primary" href="{% url 'home' %}">Voltar</a>
-            <a class="btn btn-primary" href="{% url 'profissionaldasaudeCreate' %}">Cadastrar</a>
-        </div>
+            <a href="#" class="btn btn-primary btn-expand-all">Expandir todos</a>
+            <a class="btn btn-primary" href="{% url 'pacienteCreate' %}">Cadastrar</a>
+          </div>
 
         <div class="input-group mb-3">
             <input type="text" class="form-control" placeholder="Pesquisar paciente..." id="searchInput" />
@@ -108,13 +109,29 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
           const toggles = document.querySelectorAll('.accordion-toggle')
-          const nomeDivs = document.querySelectorAll('.paciente-nome')
+          const nomeDivs = document.querySelectorAll('.profissionaldasaude-nome')
+          const expandAllButton = document.querySelector('.btn-expand-all')
         
           nomeDivs.forEach(function (nomeDiv, index) {
             nomeDiv.addEventListener('click', function () {
               const toggle = toggles[index]
               const expanded = toggle.getAttribute('aria-expanded') === 'true'
               toggle.setAttribute('aria-expanded', !expanded)
+            })
+          })
+          
+          expandAllButton.addEventListener('click', function (event) {
+            event.preventDefault()
+      
+            const accordions = document.querySelectorAll('.collapse')
+            const isExpanded = accordions[0].classList.contains('show')
+      
+            accordions.forEach(function (accordion) {
+              if (isExpanded) {
+                accordion.classList.remove('show')
+              } else {
+                accordion.classList.add('show')
+              }
             })
           })
         })
