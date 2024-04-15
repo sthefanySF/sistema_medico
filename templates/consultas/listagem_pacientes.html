@@ -15,19 +15,17 @@
     <a class="btn btn-primary" href="{% url 'pacienteCreate' %}">Cadastrar</a>
   </div>
 
-    
   <div class="input-group mb-3">
-    <input type="text" class="form-control" placeholder="Pesquisar paciente..." id="searchInput">
-    <button class="btn btn-outline-secondary" type="button" id="searchButton">Pesquisar</button>
+    <input type="text" class="form-control" placeholder="Pesquisar paciente..." id="searchInput" />
   </div>
-  
-<table class="table table-bordered table-sm" id="border-none">
+
+  <table class="table table-bordered table-sm" id="border-none">
     <thead>
       <tr>
-        <th colspan="3" style="text-align: center;">Nome</th>
+        <th colspan="7" style="text-align: center;">Nome</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody class="collapse-table" style="display: ;">
       {% for paciente in pacientes %}
         <tr data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
           <td class="paciente-nome" colspan="3">
@@ -62,50 +60,45 @@
         </tr>
       {% endfor %}
     </tbody>
+
+    
   </table>
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const toggles = document.querySelectorAll('.accordion-toggle');
-      const nomeDivs = document.querySelectorAll('.paciente-nome');
-      const searchInput = document.getElementById('searchInput');
-      const searchButton = document.getElementById('searchButton');
+    $(document).ready(function () {
+      // Ao digitar no campo de pesquisa
+      $('#searchInput').on('keyup', function () {
+        var searchText = $(this).val().toLowerCase()
   
-      // Adiciona evento de clique ao botão de pesquisa
-      searchButton.addEventListener('click', function() {
-        const searchTerm = searchInput.value.trim().toLowerCase();
+        // Mostrar a tabela e limpar resultados anteriores
+        $('tbody').show()
+        $('tbody tr').hide()
   
-        // Percorre os nomes dos pacientes e exibe ou oculta de acordo com o termo de pesquisa
-        nomeDivs.forEach(function(nomeDiv) {
-          const nome = nomeDiv.textContent.trim().toLowerCase();
-          const parentRow = nomeDiv.parentElement;
+        // Filtrar as linhas da tabela
+        $('tbody tr').each(function () {
+          // Verificar se o texto de pesquisa está presente em qualquer célula da linha
+          var found = false
+          $(this)
+            .find('td')
+            .each(function () {
+              if ($(this).text().toLowerCase().indexOf(searchText) !== -1) {
+                found = true
+                return false // Sair do loop interno se o texto for encontrado em qualquer célula
+              }
+            })
   
-          if (nome.includes(searchTerm)) {
-            parentRow.style.display = '';
-          } else {
-            parentRow.style.display = 'none';
+          // Mostrar a linha se o texto for encontrado
+          if (found) {
+            $(this).show()
+            $(this).next('tr').show() // Mostrar a próxima linha que contém mais informações do paciente            
           }
-        });
-      });
-  
-      // Adiciona evento de pressionar Enter no campo de entrada para iniciar a pesquisa
-      searchInput.addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-          searchButton.click();
-        }
-      });
-  
-      // Adiciona evento de clique aos nomes dos pacientes para expandir/collapse as informações
-      nomeDivs.forEach(function(nomeDiv, index) {
-        nomeDiv.addEventListener('click', function() {
-          const toggle = toggles[index];
-          const expanded = toggle.getAttribute('aria-expanded') === 'true';
-          toggle.setAttribute('aria-expanded', !expanded);
-        });
-      });
-    });
+        })
+      })
+    })
   </script>
   
+
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const toggles = document.querySelectorAll('.accordion-toggle')
