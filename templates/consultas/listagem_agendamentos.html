@@ -106,7 +106,7 @@
           {% if agendamento.status_atendimento == 'pendente' %}
           <div class="btn-group" role="group" aria-label="Status">
             <a href="{% url 'agendamentoConfirmar' agendamento.id %}" class="btn btn-success">Confirmar</a>
-            <a href="{% url 'agendamentoAusente' agendamento.id %}" class="btn btn-warning ms-1">Ausente</a>
+            
           </div>
           {% elif agendamento.status_atendimento == 'confirmado' %}
           Confirmado
