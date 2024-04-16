@@ -12,12 +12,12 @@
 
   <div class="d-flex justify-content-between pb-3">
     <a class="btn btn-primary" href="{% url 'home' %}">Voltar</a>
-    <a class="btn btn-primary" href="{% url 'administrativoCreate' %}">Cadastrar</a>
+    <a href="#" class="btn btn-primary btn-expand-all">Expandir todos</a>
+    <a class="btn btn-primary" href="{% url 'pacienteCreate' %}">Cadastrar</a>
   </div>
 
   <div class="input-group mb-3">
     <input type="text" class="form-control" placeholder="Pesquisar administrativo..." id="searchInput">
-    <button class="btn btn-outline-secondary" type="button" id="searchButton">Pesquisar</button>
   </div>
   
   <table class="table table-bordered table-sm" id="border-none">
@@ -63,46 +63,70 @@
     </tbody>
   </table>
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      const toggles = document.querySelectorAll('.accordion-toggle');
-      const nomeDivs = document.querySelectorAll('.administrativo-nome');
-      const searchInput = document.getElementById('searchInput');
-      const searchButton = document.getElementById('searchButton');
+    $(document).ready(function () {
+      // Ao digitar no campo de pesquisa
+      $('#searchInput').on('keyup', function () {
+        var searchText = $(this).val().toLowerCase()
   
-      // Adiciona evento de clique ao botão de pesquisa
-      searchButton.addEventListener('click', function() {
-        const searchTerm = searchInput.value.trim().toLowerCase();
+        // Mostrar a tabela e limpar resultados anteriores
+        $('tbody').show()
+        $('tbody tr').hide()
   
-        // Percorre os nomes dos administrativos e exibe ou oculta de acordo com o termo de pesquisa
-        nomeDivs.forEach(function(nomeDiv) {
-          const nome = nomeDiv.textContent.trim().toLowerCase();
-          const parentRow = nomeDiv.parentElement;
+        // Filtrar as linhas da tabela
+        $('tbody tr').each(function () {
+          // Verificar se o texto de pesquisa está presente em qualquer célula da linha
+          var found = false
+          $(this)
+            .find('td')
+            .each(function () {
+              if ($(this).text().toLowerCase().indexOf(searchText) !== -1) {
+                found = true
+                return false // Sair do loop interno se o texto for encontrado em qualquer célula
+              }
+            })
   
-          if (nome.includes(searchTerm)) {
-            parentRow.style.display = '';
-          } else {
-            parentRow.style.display = 'none';
+          // Mostrar a linha se o texto for encontrado
+          if (found) {
+            $(this).show()
+            $(this).next('tr').show() // Mostrar a próxima linha que contém mais informações do paciente
           }
-        });
-      });
+        })
+      })
+    })
+  </script>
   
-      // Adiciona evento de pressionar Enter no campo de entrada para iniciar a pesquisa
-      searchInput.addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-          searchButton.click();
-        }
-      });
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const toggles = document.querySelectorAll('.accordion-toggle')
+      const nomeDivs = document.querySelectorAll('.administrativo-nome')
+      const expandAllButton = document.querySelector('.btn-expand-all')
+    
+      nomeDivs.forEach(function (nomeDiv, index) {
+        nomeDiv.addEventListener('click', function () {
+          const toggle = toggles[index]
+          const expanded = toggle.getAttribute('aria-expanded') === 'true'
+          toggle.setAttribute('aria-expanded', !expanded)
+        })
+      })
+
+      expandAllButton.addEventListener('click', function (event) {
+        event.preventDefault()
   
-      // Adiciona evento de clique aos nomes dos administrativos para expandir/collapse as informações
-      nomeDivs.forEach(function(nomeDiv, index) {
-        nomeDiv.addEventListener('click', function() {
-          const toggle = toggles[index];
-          const expanded = toggle.getAttribute('aria-expanded') === 'true';
-          toggle.setAttribute('aria-expanded', !expanded);
-        });
-      });
-    });
+        const accordions = document.querySelectorAll('.collapse')
+        const isExpanded = accordions[0].classList.contains('show')
+  
+        accordions.forEach(function (accordion) {
+          if (isExpanded) {
+            accordion.classList.remove('show')
+          } else {
+            accordion.classList.add('show')
+          }
+        })
+      })
+    })
   </script>
 
   <style></style>

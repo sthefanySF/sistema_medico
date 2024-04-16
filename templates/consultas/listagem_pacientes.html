@@ -12,6 +12,7 @@
 
   <div class="d-flex justify-content-between pb-3">
     <a class="btn btn-primary" href="{% url 'home' %}">Voltar</a>
+    <a href="#" class="btn btn-primary btn-expand-all">Expandir todos</a>
     <a class="btn btn-primary" href="{% url 'pacienteCreate' %}">Cadastrar</a>
   </div>
 
@@ -60,8 +61,6 @@
         </tr>
       {% endfor %}
     </tbody>
-
-    
   </table>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -70,11 +69,11 @@
       // Ao digitar no campo de pesquisa
       $('#searchInput').on('keyup', function () {
         var searchText = $(this).val().toLowerCase()
-  
+    
         // Mostrar a tabela e limpar resultados anteriores
         $('tbody').show()
         $('tbody tr').hide()
-  
+    
         // Filtrar as linhas da tabela
         $('tbody tr').each(function () {
           // Verificar se o texto de pesquisa está presente em qualquer célula da linha
@@ -87,28 +86,44 @@
                 return false // Sair do loop interno se o texto for encontrado em qualquer célula
               }
             })
-  
+    
           // Mostrar a linha se o texto for encontrado
           if (found) {
             $(this).show()
-            $(this).next('tr').show() // Mostrar a próxima linha que contém mais informações do paciente            
+            $(this).next('tr').show() // Mostrar a próxima linha que contém mais informações do paciente
           }
         })
       })
     })
   </script>
-  
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const toggles = document.querySelectorAll('.accordion-toggle')
       const nomeDivs = document.querySelectorAll('.paciente-nome')
+      const expandAllButton = document.querySelector('.btn-expand-all')
     
       nomeDivs.forEach(function (nomeDiv, index) {
         nomeDiv.addEventListener('click', function () {
           const toggle = toggles[index]
           const expanded = toggle.getAttribute('aria-expanded') === 'true'
           toggle.setAttribute('aria-expanded', !expanded)
+        })
+      })
+    
+      // Adiciona um evento de clique ao botão "Expandir todos"
+      expandAllButton.addEventListener('click', function (event) {
+        event.preventDefault()
+    
+        const accordions = document.querySelectorAll('.collapse')
+        const isExpanded = accordions[0].classList.contains('show')
+    
+        accordions.forEach(function (accordion) {
+          if (isExpanded) {
+            accordion.classList.remove('show')
+          } else {
+            accordion.classList.add('show')
+          }
         })
       })
     })
