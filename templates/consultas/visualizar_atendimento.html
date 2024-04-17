@@ -27,7 +27,13 @@
             <dd class="col-sm-3 border-bottom">{{ atendimento.agendamento.data_agendamento|date:'d/m/Y' }}</dd>
 
             <dt class="col-sm-2 border-bottom">pdf exames:</dt>
-            <dd class="col-sm-4 border-bottom">{{ atendimento.pdf_exames }}</dd>
+            <dd class="col-sm-4 border-bottom">
+                {% if atendimento.pdf_exames %}
+                    <a href="{% url 'visualizar_pdf_exames' atendimento_id=atendimento.id %}" target="_blank">{{ atendimento.pdf_exames.name }}</a>
+                {% else %}
+                    Sem PDF anexado
+                {% endif %}
+            </dd>
 
             <h6 class="d-flex justify-content-center py-3"> DIAGNÓSTICOS </h6>
 
@@ -53,9 +59,10 @@
     </div>
 
     
-    <div class="text-center mt-3">
+    <div class="d-flex justify-content-around text-center mt-3">
       <a href="{% url 'listaAtendimentos' %}" class="btn btn-primary">Voltar para Lista de Atendimentos</a>
-    </div>
+      <a href="{% url 'visualizar_comprovante_atendimento' atendimento_id=atendimento.id %}" class="btn btn-primary" target="_blank">Visualizar comprovante de atendimento</a>
+  </div>
   </div>
 
 

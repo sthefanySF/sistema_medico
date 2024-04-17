@@ -28,12 +28,20 @@ class PacienteForm(forms.ModelForm):
             'sexo': forms.RadioSelect(choices=[('M', 'Masculino'), ('F', 'Feminino')]),
             'tipo_paciente': forms.Select(choices=Paciente.TIPO_PACIENTE_CHOICES),
         }
+        
+    def __init__(self, *args, **kwargs):
+        super(PacienteForm, self).__init__(*args, **kwargs)
+
+        # Adicionando a classe 'form-control' aos widgets
+        for f in self.fields:
+            self.fields[f].widget.attrs['class'] = 'form-control'
 
     def clean_data_nascimento(self):
         data_nascimeto = self.cleaned_data.get('data_nascimento')
         if data_nascimeto > datetime.now().date():
             raise forms.ValidationError('Informe uma data válida.')
         return data_nascimeto
+    
 
 
         

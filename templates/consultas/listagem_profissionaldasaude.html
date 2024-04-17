@@ -122,3 +122,18 @@
           
           expandAllButton.addEventListener('click', function (event) {
             event.preventDefault()
+      
+            const accordions = document.querySelectorAll('.collapse')
+            const isExpanded = accordions[0].classList.contains('show')
+      
+            accordions.forEach(function (accordion) {
+              if (isExpanded) {
+                accordion.classList.remove('show')
+              } else {
+                accordion.classList.add('show')
+              }
+            })
+          })
+        })
+      </script>
+{% endblock %}
