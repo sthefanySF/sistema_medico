@@ -32,6 +32,7 @@
           <td class="administrativo-nome" colspan="3">
             {{ administrativo.nome }}
             <span style="color: #bbbbbb">- {{ administrativo.cargo_funcao }}</span>
+            <span style="display: none;">{{ administrativo.data_nascimento|date:'d/m/Y' }}-{{ administrativo.email }}-{{ administrativo.rg }}-{{ administrativo.cpf }}{{ administrativo.setor }}-{{ administrativo.cargo }}</span>
             <a href="#" aria-expanded="false" class="accordion-toggle"></a>
           </td>
         </tr>
@@ -89,8 +90,8 @@
   
           // Mostrar a linha se o texto for encontrado
           if (found) {
-            $(this).show()
-            $(this).next('tr').show() // Mostrar a próxima linha que contém mais informações do paciente
+            $(this).show('tr')
+            //$(this).next('tr').show() // Mostrar a próxima linha que contém mais informações         
           }
         })
       })
