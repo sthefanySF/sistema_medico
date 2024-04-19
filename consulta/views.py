@@ -508,3 +508,36 @@ def download_comprovante_atendimento(request, atendimento_id):
     response['Content-Disposition'] = f'attachment; filename=comprovante_atendimento_{atendimento_id}.pdf'
     
     return response
+
+
+def visualizar_pdf_exames(request, atendimento_id):
+    atendimento = get_object_or_404(Atendimento, id=atendimento_id)
+
+    # Verifica se o atendimento possui um PDF de exames
+    if atendimento.pdf_exames:
+        pdf_file_path = atendimento.pdf_exames.path
+        with open(pdf_file_path, 'rb') as pdf:
+            response = HttpResponse(pdf.read(), content_type='application/pdf')
+            response['Content-Disposition'] = f'filename=pdf_exames_atendimento_{atendimento_id}.pdf'
+            return response
+    else:
+        # Caso não tenha PDF de exames, você pode retornar uma mensagem de erro ou redirecionar para outra página
+        return HttpResponse("PDF de exames não encontrado.")
+  
+    
+def visualizar_comprovante_atendimento(request, atendimento_id):
+    atendimento = get_object_or_404(Atendimento, id=atendimento_id)
+
+    # Renderiza o template para HTML
+    html_content = render_to_string('consultas/comprovantePdf_atendimento.html', {'atendimento': atendimento})
+    
+    # Converte HTML para PDF
+    pdf_file = io.BytesIO()
+    pisa.CreatePDF(html_content, dest=pdf_file)
+    
+    # Configura o conteúdo do PDF para visualização
+    pdf_file.seek(0)
+    response = HttpResponse(pdf_file.read(), content_type='application/pdf')
+    response['Content-Disposition'] = f'filename=comprovante_atendimento_{atendimento_id}.pdf'
+    
+    return response

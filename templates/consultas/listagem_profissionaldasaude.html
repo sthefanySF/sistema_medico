@@ -15,8 +15,9 @@
 
         <div class="d-flex justify-content-between pb-3">
             <a class="btn btn-primary" href="{% url 'home' %}">Voltar</a>
+            <a href="#" class="btn btn-primary btn-expand-all">Expandir todos</a>
             <a class="btn btn-primary" href="{% url 'profissionaldasaudeCreate' %}">Cadastrar</a>
-        </div>
+          </div>
 
         <div class="input-group mb-3">
             <input type="text" class="form-control" placeholder="Pesquisar paciente..." id="searchInput" />
@@ -34,6 +35,7 @@
                         <td class="profissionaldasaude-nome" colspan="3">
                             {{ profissionaldasaude.nome }}
                             <span style="color: #bbbbbb"> - {{ profissionaldasaude.area }}</span>
+                            <span style="display: none;">{{ profissionaldasaude.data_nascimento | date:"d/m/Y" }}-{{ profissionaldasaude.email }}-{{ profissionaldasaude.rg }}-{{ profissionaldasaude.cpf }}-{{ profissionaldasaude.identificacao_unica }}-{{ profissionaldasaude.area }}-{{ profissionaldasaude.unidade_siass }}-{{ profissionaldasaude.conselho }}</span>
                             <a href="#" aria-expanded="false" class="accordion-toggle"></a>
                         </td>
                     </tr>
@@ -97,8 +99,8 @@
     
             // Mostrar a linha se o texto for encontrado
             if (found) {
-              $(this).show()
-              $(this).next('tr').show() // Mostrar a próxima linha que contém mais informações do paciente            
+              $(this).show('tr')
+              //$(this).next('tr').show() // Mostrar a próxima linha que contém mais informações         
             }
           })
         })
@@ -108,13 +110,29 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
           const toggles = document.querySelectorAll('.accordion-toggle')
-          const nomeDivs = document.querySelectorAll('.paciente-nome')
+          const nomeDivs = document.querySelectorAll('.profissionaldasaude-nome')
+          const expandAllButton = document.querySelector('.btn-expand-all')
         
           nomeDivs.forEach(function (nomeDiv, index) {
             nomeDiv.addEventListener('click', function () {
               const toggle = toggles[index]
               const expanded = toggle.getAttribute('aria-expanded') === 'true'
               toggle.setAttribute('aria-expanded', !expanded)
+            })
+          })
+          
+          expandAllButton.addEventListener('click', function (event) {
+            event.preventDefault()
+      
+            const accordions = document.querySelectorAll('.collapse')
+            const isExpanded = accordions[0].classList.contains('show')
+      
+            accordions.forEach(function (accordion) {
+              if (isExpanded) {
+                accordion.classList.remove('show')
+              } else {
+                accordion.classList.add('show')
+              }
             })
           })
         })
