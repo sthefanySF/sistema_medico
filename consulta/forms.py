@@ -194,9 +194,6 @@ class AgendamentoReagendarForm(forms.ModelForm):
         #     # self.fields['data_agendamento'].error_messages = {'required': 'Email é um campo obrigatório.'}
 
 
-class PesquisaAgendamentoForm(forms.Form):
-    cpf = forms.CharField(label='', required=False, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Pesquise por CPF'}))
-    data_agendamento = forms.DateField(label='', required=False, widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}))
 
 class JustificativaCancelamentoForm(forms.Form):
     justificativa = forms.CharField(widget=forms.Textarea(attrs={'rows': 4, 'placeholder': 'Digite a justificativa aqui'}))
