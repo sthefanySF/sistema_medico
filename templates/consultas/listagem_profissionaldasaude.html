@@ -1,140 +1,131 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block title %}
-    Lista de Profissionais de Saúde
+  Lista de Profissionais de Saúde
 {% endblock %}
 
 {% block content %}
-    {# Verifica se há mensagens na views e mostra caso verdadeiro #}
-    {% if messages %}
-        {% include 'messages.html' %}
-    {% endif %}
+  {# Verifica se há mensagens na views e mostra caso verdadeiro #}
+  {% if messages %}
+    {% include 'messages.html' %}
+  {% endif %}
 
-    <div class="container mt-3">
-        <h4 class="text-center mb-4 custom-title">Lista de Profissionais de Saúde</h4>
+  <div class="container mt-3">
+    <h4 class="text-center mb-4 custom-title">Lista de Profissionais de Saúde</h4>
 
-        <div class="d-flex justify-content-between pb-3">
-            <a class="btn btn-primary" href="{% url 'home' %}">Voltar</a>
-            <a href="#" class="btn btn-primary btn-expand-all">Expandir todos</a>
-            <a class="btn btn-primary" href="{% url 'profissionaldasaudeCreate' %}">Cadastrar</a>
-          </div>
-
-        <div class="input-group mb-3">
-            <input type="text" class="form-control" placeholder="Pesquisar paciente..." id="searchInput" />
-          </div>
-
-        <table class="table table-bordered table-sm" id="border-none">
-            <thead>
-                <tr>
-                    <th colspan="3" style="text-align: center;">Nome</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for profissionaldasaude in profissionaldasaude %}
-                    <tr data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
-                        <td class="profissionaldasaude-nome" colspan="3">
-                            {{ profissionaldasaude.nome }}
-                            <span style="color: #bbbbbb"> - {{ profissionaldasaude.area }}</span>
-                            <span style="display: none;">{{ profissionaldasaude.data_nascimento | date:"d/m/Y" }}-{{ profissionaldasaude.email }}-{{ profissionaldasaude.rg }}-{{ profissionaldasaude.cpf }}-{{ profissionaldasaude.identificacao_unica }}-{{ profissionaldasaude.area }}-{{ profissionaldasaude.unidade_siass }}-{{ profissionaldasaude.conselho }}</span>
-                            <a href="#" aria-expanded="false" class="accordion-toggle"></a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="3" style="border: transparent;">
-                            <div class="collapse" id="collapse{{ forloop.counter }}">
-                                <div class="card card-body" id="card-body">
-                                    <div class="info-block">
-                                        <p>Data de Nascimento: {{ profissionaldasaude.data_nascimento | date:"d/m/Y" }}</p>
-                                        <p>E-mail: {{ profissionaldasaude.email }}</p>
-                                    </div>
-                                    <div class="info-block">
-                                        <p>RG: {{ profissionaldasaude.rg }}</p>
-                                        <p>CPF: {{ profissionaldasaude.cpf }}</p>
-                                    </div>
-                                    <div class="info-block">
-                                        <p>Identificação Única: {{ profissionaldasaude.identificacao_unica }}</p>
-                                        <p>Área/Rqe: {{ profissionaldasaude.area }}</p>
-                                    </div>
-                                    <div class="info-block">
-                                        <p>Unidade SIASS: {{ profissionaldasaude.unidade_siass }}</p>
-                                        <p>Conselho: {{ profissionaldasaude.conselho }}</p>
-                                    </div>
-                                    <div class="btn-group" role="group" aria-label="Ações">
-                                        <a href="{% url 'profissionaldasaudeEditar' profissionaldasaude.id %}" class="btn btn-primary">Editar</a>
-                                        <a href="{% url 'profissionaldasaudeExcluir' profissionaldasaude.id %}" class="btn btn-danger ms-1">Excluir</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="d-flex justify-content-between pb-3">
+      <a class="btn btn-primary" href="{% url 'home' %}">Voltar</a>
+      <a href="#" class="btn btn-primary btn-expand-all">Expandir todos</a>
+      <a class="btn btn-primary" href="{% url 'profissionaldasaudeCreate' %}">Cadastrar</a>
     </div>
 
+    <div class="input-group mb-3">
+      <input type="text" class="form-control" placeholder="Pesquisar paciente..." id="searchInput" />
+    </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-      $(document).ready(function () {
-        // Ao digitar no campo de pesquisa
-        $('#searchInput').on('keyup', function () {
-          var searchText = $(this).val().toLowerCase()
+    <table class="table table-bordered table-sm" id="border-none">
+      <thead>
+        <tr>
+          <th colspan="3" style="text-align: center;">Nome</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for profissionaldasaude in profissionaldasaude %}
+          <tr data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
+            <td class="profissionaldasaude-nome" colspan="3">
+              {{ profissionaldasaude.nome }}
+              <span style="color: #bbbbbb">- {{ profissionaldasaude.area }}</span>
+              <span style="display: none;">{{ profissionaldasaude.data_nascimento|date:'d/m/Y' }}-{{ profissionaldasaude.email }}-{{ profissionaldasaude.rg }}-{{ profissionaldasaude.cpf }}-{{ profissionaldasaude.identificacao_unica }}-{{ profissionaldasaude.area }}-{{ profissionaldasaude.unidade_siass }}-{{ profissionaldasaude.conselho }}</span>
+              <a href="#" aria-expanded="false" class="accordion-toggle"></a>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3" style="border: transparent;">
+              <div class="collapse" id="collapse{{ forloop.counter }}">
+                <div class="card card-body" id="card-body">
+                  <div class="info-block">
+                    <p>Data de Nascimento: {{ profissionaldasaude.data_nascimento|date:'d/m/Y' }}</p>
+                    <p>E-mail: {{ profissionaldasaude.email }}</p>
+                  </div>
+                  <div class="info-block">
+                    <p>RG: {{ profissionaldasaude.rg }}</p>
+                    <p>CPF: {{ profissionaldasaude.cpf }}</p>
+                  </div>
+                  <div class="info-block">
+                    <p>Identificação Única: {{ profissionaldasaude.identificacao_unica }}</p>
+                    <p>Área/Rqe: {{ profissionaldasaude.area }}</p>
+                  </div>
+                  <div class="info-block">
+                    <p>Unidade SIASS: {{ profissionaldasaude.unidade_siass }}</p>
+                    <p>Conselho: {{ profissionaldasaude.conselho }}</p>
+                  </div>
+                  <div class="btn-group" role="group" aria-label="Ações">
+                    <a href="{% url 'profissionaldasaudeEditar' profissionaldasaude.id %}" class="btn btn-primary">Editar</a>
+                    <a href="{% url 'profissionaldasaudeExcluir' profissionaldasaude.id %}" class="btn btn-danger ms-1">Excluir</a>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      // Ao digitar no campo de pesquisa
+      $('#searchInput').on('keyup', function () {
+        var searchText = $(this).val().toLowerCase()
     
-          // Mostrar a tabela e limpar resultados anteriores
-          $('tbody').show()
-          $('tbody tr').hide()
+        // Mostrar a tabela e limpar resultados anteriores
+        $('tbody').show()
+        $('tbody tr').hide()
     
-          // Filtrar as linhas da tabela
-          $('tbody tr').each(function () {
-            // Verificar se o texto de pesquisa está presente em qualquer célula da linha
-            var found = false
-            $(this)
-              .find('td')
-              .each(function () {
-                if ($(this).text().toLowerCase().indexOf(searchText) !== -1) {
-                  found = true
-                  return false // Sair do loop interno se o texto for encontrado em qualquer célula
-                }
-              })
+        // Filtrar as linhas da tabela
+        $('tbody tr').each(function () {
+          // Verificar se o texto de pesquisa está presente no nome do profissional
+          var profissionalNome = $(this).find('.profissionaldasaude-nome').text().toLowerCase();
+          if (profissionalNome.indexOf(searchText) !== -1) {
+            $(this).show('500');
+            // Mostrar a próxima linha que contém mais informações
+            $(this).next('tr').show();
+          }
+        });
+      });
+    });
     
-            // Mostrar a linha se o texto for encontrado
-            if (found) {
-              $(this).show('tr')
-              //$(this).next('tr').show() // Mostrar a próxima linha que contém mais informações         
-            }
-          })
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const toggles = document.querySelectorAll('.accordion-toggle')
+      const nomeDivs = document.querySelectorAll('.profissionaldasaude-nome')
+      const expandAllButton = document.querySelector('.btn-expand-all')
+    
+      nomeDivs.forEach(function (nomeDiv, index) {
+        nomeDiv.addEventListener('click', function () {
+          const toggle = toggles[index]
+          const expanded = toggle.getAttribute('aria-expanded') === 'true'
+          toggle.setAttribute('aria-expanded', !expanded)
         })
       })
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-          const toggles = document.querySelectorAll('.accordion-toggle')
-          const nomeDivs = document.querySelectorAll('.profissionaldasaude-nome')
-          const expandAllButton = document.querySelector('.btn-expand-all')
-        
-          nomeDivs.forEach(function (nomeDiv, index) {
-            nomeDiv.addEventListener('click', function () {
-              const toggle = toggles[index]
-              const expanded = toggle.getAttribute('aria-expanded') === 'true'
-              toggle.setAttribute('aria-expanded', !expanded)
-            })
-          })
-          
-          expandAllButton.addEventListener('click', function (event) {
-            event.preventDefault()
-      
-            const accordions = document.querySelectorAll('.collapse')
-            const isExpanded = accordions[0].classList.contains('show')
-      
-            accordions.forEach(function (accordion) {
-              if (isExpanded) {
-                accordion.classList.remove('show')
-              } else {
-                accordion.classList.add('show')
-              }
-            })
-          })
+    
+      expandAllButton.addEventListener('click', function (event) {
+        event.preventDefault()
+    
+        const accordions = document.querySelectorAll('.collapse')
+        const isExpanded = accordions[0].classList.contains('show')
+    
+        accordions.forEach(function (accordion) {
+          if (isExpanded) {
+            accordion.classList.remove('show')
+          } else {
+            accordion.classList.add('show')
+          }
         })
-      </script>
+      })
+    })
+  </script>
 {% endblock %}
