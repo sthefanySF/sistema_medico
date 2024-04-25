@@ -34,10 +34,18 @@ from django.template.response import TemplateResponse
 from django.core.mail import send_mail
 from sistema_medico.settings import EMAIL_HOST_USER
 
+# para weasyprint e visualizar pdf
+from django.http import FileResponse
+from django.template.loader import get_template
+from weasyprint import HTML
+
+
 
 def home(request):
     return render(request, 'home.html')
 
+def prontuario_medico(request):
+    return render(request, 'consultas/prontuario_medico.html')
 
 def logar(request):
     if request.user.is_authenticated:
@@ -540,4 +548,26 @@ def visualizar_comprovante_atendimento(request, atendimento_id):
     response = HttpResponse(pdf_file.read(), content_type='application/pdf')
     response['Content-Disposition'] = f'filename=comprovante_atendimento_{atendimento_id}.pdf'
     
+    return response
+
+def prontuario_medico(request, paciente_id):
+    paciente = Paciente.objects.get(pk=paciente_id)
+    atendimentos = Atendimento.objects.filter(agendamento__paciente=paciente)
+    return render(request, 'consultas/prontuario_medico.html', {'paciente': paciente, 'atendimentos': atendimentos})
+
+
+def pdf_prontuario_medico(request, paciente_id):
+    paciente = Paciente.objects.get(pk=paciente_id)
+    atendimentos = Atendimento.objects.filter(agendamento__paciente=paciente)
+
+    # Use o Django para obter o HTML para a página.
+    template = get_template('pdfs/pdf_prontuario_medico.html')
+    html = template.render({'paciente': paciente, 'atendimentos': atendimentos})
+
+    # Use WeasyPrint para transformar o HTML em PDF.
+    pdf = HTML(string=html, base_url=request.build_absolute_uri()).write_pdf()
+
+    # Retorne o PDF como um download.
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="prontuario_medico.pdf"'
     return response

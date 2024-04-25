@@ -67,8 +67,11 @@ urlpatterns = [
     path('download-comprovante-atendimento/<int:atendimento_id>/', download_comprovante_atendimento, name='download_comprovante_atendimento'),
     path('visualizar-pdf-exames/<int:atendimento_id>/', views.visualizar_pdf_exames, name='visualizar_pdf_exames'),
     path('visualizar-comprovante-atendimento/<int:atendimento_id>/', views.visualizar_comprovante_atendimento, name='visualizar_comprovante_atendimento'),
-
-
+    # path('prontuario/', prontuario_medico, name='prontuario_medico'),
+    path('prontuario_medico/<int:paciente_id>/', views.prontuario_medico, name='prontuario_medico'),
+    
+    # pdfs
+    path('pdf_prontuario_medico/<int:paciente_id>/', views.pdf_prontuario_medico, name='pdf_prontuario_medico'),
 
 
     # path('cancelar/agendamento/<int:pk>/', views.cancelar_agendamento, name='cancelarAgendamento'),
