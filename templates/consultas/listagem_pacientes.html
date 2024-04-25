@@ -34,7 +34,9 @@
             <span style="color: #bbbbbb">- {{ paciente.get_sexo_display }}</span>
             <span style="display: none;">{{ paciente.data_nascimento|date:'d/m/Y' }}-{{ paciente.email }}-{{ paciente.rg }}-{{ paciente.cpf }}-{{ paciente.tipo_paciente }}-{{ paciente.matricula }}</span>
             <a href="#" aria-expanded="false" class="accordion-toggle"></a>
-          </td>
+            <a href="{% url 'prontuario_medico' paciente.id %}" class="btn btn-primary btn-prontuario" style="display: block; float: right; margin-right: 20px;">Prontuário</a>
+
+            </td>
         </tr>
         <tr>
           <td colspan="3" style="border: transparent;">
@@ -85,6 +87,19 @@
             $(this).next('tr').show();
           }
         });
+      });
+    });
+    
+  </script>
+
+  <script>
+    $(document).ready(function() {
+      // Configuração do botão de prontuário
+      $('.btn-prontuario').click(function(event) {
+        // Impede o comportamento padrão do link
+        event.preventDefault();
+        // Redireciona para a página de prontuário
+        window.location.href = $(this).attr('href');
       });
     });
   </script>
