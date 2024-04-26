@@ -151,3 +151,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #
 # LOGOUT_REDIRECT_URL = 'accounts/login'
 
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
+

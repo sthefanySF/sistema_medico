@@ -1,13 +1,100 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
-    <!-- Inclua o caminho da imagem na tag <img> -->
-    <img src="{% static 'imagens/logo_ufac_2.png' %}" alt="Logo UFAC">
-</body>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=B612+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Fragment+Mono:ital@0;1&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+
+    <style>
+        body{
+            font-family: "Poppins", sans-serif;
+        }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        border-bottom: 1px solid #e9ecef;
+      }
+      .infoufac {
+        font-weight: bold;
+        text-align: start;
+      }
+      
+      #logoufac {
+        width: 70px;
+        height: auto;
+      }
+      
+      span {
+        display: flex;
+        font-size: 20px;
+        font-weight: bold;
+        justify-content: center;
+        margin-top: 10px;
+      }
+      .info-prontuario {
+ 
+      }
+      dt {
+        font-weight: bold;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="infoufac">
+        <p>UNIVERSIDADE FEDERAL DO ACRE</p>
+        <p>DIRETORIA DE SAÚDE E QUALIDADE DE VIDA</p>
+        <p>COORDENADORIA DE VIGILÂNCIA À SAÚDE DO SERVIDOR</p>
+        <p>SETOR MÉDICO PERICIAL</p>
+      </div>
+      <img id="logoufac" src="{% static 'imagens/logo_ufac_2.png' %}" alt="Logo UFAC" />
+    </header>
+
+    <span>PRONTUARIO MEDICO</span>
+
+    <div class="info-prontuario">
+      <dl class="row border p-3 align-items-start">
+        {% for atendimento in atendimentos %}
+          <dt class="col-sm-2 border-bottom">Profissional de Saúde:</dt>
+          <dd class="col-sm-10 border-bottom">{{ atendimento.agendamento.profissional_saude.nome }}</dd>
+
+          <dt class="col-sm-2 border-bottom">Nome do paciente:</dt>
+          <dd class="col-sm-4 border-bottom">{{ atendimento.agendamento.paciente.nome }}</dd>
+
+          <dt class="col-sm-2 border-bottom">Tipo de paciente:</dt>
+          <dd class="col-sm-4 border-bottom">{{ atendimento.agendamento.paciente.tipo_paciente }}</dd>
+
+          <dt class="col-sm-3 border-bottom">Data do Agendamento:</dt>
+          <dd class="col-sm-3 border-bottom">{{ atendimento.agendamento.data_agendamento|date:'d/m/Y' }}</dd>
+
+          <dl class="p-3">
+            <dt class="border-bottom">Anamnese:</dt>
+            <dd class="border-bottom">{{ atendimento.anamnese }}</dd>
+
+            <dt class="border-bottom">Exames Físicos:</dt>
+            <dd class="border-bottom">{{ atendimento.exame_fisico }}</dd>
+
+            <dt class="border-bottom">Exames Complementares:</dt>
+            <dd class="border-bottom">{{ atendimento.exames_complementares }}</dd>
+
+            <dt class="border-bottom">Diagnóstico:</dt>
+            <dd class="border-bottom">{{ atendimento.diagnostico }}</dd>
+
+            <dt class="border-bottom">Conduta:</dt>
+            <dd>{{ atendimento.conduta }}</dd>
+          </dl>
+          {% empty %}
+          <dt>Nenhum atendimento registrado para este paciente.</dt>
+        {% endfor %}
+      </dl>
+    </div>
+  </body>
 </html>
