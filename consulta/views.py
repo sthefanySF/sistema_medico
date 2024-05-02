@@ -6,6 +6,7 @@ from django.views.generic.edit import CreateView
 
 # from consulta.forms import AdministrativoForm, AgendamentoForm, AgendamentoReagendarForm, AtendimentoForm,
 # JustificativaCancelamentoForm, PacienteForm, PesquisaAgendamentoForm, ProfissionaldasaudeForm
+import json
 from consulta.forms import *
 
 from consulta.models import Atendimento, Paciente, Administrativo
@@ -13,6 +14,7 @@ from consulta.models import Agendamento, Paciente, Profissionaldasaude
 from datetime import date
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
+
 
 from django.contrib import messages
 
@@ -38,6 +40,8 @@ from sistema_medico.settings import EMAIL_HOST_USER
 from django.http import FileResponse
 from django.template.loader import get_template
 from weasyprint import HTML
+from django.core import serializers
+from django.core.serializers import serialize
 
 
 
@@ -317,10 +321,7 @@ class PacienteCreate(CreateView):
         messages.error(self.request, 'Erro ao cadastrar o paciente. Verifique os dados e tente novamente.')
         print("Erro ao cadastrar o paciente.")
         print(form.errors)  
-        return super().form_invalid(form)
-
-    
-    
+        return super().form_invalid(form)   
 
 class AdministrativoCreate(CreateView):
     model = Administrativo
@@ -567,21 +568,67 @@ def visualizar_comprovante_atendimento(request, atendimento_id):
 def prontuario_medico(request, paciente_id):
     paciente = Paciente.objects.get(pk=paciente_id)
     atendimentos = Atendimento.objects.filter(agendamento__paciente=paciente)
-    return render(request, 'consultas/prontuario_medico.html', {'paciente': paciente, 'atendimentos': atendimentos})
+    profissionais_saude = Profissionaldasaude.objects.all()  # Obter todos os médicos
+    return render(request, 'consultas/prontuario_medico.html', {'paciente': paciente, 'atendimentos': atendimentos, 'profissionais_saude': profissionais_saude})
+
+# def filtrar_prontuarios(request):
+#     paciente_id = request.GET.get('paciente_id')
+#     medicos_ids = request.GET.getlist('medicos')
+
+#     paciente = get_object_or_404(Paciente, pk=paciente_id)
+#     ids_agendamentos = paciente.agendamento_set.all().values_list('id', flat=True)
+
+#     atendimentos = Atendimento.objects.filter(agendamento__id__in=ids_agendamentos, agendamento__profissional_saude__id__in=medicos_ids)
+
+#     # Serializa os objetos com representação natural de chaves estrangeiras
+#     data = serialize('json', atendimentos, use_natural_foreign_keys=True, fields=('profissional_saude', 'paciente', 'data_atendimento', 'anamnese', 'exame_fisico', 'exames_complementares', 'diagnostico', 'conduta'))
+#     return HttpResponse(data, content_type='application/json')
+
+def filtrar_prontuarios(request):
+    paciente_id = request.GET.get('paciente_id')
+    medicos_ids = request.GET.getlist('medicos')
+
+    paciente = get_object_or_404(Paciente, pk=paciente_id)
+    ids_agendamentos = paciente.agendamento_set.all().values_list('id', flat=True)
+
+    atendimentos = Atendimento.objects.filter(agendamento__id__in=ids_agendamentos, agendamento__profissional_saude__id__in=medicos_ids)
+
+    # Construindo a lista de dicionários para cada atendimento
+    atendimentos_list = []
+    for atendimento in atendimentos:
+        atendimento_dict = {
+            'profissional_saude': atendimento.agendamento.profissional_saude.nome,
+            'paciente': atendimento.agendamento.paciente.nome,
+            'data_atendimento': atendimento.data_atendimento.strftime('%Y-%m-%d'),  # Formatar a data para string
+            'anamnese': atendimento.anamnese,
+            'exame_fisico': atendimento.exame_fisico,
+            'exames_complementares': atendimento.exames_complementares,
+            'diagnostico': atendimento.diagnostico,
+            'conduta': atendimento.conduta
+        }
+        atendimentos_list.append(atendimento_dict)
+
+    # Convertendo a lista de dicionários para JSON
+    data = json.dumps(atendimentos_list)
+
+    return HttpResponse(data, content_type='application/json')
 
 
-def pdf_prontuario_medico(request, paciente_id):
-    paciente = Paciente.objects.get(pk=paciente_id)
-    atendimentos = Atendimento.objects.filter(agendamento__paciente=paciente)
 
-    # Use o Django para obter o HTML para a página.
-    template = get_template('pdfs/pdf_prontuario_medico.html')
-    html = template.render({'paciente': paciente, 'atendimentos': atendimentos})
 
-    # Use WeasyPrint para transformar o HTML em PDF.
-    pdf = HTML(string=html, base_url=request.build_absolute_uri()).write_pdf()
+# def pdf_prontuario_medico(request, paciente_id):
+#     paciente = Paciente.objects.get(pk=paciente_id)
 
-    # Retorne o PDF como um download.
-    response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="prontuario_medico.pdf"'
-    return response
+
+#     # Use o Django para obter o HTML para a página.
+#     template = get_template('pdfs/pdf_prontuario_medico.html')
+#     html = template.render({'paciente': paciente, 'atendimentos': atendimentos})
+
+#     # Use WeasyPrint para transformar o HTML em PDF.
+#     pdf = HTML(string=html, base_url=request.build_absolute_uri()).write_pdf()
+
+#     # Retorne o PDF como um download.
+#     response = HttpResponse(pdf, content_type='application/pdf')
+#     response['Content-Disposition'] = 'attachment; filename="prontuario_medico.pdf"'
+#     return response
+

@@ -8,9 +8,28 @@
 {% block content %}
   <h4 class="text-center mb-4 custom-title">Prontuário Médico de {{ paciente.nome }}</h4>
 
+
+
   <div class="d-flex justify-content-between pb-3">
-    <a class="btn btn-primary" href="{% url 'pacienteListagem' %}">Voltar</a>
-    <a href="{% url 'pdf_prontuario_medico' paciente.id %}" target="_blank" class="print-btn" style="border: none;">
+    <a class="btn btn-primary" href="{% url 'pacienteListagem' %}" style="height: fit-content;">Voltar</a>
+    
+    <form id="filtro-form">
+      <input type="hidden" name="paciente_id" value="{{ paciente.id }}">
+      <div class="row align-items-end">
+        <div class="col-md-6 mb-3" style="width: auto;">
+          <label class="form-label">Profissionais de Saúde:</label>
+          {% for profissional in profissionais_saude %}
+             <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="medico{{ profissional.id }}" name="medicos" value="{{ profissional.id }}" />
+                <label class="form-check-label" for="medico{{ profissional.id }}">{{ profissional.nome }}</label>
+             </div>
+          {% endfor %}
+          <button class="btn btn-primary">Filtrar</button>
+        </div>
+      </div>
+    </form>
+    
+       {% comment %} <a href="{% url 'pdf_prontuario_medico' paciente.id %}" target="_blank" class="print-btn" style="border: none;">
       <button class="print-btn">
         <span class="printer-wrapper">
           <span class="printer-container">
@@ -28,30 +47,65 @@
         </span>
         Print
       </button>
-    </a>
+    </a> {% endcomment %}
   </div>
 
   <dl id="patient-info">
-
-
     {% for atendimento in atendimentos %}
       <div id="" class="flex d-flex justify-content-evenly">
-        <p><strong>Atendido por Dr(a) </strong><span>{{ atendimento.profissional_saude.nome }}</span></p>
-        <p><strong>Tipo de Paciente: </strong><span>{{ paciente.tipo_paciente }} </span></p>
-        <p><strong>Data do Atendimento: </strong><span>{{ atendimento.data_atendimento }}</span></p>
+        <p><strong>Atendido por Dr(a)</strong><span>{{ atendimento.profissional_saude.nome }}</span></p>
+        <p><strong>Tipo de Paciente:</strong><span>{{ paciente.tipo_paciente }}</span></p>
+        <p><strong>Data do Atendimento:</strong><span>{{ atendimento.data_atendimento }}</span></p>
       </div>
-      
+
       <dd id="diag">
-        <p><strong>Anamnese:</strong> {{ atendimento.anamnese }}<br></p>
-        <p><strong>Exame Físico:</strong> {{ atendimento.exame_fisico }}<br></p>
-        <p><strong>Exames Complementares:</strong> {{ atendimento.exames_complementares }}<br></p>
-        <p><strong>Diagnóstico:</strong> {{ atendimento.diagnostico }}<br></p>
-        <p><strong>Conduta:</strong> {{ atendimento.conduta }}<br></p>
+        <p><strong>Anamnese:</strong> {{ atendimento.anamnese }}<br /></p>
+        <p><strong>Exame Físico:</strong> {{ atendimento.exame_fisico }}<br /></p>
+        <p><strong>Exames Complementares:</strong> {{ atendimento.exames_complementares }}<br /></p>
+        <p><strong>Diagnóstico:</strong> {{ atendimento.diagnostico }}<br /></p>
+        <p><strong>Conduta:</strong> {{ atendimento.conduta }}<br /></p>
       </dd>
-    {% empty %}
+      {% empty %}
       <dt>Nenhum atendimento registrado para este paciente.</dt>
     {% endfor %}
   </dl>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function() {
+    $('#filtro-form').on('submit', function(e) {
+      e.preventDefault();
+      $.ajax({
+        url: "{% url 'filtrar_prontuarios' %}",
+        data: $(this).serialize(),
+        success: function(data) {
+          console.log(data);
+          $('#patient-info').empty();
+  
+          data.forEach(function(atendimento) {
+            console.log("Atendimento:", atendimento);
+            if (atendimento) {
+              $('#patient-info').append(`
+                <div class="flex d-flex justify-content-evenly">
+                  <p><strong>Atendido por Dr(a)</strong><span>${atendimento.profissional_saude}</span></p>
+                  <p><strong>Paciente:</strong><span>${atendimento.paciente}</span></p>
+                  <p><strong>Data do Atendimento:</strong><span>${atendimento.data_atendimento}</span></p>
+                </div>
+                <dd id="diag">
+                  <p><strong>Anamnese:</strong> ${atendimento.anamnese}<br /></p>
+                  <p><strong>Exame Físico:</strong> ${atendimento.exame_fisico}<br /></p>
+                  <p><strong>Exames Complementares:</strong> ${atendimento.exames_complementares}<br /></p>
+                  <p><strong>Diagnóstico:</strong> ${atendimento.diagnostico}<br /></p>
+                  <p><strong>Conduta:</strong> ${atendimento.conduta}<br /></p>
+                </dd>
+              `);
+            }
+          });
+        }
+      });
+    });
+  });
+</script>
 
   <style>
     p {
