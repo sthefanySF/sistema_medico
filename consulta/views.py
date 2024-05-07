@@ -40,6 +40,8 @@ from sistema_medico.settings import EMAIL_HOST_USER
 from django.http import FileResponse
 from django.template.loader import get_template
 from weasyprint import HTML
+
+#filtrar pacientes
 from django.core import serializers
 from django.core.serializers import serialize
 
@@ -565,12 +567,6 @@ def visualizar_comprovante_atendimento(request, atendimento_id):
     
     return response
 
-def prontuario_medico(request, paciente_id):
-    paciente = Paciente.objects.get(pk=paciente_id)
-    atendimentos = Atendimento.objects.filter(agendamento__paciente=paciente)
-    profissionais_saude = Profissionaldasaude.objects.all()  # Obter todos os médicos
-    return render(request, 'consultas/prontuario_medico.html', {'paciente': paciente, 'atendimentos': atendimentos, 'profissionais_saude': profissionais_saude})
-
 # def filtrar_prontuarios(request):
 #     paciente_id = request.GET.get('paciente_id')
 #     medicos_ids = request.GET.getlist('medicos')
@@ -583,6 +579,13 @@ def prontuario_medico(request, paciente_id):
 #     # Serializa os objetos com representação natural de chaves estrangeiras
 #     data = serialize('json', atendimentos, use_natural_foreign_keys=True, fields=('profissional_saude', 'paciente', 'data_atendimento', 'anamnese', 'exame_fisico', 'exames_complementares', 'diagnostico', 'conduta'))
 #     return HttpResponse(data, content_type='application/json')
+
+def prontuario_medico(request, paciente_id):
+    paciente = Paciente.objects.get(pk=paciente_id)
+    atendimentos = Atendimento.objects.filter(agendamento__paciente=paciente)
+    profissionais_saude = Profissionaldasaude.objects.all()  # Obter todos os médicos
+    return render(request, 'consultas/prontuario_medico.html', {'paciente': paciente, 'atendimentos': atendimentos, 'profissionais_saude': profissionais_saude})
+
 
 def filtrar_prontuarios(request):
     paciente_id = request.GET.get('paciente_id')
@@ -613,6 +616,34 @@ def filtrar_prontuarios(request):
 
     return HttpResponse(data, content_type='application/json')
 
+def pdf_prontuario_medico(request, paciente_id):
+    paciente = Paciente.objects.get(pk=paciente_id)
+    medicos_ids = request.GET.get('medicos')
+
+    print("IDs dos médicos:", medicos_ids)  # Adicionando um print statement para verificar os IDs dos médicos
+
+    if medicos_ids:
+        medicos_ids = [int(id) for id in medicos_ids.split(",")]
+
+        ids_agendamentos = paciente.agendamento_set.filter(profissional_saude__id__in=medicos_ids).values_list('id', flat=True)
+        atendimentos = Atendimento.objects.filter(agendamento__id__in=ids_agendamentos)
+    else:
+        atendimentos = Atendimento.objects.filter(agendamento__paciente=paciente)
+        
+    context = {
+        'paciente': paciente,
+        'atendimentos': atendimentos,
+        'medicos_ids': medicos_ids,
+    }
+
+    html = render_to_string('pdfs/pdf_prontuario_medico.html', context)
+
+    # Use WeasyPrint para transformar o HTML em PDF.
+    pdf = HTML(string=html, base_url=request.build_absolute_uri()).write_pdf()
+
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="prontuario_medico.pdf"'
+    return response
 
 
 
@@ -631,4 +662,3 @@ def filtrar_prontuarios(request):
 #     response = HttpResponse(pdf, content_type='application/pdf')
 #     response['Content-Disposition'] = 'attachment; filename="prontuario_medico.pdf"'
 #     return response
-

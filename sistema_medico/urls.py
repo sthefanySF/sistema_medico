@@ -69,11 +69,11 @@ urlpatterns = [
     path('visualizar-comprovante-atendimento/<int:atendimento_id>/', views.visualizar_comprovante_atendimento, name='visualizar_comprovante_atendimento'),
     # path('prontuario/', prontuario_medico, name='prontuario_medico'),
     path('prontuario_medico/<int:paciente_id>/', views.prontuario_medico, name='prontuario_medico'),
+     path('filtrar_prontuarios/', filtrar_prontuarios, name='filtrar_prontuarios'),
     
-    # pdfs
-    # path('pdf_prontuario_medico/<int:paciente_id>/', views.pdf_prontuario_medico, name='pdf_prontuario_medico'),
-    path('filtrar_prontuarios/', filtrar_prontuarios, name='filtrar_prontuarios'),
-
+    # pdfs  
+    path('pdf_prontuario_medico/<int:paciente_id>/', views.pdf_prontuario_medico, name='pdf_prontuario_medico'),
+    
     # path('cancelar/agendamento/<int:pk>/', views.cancelar_agendamento, name='cancelarAgendamento'),
     path('', views.home, name='home'),
 

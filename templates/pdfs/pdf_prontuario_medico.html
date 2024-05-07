@@ -38,9 +38,7 @@
         justify-content: center;
         margin-top: 10px;
       }
-      .info-prontuario {
-      }
-      
+
       .contents {
         display: flex;
         padding: 10px 0 10px 0;
@@ -81,48 +79,48 @@
       <img id="logoufac" src="{% static 'imagens/logo_ufac_2.png' %}" alt="Logo UFAC" />
     </header>
 
-    <span>PRONTUARIO MEDICO</span>
+        {% if atendimentos %}
+    
 
+    <div class="info-paciente" style="display: flex; flex-direction: column;">
+      <span>Prontuario Medico de {{ atendimentos.0.agendamento.paciente.nome }}</span>
+    <h4 style="text-align: center; font-weight:400;">{{ atendimentos.0.agendamento.paciente.tipo_paciente }}</h6>
+
+    </div>
+{% endif %}
     <div class="info-prontuario">
       <dl>
         {% for atendimento in atendimentos %}
-          <div class="info-atendimento">
-            <div class="contents">
-              <dt>Profissional de Saúde:</dt>
-              <dd>{{ atendimento.agendamento.profissional_saude.nome }}</dd>
+          {% if atendimento.agendamento.profissional_saude.id in medicos_ids %}
+            <div class="info-atendimento">
+              <div class="contents">
+                <dt>Profissional de Saúde:</dt>
+                <dd>{{ atendimento.agendamento.profissional_saude.nome }}</dd>
+              </div>
+
+              <div class="contents">
+                <dt>Data do Agendamento:</dt>
+                <dd>{{ atendimento.agendamento.data_agendamento|date:'d/m/Y' }}</dd>
+              </div>
             </div>
 
-            <div class="contents">
-              <dt>Nome do paciente:</dt>
-              <dd>{{ atendimento.agendamento.paciente.nome }}</dd>
-            </div>
-            <div class="contents" style="justify-content: space-between;">
-              <dt>Tipo de paciente:</dt>
-              <dd>{{ atendimento.agendamento.paciente.tipo_paciente }}</dd>
+            <dl class="diagnosticos">
+              <dt>Anamnese:</dt>
+              <dd>{{ atendimento.anamnese }}</dd>
 
-              <dt>Data do Agendamento:</dt>
-              <dd>{{ atendimento.agendamento.data_agendamento|date:'d/m/Y' }}</dd>
-            </div>
-          </div>
+              <dt>Exames Físicos:</dt>
+              <dd>{{ atendimento.exame_fisico }}</dd>
 
-          <dl class="diagnosticos">
-            <dt>Anamnese:</dt>
-            <dd>{{ atendimento.anamnese }}</dd>
+              <dt>Exames Complementares:</dt>
+              <dd>{{ atendimento.exames_complementares }}</dd>
 
-            <dt>Exames Físicos:</dt>
-            <dd>{{ atendimento.exame_fisico }}</dd>
+              <dt>Diagnóstico:</dt>
+              <dd>{{ atendimento.diagnostico }}</dd>
 
-            <dt>Exames Complementares:</dt>
-            <dd>{{ atendimento.exames_complementares }}</dd>
-
-            <dt>Diagnóstico:</dt>
-            <dd>{{ atendimento.diagnostico }}</dd>
-
-            <dt>Conduta:</dt>
-            <dd>{{ atendimento.conduta }}</dd>
-          </dl>
-          {% empty %}
-          <dt>Nenhum atendimento registrado para este paciente.</dt>
+              <dt>Conduta:</dt>
+              <dd>{{ atendimento.conduta }}</dd>
+            </dl>
+          {% endif %}
         {% endfor %}
       </dl>
     </div>
