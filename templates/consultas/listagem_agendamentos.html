@@ -48,11 +48,6 @@
           </select>
         </div>
       </div>
-      
-      
-        {% comment %} <div class="col-md-6">
-          <button type="submit" class="btn btn-primary">Pesquisar</button>
-        </div> {% endcomment %}
       </div>
       
   </form>
@@ -119,14 +114,11 @@
 
         <td>
           <div class="btn-group" role="group" aria-label="Ações">
-            
-            <button type="button" class="btn btn-secondary ms-1 btn-lg custom-btn" onclick="redirecionar('{% url 'reagendarAgendamento' agendamento.id %}')" title='Reagendar'><i class="fa fa-calendar-o" aria-hidden="true"></i> </button>
-            <button type="button" class="btn btn-danger ms-1 btn-lg custom-btn" data-bs-toggle="modal" data-bs-target="#cancelarModal{{ agendamento.id }}" title="Cancelar" onclick="confirmarCancelamento('{{ agendamento.id }}')"><i class="fa fa-times" aria-hidden="true"></i></button>
+            <button type="button" class="btn btn-secondary ms-1 btn-lg custom-btn" onclick="redirecionar('{% url 'reagendarAgendamento' agendamento.id %}')" title="Reagendar"><i class="fa fa-calendar-o" aria-hidden="true"></i></button>
+            <button type="button" class="btn btn-danger ms-1 btn-lg custom-btn" data-bs-toggle="modal" data-bs-target="#cancelarModal{{ agendamento.id }}" title="Cancelar"><i class="fa fa-times" aria-hidden="true"></i></button>
             <button type="button" class="btn btn-success ms-1 btn-lg custom-btn" onclick="redirecionar('{% url 'criar_atendimento' agendamento.id %}')" title="Atender"><i class="fa fa-check-square-o" aria-hidden="true"></i></button>
             <button type="button" class="btn btn-info ms-1 btn-lg custom-btn" onclick="redirecionar('{% url 'confirmAgendamento' agendamento.id %}')" title="Visualizar"><i class="fa fa-eye" aria-hidden="true"></i></button>
-
           </div>
-
           <div class="modal fade" id="cancelarModal{{ agendamento.id }}" tabindex="-1" aria-labelledby="cancelarModalLabel{{ agendamento.id }}" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
@@ -134,22 +126,19 @@
                   <h5 class="modal-title" id="cancelarModalLabel{{ agendamento.id }}">Cancelar Agendamento</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-
                 <div class="modal-body">
                   <p>Informe a justificativa para o cancelamento:</p>
-
-                  <form id="cancelarForm{{ agendamento.id }}" method="post" action="{% url 'cancelar_agendamento' agendamento.id %}">
-                    {% csrf_token %}
-                    {{ form.justificativa_cancelamento }}
-                    <textarea name="justificativa_cancelamento" class="form-control" rows="4" placeholder="Digite a justificativa aqui"></textarea>
-                    <button type="submit" class="btn btn-danger mt-3">Confirmar Cancelamento</button>
-                  </form>
-
+                  <textarea id="justificativa_cancelamento_{{ agendamento.id }}" class="form-control" rows="4" placeholder="Digite a justificativa aqui"></textarea>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                  <button type="button" class="btn btn-danger" onclick="cancelarAgendamento('{{ agendamento.id }}')">Confirmar Cancelamento</button>
                 </div>
               </div>
             </div>
           </div>
         </td>
+
       </tr>
       {% endfor %}
     </tbody>
@@ -188,6 +177,25 @@
     });
   });
 </script>
+
+<script>
+  function redirecionar(url) {
+    window.location.href = url;
+  }
+
+  function cancelarAgendamento(agendamentoId) {
+    // Obtenha a justificativa do cancelamento do textarea
+    var justificativa = document.getElementById('justificativa_cancelamento_' + agendamentoId).value;
+
+    // Faça uma solicitação AJAX para cancelar o agendamento
+    // Substitua este exemplo com a lógica real de cancelamento do agendamento
+    console.log('Agendamento ' + agendamentoId + ' cancelado com a justificativa: ' + justificativa);
+
+    // Feche o modal após o cancelamento (opcional)
+    $('#cancelarModal' + agendamentoId).modal('hide');
+  }
+</script>
+
 
 <style>
 

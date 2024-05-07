@@ -197,31 +197,17 @@ def profissionaldasaude_excluir(request, pk):
 
 
 def listar_agendamentos(request):
-    form = PesquisaAgendamentoForm(request.GET)
     agendamentos = Agendamento.objects.all()
     profissionais_saude = Profissionaldasaude.objects.all()
 
-    profissional_id = request.GET.get('profissional_saude')
      # Atualiza os status dos agendamentos
     for agendamento in agendamentos:
         agendamento.atualizar_status()
 
-    if form.is_valid() and profissional_id and profissional_id != 'todos':
-        cpf = form.cleaned_data.get('cpf')
-        data_agendamento = form.cleaned_data.get('data_agendamento')
-
-        if cpf:
-            agendamentos = agendamentos.filter(paciente__cpf__icontains=cpf)
-
-        if data_agendamento:
-            agendamentos = agendamentos.filter(data_agendamento__date=data_agendamento)
-
-        agendamentos = agendamentos.filter(profissional_saude_id=profissional_id)
-
     # Ordenar os agendamentos pela data em ordem decrescente
     agendamentos = agendamentos.order_by('-data_agendamento')
 
-    return render(request, 'consultas/listagem_agendamentos.html', {'form': form, 'agendamentos': agendamentos, 'profissionais_saude': profissionais_saude})
+    return render(request, 'consultas/listagem_agendamentos.html', {'agendamentos': agendamentos, 'profissionais_saude': profissionais_saude})
 
 
 
@@ -274,13 +260,13 @@ def cancelar_agendamento(request, agendamento_id):
             agendamento.status_atendimento = 'cancelado'
             agendamento.save()
 
-            # Retorna uma resposta JSON
+            # Retorna uma resposta JSON de sucesso
             return JsonResponse({'success': True, 'message': 'Agendamento cancelado com sucesso.'})
+        else:
+            # Se o formulário não for válido, retorna os erros
+            return JsonResponse({'success': False, 'errors': form.errors})
 
-    else:
-        form = JustificativaCancelamentoForm()
-
-    return render(request, 'consultas/cancelar_agendamento.html', {'form': form, 'agendamento': agendamento})
+    return JsonResponse({'success': False, 'message': 'Método não permitido'})
 
 
 def visualizar_atendimento(request, atendimento_id):
