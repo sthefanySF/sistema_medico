@@ -6,30 +6,50 @@
 {% endblock %}
 
 {% block content %}
-  <h4 class="text-center mb-4 custom-title">Prontuário Médico de {{ paciente.nome }}</h4>
+  <h4 class="text-center mb-4 custom-title">Prontuário Médico de {{ paciente.nome }} <span style="font-size: smaller; font-weight:lighter ;">({{ paciente.tipo_paciente }})</span></h4>
 
   <div class="d-flex justify-content-between pb-3">
     <a class="btn btn-primary" href="{% url 'pacienteListagem' %}" style="height: fit-content;">Voltar</a>
 
-    <form id="filtro-form">
-      <label class="form-label">Profissionais de Saúde:</label>
+    <form id="filtro-form" class="col-md-6">
       <input type="hidden" name="paciente_id" value="{{ paciente.id }}" />
       <div class="row align-items-end">
-        <div class="col-md-12 mb-3" style="width: auto;">
-          {% for profissional in profissionais_saude %}
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="medico{{ profissional.id }}" name="medicos" value="{{ profissional.id }}" />
-              <label class="form-check-label" for="medico{{ profissional.id }}">{{ profissional.nome }}</label>
+        <div class="col-md-12" style="">
+          <div class="dropdown">
+            <label class="dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display: flex; justify-content: center; align-items: center;">Selecione os médicos</label>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              {% for profissional in profissionais_saude %}
+                <div class="form-check" id="form-check-pront">
+                  <input class="form-check-input" type="checkbox" id="medico{{ profissional.id }}" name="medicos" value="{{ profissional.id }}" />
+                  <label class="form-check-label-pront" for="medico{{ profissional.id }}">{{ profissional.nome }} <span style="color: #bbbbbb"> - {{ profissional.area }}</span></label>
+                </div>
+              {% endfor %}
             </div>
-          {% endfor %}
-          <button class="btn btn-primary">Filtrar</button>
-          <button id="exibir-todos-btn" class="btn btn-primary">Exibir todos</button>
+          </div>
+          <div class="buttons">
+            <button class="btn btn-primary">Filtrar</button>
+            <button id="exibir-todos-btn" class="btn btn-primary">Exibir todos</button>
+          </div>
         </div>
       </div>
     </form>
 
     <a href="{% url 'pdf_prontuario_medico' paciente.id %}?medicos={{ medicos_ids|join:',' }}" target="_blank" class="print-btn" style="border: none;">
       <button class="print-btn">
+        <span class="printer-wrapper">
+          <span class="printer-container">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 92 75">
+              <path stroke-width="5" stroke="black" d="M12 37.5H80C85.2467 37.5 89.5 41.7533 89.5 47V69C89.5 70.933 87.933 72.5 86 72.5H6C4.067 72.5 2.5 70.933 2.5 69V47C2.5 41.7533 6.75329 37.5 12 37.5Z"></path>
+              <mask fill="white" id="path-2-inside-1_30_7">
+                <path d="M12 12C12 5.37258 17.3726 0 24 0H57C70.2548 0 81 10.7452 81 24V29H12V12Z"></path>
+              </mask>
+              <path mask="url(#path-2-inside-1_30_7)" fill="black" d="M7 12C7 2.61116 14.6112 -5 24 -5H57C73.0163 -5 86 7.98374 86 24H76C76 13.5066 67.4934 5 57 5H24C20.134 5 17 8.13401 17 12H7ZM81 29H12H81ZM7 29V12C7 2.61116 14.6112 -5 24 -5V5C20.134 5 17 8.13401 17 12V29H7ZM57 -5C73.0163 -5 86 7.98374 86 24V29H76V24C76 13.5066 67.4934 5 57 5V-5Z"></path>
+              <circle fill="black" r="3" cy="49" cx="78"></circle>
+            </svg>
+          </span>
+
+          <span class="printer-page-wrapper"><span class="printer-page"></span></span>
+        </span>
         Print
       </button>
     </a>
@@ -38,23 +58,42 @@
   <dl id="patient-info">
     {% for atendimento in atendimentos %}
       <div id="" class="flex d-flex justify-content-evenly">
-        <p><strong>Atendido por Dr(a)</strong><span>{{ atendimento.profissional_saude.nome }}</span></p>
-        <p><strong>Tipo de Paciente:</strong><span>{{ paciente.tipo_paciente }}</span></p>
-        <p><strong>Data do Atendimento:</strong><span>{{ atendimento.data_atendimento }}</span></p>
+        <p><strong>Atendido por Dr(a) </strong><span>{{ atendimento.profissional_saude.nome }}</span></p>
+        <p><strong>Area: </strong><span>{{ atendimento.profissional_saude.area }}</span></p>
+        <p><strong>Data do Atendimento: </strong><span>{{ atendimento.data_atendimento }}</span></p>
       </div>
 
       <dd id="diag">
         <p><strong>Anamnese:</strong> {{ atendimento.anamnese }}<br /></p>
         <p><strong>Exame Físico:</strong> {{ atendimento.exame_fisico }}<br /></p>
         <p><strong>Exames Complementares:</strong> {{ atendimento.exames_complementares }}<br /></p>
-        <p><strong>Diagnóstico:</strong> {{ atendimento.diagnostico }}<br /></p>
-        <p><strong>Conduta:</strong> {{ atendimento.conduta }}<br /></p>
+        <p><strong>Diagnóstico:</strong> {{ atendimento.diagnostico }}<br />
+        </p><p><strong>Conduta:</strong> {{ atendimento.conduta }}<br /> </p>
       </dd>
       {% empty %}
       <dt>Nenhum atendimento registrado para este paciente.</dt>
     {% endfor %}
   </dl>
 
+  <script>
+    var dropdown = document.querySelector('.dropdown')
+    var dropdownMenu = document.querySelector('.dropdown-menu')
+    
+    dropdown.addEventListener('click', function (event) {
+      event.stopPropagation()
+      if (dropdownMenu.style.display === 'none' || dropdownMenu.style.display === '') {
+        dropdownMenu.style.display = 'block'
+      } else {
+        dropdownMenu.style.display = 'none'
+      }
+    })
+    
+    document.querySelector('body').addEventListener('click', function (event) {
+      dropdownMenu.style.display = 'none'
+    })
+  </script>
+  
+{% comment %} filtragem por medicos {% endcomment %}
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script>
     $(document).ready(function () {
@@ -71,19 +110,19 @@
               console.log('Atendimento:', atendimento)
               if (atendimento) {
                 $('#patient-info').append(`
-                        <div class="flex d-flex justify-content-evenly">
-                          <p><strong>Atendido por Dr(a)</strong><span>${atendimento.profissional_saude}</span></p>
-                          <p><strong>Paciente:</strong><span>${atendimento.paciente}</span></p>
-                          <p><strong>Data do Atendimento:</strong><span>${atendimento.data_atendimento}</span></p>
-                        </div>
-                        <dd id="diag">
-                          <p><strong>Anamnese:</strong> ${atendimento.anamnese}<br /></p>
-                          <p><strong>Exame Físico:</strong> ${atendimento.exame_fisico}<br /></p>
-                          <p><strong>Exames Complementares:</strong> ${atendimento.exames_complementares}<br /></p>
-                          <p><strong>Diagnóstico:</strong> ${atendimento.diagnostico}<br /></p>
-                          <p><strong>Conduta:</strong> ${atendimento.conduta}<br /></p>
-                        </dd>
-                      `)
+                                <div class="flex d-flex justify-content-evenly">
+                                  <p><strong>Atendido por Dr(a)</strong><span> ${atendimento.profissional_saude}</span></p>
+                                  <p><strong>Area:</strong><span> ${atendimento.area}</span></p>
+                                  <p><strong>Data do Atendimento:</strong><span> ${atendimento.data_atendimento}</span></p>
+                                </div>
+                                <dd id="diag">
+                                  <p><strong>Anamnese:</strong> ${atendimento.anamnese}<br /></p>
+                                  <p><strong>Exame Físico:</strong> ${atendimento.exame_fisico}<br /></p>
+                                  <p><strong>Exames Complementares:</strong> ${atendimento.exames_complementares}<br /></p>
+                                  <p><strong>Diagnóstico:</strong> ${atendimento.diagnostico}<br /></p>
+                                  <p><strong>Conduta:</strong> ${atendimento.conduta}<br /></p>
+                                </dd>
+                              `)
               }
             })
           }
@@ -92,7 +131,7 @@
     })
   </script>
 
-  <script>
+  <script>{% comment %} capturara id do medico {% endcomment %}
     document.getElementById('filtro-form').addEventListener('submit', function (e) {
       e.preventDefault()
       var medicos = Array.from(document.querySelectorAll('input[name="medicos"]:checked')).map(function (input) {
@@ -103,112 +142,18 @@
     })
   </script>
 
-  <script>
+  <script>{% comment %}  botão exibir todos {% endcomment %}
     document.getElementById('exibir-todos-btn').addEventListener('click', function (e) {
-      e.preventDefault();
-      // Limpar os checkboxes selecionados
-      var checkboxes = document.querySelectorAll('input[name="medicos"]');
+      e.preventDefault()
+      // Limpar os checkboxes selecionados dentro do dropdown
+      var checkboxes = document.querySelectorAll('.dropdown-menu input[type="checkbox"]')
       checkboxes.forEach(function (checkbox) {
-        checkbox.checked = false;
-      });
+        checkbox.checked = false
+      })
       // Submeter o formulário para exibir todos os prontuários novamente
-      document.getElementById('filtro-form').submit();
-    });
+      document.getElementById('filtro-form').submit()
+    })
   </script>
 
-  <style>
-    p {
-      text-align: justify;
-    }
-    
-    #diag {
-      border-top: 1px solid #ccc;
-      border-bottom: 1px solid #ccc;
-      padding: 15px;
-    }
-    
-    #patient-info {
-      border: 1px solid #ccc;
-      border-radius: 15px;
-      padding: 20px;
-    }
-    
-    .print-btn {
-      width: 100px;
-      height: 45px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: white;
-      border: 1px solid rgb(213, 213, 213);
-      border-radius: 10px;
-      gap: 10px;
-      font-size: 16px;
-      cursor: pointer;
-      overflow: hidden;
-      font-weight: 500;
-      box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.065);
-      transition: all 0.3s;
-    }
-    .printer-wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 20px;
-      height: 100%;
-    }
-    .printer-container {
-      height: 50%;
-      width: 100%;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-    }
-    
-    .printer-container svg {
-      width: 100%;
-      height: auto;
-      transform: translateY(4px);
-    }
-    .printer-page-wrapper {
-      width: 100%;
-      height: 50%;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-    }
-    .printer-page {
-      width: 70%;
-      height: 10px;
-      border: 1px solid black;
-      background-color: white;
-      transform: translateY(0px);
-      transition: all 0.3s;
-      transform-origin: top;
-    }
-    .print-btn:hover .printer-page {
-      height: 16px;
-      background-color: rgb(239, 239, 239);
-    }
-    .print-btn:hover {
-      background-color: rgb(239, 239, 239);
-    }
-  </style>
+  
 {% endblock %}
-
-
-{% comment %} <span class="printer-wrapper">
-  <span class="printer-container">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 92 75">
-      <path stroke-width="5" stroke="black" d="M12 37.5H80C85.2467 37.5 89.5 41.7533 89.5 47V69C89.5 70.933 87.933 72.5 86 72.5H6C4.067 72.5 2.5 70.933 2.5 69V47C2.5 41.7533 6.75329 37.5 12 37.5Z"></path>
-      <mask fill="white" id="path-2-inside-1_30_7">
-        <path d="M12 12C12 5.37258 17.3726 0 24 0H57C70.2548 0 81 10.7452 81 24V29H12V12Z"></path>
-      </mask>
-      <path mask="url(#path-2-inside-1_30_7)" fill="black" d="M7 12C7 2.61116 14.6112 -5 24 -5H57C73.0163 -5 86 7.98374 86 24H76C76 13.5066 67.4934 5 57 5H24C20.134 5 17 8.13401 17 12H7ZM81 29H12H81ZM7 29V12C7 2.61116 14.6112 -5 24 -5V5C20.134 5 17 8.13401 17 12V29H7ZM57 -5C73.0163 -5 86 7.98374 86 24V29H76V24C76 13.5066 67.4934 5 57 5V-5Z"></path>
-      <circle fill="black" r="3" cy="49" cx="78"></circle>
-    </svg>
-  </span>
-
-  <span class="printer-page-wrapper"><span class="printer-page"></span></span>
-</span> {% endcomment %}
