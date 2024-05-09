@@ -580,15 +580,19 @@ def filtrar_prontuarios(request):
     paciente = get_object_or_404(Paciente, pk=paciente_id)
     ids_agendamentos = paciente.agendamento_set.all().values_list('id', flat=True)
 
-    atendimentos = Atendimento.objects.filter(agendamento__id__in=ids_agendamentos, agendamento__profissional_saude__id__in=medicos_ids)
+    if not medicos_ids:  # Se nenhum médico foi selecionado, retornar todos os atendimentos
+        atendimentos = Atendimento.objects.filter(agendamento__paciente=paciente)
+    else:
+        atendimentos = Atendimento.objects.filter(agendamento__id__in=ids_agendamentos, agendamento__profissional_saude__id__in=medicos_ids)
 
     # Construindo a lista de dicionários para cada atendimento
     atendimentos_list = []
     for atendimento in atendimentos:
         atendimento_dict = {
             'profissional_saude': atendimento.agendamento.profissional_saude.nome,
+            'area': atendimento.agendamento.profissional_saude.area,
             'paciente': atendimento.agendamento.paciente.nome,
-            'data_atendimento': atendimento.data_atendimento.strftime('%Y-%m-%d'),  # Formatar a data para string
+            'data_atendimento': atendimento.data_atendimento.strftime('%d-%m-%Y'),  # Formatar a data para string
             'anamnese': atendimento.anamnese,
             'exame_fisico': atendimento.exame_fisico,
             'exames_complementares': atendimento.exames_complementares,
