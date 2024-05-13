@@ -5,8 +5,22 @@
 
 {% block content %}
     {% if messages %}{% include 'messages.html' %}{% endif %}
-    <div class="container mt-6">
-        <div class="jumbotron ">
+    <div class="container" style="display: flex;">
+
+            {% load static %}
+            <div class="contents">
+                <span style="font-weight: bold; font-size: larger; text-align: start;">ACESSE:</span>
+                <div class="card">
+                    <a href="https://app.ufac.br/observatorio/pericia/" target="_blank">
+                    <img src="{% static 'imagens/pericia_medica.png' %}" style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px;">
+                    </a>
+                </div>
+                {% comment %} <div class="mt-5">
+                    <p>Caso seja aluno e queira agendar uma pericia medica voce pode clicar <a href="https://app.ufac.br/observatorio/pericia/">AQUI!</a></p>
+                </div> {% endcomment %}
+            </div>
+
+            <div class="container-login ">
 
 
             <div class="m-3">
@@ -17,18 +31,19 @@
 
                 <hr class="my-4">
                      <span style="font-size: 20px">
-                         Você é técnico ou médico do setor? Faça seu login para ter acesso ao sistema.
+                         Você é técnico ou profissional de saúde do setor?<br> Faça seu login para ter acesso ao sistema.
                      </span>
                 </div>
                 <br><br>
-{#                <a class="btn btn-primary btn-lg" href="#" role="button">Saiba mais</a>#}
+                {#<a class="btn btn-primary btn-lg" href="#" role="button">Saiba mais</a>#}
 
                 <div class="row justify-content-center mt-4">
-                    <div class="col-md-4 col-md-offset-2" style="border-color: #007bff">
-                        <div class="card border-primary">
+                    <div class="col-md-5 col-md-offset-2" style="">
+                        <div class="">
                             <div class="card-header">
                                 {#                            <h5 class="card-title ">Faça login para acessar o sistema</h5>#}
-                                <i class="fa fa-user-md fa-3x" style="float: right"></i>
+                                {#<i class="fa fa-user-md fa-3x" style="float: right"></i>#}
+                                <h3 style="text-align: center; font-weight: lighter;">LOGIN</h3>
 
                             </div>
                             <div class="card-body">
@@ -37,18 +52,18 @@
                                     {% csrf_token %}
 
                                     <div>
-                                        <input class="form-control" placeholder="Usuário" name="usuario" id="usuario"
+                                        <input class="input" placeholder="Usuário" name="usuario" id="usuario"
                                                autofocus required>
-                                        {#                                </div>#}
+                                        
 
                                         <br>
 
 
-                                        <input class="form-control" placeholder="Senha" name="senha" type="password"
+                                        <input class="input" placeholder="Senha" name="senha" type="password"
                                                value="" required>
 
                                         <br>
-                                        <div class="text-center">
+                                        <div class="text-center mt-4">
                                             <button class="btn btn-primary center-block" type="submit">
                                                 <b>Acessar&nbsp;<span class="fa fa-sign-in"></span></b>
                                             </button>
@@ -66,7 +81,7 @@
                 </div>
             </div>
             <div class="text-center">
-                <button type="button" class="btn btn-warning " data-bs-toggle="tooltip" data-bs-placement="bottom"
+                <button type="button" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="bottom"
                         title="Recuperação de senha" onclick="window.location='{% url 'redefinir_senha' %}'">
                     <b>Esqueceu sua senha?</b>
                 </button>
@@ -74,6 +89,53 @@
 
         </div>
 
+
+
     </div>
 
+    <style>
+
+        .input {
+            width: 100%;
+            margin: 15px 0px;
+            height: 45px;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1.5px solid lightgrey;
+            outline: none;
+            transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+            box-shadow: 0px 0px 20px -18px;
+          }
+          
+          .input:hover {
+            border: 2px solid lightgrey;
+            box-shadow: 0px 0px 20px -17px;
+          }
+          
+          .input:active {
+            transform: scale(0.95);
+          }
+          
+          .input:focus {
+            border: 2px solid grey;
+          }
+
+        nav.navbar,footer {
+            z-index: 1;
+        }
+
+        .contents{
+ 
+            max-width: 50%;
+        }
+
+        .card {
+            width: 30em;
+            height: auto;
+            background: rgb(236, 236, 236);
+            box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+          }
+
+
+    </style>
 {% endblock %}

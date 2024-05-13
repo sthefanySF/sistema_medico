@@ -12,12 +12,13 @@ O valor smooth faz a rolagem da página de forma suave. */
 
 .navbar-brand {
   background-color: white;
-  width: 55px;
+  width: 100px;
   height: 74px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 10%;
+  border-radius: 0 10% 10% 0;
+  left: 0;
 }
 
 
@@ -210,6 +211,19 @@ O valor smooth faz a rolagem da página de forma suave. */
   border-radius: 0.3rem;
 }
 
+.container-login {
+  margin-top: -3em;
+  position: fixed;
+  right: 0;
+  height: calc(100% - 170px);
+  box-shadow: 9px 0px 20px 0px;
+  min-width: 50%;
+  background-color: #ffffff;
+  /* padding: 2rem 1rem;
+  margin-bottom: 2rem; */
+  border: solid 1px #d3d2d2;
+  border-radius: 20px 0 0 20px;
+}
 
 /* Personalização da barra de rolagem de table*/
 .table-responsive::-webkit-scrollbar {
@@ -461,6 +475,7 @@ label.form-check-label-pront {
   justify-content: center;
   width: 20px;
   height: 100%;
+  
 }
 .printer-container {
   height: 50%;
