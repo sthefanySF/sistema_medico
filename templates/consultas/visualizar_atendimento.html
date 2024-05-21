@@ -5,13 +5,15 @@
 {% endblock %}
 
 {% block content %}
+  {% load tz %}
   <div class="container mt-5">
     <div class="text-center mb-4 custom-title">
       <h4>Detalhes do Atendimento</h4>
     </div>
 
     <div class="d-flex justify-content-between pb-3">
-      <a class="btn btn-primary" href="">Atestado Medico</a>
+      <a href="{% url 'atestado_medico' paciente.id %}" class="btn btn-primary">Atestado Medico</a>
+
       <a class="btn btn-primary btn-expand-all" href="#">Receita Medica</a>
       <a class="btn btn-primary" href="">Laudo Medico</a>
     </div>
@@ -30,20 +32,37 @@
             <dd class="col-sm-4 border-bottom">{{ atendimento.agendamento.paciente.tipo_paciente }}</dd>
 
             <dt class="col-sm-3 border-bottom">Data do Agendamento:</dt>
-            <dd class="col-sm-3 border-bottom">{{ atendimento.agendamento.data_agendamento|date:'d/m/Y' }}</dd>
+            <dd class="col-sm-9 border-bottom">{{ atendimento.agendamento.data_agendamento|date:'d/m/Y' }}</dd>
 
-            <dt class="col-sm-2 border-bottom">pdf exames:</dt>
-            <dd class="col-sm-4 border-bottom">
-                {% if atendimento.pdf_exames %}
-                    <a href="{% url 'visualizar_pdf_exames' atendimento_id=atendimento.id %}" target="_blank">{{ atendimento.pdf_exames.name }}</a>
-                {% else %}
-                    Sem PDF anexado
-                {% endif %}
+            <dt class="col-sm-2 border-bottom" id="pdfs-name">pdf exames:</dt>
+            <dd class="col-sm-10 border-bottom" id="pdfs">
+              {% comment %} {% if atendimento.pdf_exames %} {% endcomment %}
+                <a href="{% url 'visualizar_pdf_exames' atendimento_id=atendimento.id %}" target="_blank">{{ atendimento.pdf_exames.name }}</a>
+              {% comment %} {% else %} {% endcomment %}
+                Sem PDF anexado
+              {% comment %} {% endif %} {% endcomment %}
+              <form method="post" enctype="multipart/form-data">
+                <input type="file" name="pdf_exames" />
+                <button type="submit">Upload</button>
+              </form>
             </dd>
 
-            <h6 class="d-flex justify-content-center py-3"> DIAGNÓSTICOS </h6>
+            <dt class="col-sm-2 border-bottom" id="pdfs-name">pdf extra:</dt>
+            <dd class="col-sm-10 border-bottom" id="pdfs">
+              {% comment %} {% if atendimento.pdf_extra %} {% endcomment %}
+                <a href="" target="_blank">{{ atendimento.pdf_extra.name }}</a>
+              {% comment %} {% else %} {% endcomment %}
+                Sem PDF anexado
+              {% comment %} {% endif %} {% endcomment %}
+              <form method="post" enctype="multipart/form-data">
+                <input type="file" name="pdf_extra" />
+                <button type="submit">Upload</button>
+              </form>
+            </dd>
 
-            <dl class=" p-3">
+            <h6 class="d-flex justify-content-center py-3">RESULTADOS</h6>
+
+            <dl class="p-3">
               <dt class="border-bottom">Anamnese:</dt>
               <dd class="border-bottom">{{ atendimento.anamnese }}</dd>
 
@@ -64,14 +83,174 @@
       </div>
     </div>
 
-    
+    <h6 class="d-flex justify-content-center py-3">ATESTADO MEDICO</h6>
+
+    <div class="atestado">
+      <a href="" target="_blank" class="print-btn" style="border: none; float: right;">
+        <button class="print-btn">
+          <span class="printer-wrapper">
+            <span class="printer-container">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="black" viewBox="0 0 92 75">
+                <path stroke-width="5" stroke="black" d="M12 37.5H80C85.2467 37.5 89.5 41.7533 89.5 47V69C89.5 70.933 87.933 72.5 86 72.5H6C4.067 72.5 2.5 70.933 2.5 69V47C2.5 41.7533 6.75329 37.5 12 37.5Z"></path>
+                <mask fill="white" id="path-2-inside-1_30_7">
+                  <path d="M12 12C12 5.37258 17.3726 0 24 0H57C70.2548 0 81 10.7452 81 24V29H12V12Z"></path>
+                </mask>
+                <path mask="url(#path-2-inside-1_30_7)" fill="black" d="M7 12C7 2.61116 14.6112 -5 24 -5H57C73.0163 -5 86 7.98374 86 24H76C76 13.5066 67.4934 5 57 5H24C20.134 5 17 8.13401 17 12H7ZM81 29H12H81ZM7 29V12C7 2.61116 14.6112 -5 24 -5V5C20.134 5 17 8.13401 17 12V29H7ZM57 -5C73.0163 -5 86 7.98374 86 24V29H76V24C76 13.5066 67.4934 5 57 5V-5Z"></path>
+                <circle fill="white" r="3" cy="49" cx="78"></circle>
+              </svg>
+            </span>
+
+            <span class="printer-page-wrapper"><span class="printer-page"></span></span>
+          </span>
+          Print
+        </button>
+      </a>
+
+      <form action="">
+        <label for="dias">Atesto que o paciente <span>{{ paciente.nome }}</span> esteve em consulta no dia <span>{% now 'd/m/Y' %}</span>, e necessita de <span><input class="input" name="dias" type="text" style="" /></span> dias de afastamento de suas atividades normais, para sua convalescença</label>
+
+        <label for="cid">CID:</label>
+        <input class="input" type="text" style="margin-top: 20px;" name="cid" />
+
+        <p style="text-align: center;">
+          Rio Branco - Acre{% now 'd/m/Y' %}
+        </p>
+
+        <img src="" alt="assinatura do medico" />
+      </form>
+    </div>
+
+    <h6 class="d-flex justify-content-center py-3">RECEITA MEDICA</h6>
+
+    <div class="receita">
+      <a href="" target="_blank" class="print-btn" style="border: none; float: right;">
+        <button class="print-btn">
+          <span class="printer-wrapper">
+            <span class="printer-container">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="black" viewBox="0 0 92 75">
+                <path stroke-width="5" stroke="black" d="M12 37.5H80C85.2467 37.5 89.5 41.7533 89.5 47V69C89.5 70.933 87.933 72.5 86 72.5H6C4.067 72.5 2.5 70.933 2.5 69V47C2.5 41.7533 6.75329 37.5 12 37.5Z"></path>
+                <mask fill="white" id="path-2-inside-1_30_7">
+                  <path d="M12 12C12 5.37258 17.3726 0 24 0H57C70.2548 0 81 10.7452 81 24V29H12V12Z"></path>
+                </mask>
+                <path mask="url(#path-2-inside-1_30_7)" fill="black" d="M7 12C7 2.61116 14.6112 -5 24 -5H57C73.0163 -5 86 7.98374 86 24H76C76 13.5066 67.4934 5 57 5H24C20.134 5 17 8.13401 17 12H7ZM81 29H12H81ZM7 29V12C7 2.61116 14.6112 -5 24 -5V5C20.134 5 17 8.13401 17 12V29H7ZM57 -5C73.0163 -5 86 7.98374 86 24V29H76V24C76 13.5066 67.4934 5 57 5V-5Z"></path>
+                <circle fill="white" r="3" cy="49" cx="78"></circle>
+              </svg>
+            </span>
+
+            <span class="printer-page-wrapper"><span class="printer-page"></span></span>
+          </span>
+          Print
+        </button>
+      </a>
+
+      <form action="">
+        <textarea name="" id="" style="width: 100%;height: 200px;"></textarea>
+      </form>
+    </div>
+
     <div class="d-flex justify-content-around text-center mt-3">
       <a href="{% url 'listaAtendimentos' %}" class="btn btn-primary">Voltar para Lista de Atendimentos</a>
       <a href="{% url 'visualizar_comprovante_atendimento' atendimento_id=atendimento.id %}" class="btn btn-primary" target="_blank">Visualizar comprovante de atendimento</a>
+    </div>
   </div>
-  </div>
 
+  <style>
+    .edit-button {
+      width: 35px;
+      height: 35px;
+      border-radius: 30%;
+      background-color: #007bff;
+      border: none;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+      cursor: pointer;
+      transition-duration: 0.3s;
+      overflow: hidden;
+      position: relative;
+      text-decoration: none !important;
+    }
+    
+    .edit-svgIcon {
+      width: 17px;
+    }
+    
+    .edit-svgIcon path {
+      fill: white;
+    }
+    
+    .edit-button:hover {
+      background-color: #0056b3;
+    }
+    
+    dl #pdfs {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 3em;
+    }
+    
+    dl #pdfs-name {
+      display: flex;
+      height: 3em;
+      align-items: center;
+    }
+    
+    div.atestado form {
+      border: 1px solid #ccc;
+      padding: 25px;
+      border-radius: 5px;
+    }
+    .atestado,
+    .receita {
+      background-color: #f8f9fa;
+      border: 1px solid #dee2e6;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+    }
+    
+    .atestado a,
+    .receita a {
+      text-decoration: none;
+      position: relative;
+      float: right;
+      bottom: 55px;
+    }
+    
+    .input {
+      width: 100%;
+      max-width: 220px;
+      height: 30px;
+      padding: 12px;
+      border-radius: 5px;
+      border: 1.5px solid lightgrey;
+      outline: none;
+      transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+      box-shadow: 0px 0px 20px -18px;
+    }
+    
+    .input:hover {
+      border: 1px solid lightgrey;
+      box-shadow: 0px 0px 20px -17px;
+    }
+    
+    .input:active {
+      transform: scale(0.95);
+    }
+    
+    .input:focus {
+      border: 1px solid grey;
+    }
 
-
-  
+    textarea {
+      transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+    
+    textarea:active {
+      transform: scale(0.98);
+    }
+  </style>
 {% endblock %}

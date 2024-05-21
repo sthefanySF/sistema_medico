@@ -13,7 +13,7 @@
   <div class="d-flex justify-content-between pb-3">
     <a class="btn btn-primary" href="{% url 'home' %}">Voltar</a>
     <a href="#" class="btn btn-primary btn-expand-all">Expandir todos</a>
-    <a class="btn btn-primary" href="{% url 'pacienteCreate' %}">Cadastrar</a>
+    <a class="btn btn-primary" href="{% url 'administrativoCreate' %}">Cadastrar</a>
   </div>
 
   <div class="input-group mb-3">
@@ -50,7 +50,7 @@
                 </div>
                 <div class="info-block">
                   <p>Setor: {{ administrativo.setor }}</p>
-                  <p>Cargo: {{ administrativo.cargo }}</p>
+                  <p>Cargo: {{ administrativo.cargo_funcao }}</p>
                 </div>
                 <div class="btn-group" role="group" aria-label="Ações">
                   <a href="{% url 'administrativoEditar' administrativo.id %}" class="btn btn-primary">Editar</a>

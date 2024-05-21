@@ -17,6 +17,7 @@
             {{ atendimento.agendamento.paciente.nome }}
             {% if atendimento.profissional_saude %}
               <span class="profissional-text"> - Dr(a): {{ atendimento.profissional_saude.nome }}</span>
+              <span class="atend-data">{{ atendimento.agendamento.data_agendamento | date:"d/m/Y " }}</span>
             {% endif %}
           </a>
         </li>
@@ -27,4 +28,14 @@
       <a href="{% url 'home' %}" class="btn btn-primary">Voltar</a>
     </div>
   </div>
+
+  <style>
+    span.atend-data{
+      position:absolute;
+      right: 0;
+      font-weight:lighter ;
+      color: #8194a8;
+    }
+  </style>
+
 {% endblock %}
