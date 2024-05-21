@@ -11,15 +11,10 @@
         alt="" />
     </div>
 
-    <h1 style="text-align: center; font-size:xx-large; padding-bottom: 20px;">COMPOVANTE DE ATENDIMENTO</h1>
+    <h1 style="text-align: center; font-size:xx-large; padding-bottom: 20px;">COMPROVANTE DE ATENDIMENTO</h1>
 
     <div class="info" style="font-size:x-large; padding-top: 10px;">
-      <p><strong>Data do Atendimento: </strong>{{ atendimento.agendamento.data_agendamento }}</p>
-      <p><strong>Nome do Paciente: </strong>{{ atendimento.paciente.nome }}</p>
-      <p><strong>anamnese: </strong>{{ atendimento.exame_fisico }}</p>
-      <p><strong>Exames Complementares:</strong> {{ atendimento.exames_complementares }}</p>
-      <p><strong>Exames pdf: </strong>{{ atendimento.pdf_exames }}</p>
-      <p><strong>Diagnostico: </strong>{{ atendimento.diagnostico }}</p>
+      <p>Declaro, para os devidos fins, que o Sr(a). <strong>{{ atendimento.paciente.nome }}</strong>, inscrito no CPF sob o nº <strong>{{ atendimento.paciente.cpf }}</strong>, esteve presente em consulta médica no dia <strong>{{ atendimento.agendamento.data_agendamento}}</strong>, tendo sido atendido pelo profissional de saúde <strong>{{ atendimento.agendamento.profissional_saude }}</strong>.</p>
     </div>
   </body>
 </html>
