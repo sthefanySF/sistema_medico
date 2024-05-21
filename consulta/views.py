@@ -271,7 +271,8 @@ def cancelar_agendamento(request, agendamento_id):
 
 def visualizar_atendimento(request, atendimento_id):
     atendimento = get_object_or_404(Atendimento, id=atendimento_id)
-    return render(request, 'consultas/visualizar_atendimento.html', {'atendimento': atendimento})
+    paciente = atendimento.agendamento.paciente
+    return render(request, 'consultas/visualizar_atendimento.html', {'atendimento': atendimento, 'paciente': paciente})
 
 def lista_atendimentos(request):
     atendimentos = Atendimento.objects.all()
@@ -634,20 +635,6 @@ def pdf_prontuario_medico(request, paciente_id):
     response['Content-Disposition'] = 'attachment; filename="prontuario_medico.pdf"'
     return response
 
-
-
-# def pdf_prontuario_medico(request, paciente_id):
-#     paciente = Paciente.objects.get(pk=paciente_id)
-
-
-#     # Use o Django para obter o HTML para a página.
-#     template = get_template('pdfs/pdf_prontuario_medico.html')
-#     html = template.render({'paciente': paciente, 'atendimentos': atendimentos})
-
-#     # Use WeasyPrint para transformar o HTML em PDF.
-#     pdf = HTML(string=html, base_url=request.build_absolute_uri()).write_pdf()
-
-#     # Retorne o PDF como um download.
-#     response = HttpResponse(pdf, content_type='application/pdf')
-#     response['Content-Disposition'] = 'attachment; filename="prontuario_medico.pdf"'
-#     return response
+def atestado_medico(request, paciente_id):
+    paciente = Paciente.objects.get(pk=paciente_id)
+    return render(request, 'consultas/criar_atestado_medico.html', {'paciente': paciente})
