@@ -119,6 +119,8 @@
             <button type="button" class="btn btn-success ms-1 btn-lg custom-btn" onclick="redirecionar('{% url 'criar_atendimento' agendamento.id %}')" title="Atender"><i class="fa fa-check-square-o" aria-hidden="true"></i></button>
             <button type="button" class="btn btn-info ms-1 btn-lg custom-btn" onclick="redirecionar('{% url 'confirmAgendamento' agendamento.id %}')" title="Visualizar"><i class="fa fa-eye" aria-hidden="true"></i></button>
           </div>
+
+
           <div class="modal fade" id="cancelarModal{{ agendamento.id }}" tabindex="-1" aria-labelledby="cancelarModalLabel{{ agendamento.id }}" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
@@ -132,11 +134,13 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                  <button type="button" class="btn btn-danger" onclick="cancelarAgendamento('{{ agendamento.id }}')">Confirmar Cancelamento</button>
+                  <button type="button" class="btn btn-danger" onclick="cancelarAgendamento({{ agendamento.id }})">Confirmar Cancelamento</button>
+
                 </div>
               </div>
             </div>
           </div>
+      
         </td>
 
       </tr>
@@ -183,16 +187,32 @@
     window.location.href = url;
   }
 
+
+</script>
+
+<script>
   function cancelarAgendamento(agendamentoId) {
-    // Obtenha a justificativa do cancelamento do textarea
     var justificativa = document.getElementById('justificativa_cancelamento_' + agendamentoId).value;
 
-    // Faça uma solicitação AJAX para cancelar o agendamento
-    // Substitua este exemplo com a lógica real de cancelamento do agendamento
-    console.log('Agendamento ' + agendamentoId + ' cancelado com a justificativa: ' + justificativa);
-
-    // Feche o modal após o cancelamento (opcional)
-    $('#cancelarModal' + agendamentoId).modal('hide');
+    $.ajax({
+      type: 'POST',
+      url: '/cancelar_agendamento/' + agendamentoId + '/',
+      data: {
+        'justificativa': justificativa,
+        'csrfmiddlewaretoken': '{{ csrf_token }}'
+      },
+      success: function(response) {
+        if (response.success) {
+          alert(response.message);
+          location.reload();  // Recarrega a página para atualizar o status na tabela
+        } else {
+          alert('Erro: ' + response.errors);
+        }
+      },
+      error: function(response) {
+        alert('Ocorreu um erro ao cancelar o agendamento.');
+      }
+    });
   }
 </script>
 

@@ -8,7 +8,7 @@ from django.views.generic.edit import CreateView
 # JustificativaCancelamentoForm, PacienteForm, PesquisaAgendamentoForm, ProfissionaldasaudeForm
 import json
 from consulta.forms import *
-
+from django.views.decorators.http import require_POST
 from consulta.models import Atendimento, Paciente, Administrativo
 from consulta.models import Agendamento, Paciente, Profissionaldasaude
 from datetime import date
@@ -250,24 +250,21 @@ def reagendar_agendamento(request, pk):
     return render(request, 'consultas/reagendar_agendamento.html', {'form': form, 'agendamento': agendamento})
 
 
+@require_POST  # Certifica que a função aceita apenas requisições POST
 def cancelar_agendamento(request, agendamento_id):
     agendamento = get_object_or_404(Agendamento, pk=agendamento_id)
+    form = JustificativaCancelamentoForm(request.POST)
 
-    if request.method == 'POST':
-        form = JustificativaCancelamentoForm(request.POST)
-        if form.is_valid():
-            agendamento.justificativa_cancelamento = form.cleaned_data['justificativa']
-            agendamento.status_atendimento = 'cancelado'
-            agendamento.save()
+    if form.is_valid():
+        justificativa = form.cleaned_data['justificativa']
+        agendamento.justificativa_cancelamento = justificativa
+        agendamento.status_atendimento = 'cancelado'
+        agendamento.save()
 
-            # Retorna uma resposta JSON de sucesso
-            return JsonResponse({'success': True, 'message': 'Agendamento cancelado com sucesso.'})
-        else:
-            # Se o formulário não for válido, retorna os erros
-            return JsonResponse({'success': False, 'errors': form.errors})
-
-    return JsonResponse({'success': False, 'message': 'Método não permitido'})
-
+        return JsonResponse({'success': True, 'message': 'Agendamento cancelado com sucesso.'})
+    else:
+        return JsonResponse({'success': False, 'errors': form.errors})
+        
 
 def visualizar_atendimento(request, atendimento_id):
     atendimento = get_object_or_404(Atendimento, id=atendimento_id)
