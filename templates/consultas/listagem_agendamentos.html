@@ -115,7 +115,8 @@
         <td>
           <div class="btn-group" role="group" aria-label="Ações">
             <button type="button" class="btn btn-secondary ms-1 btn-lg custom-btn" onclick="redirecionar('{% url 'reagendarAgendamento' agendamento.id %}')" title="Reagendar"><i class="fa fa-calendar-o" aria-hidden="true"></i></button>
-            <button type="button" class="btn btn-danger ms-1 btn-lg custom-btn" data-bs-toggle="modal" data-bs-target="#cancelarModal{{ agendamento.id }}" title="Cancelar"><i class="fa fa-times" aria-hidden="true"></i></button>
+            <button type="button" class="btn btn-danger ms-1 btn-lg custom-btn" data-status="{{ agendamento.status_atendimento }}" data-bs-toggle="modal" data-bs-target="#cancelarModal{{ agendamento.id }}" title="Cancelar"><i class="fa fa-times" aria-hidden="true"></i></button>
+
             <button type="button" class="btn btn-success ms-1 btn-lg custom-btn" onclick="redirecionar('{% url 'criar_atendimento' agendamento.id %}')" title="Atender"><i class="fa fa-check-square-o" aria-hidden="true"></i></button>
             <button type="button" class="btn btn-info ms-1 btn-lg custom-btn" onclick="redirecionar('{% url 'confirmAgendamento' agendamento.id %}')" title="Visualizar"><i class="fa fa-eye" aria-hidden="true"></i></button>
           </div>
@@ -192,8 +193,16 @@
 
 <script>
   function cancelarAgendamento(agendamentoId) {
+    var button = document.querySelector('[data-bs-target="#cancelarModal' + agendamentoId + '"]');
+    var status = button.getAttribute('data-status');
+  
+    if (status !== 'pendente') {
+      alert('Não é possível cancelar um agendamento que não está pendente.');
+      return; // Saia da função se o status não for pendente
+    }
+  
     var justificativa = document.getElementById('justificativa_cancelamento_' + agendamentoId).value;
-
+  
     $.ajax({
       type: 'POST',
       url: '/cancelar_agendamento/' + agendamentoId + '/',
@@ -204,7 +213,7 @@
       success: function(response) {
         if (response.success) {
           alert(response.message);
-          location.reload();  // Recarrega a página para atualizar o status na tabela
+          location.reload(); // Recarrega a página para atualizar o status na tabela
         } else {
           alert('Erro: ' + response.errors);
         }
@@ -214,6 +223,8 @@
       }
     });
   }
+  
+
 </script>
 
 

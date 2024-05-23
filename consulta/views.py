@@ -252,18 +252,34 @@ def reagendar_agendamento(request, pk):
 
 @require_POST  # Certifica que a função aceita apenas requisições POST
 def cancelar_agendamento(request, agendamento_id):
+    # Obtém o objeto Agendamento com o ID fornecido ou retorna um erro 404 se não for encontrado
     agendamento = get_object_or_404(Agendamento, pk=agendamento_id)
+    
+    # Verifica se o status do agendamento não é 'pendente'
+    if agendamento.status_atendimento != 'pendente':
+        # Se o status não for 'pendente', retorna uma resposta JSON com sucesso = False e uma mensagem de erro
+        return JsonResponse({'success': False, 'errors': 'Não é possível cancelar um agendamento que não está pendente.'})
+
+    # Cria uma instância do formulário JustificativaCancelamentoForm com os dados POST
     form = JustificativaCancelamentoForm(request.POST)
 
+    # Verifica se o formulário é válido
     if form.is_valid():
+        # Se o formulário for válido, obtém a justificativa do formulário limpo
         justificativa = form.cleaned_data['justificativa']
+        # Define a justificativa do cancelamento no objeto Agendamento
         agendamento.justificativa_cancelamento = justificativa
+        # Define o status do atendimento como 'cancelado'
         agendamento.status_atendimento = 'cancelado'
+        # Salva as alterações no banco de dados
         agendamento.save()
 
+        # Retorna uma resposta JSON indicando que o cancelamento foi bem-sucedido
         return JsonResponse({'success': True, 'message': 'Agendamento cancelado com sucesso.'})
     else:
+        # Se o formulário não for válido, retorna uma resposta JSON com os erros do formulário
         return JsonResponse({'success': False, 'errors': form.errors})
+
         
 
 def visualizar_atendimento(request, atendimento_id):
