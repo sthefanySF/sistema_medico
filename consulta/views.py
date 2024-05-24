@@ -197,17 +197,30 @@ def profissionaldasaude_excluir(request, pk):
 
 
 def listar_agendamentos(request):
-    agendamentos = Agendamento.objects.all()
+    # Obtém o valor do filtro do profissional de saúde a partir dos parâmetros da query
+    profissional_id = request.GET.get('profissional_saude')
+
+    # Busca todos os profissionais de saúde
     profissionais_saude = Profissionaldasaude.objects.all()
 
-     # Atualiza os status dos agendamentos
+    # Filtra os agendamentos com base no profissional de saúde, se um profissional for selecionado
+    if profissional_id and profissional_id != 'todos':
+        agendamentos = Agendamento.objects.filter(profissional_saude_id=profissional_id)
+    else:
+        agendamentos = Agendamento.objects.all()
+
+    # Atualiza os status dos agendamentos
     for agendamento in agendamentos:
         agendamento.atualizar_status()
 
-    # Ordenar os agendamentos pela data em ordem decrescente
+    # Ordena os agendamentos pela data em ordem decrescente
     agendamentos = agendamentos.order_by('-data_agendamento')
 
-    return render(request, 'consultas/listagem_agendamentos.html', {'agendamentos': agendamentos, 'profissionais_saude': profissionais_saude})
+    return render(request, 'consultas/listagem_agendamentos.html', {
+        'agendamentos': agendamentos,
+        'profissionais_saude': profissionais_saude
+    })
+
 
 
 
@@ -252,34 +265,22 @@ def reagendar_agendamento(request, pk):
 
 @require_POST  # Certifica que a função aceita apenas requisições POST
 def cancelar_agendamento(request, agendamento_id):
-    # Obtém o objeto Agendamento com o ID fornecido ou retorna um erro 404 se não for encontrado
     agendamento = get_object_or_404(Agendamento, pk=agendamento_id)
     
-    # Verifica se o status do agendamento não é 'pendente'
     if agendamento.status_atendimento != 'pendente':
-        # Se o status não for 'pendente', retorna uma resposta JSON com sucesso = False e uma mensagem de erro
         return JsonResponse({'success': False, 'errors': 'Não é possível cancelar um agendamento que não está pendente.'})
 
-    # Cria uma instância do formulário JustificativaCancelamentoForm com os dados POST
     form = JustificativaCancelamentoForm(request.POST)
 
-    # Verifica se o formulário é válido
     if form.is_valid():
-        # Se o formulário for válido, obtém a justificativa do formulário limpo
         justificativa = form.cleaned_data['justificativa']
-        # Define a justificativa do cancelamento no objeto Agendamento
         agendamento.justificativa_cancelamento = justificativa
-        # Define o status do atendimento como 'cancelado'
         agendamento.status_atendimento = 'cancelado'
-        # Salva as alterações no banco de dados
         agendamento.save()
 
-        # Retorna uma resposta JSON indicando que o cancelamento foi bem-sucedido
         return JsonResponse({'success': True, 'message': 'Agendamento cancelado com sucesso.'})
     else:
-        # Se o formulário não for válido, retorna uma resposta JSON com os erros do formulário
         return JsonResponse({'success': False, 'errors': form.errors})
-
         
 
 def visualizar_atendimento(request, atendimento_id):

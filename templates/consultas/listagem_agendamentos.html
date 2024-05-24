@@ -43,9 +43,9 @@
             <option value="" selected>Selecione um profissional</option>
             <option value="todos" class="destacado">Listar Todos</option>
             {% for profissional in profissionais_saude %}
-              <option value="{{ profissional.id }}" class="destacado">{{ profissional.nome }}</option>
+                <option value="{{ profissional.id }}" {% if request.GET.profissional_saude == profissional.id|stringformat:"s" %}selected{% endif %}>{{ profissional.nome }}</option>
             {% endfor %}
-          </select>
+        </select>
         </div>
       </div>
     </div>
@@ -130,7 +130,7 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                  <p>Informe a justificativa para o cancelamento:</p>
+                  <p>Ao cancelar esse agendamento ele não poderá mais ser atendido. Informe a justificativa para o cancelamento:</p>
                   <textarea id="justificativa_cancelamento_{{ agendamento.id }}" class="form-control" rows="4" placeholder="Digite a justificativa aqui"></textarea>
                 </div>
                 <div class="modal-footer">
