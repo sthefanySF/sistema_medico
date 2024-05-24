@@ -1,199 +1,178 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
-{% block title %}Cadastro Administrativo{% endblock %}
+{% block title %}
+  Cadastro Administrativo
+{% endblock %}
 
 {% block content %}
-    {% if messages %} {% include 'messages.html' %} {% endif %}
+  {% if messages %}
+    {% include 'messages.html' %}
+  {% endif %}
 
-    <div class="container mt-3">
+  <div class="container mt-3">
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+        <div class="card">
+          <div class="card-header mb-4">
+            <h4 class="text-center m-3 card-title">Cadastro Administrativo</h4>
+          </div>
 
-        <div class="row justify-content-center">
-            <div class="col-md-10">
-                <div class="card">
+          <form action="" method="POST" class="mb-4">
+            <div class="col-md-10 offset-md-1">
+              {% csrf_token %}
+              <div class="m-2">
+                <div class="m-2">
+                  <div class="mb-3 row">
+                    <div class="col-sm-12" id="pessoais">
+                      <div class="col mb-3">
+                        <label for="{{ form.nome.id_for_label }}" class="col-sm-2 col-form-label"><b>Nome</b></label>
+                        <div class="col-sm-12">{{ form.nome }}</div>
+                      </div>
 
-                    <div class="card-header mb-4">
-                        <h4 class="text-center m-3 card-title">Cadastro Administrativo</h4>
+                      <div class="col mb-3">
+                        <label for="{{ form.email.id_for_label }}" class="col-sm-2 col-form-label"><b>E-mail</b></label>
+                        <div class="col-sm-12">
+                          {% with field=form.email %}
+                            {% include 'field.html' %}
+                          {% endwith %}
+                        </div>
+                      </div>
+
+                      <div class="row mb-3">
+                        <div class="col-sm-6">
+                          <label for="{{ form.cpf.id_for_label }}" class="col-sm-2 col-form-label"><b>CPF</b></label>
+                          <div class="col-sm-12">
+                            {% with field=form.cpf %}
+                              {% include 'field.html' %}
+                            {% endwith %}
+                          </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                          <label for="{{ form.rg.id_for_label }}" class="col-sm-2 col-form-label"><b>RG</b></label>
+                          <div class="col-sm-12">{{ form.rg }}</div>
+                        </div>
+                      </div>
+
+                      <div class="row mb-3">
+                        <div class="col-sm-6">
+                          <label for="{{ form.data_nascimento.id_for_label }}" class="col-sm-6 col-form-label"><b>Data de Nascimento</b></label>
+                          <div class="col-sm-12">
+                            {% with field=form.data_nascimento %}
+                              {% include 'field.html' %}
+                            {% endwith %}
+                          </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                          <label for="{{ form.sexo.id_for_label }}" class="col-sm-2 col-form-label"><b>Sexo</b></label>
+                          <div class="col-sm-12">{{ form.sexo }}</div>
+                        </div>
+                      </div>
                     </div>
 
-                    <form action="" method="POST" class="mb-4">
-                        <div class="col-md-10 offset-md-1">
+                    <div class="col-sm-12" id="endereco">
+                      <div class="col mb-3">
+                        <label for="{{ form.bairro.id_for_label }}" class="col-sm-2 col-form-label"><b>Bairro e Rua</b></label>
+                        <div class="col-sm-12">{{ form.bairro }}</div>
+                      </div>
 
-                            {% csrf_token %}
-
-                            <div class=" m-2 jumbotron">
-
-                                <div class=" m-2">
-                                    <div class="mb-3 row">
-                                        <label for="{{ form.nome.id_for_label }}"
-                                               class="col-sm-2 "><b>Nome</b>
-                                        </label>
-                                        <div class="col-sm-4">
-                                            {{ form.nome }}
-                                        </div>
-
-
-                                        <label for="{{ form.data_nascimento.id_for_label }}" class="col-sm-2 ">
-                                            <b>Data de Nascimento</b>
-                                        </label>
-                                        <div class="col-sm-4">
-                                            {% with form.data_nascimento as field %}
-                                                {% include 'field.html' %}
-                                            {% endwith %}
-                                        </div>
-                                    </div>
-
-
-                                    <div class="mb-3 row">
-                                        <label for="{{ form.cpf.id_for_label }}"
-                                               class="col-sm-2 col-form-label"><b>CPF</b>
-                                        </label>
-
-                                        <div class="col-sm-4">
-                                            {% with form.cpf as field %}
-                                                {% include 'field.html' %}
-                                            {% endwith %}
-                                        </div>
-
-                                        <label for="{{ form.rg.id_for_label }}"
-                                               class="col-sm-2 col-form-label"><b>RG</b>
-                                        </label>
-                                        <div class="col-sm-4">
-                                            {{ form.rg }}
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3 row">
-                                        <label for="{{ form.email.id_for_label }}"
-                                               class="col-sm-2 col-form-label"><b>E-mail</b>
-                                        </label>
-                                        <div class="col-sm-4">
-                                            {% with form.email as field %} {% include 'field.html' %} {% endwith %}
-                                        </div>
-
-
-                                        <label for="{{ form.sexo.id_for_label }}"
-                                               class="col-sm-2 col-form-label"><b>Sexo</b></label>
-                                        <div class="col-sm-4">
-                                            {{ form.sexo }}
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3 row">
-                                        <label for="{{ form.uf.id_for_label }}"
-                                               class="col-sm-2 col-form-label"><b>UF</b>
-                                        </label>
-                                        <div class="col-sm-4">
-                                            {{ form.uf }}
-                                        </div>
-
-                                        <label for="{{ form.cidade.id_for_label }}"
-                                               class="col-sm-2 col-form-label"><b>Cidade</b></label>
-                                        <div class="col-sm-4">
-                                            {{ form.cidade }}
-                                        </div>
-
-
-
-                                    </div>
-
-                                    <div class="mb-3 row">
-                                         <label for="{{ form.cep.id_for_label }}"
-                                               class="col-sm-2 col-form-label"><b>CEP</b></label>
-                                        <div class="col-sm-4">
-                                            {{ form.cep }}
-                                        </div>
-
-                                        <label for="{{ form.bairro.id_for_label }}"
-                                               class="col-sm-2 col-form-label"><b>Bairro</b></label>
-                                        <div class="col-sm-4">
-                                            {{ form.bairro }}
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3 row">
-
-                                        <label for="{{ form.numero.id_for_label }}"
-                                               class="col-sm-2 col-form-label"><b>Número</b></label>
-                                        <div class="col-sm-4">
-                                            {{ form.numero }}
-                                        </div>
-
-                                        <label for="{{ form.ddd_telefone.id_for_label }}"
-                                               class="col-sm-2 col-form-label"><b>Telefone</b></label>
-                                        <div class="col-sm-4">
-                                            {{ form.ddd_telefone }}
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3 row">
-                                         <label for="{{ form.cargo_funcao.id_for_label }}"
-                                               class="col-sm-2 col-form-label"><b>Cargo/Função</b></label>
-                                        <div class="col-sm-4">
-                                            {{ form.cargo_funcao }}
-                                        </div>
-
-                                        
-                                    </div>
-
-                                    <div class="mb-3 row">
-                                        <label for="{{ form.lotacao_de_exercicio.id_for_label }}"
-                                               class="col-sm-2 col-form-label"><b>Lotação de Exercício</b></label>
-                                        <div class="col-sm-4">
-                                            {{ form.lotacao_de_exercicio }}
-                                        </div>
-
-                                        <label for="{{ form.matricula_siape.id_for_label }}"
-                                               class="col-sm-2 col-form-label"><b>Matricula Siape</b></label>
-                                        <div class="col-sm-4">
-                                            {{ form.matricula_siape }}
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3 row">
-                                        <label for="{{ form.complemento.id_for_label }}"
-                                               class="col-sm-2 col-form-label"><b>Complemento</b></label>
-                                        <div class="col-sm-10">
-                                            {{ form.complemento }}
-                                        </div>
-                                    </div>
-
-                                <br>
-                                <br>
-
-                                    <div class="mb-3 row" style="justify-content: center">
-                                        <div class="btn btn-group" style="max-width: 60%;
-                                    justify-content: center">
-                                            <button type="submit" class="btn btn-primary"><b>Cadastrar</b></button>
-                                            <a class="btn btn-secondary "
-                                               href="{% url 'administrativoListagem' %}"
-                                               style="line-height: 2"><b>Voltar</b>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                      <div class="row mb-3">
+                        <div class="col-sm-6">
+                          <label for="{{ form.numero.id_for_label }}" class="col-sm-2 col-form-label"><b>Número</b></label>
+                          <div class="col-sm-12">{{ form.numero }}</div>
                         </div>
-                    </form>
+                        <div class="col-sm-6">
+                          <label for="{{ form.cidade.id_for_label }}" class="col-sm-2 col-form-label"><b>Cidade</b></label>
+                          <div class="col-sm-12">{{ form.cidade }}</div>
+                        </div>
+                      </div>
 
+                      <div class="row mb-3">
+                        <div class="col-sm-6">
+                          <label for="{{ form.uf.id_for_label }}" class="col-sm-2 col-form-label"><b>UF</b></label>
+                          <div class="col-sm-12">{{ form.uf }}</div>
+                        </div>
+                        <div class="col-sm-6">
+                          <label for="{{ form.cep.id_for_label }}" class="col-sm-2 col-form-label"><b>CEP</b></label>
+                          <div class="col-sm-12">{{ form.cep }}</div>
+                        </div>
+                      </div>
+
+                      <div class="col mb-3">
+                        <label for="{{ form.ddd_telefone.id_for_label }}" class="col-sm-2 col-form-label"><b>Telefone</b></label>
+                        <div class="col-sm-12">{{ form.ddd_telefone }}</div>
+                      </div>
+
+                      <div class="col mb-3">
+                        <label for="{{ form.complemento.id_for_label }}" class="col-sm-2 col-form-label"><b>Complemento</b></label>
+                        <div class="col-sm-12">{{ form.complemento }}</div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-12" id="cargo">
+                      <div class="mb-3 row">
+                        <label for="{{ form.cargo_funcao.id_for_label }}" class="col-sm-2 col-form-label"><b>Cargo/Função</b></label>
+                        <div class="col-sm-12">{{ form.cargo_funcao }}</div>
+                      </div>
+
+                      <div class="row mb-3">
+                        <div class="col-sm-6">
+                          <label for="{{ form.lotacao_de_exercicio.id_for_label }}" class="col-sm-12 col-form-label"><b>Lotação de Exercício</b></label>
+                          <div class="col-sm-12">{{ form.lotacao_de_exercicio }}</div>
+                        </div>
+                        <div class="col-sm-6">
+                          <label for="{{ form.matricula_siape.id_for_label }}" class="col-sm-12 col-form-label"><b>Matricula Siape</b></label>
+                          <div class="col-sm-12">{{ form.matricula_siape }}</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mb-3 row">
+                      <div class="text-center">
+                        <button type="submit" class="btn btn-primary"><b>Cadastrar</b></button>
+                        <a class="btn btn-secondary" href="{% url 'administrativoListagem' %}" style="line-height: 2; margin-bottom: 2px"><b>Voltar</b></a>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+              </div>
             </div>
+          </form>
         </div>
+      </div>
     </div>
+  </div>
 
-    <script>
+  <script>
+    const q = (e) => document.querySelector(e)
+    const qA = (e) => document.querySelectorAll(e)
+    q('body').onload = () => {
+      const itensModificar = ["input[type='text']", "input[type='email']", 'select', "input[type='file']"]
+      itensModificar.forEach((seletor, index) => {
+        let itens = qA(seletor)
+        itens.forEach((item, index) => {
+          item.classList.add('form-control')
+        })
+      })
+    }
+  </script>
 
-        const q = (e) => document.querySelector(e);
-        const qA = (e) => document.querySelectorAll(e);
-        q("body").onload = () => {
-            const itensModificar = ["input[type='text']", "input[type='email']", "select", "input[type='file']"];
-            itensModificar.forEach((seletor, index) => {
-                let itens = qA(seletor);
-                itens.forEach((item, index) => {
-                    item.classList.add("form-control");
-                });
-            });
-        }
-
-
-    </script>
+  <style>
+    #pessoais,
+    #endereco,
+    #cargo {
+      background-color: #f5f5f5;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 9px;
+      margin-bottom: 30px;
+      box-shadow: 9px 9px 20px -15px rgb(0, 0, 0);
+    }
+    
+    #col-labels {
+      display: flex;
+      flex-direction: column;
+    }
+  </style>
 {% endblock %}

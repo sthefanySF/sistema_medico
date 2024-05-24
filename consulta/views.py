@@ -294,9 +294,7 @@ def lista_atendimentos(request):
 
 
 class PacienteCreate(CreateView):
-    model = Paciente
-    fields = ['nome', 'data_nascimento', 'email', 'rg', 'cpf', 'sexo', 'matricula', 'tipo_paciente',
-              'cargo_funcao', 'ddd_telefone', 'uf', 'cep', 'cidade', 'bairro', 'numero', 'complemento']
+    form_class = PacienteForm
     template_name = 'consultas/cadastro_paciente.html'
     success_url = reverse_lazy('pacienteListagem')
 
