@@ -179,7 +179,7 @@ class AgendamentoReagendarForm(forms.ModelForm):
 
     class Meta:
         model = Agendamento
-        fields = ['profissional_saude', 'data_agendamento', 'prioridade_atendimento', 'justificativa_cancelamento']
+        fields = ['profissional_saude', 'data_agendamento', 'prioridade_atendimento', 'turno']
 
         labels = {
             'profissional_saude': 'Selecionar profissional de saúde:',
@@ -190,16 +190,11 @@ class AgendamentoReagendarForm(forms.ModelForm):
         widgets = {
             'profissional_saude': forms.Select(attrs={'class': 'form-control'}),
             'data_agendamento': forms.DateTimeInput(attrs={'class': 'form-control'}),
+            'turno': forms.Select(attrs={'class': 'form-control'}),
             'prioridade_atendimento': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
-        # def __init__(self, *args, **kwargs):
-        #     super(AgendamentoReagendarForm, self).__init__(*args, **kwargs)
-        #     # data = datetime.now()
-        #
-        #     self.fields['data_agendamento'].required = True
-        #     self.fields['data_agendamento'].widget.attrs['class'] = 'form-control'
-        #     # self.fields['data_agendamento'].error_messages = {'required': 'Email é um campo obrigatório.'}
+    
 
 
 

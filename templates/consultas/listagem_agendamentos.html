@@ -43,9 +43,9 @@
             <option value="" selected>Selecione um profissional</option>
             <option value="todos" class="destacado">Listar Todos</option>
             {% for profissional in profissionais_saude %}
-              <option value="{{ profissional.id }}" class="destacado">{{ profissional.nome }}</option>
+                <option value="{{ profissional.id }}" {% if request.GET.profissional_saude == profissional.id|stringformat:"s" %}selected{% endif %}>{{ profissional.nome }}</option>
             {% endfor %}
-          </select>
+        </select>
         </div>
       </div>
     </div>
@@ -114,11 +114,22 @@
 
         <td>
           <div class="btn-group" role="group" aria-label="Ações">
-            <button type="button" class="btn btn-secondary ms-1 btn-lg custom-btn" onclick="redirecionar('{% url 'reagendarAgendamento' agendamento.id %}')" title="Reagendar"><i class="fa fa-calendar-o" aria-hidden="true"></i></button>
-            <button type="button" class="btn btn-danger ms-1 btn-lg custom-btn" data-bs-toggle="modal" data-bs-target="#cancelarModal{{ agendamento.id }}" title="Cancelar"><i class="fa fa-times" aria-hidden="true"></i></button>
+            <button type="button" 
+                    class="btn btn-secondary ms-1 btn-lg custom-btn" 
+                    data-status="{{ agendamento.status_atendimento }}" 
+                    onclick="reagendarAgendamento({{ agendamento.id }}, '{{ agendamento.status_atendimento }}')" 
+                    title="Reagendar"
+                    {% if agendamento.status_atendimento != 'pendente' %}disabled{% endif %}>
+                <i class="fa fa-calendar-o" aria-hidden="true"></i>
+            </button>   
+            
+            <button type="button" class="btn btn-danger ms-1 btn-lg custom-btn" data-status="{{ agendamento.status_atendimento }}" data-bs-toggle="modal" data-bs-target="#cancelarModal{{ agendamento.id }}" title="Cancelar"><i class="fa fa-times" aria-hidden="true"></i></button>
+
             <button type="button" class="btn btn-success ms-1 btn-lg custom-btn" onclick="redirecionar('{% url 'criar_atendimento' agendamento.id %}')" title="Atender"><i class="fa fa-check-square-o" aria-hidden="true"></i></button>
             <button type="button" class="btn btn-info ms-1 btn-lg custom-btn" onclick="redirecionar('{% url 'confirmAgendamento' agendamento.id %}')" title="Visualizar"><i class="fa fa-eye" aria-hidden="true"></i></button>
           </div>
+
+
           <div class="modal fade" id="cancelarModal{{ agendamento.id }}" tabindex="-1" aria-labelledby="cancelarModalLabel{{ agendamento.id }}" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
@@ -127,16 +138,18 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                  <p>Informe a justificativa para o cancelamento:</p>
+                  <p>Ao cancelar esse agendamento ele não poderá mais ser atendido. Informe a justificativa para o cancelamento:</p>
                   <textarea id="justificativa_cancelamento_{{ agendamento.id }}" class="form-control" rows="4" placeholder="Digite a justificativa aqui"></textarea>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                  <button type="button" class="btn btn-danger" onclick="cancelarAgendamento('{{ agendamento.id }}')">Confirmar Cancelamento</button>
+                  <button type="button" class="btn btn-danger" onclick="cancelarAgendamento({{ agendamento.id }})">Confirmar Cancelamento</button>
+
                 </div>
               </div>
             </div>
           </div>
+      
         </td>
 
       </tr>
@@ -183,18 +196,54 @@
     window.location.href = url;
   }
 
-  function cancelarAgendamento(agendamentoId) {
-    // Obtenha a justificativa do cancelamento do textarea
-    var justificativa = document.getElementById('justificativa_cancelamento_' + agendamentoId).value;
 
-    // Faça uma solicitação AJAX para cancelar o agendamento
-    // Substitua este exemplo com a lógica real de cancelamento do agendamento
-    console.log('Agendamento ' + agendamentoId + ' cancelado com a justificativa: ' + justificativa);
-
-    // Feche o modal após o cancelamento (opcional)
-    $('#cancelarModal' + agendamentoId).modal('hide');
-  }
 </script>
+
+<script>
+  function cancelarAgendamento(agendamentoId) {
+    var button = document.querySelector('[data-bs-target="#cancelarModal' + agendamentoId + '"]');
+    var status = button.getAttribute('data-status');
+  
+    if (status !== 'pendente') {
+      alert('Não é possível cancelar um agendamento que não está pendente.');
+      return; // Saia da função se o status não for pendente
+    }
+  
+    var justificativa = document.getElementById('justificativa_cancelamento_' + agendamentoId).value;
+  
+    $.ajax({
+      type: 'POST',
+      url: '/cancelar_agendamento/' + agendamentoId + '/',
+      data: {
+        'justificativa': justificativa,
+        'csrfmiddlewaretoken': '{{ csrf_token }}'
+      },
+      success: function(response) {
+        if (response.success) {
+          alert(response.message);
+          location.reload(); // Recarrega a página para atualizar o status na tabela
+        } else {
+          alert('Erro: ' + response.errors);
+        }
+      },
+      error: function(response) {
+        alert('Ocorreu um erro ao cancelar o agendamento.');
+      }
+    });
+  }
+  
+
+  function reagendarAgendamento(agendamentoId, status) {
+    if (status !== 'pendente') {
+      alert('Este agendamento não pode ser reagendado porque não está pendente.');
+      return;
+    }
+    // Redirecionar para a página de reagendamento
+    window.location.href = `/reagendar/agendamento/${agendamentoId}/`;
+  }
+
+</script>
+
 
 
 <style>

@@ -8,7 +8,7 @@ from django.views.generic.edit import CreateView
 # JustificativaCancelamentoForm, PacienteForm, PesquisaAgendamentoForm, ProfissionaldasaudeForm
 import json
 from consulta.forms import *
-
+from django.views.decorators.http import require_POST
 from consulta.models import Atendimento, Paciente, Administrativo
 from consulta.models import Agendamento, Paciente, Profissionaldasaude
 from datetime import date
@@ -197,17 +197,30 @@ def profissionaldasaude_excluir(request, pk):
 
 
 def listar_agendamentos(request):
-    agendamentos = Agendamento.objects.all()
+    # Obtém o valor do filtro do profissional de saúde a partir dos parâmetros da query
+    profissional_id = request.GET.get('profissional_saude')
+
+    # Busca todos os profissionais de saúde
     profissionais_saude = Profissionaldasaude.objects.all()
 
-     # Atualiza os status dos agendamentos
+    # Filtra os agendamentos com base no profissional de saúde, se um profissional for selecionado
+    if profissional_id and profissional_id != 'todos':
+        agendamentos = Agendamento.objects.filter(profissional_saude_id=profissional_id)
+    else:
+        agendamentos = Agendamento.objects.all()
+
+    # Atualiza os status dos agendamentos
     for agendamento in agendamentos:
         agendamento.atualizar_status()
 
-    # Ordenar os agendamentos pela data em ordem decrescente
+    # Ordena os agendamentos pela data em ordem decrescente
     agendamentos = agendamentos.order_by('-data_agendamento')
 
-    return render(request, 'consultas/listagem_agendamentos.html', {'agendamentos': agendamentos, 'profissionais_saude': profissionais_saude})
+    return render(request, 'consultas/listagem_agendamentos.html', {
+        'agendamentos': agendamentos,
+        'profissionais_saude': profissionais_saude
+    })
+
 
 
 
@@ -226,48 +239,49 @@ def agendamento_ausente(request, pk):
     messages.warning(request, 'Agendamento definido como ausente!')
     return redirect('agendamentoListagem')
 
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+
 def reagendar_agendamento(request, pk):
     agendamento = get_object_or_404(Agendamento, pk=pk)
+
+    if agendamento.status_atendimento != 'pendente':
+        messages.error(request, 'Este agendamento não pode ser reagendado porque não está pendente.')
+        return redirect('agendamentoListagem')
 
     if request.method == 'POST':
         form = AgendamentoReagendarForm(request.POST, instance=agendamento)
         if form.is_valid():
             form.save()
-            
-            # Verifique se o status atual é 'ausente' e mude para 'pendente' se for o caso
-            if agendamento.status_atendimento == 'ausente':
-                agendamento.status_atendimento = 'pendente'
-                agendamento.save()
-
-            messages.warning(request, 'Reagendado com sucesso!')
+            messages.success(request, 'Reagendado com sucesso!')
             return redirect('agendamentoListagem')
         else:
             messages.error(request, 'Informe uma data válida!')
-
     else:
         form = AgendamentoReagendarForm(instance=agendamento)
 
     return render(request, 'consultas/reagendar_agendamento.html', {'form': form, 'agendamento': agendamento})
 
 
+@require_POST  # Certifica que a função aceita apenas requisições POST
 def cancelar_agendamento(request, agendamento_id):
     agendamento = get_object_or_404(Agendamento, pk=agendamento_id)
+    
+    if agendamento.status_atendimento != 'pendente':
+        return JsonResponse({'success': False, 'errors': 'Não é possível cancelar um agendamento que não está pendente.'})
 
-    if request.method == 'POST':
-        form = JustificativaCancelamentoForm(request.POST)
-        if form.is_valid():
-            agendamento.justificativa_cancelamento = form.cleaned_data['justificativa']
-            agendamento.status_atendimento = 'cancelado'
-            agendamento.save()
+    form = JustificativaCancelamentoForm(request.POST)
 
-            # Retorna uma resposta JSON de sucesso
-            return JsonResponse({'success': True, 'message': 'Agendamento cancelado com sucesso.'})
-        else:
-            # Se o formulário não for válido, retorna os erros
-            return JsonResponse({'success': False, 'errors': form.errors})
+    if form.is_valid():
+        justificativa = form.cleaned_data['justificativa']
+        agendamento.justificativa_cancelamento = justificativa
+        agendamento.status_atendimento = 'cancelado'
+        agendamento.save()
 
-    return JsonResponse({'success': False, 'message': 'Método não permitido'})
-
+        return JsonResponse({'success': True, 'message': 'Agendamento cancelado com sucesso.'})
+    else:
+        return JsonResponse({'success': False, 'errors': form.errors})
+        
 
 def visualizar_atendimento(request, atendimento_id):
     atendimento = get_object_or_404(Atendimento, id=atendimento_id)
