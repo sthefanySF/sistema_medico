@@ -11,8 +11,8 @@ from django.contrib.auth.models import User
 class PacienteForm(forms.ModelForm):
     class Meta:
         model = Paciente
-        fields = ['nome', 'data_nascimento', 'email', 'rg', 'cpf', 'sexo', 'matricula', 'tipo_paciente', 'cargo_funcao','ddd_telefone',  'uf','cep', 'cidade', 'bairro',  'numero',  'complemento']
-
+        #fields = ['nome', 'data_nascimento', 'email', 'rg', 'cpf', 'sexo', 'matricula', 'tipo_paciente', 'cargo_funcao','ddd_telefone',  'uf','cep', 'cidade', 'bairro',  'numero',  'complemento']
+        fields = '__all__'
         
         
         labels = {
@@ -31,8 +31,8 @@ class PacienteForm(forms.ModelForm):
         
     def __init__(self, *args, **kwargs):
         super(PacienteForm, self).__init__(*args, **kwargs)
+        # self.fields['data_nascimento'].error_messages = {'required': 'Email é um campo obrigatório.'}
 
-        # Adicionando a classe 'form-control' aos widgets
         for f in self.fields:
             self.fields[f].widget.attrs['class'] = 'form-control'
 

@@ -21,14 +21,14 @@
 
               <div class="m-4">
                 <div class="m-2">
-                  <div class="pessoais">
-                    <div class="mb-3 col">
-                      <label for="{{ form.nome.id_for_label }}" class="col-sm-1 col-form-label"><b>Nome</b></label>
+                  <div class="col-sm-12" id="pessoais">
+                    <div class="col mb-3">
+                      <label for="{{ form.nome.id_for_label }}" class="col-sm-2 col-form-label"><b>Nome</b></label>
                       <div class="col-sm-12">{{ form.nome }}</div>
                     </div>
 
-                    <div class="mb-3 col">
-                      <label for="{{ form.email.id_for_label }}" class="col-sm-1 col-form-label"><b>E-mail</b></label>
+                    <div class="col mb-3">
+                      <label for="{{ form.email.id_for_label }}" class="col-sm-2 col-form-label"><b>E-mail</b></label>
                       <div class="col-sm-12">
                         {% with field=form.email %}
                           {% include 'field.html' %}
@@ -36,17 +36,8 @@
                       </div>
                     </div>
 
-                    <div class="row">
-                      <div class="col-sm-6 mb-3" id="col-labels">
-                        <label for="{{ form.rg.id_for_label }}" class="col-sm-2 col-form-label"><b>RG</b></label>
-                        <div class="col-sm-12">
-                          {% with field=form.rg %}
-                            {% include 'field.html' %}
-                          {% endwith %}
-                        </div>
-                      </div>
-
-                      <div class="col-sm-6 mb-3" id="col-labels">
+                    <div class="row mb-3">
+                      <div class="col-sm-6">
                         <label for="{{ form.cpf.id_for_label }}" class="col-sm-2 col-form-label"><b>CPF</b></label>
                         <div class="col-sm-12">
                           {% with field=form.cpf %}
@@ -54,10 +45,15 @@
                           {% endwith %}
                         </div>
                       </div>
+
+                      <div class="col-sm-6">
+                        <label for="{{ form.rg.id_for_label }}" class="col-sm-2 col-form-label"><b>RG</b></label>
+                        <div class="col-sm-12">{{ form.rg }}</div>
+                      </div>
                     </div>
 
-                    <div class="row">
-                      <div class="col-sm-6 mb-3" id="col-labels">
+                    <div class="row mb-3">
+                      <div class="col-sm-6">
                         <label for="{{ form.data_nascimento.id_for_label }}" class="col-sm-6 col-form-label"><b>Data de Nascimento</b></label>
                         <div class="col-sm-12">
                           {% with field=form.data_nascimento %}
@@ -66,84 +62,69 @@
                         </div>
                       </div>
 
-                      <div class="col-sm-6 mb-3" id="col-labels">
+                      <div class="col-sm-6">
                         <label for="{{ form.sexo.id_for_label }}" class="col-sm-2 col-form-label"><b>Sexo</b></label>
                         <div class="col-sm-12">{{ form.sexo }}</div>
                       </div>
                     </div>
                   </div>
 
-                  <div class="resto">
-                    <div class="mb-3 row">
-                      <label for="{{ form.cep.id_for_label }}" class="col-sm-2 col-form-label"><b>CEP</b></label>
-                      <div class="col-sm-10">{{ form.cep }}</div>
+                  <div class="col-sm-12" id="endereco">
+                    <div class="col mb-3">
+                      <label for="{{ form.bairro.id_for_label }}" class="col-sm-2 col-form-label"><b>Bairro e Rua</b></label>
+                      <div class="col-sm-12">{{ form.bairro }}</div>
                     </div>
 
-                    <div class="mb-3 row">
-                      <label for="{{ form.cidade.id_for_label }}" class="col-sm-2 col-form-label"><b>Cidade</b></label>
-                      <div class="col-sm-10">{{ form.cidade }}</div>
-                    </div>
-
-                    <div class="mb-3 row">
-                      <label for="{{ form.bairro.id_for_label }}" class="col-sm-2 col-form-label"><b>Bairro</b></label>
-                      <div class="col-sm-10">{{ form.bairro }}</div>
-                    </div>
-
-                    <div class="mb-3 row">
-                      <label for="{{ form.uf.id_for_label }}" class="col-sm-2 col-form-label"><b>UF</b></label>
-                      <div class="col-sm-10">{{ form.uf }}</div>
-                    </div>
-
-                    <div class="mb-3 row">
-                      <label for="{{ form.numero.id_for_label }}" class="col-sm-2 col-form-label"><b>Número</b></label>
-                      <div class="col-sm-10">
-                        {% with field=form.numero %}
-                          {% include 'field.html' %}
-
-                          {% if form.ddd_telefone.help_text %}
-                            <p>
-                              <i style="color: red">*</i> {{ form.ddd_telefone.help_text }}
-                            </p>
-                          {% endif %}
-                        {% endwith %}
+                    <div class="row mb-3">
+                      <div class="col-sm-6">
+                        <label for="{{ form.numero.id_for_label }}" class="col-sm-2 col-form-label"><b>Número</b></label>
+                        <div class="col-sm-12">{{ form.numero }}</div>
+                      </div>
+                      <div class="col-sm-6">
+                        <label for="{{ form.cidade.id_for_label }}" class="col-sm-2 col-form-label"><b>Cidade</b></label>
+                        <div class="col-sm-12">{{ form.cidade }}</div>
                       </div>
                     </div>
 
-                    <div class="mb-3 row">
+                    <div class="row mb-3">
+                      <div class="col-sm-6">
+                        <label for="{{ form.uf.id_for_label }}" class="col-sm-2 col-form-label"><b>UF</b></label>
+                        <div class="col-sm-12">{{ form.uf }}</div>
+                      </div>
+                      <div class="col-sm-6">
+                        <label for="{{ form.cep.id_for_label }}" class="col-sm-2 col-form-label"><b>CEP</b></label>
+                        <div class="col-sm-12">{{ form.cep }}</div>
+                      </div>
+                    </div>
+
+                    <div class="col mb-3">
                       <label for="{{ form.ddd_telefone.id_for_label }}" class="col-sm-2 col-form-label"><b>Telefone</b></label>
-                      <div class="col-sm-10">
-                        {% with field=form.ddd_telefone %}
-                          {% include 'field.html' %}
-                        {% endwith %}
-                      </div>
+                      <div class="col-sm-12">{{ form.ddd_telefone }}</div>
                     </div>
 
-                    <div class="mb-3 row">
+                    <div class="col mb-3">
                       <label for="{{ form.complemento.id_for_label }}" class="col-sm-2 col-form-label"><b>Complemento</b></label>
-                      <div class="col-sm-10">{{ form.complemento }}</div>
+                      <div class="col-sm-12">{{ form.complemento }}</div>
                     </div>
                   </div>
 
-                  <div class="resto2">
+                  <div class="col-sm-12" id="cargo">
                     <div class="mb-3 row">
                       <label for="{{ form.cargo_funcao.id_for_label }}" class="col-sm-2 col-form-label"><b>Cargo/Função</b></label>
-                      <div class="col-sm-10">{{ form.cargo_funcao }}</div>
-                    </div>
-                    <div class="mb-3 row">
-                      <label for="{{ form.lotacao_de_exercicio.id_for_label }}" class="col-sm-2 col-form-label"><b>Lotação de Exercício</b></label>
-                      <div class="col-sm-10">{{ form.lotacao_de_exercicio }}</div>
+                      <div class="col-sm-12">{{ form.cargo_funcao }}</div>
                     </div>
 
-                    <div class="mb-3 row">
-                      <label for="{{ form.matricula_siape.id_for_label }}" class="col-sm-2 col-form-label"><b>Matricula Siape</b></label>
-                      <div class="col-sm-10">
-                        {% with field=form.matricula_siape %}
-                          {% include 'field.html' %}
-                        {% endwith %}
+                    <div class="row mb-3">
+                      <div class="col-sm-6">
+                        <label for="{{ form.lotacao_de_exercicio.id_for_label }}" class="col-sm-12 col-form-label"><b>Lotação de Exercício</b></label>
+                        <div class="col-sm-12">{{ form.lotacao_de_exercicio }}</div>
+                      </div>
+                      <div class="col-sm-6">
+                        <label for="{{ form.matricula_siape.id_for_label }}" class="col-sm-12 col-form-label"><b>Matricula Siape</b></label>
+                        <div class="col-sm-12">{{ form.matricula_siape }}</div>
                       </div>
                     </div>
                   </div>
-
                   <br />
 
                   <div class="mb-3 row">
@@ -162,9 +143,9 @@
   </div>
 
   <style>
-    .pessoais,
-    .resto,
-    .resto2 {
+    #pessoais,
+    #endereco,
+    #cargo {
       background-color: #f5f5f5;
       padding: 20px;
       border: 1px solid #ccc;
