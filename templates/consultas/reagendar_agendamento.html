@@ -7,7 +7,7 @@
 
     <div class="container">
         <div class="col-md-8 offset-md-2">
-            <h4 class="text-center">Reagendar Consulta</h4> <br>
+            <h4 class="text-center">Reagendar Consulta </h4> <br>
             <form action="{% url 'reagendarAgendamento' agendamento.id %}" method="POST">
                 {% csrf_token %}
 
@@ -16,21 +16,31 @@
                     {{ form.profissional_saude }}
                 </div>
 
-                <div >
-                                            
-                    {% with form.data_agendamento as field %} 
-                        {% include 'field.html' %}
-                    {% endwith %}
+                <div class="mb-3" style="font-weight: bold">
+                    <label for="{{ form.data_agendamento.id_for_label }}">{{ form.data_agendamento.label }}</label>
+                    {{ form.data_agendamento }}
+                    {% if form.data_agendamento.errors %}
+                        <div class="alert alert-danger mt-2" role="alert">
+                            {{ form.data_agendamento.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+
+                <div class="mb-3" style="font-weight: bold" >
+                    <label for="{{ form.turno.id_for_label }}">{{ form.turno.label }}</label>
+                    {{ form.turno }}
                 </div>
 
-                <div class="mb-3 form-check">
+                <div class="mb-3 form-check" style="font-weight: bold">
                     {{ form.prioridade_atendimento }}
                     <label class="form-check-label" for="{{ form.prioridade_atendimento.id_for_label }}">
                         {{ form.prioridade_atendimento.label }}
                     </label>
                 </div>
+
                 <div class="text-center">
-                    <button type="submit" class="btn btn-primary ">Reagendar</button>
+                    <button type="submit" class="btn btn-primary">Reagendar</button>
                     <a class="btn btn-danger ms-2" href="{% url 'agendamentoListagem' %}">Cancelar</a>
                 </div>
             </form>

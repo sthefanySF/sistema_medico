@@ -239,24 +239,24 @@ def agendamento_ausente(request, pk):
     messages.warning(request, 'Agendamento definido como ausente!')
     return redirect('agendamentoListagem')
 
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+
 def reagendar_agendamento(request, pk):
     agendamento = get_object_or_404(Agendamento, pk=pk)
+
+    if agendamento.status_atendimento != 'pendente':
+        messages.error(request, 'Este agendamento não pode ser reagendado porque não está pendente.')
+        return redirect('agendamentoListagem')
 
     if request.method == 'POST':
         form = AgendamentoReagendarForm(request.POST, instance=agendamento)
         if form.is_valid():
             form.save()
-            
-            # Verifique se o status atual é 'ausente' e mude para 'pendente' se for o caso
-            if agendamento.status_atendimento == 'ausente':
-                agendamento.status_atendimento = 'pendente'
-                agendamento.save()
-
-            messages.warning(request, 'Reagendado com sucesso!')
+            messages.success(request, 'Reagendado com sucesso!')
             return redirect('agendamentoListagem')
         else:
             messages.error(request, 'Informe uma data válida!')
-
     else:
         form = AgendamentoReagendarForm(instance=agendamento)
 

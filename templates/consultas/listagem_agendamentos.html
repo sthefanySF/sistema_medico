@@ -114,7 +114,15 @@
 
         <td>
           <div class="btn-group" role="group" aria-label="Ações">
-            <button type="button" class="btn btn-secondary ms-1 btn-lg custom-btn" onclick="redirecionar('{% url 'reagendarAgendamento' agendamento.id %}')" title="Reagendar"><i class="fa fa-calendar-o" aria-hidden="true"></i></button>
+            <button type="button" 
+                    class="btn btn-secondary ms-1 btn-lg custom-btn" 
+                    data-status="{{ agendamento.status_atendimento }}" 
+                    onclick="reagendarAgendamento({{ agendamento.id }}, '{{ agendamento.status_atendimento }}')" 
+                    title="Reagendar"
+                    {% if agendamento.status_atendimento != 'pendente' %}disabled{% endif %}>
+                <i class="fa fa-calendar-o" aria-hidden="true"></i>
+            </button>   
+            
             <button type="button" class="btn btn-danger ms-1 btn-lg custom-btn" data-status="{{ agendamento.status_atendimento }}" data-bs-toggle="modal" data-bs-target="#cancelarModal{{ agendamento.id }}" title="Cancelar"><i class="fa fa-times" aria-hidden="true"></i></button>
 
             <button type="button" class="btn btn-success ms-1 btn-lg custom-btn" onclick="redirecionar('{% url 'criar_atendimento' agendamento.id %}')" title="Atender"><i class="fa fa-check-square-o" aria-hidden="true"></i></button>
@@ -225,7 +233,17 @@
   }
   
 
+  function reagendarAgendamento(agendamentoId, status) {
+    if (status !== 'pendente') {
+      alert('Este agendamento não pode ser reagendado porque não está pendente.');
+      return;
+    }
+    // Redirecionar para a página de reagendamento
+    window.location.href = `/reagendar/agendamento/${agendamentoId}/`;
+  }
+
 </script>
+
 
 
 <style>
