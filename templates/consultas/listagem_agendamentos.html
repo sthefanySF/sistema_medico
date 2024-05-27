@@ -125,8 +125,10 @@
                 <i class="fa fa-calendar-o" aria-hidden="true"></i>
             </button>   
             
-            <button type="button" class="btn btn-danger ms-1 btn-lg custom-btn" data-status="{{ agendamento.status_atendimento }}" data-bs-toggle="modal" data-bs-target="#cancelarModal{{ agendamento.id }}" title="Cancelar"><i class="fa fa-times" aria-hidden="true"></i></button>
-
+            <button type="button" class="btn btn-danger ms-1 btn-lg custom-btn {% if agendamento.status_atendimento != 'pendente' %}disabled{% endif %}" data-status="{{ agendamento.status_atendimento }}" data-bs-toggle="modal" data-bs-target="#cancelarModal{{ agendamento.id }}" title="Cancelar">
+              <i class="fa fa-times" aria-hidden="true"></i>
+            </button>
+          
             {% if agendamento.status_atendimento == 'confirmado' %}
             <button type="button" 
                     class="btn btn-success ms-1 btn-lg custom-btn" 
