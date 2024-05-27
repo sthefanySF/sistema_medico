@@ -107,8 +107,10 @@
           Confirmado
           {% elif agendamento.status_atendimento == 'ausente' %}
           Ausente
+          {% elif agendamento.status_atendimento == 'atendido' %}
+          Atendido
           {% else %}
-          <span class="text-success">Cancelado</span>
+          Cancelado
           {% endif %}
         </td>
 

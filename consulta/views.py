@@ -506,8 +506,13 @@ class AtendimentoCreate(CreateView):
         # Salva o atendimento
         atendimento = form.save()
 
+        # Atualiza o status do agendamento para "atendido"
+        agendamento.status_atendimento = 'atendido'
+        agendamento.save()
+
         # Redireciona para a tela de confirmação de atendimento com o ID do Atendimento
         return redirect('confirmar_atendimento', agendamento_id=agendamento_id)
+
 
 
 def confirmar_atendimento(request, agendamento_id):

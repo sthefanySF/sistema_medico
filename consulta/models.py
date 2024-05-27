@@ -152,8 +152,8 @@ class Agendamento(models.Model):
         ('confirmado', 'Confirmado'),
         ('ausente', 'Ausente'),
         ('pendente', 'Pendente'),
-        # ('cancelado', 'Cancelado'),
-
+        ('cancelado', 'Cancelado'),
+        ('atendido', 'Atendido'),  # Adicionando o novo status "atendido"
     ], default='pendente')
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
     profissional_saude = models.ForeignKey(Profissionaldasaude, on_delete=models.CASCADE)
