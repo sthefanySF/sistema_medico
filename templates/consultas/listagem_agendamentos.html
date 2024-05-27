@@ -125,7 +125,21 @@
             
             <button type="button" class="btn btn-danger ms-1 btn-lg custom-btn" data-status="{{ agendamento.status_atendimento }}" data-bs-toggle="modal" data-bs-target="#cancelarModal{{ agendamento.id }}" title="Cancelar"><i class="fa fa-times" aria-hidden="true"></i></button>
 
-            <button type="button" class="btn btn-success ms-1 btn-lg custom-btn" onclick="redirecionar('{% url 'criar_atendimento' agendamento.id %}')" title="Atender"><i class="fa fa-check-square-o" aria-hidden="true"></i></button>
+            {% if agendamento.status_atendimento == 'confirmado' %}
+            <button type="button" 
+                    class="btn btn-success ms-1 btn-lg custom-btn" 
+                    onclick="redirecionar('{% url 'criar_atendimento' agendamento.id %}')" 
+                    title="Atender">
+                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+            </button>
+            {% else %}
+            <button type="button" 
+                    class="btn btn-success ms-1 btn-lg custom-btn disabled" 
+                    disabled>
+                <i class="fa fa-check-square-o" aria-hidden="true"></i>
+            </button>
+            {% endif %}           
+           
             <button type="button" class="btn btn-info ms-1 btn-lg custom-btn" onclick="redirecionar('{% url 'confirmAgendamento' agendamento.id %}')" title="Visualizar"><i class="fa fa-eye" aria-hidden="true"></i></button>
           </div>
 
