@@ -10,17 +10,19 @@
     {% include 'messages.html' %}
   {% endif %}
 
-  <div class="container mt-3">
-    <h4 class="text-center mb-4 custom-title">Lista de Profissionais de Saúde</h4>
+  <div class="container">
+    <h4 class="text-center mb-4 text-white">LISTA DE PROFISSIONAIS DE SAÚDE</h4>
 
-    <div class="d-flex justify-content-between pb-3">
-      <a class="btn btn-primary" href="{% url 'home' %}">Voltar</a>
-      <a href="#" class="btn btn-primary btn-expand-all">Expandir todos</a>
-      <a class="btn btn-primary" href="{% url 'profissionaldasaudeCreate' %}">Cadastrar</a>
-    </div>
+    <div class="mb-4" id="glass">
+      <div class="d-flex justify-content-between pb-3">
+        <a class="btn btn-primary" href="{% url 'home' %}">Voltar</a>
+        <a href="#" class="btn btn-primary btn-expand-all">Expandir todos</a>
+        <a class="btn btn-primary" href="{% url 'profissionaldasaudeCreate' %}">Cadastrar</a>
+      </div>
 
-    <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="Pesquisar paciente..." id="searchInput" />
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Pesquisar paciente..." id="searchInput" />
+      </div>
     </div>
 
     <table class="table table-bordered table-sm" id="border-none">
@@ -86,16 +88,15 @@
         // Filtrar as linhas da tabela
         $('tbody tr').each(function () {
           // Verificar se o texto de pesquisa está presente no nome do profissional
-          var profissionalNome = $(this).find('.profissionaldasaude-nome').text().toLowerCase();
+          var profissionalNome = $(this).find('.profissionaldasaude-nome').text().toLowerCase()
           if (profissionalNome.indexOf(searchText) !== -1) {
-            $(this).show('500');
+            $(this).show('500')
             // Mostrar a próxima linha que contém mais informações
-            $(this).next('tr').show();
+            $(this).next('tr').show()
           }
-        });
-      });
-    });
-    
+        })
+      })
+    })
   </script>
 
   <script>

@@ -6,9 +6,9 @@
 {% endblock %}
 
 {% block content %}
-  <h4 class="text-center mb-4 custom-title">Prontuário Médico de {{ paciente.nome }} <span style="font-size: smaller; font-weight:lighter ;">({{ paciente.tipo_paciente }})</span></h4>
+  <h4 class="text-center mb-4 text-white">Prontuário Médico de {{ paciente.nome }} <span style="font-size: smaller; font-weight:lighter ;">({{ paciente.tipo_paciente }})</span></h4>
 
-  <div class="d-flex justify-content-between pb-3">
+  <div class="d-flex justify-content-between pb-3 mb-4 pt-" id="glass">
     <a class="btn btn-primary" href="{% url 'pacienteListagem' %}" style="height: fit-content;">Voltar</a>
 
     <form id="filtro-form" class="col-md-6">
@@ -16,7 +16,7 @@
       <div class="row align-items-end">
         <div class="col-md-12" style="">
           <div class="dropdown">
-            <label class="dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display: flex; justify-content: center; align-items: center;">Selecione os médicos</label>
+            <label class="dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display: flex; justify-content: center; align-items: center; background-color: #fff;">Selecione os médicos</label>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
               {% for profissional in profissionais_saude %}
                 <div class="form-check" id="form-check-pront">
