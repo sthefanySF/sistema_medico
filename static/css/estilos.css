@@ -281,6 +281,16 @@ O valor smooth faz a rolagem da página de forma suave. */
   flex-direction: row;
 }
 
+/* efeito card de vidro/glass */
+#glass {
+  padding: 10px;
+  backdrop-filter: blur(50px) saturate(100%);
+  -webkit-backdrop-filter: blur(5px) saturate(52%);
+  background-color: rgb(255 255 255 / 16%);
+  border-radius: 12px;
+  border: 1px solid rgba(209, 213, 219, 0.3);
+}
+
 /* simbolos de mais e menos nos accordion  */
 .accordion-toggle:after {
   content: "\002b";
