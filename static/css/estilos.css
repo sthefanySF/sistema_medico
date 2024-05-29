@@ -212,10 +212,11 @@ O valor smooth faz a rolagem da página de forma suave. */
 }
 
 .container-login {
-  margin-top: -3em;
+  /* margin-top: -3em; */
   position: fixed;
   right: 0;
-  height: calc(100% - 170px);
+  top: 0; 
+  height: calc(100% - 60px);
   box-shadow: 9px 0px 20px 0px;
   min-width: 50%;
   background-color: #ffffff;
