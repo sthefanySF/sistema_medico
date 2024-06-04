@@ -70,8 +70,10 @@ urlpatterns = [
     # path('prontuario/', prontuario_medico, name='prontuario_medico'),
     path('prontuario_medico/<int:paciente_id>/', views.prontuario_medico, name='prontuario_medico'),
     path('filtrar_prontuarios/', filtrar_prontuarios, name='filtrar_prontuarios'),
-    path('atestado_medico/<int:paciente_id>/', views.atestado_medico, name='atestado_medico'),
     
+    
+    path('atestado_medico/create/<int:agendamento_id>/', AtestadoMedicoCreate.as_view(), name='atestado_medico_create'),
+ 
     # pdfs  
     path('pdf_prontuario_medico/<int:paciente_id>/', views.pdf_prontuario_medico, name='pdf_prontuario_medico'),
     

@@ -204,3 +204,31 @@ class Atendimento(models.Model):
 
     class Meta:
         ordering = ['agendamento', ]
+
+
+
+class AtestadoMedico(models.Model):
+    agendamento = models.ForeignKey(Agendamento, on_delete=models.CASCADE, related_name='atestados')
+    dias_afastamento = models.IntegerField()
+    cid = models.CharField(max_length=10)
+    data_criacao = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def paciente(self):
+        return self.agendamento.paciente
+
+    @property
+    def data_consulta(self):
+        return self.agendamento.data_agendamento
+
+    @property
+    def profissional(self):
+        return self.agendamento.profissional_saude
+
+    def __str__(self):
+        return f"Atestado Médico para {self.paciente.nome} em {self.data_consulta.date()}"
+
+    class Meta:
+        ordering = ['-data_criacao']
+        verbose_name = 'Atestado Médico'
+        verbose_name_plural = 'Atestados Médicos'

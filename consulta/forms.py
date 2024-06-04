@@ -4,7 +4,7 @@ from datetime import datetime
 from django.utils import timezone
 from django import forms
 import json
-from .models import Atendimento, Administrativo, Profissionaldasaude, Agendamento, Paciente
+from .models import Atendimento, Administrativo, AtestadoMedico, Profissionaldasaude, Agendamento, Paciente
 from django.contrib.auth.models import User
 
 
@@ -111,26 +111,6 @@ class ProfissionaldasaudeForm(forms.ModelForm):
         return data_nascimeto
 
 
-        # fields = ['nome', 'data_nascimento', 'email', 'rg', 'cpf', 'sexo', 'identificacao_unica', 'area',
-        #           'unidade_siass','formacao','conselho','registro', 'ddd_telefone','uf','cep', 'cidade', 'bairro',
-        #           'numero',  'complemento']
-
-        
-        # labels = {
-        #     'data_nascimento': 'Data de Nascimento',
-        #     'identificacao_unica': 'Identificação Única',
-        #     'ddd_telefone': 'DDD Telefone',
-        #     'unidade_siass':'Unidade SIASS',
-        #
-        # }
-        #
-        #
-        #
-        # widgets = {
-        #     'sexo': forms.RadioSelect(choices=[('M', 'Masculino'), ('F', 'Feminino')]),
-        # }
-
-
 
 class AgendamentoForm(forms.ModelForm):
     def clean_data_agendamento(self):
@@ -206,4 +186,22 @@ class AtendimentoForm(forms.ModelForm):
     class Meta:
         model = Atendimento
         fields = ['anamnese', 'exame_fisico', 'exames_complementares', 'pdf_exames', 'diagnostico', 'conduta']
+        
+class AtestadoMedicoForm(forms.ModelForm):
+    paciente = forms.CharField(label="Paciente", disabled=True, required=False)
+    profissional = forms.CharField(label="Profissional de Saúde", disabled=True, required=False)
+    data_agendamento = forms.CharField(label="Data do Agendamento", disabled=True, required=False)
+    data_criacao = forms.CharField(label="Data de Criação", disabled=True, required=False)
 
+    class Meta:
+        model = AtestadoMedico
+        fields = ['dias_afastamento', 'cid']
+
+    def __init__(self, *args, **kwargs):
+        agendamento = kwargs.pop('agendamento', None)
+        super(AtestadoMedicoForm, self).__init__(*args, **kwargs)
+        if agendamento:
+            self.fields['paciente'].initial = agendamento.paciente.nome
+            self.fields['profissional'].initial = agendamento.profissional_saude.nome
+            self.fields['data_agendamento'].initial = agendamento.data_agendamento.strftime('%Y-%m-%d %H:%M')
+            self.fields['data_criacao'].initial = timezone.now().strftime('%Y-%m-%d %H:%M')

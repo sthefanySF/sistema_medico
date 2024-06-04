@@ -652,6 +652,37 @@ def pdf_prontuario_medico(request, paciente_id):
     response['Content-Disposition'] = 'attachment; filename="prontuario_medico.pdf"'
     return response
 
-def atestado_medico(request, paciente_id):
-    paciente = Paciente.objects.get(pk=paciente_id)
-    return render(request, 'consultas/criar_atestado_medico.html', {'paciente': paciente})
+
+
+
+class AtestadoMedicoCreate(CreateView):
+    model = AtestadoMedico
+    form_class = AtestadoMedicoForm
+    template_name = 'consultas/atestado_medico.html'
+
+    def form_valid(self, form):
+        agendamento_id = self.kwargs['agendamento_id']
+        agendamento = get_object_or_404(Agendamento, id=agendamento_id)
+        form.instance.agendamento = agendamento
+        return super().form_valid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        agendamento_id = self.kwargs['agendamento_id']
+        agendamento = get_object_or_404(Agendamento, id=agendamento_id)
+        kwargs['agendamento'] = agendamento
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        agendamento_id = self.kwargs['agendamento_id']
+        agendamento = get_object_or_404(Agendamento, id=agendamento_id)
+        context['paciente'] = agendamento.paciente.nome
+        context['profissional'] = agendamento.profissional_saude.nome
+        context['data_agendamento'] = agendamento.data_agendamento
+        context['data_criacao'] = timezone.now()
+        return context
+
+    def get_success_url(self):
+        agendamento_id = self.kwargs['agendamento_id']
+        return reverse('atestado_medico_create', kwargs={'agendamento_id': agendamento_id})

@@ -37,8 +37,21 @@ class CampoAtendimento(admin.ModelAdmin):
     list_display = ('paciente', 'data_atendimento', 'anamnese', 'exame_fisico')    
 
 
+class CampoAtestadoMedico(admin.ModelAdmin):
+    search_fields = ['agendamento__paciente__nome', 'cid']
+    list_display = ('paciente', 'data_consulta', 'dias_afastamento', 'cid')
+
+    def paciente(self, obj):
+        return obj.agendamento.paciente.nome
+    paciente.short_description = 'Paciente'
+
+    def data_consulta(self, obj):
+        return obj.agendamento.data_agendamento
+    data_consulta.short_description = 'Data da Consulta'
+
 admin.site.register(Paciente, CampoPaciente)
 admin.site.register(Administrativo, CampoAdministrativo)
 admin.site.register(Profissionaldasaude, CampoProfissionaldasaude)
 admin.site.register(Agendamento, CampoAgendamento)
 admin.site.register(Atendimento, CampoAtendimento)
+admin.site.register(AtestadoMedico, CampoAtestadoMedico)
