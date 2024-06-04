@@ -7,14 +7,14 @@
 {% block content %}
   <div class="row justify-content-center">
     <div class="col-md-10">
-      <div class="card">
-        <div class="card-header mb-4">
-          <h4 class="text-center m-3 card-title">Editar Paciente</h4>
+      <div class="">
+        <div class="mb-4">
+          <h4 class="text-center mb-3 text-white">EDITAR PACIENTE</h4>
         </div>
 
         <div class="col-md-10 offset-md-1 mb-2">
           <div class="m-2">
-            <form action="{% url 'pacienteEditar'  paciente.id  %}" method="POST">
+            <form action="{% url 'pacienteEditar'  paciente.id  %}" method="POST" class="pt-4" id="glass">
               {% csrf_token %}
 
               <div class="m-4">

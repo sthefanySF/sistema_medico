@@ -5,12 +5,12 @@
 {% endblock %}
 
 {% block content %}
-  <div class="container mt-5">
-    <div class="text-center mb-4 custom-title">
-      <h4>Atendimento</h4>
+  <div class="container">
+    <div class="text-center mb-4 text-white">
+      <h4>ATENDIMENTO</h4>
     </div>
 
-    <dl class="row border p-3 align-items-start">
+    <dl class="row p-3 border align-items-start" id="info-atendimento">
       <dt class="col-sm-3 border-bottom label-title">Nome do paciente:</dt>
       <dd class="col-sm-9 border-bottom">{{ agendamento.paciente.nome }}</dd>
 
@@ -253,6 +253,12 @@
     
     textarea:active {
       transform: scale(0.99);
+    }
+
+    #info-atendimento {
+      background-color: #f8f9fa;
+      margin-bottom: 20px;
+      border-radius: 5px;
     }
   </style>
 {% endblock %}

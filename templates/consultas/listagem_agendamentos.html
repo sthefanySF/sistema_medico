@@ -8,50 +8,53 @@
 
 {% if messages %}{% include 'messages.html' %}{% endif %}
 
-<div class="text-center mb-4 custom-title">
-  <h4>Lista de Agendamentos Gerais</h4>
+<div class="text-center text-white mb-4">
+  <h4>LISTA DE AGENDAMENTOS GERAIS</h4>
 </div>
 
      {#  Botões  #}
 
-<div class="d-flex justify-content-between">
+<div class="d-flex justify-content-between align-items-center">
 
-  <a class="btn btn-danger" href="{% url 'home' %}" style="margin-bottom: 3px">
+  <a class="btn btn-danger" href="{% url 'home' %}" style="margin-bottom: 3px; max-height: 50px; box-shadow: 0px 2px 20px -10px rgb(0, 0, 0);">
     Voltar
   </a>
+
+  <div class="mb-4 d-flex align-items-center" id="">
+    <form method="get" class="mx-auto" style="max-width: 600px;">
+      <div class="row">
+        {% comment %} <div class="col" style="margin-bottom: 3px">
+          <input type="text" name="cpf" class="form-control" placeholder="CPF do paciente">
+        </div>
   
-  <a class="btn btn-primary" href="{% url 'agendamentoCreate' %}" style="margin-bottom: 3px">
+        <div class="col" style="margin-bottom: 3px">
+          <input type="date" name="data_agendamento" class="form-control" placeholder="Data do agendamento">
+        </div> {% endcomment %}
+  
+        <div class="row align-items-end">
+          <div class="col-md-6 mb-3" style="width: auto;">
+            <label for="profissional_saude" class="form-label text-white">Profissional de Saúde:</label>
+            <select name="profissional_saude" id="profissional_saude" class="form-select">
+              <option value="" selected>Selecione um profissional</option>
+              <option value="todos" class="destacado">Listar Todos</option>
+              {% for profissional in profissionais_saude %}
+                  <option value="{{ profissional.id }}" {% if request.GET.profissional_saude == profissional.id|stringformat:"s" %}selected{% endif %}>{{ profissional.nome }}</option>
+              {% endfor %}
+          </select>
+          </div>
+        </div>
+      </div>
+        
+    </form>
+  </div>
+  
+  <a class="btn btn-primary" href="{% url 'agendamentoCreate' %}" style="margin-bottom: 3px; max-height: 50px; box-shadow: 0px 2px 20px -10px rgb(0, 0, 0);">
     Agendar
   </a>
 </div>
 
-<div class="mb-4 d-flex align-items-center">
-  <form method="get" class="mx-auto" style="max-width: 600px;">
-    <div class="row">
-      {% comment %} <div class="col" style="margin-bottom: 3px">
-        <input type="text" name="cpf" class="form-control" placeholder="CPF do paciente">
-      </div>
 
-      <div class="col" style="margin-bottom: 3px">
-        <input type="date" name="data_agendamento" class="form-control" placeholder="Data do agendamento">
-      </div> {% endcomment %}
 
-      <div class="row align-items-end">
-        <div class="col-md-6 mb-3" style="width: auto;">
-          <label for="profissional_saude" class="form-label">Profissional de Saúde:</label>
-          <select name="profissional_saude" id="profissional_saude" class="form-select">
-            <option value="" selected>Selecione um profissional</option>
-            <option value="todos" class="destacado">Listar Todos</option>
-            {% for profissional in profissionais_saude %}
-                <option value="{{ profissional.id }}" {% if request.GET.profissional_saude == profissional.id|stringformat:"s" %}selected{% endif %}>{{ profissional.nome }}</option>
-            {% endfor %}
-        </select>
-        </div>
-      </div>
-    </div>
-      
-  </form>
-</div>
 
 
 
