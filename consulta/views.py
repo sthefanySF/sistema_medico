@@ -660,29 +660,44 @@ class AtestadoMedicoCreate(CreateView):
     form_class = AtestadoMedicoForm
     template_name = 'consultas/atestado_medico.html'
 
+    # Método chamado quando o formulário é válido
     def form_valid(self, form):
+        # Obtém o ID do agendamento a partir dos argumentos da URL
         agendamento_id = self.kwargs['agendamento_id']
+        # Obtém o objeto Agendamento associado ao ID
         agendamento = get_object_or_404(Agendamento, id=agendamento_id)
+        # Define o agendamento do atestado como o agendamento obtido
         form.instance.agendamento = agendamento
         return super().form_valid(form)
 
+    # Método para passar argumentos extras para o formulário
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
+        # Obtém o ID do agendamento a partir dos argumentos da URL
         agendamento_id = self.kwargs['agendamento_id']
+        # Obtém o objeto Agendamento associado ao ID
         agendamento = get_object_or_404(Agendamento, id=agendamento_id)
+        # Passa o objeto Agendamento como argumento adicional para o formulário
         kwargs['agendamento'] = agendamento
         return kwargs
 
+    # Método para adicionar dados adicionais ao contexto do template
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        # Obtém o ID do agendamento a partir dos argumentos da URL
         agendamento_id = self.kwargs['agendamento_id']
+        # Obtém o objeto Agendamento associado ao ID
         agendamento = get_object_or_404(Agendamento, id=agendamento_id)
+        # Adiciona informações do agendamento ao contexto
         context['paciente'] = agendamento.paciente.nome
         context['profissional'] = agendamento.profissional_saude.nome
         context['data_agendamento'] = agendamento.data_agendamento
         context['data_criacao'] = timezone.now()
         return context
 
+    # Método para obter a URL de redirecionamento após o sucesso do envio do formulário
     def get_success_url(self):
+        # Obtém o ID do agendamento a partir dos argumentos da URL
         agendamento_id = self.kwargs['agendamento_id']
+        # Retorna a URL de redirecionamento para a criação de um novo atestado com base no ID do agendamento
         return reverse('atestado_medico_create', kwargs={'agendamento_id': agendamento_id})

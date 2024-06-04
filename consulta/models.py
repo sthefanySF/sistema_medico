@@ -209,26 +209,31 @@ class Atendimento(models.Model):
 
 class AtestadoMedico(models.Model):
     agendamento = models.ForeignKey(Agendamento, on_delete=models.CASCADE, related_name='atestados')
-    dias_afastamento = models.IntegerField()
-    cid = models.CharField(max_length=10)
-    data_criacao = models.DateTimeField(auto_now_add=True)
+    # Define uma relação de chave estrangeira com o modelo Agendamento, indicando que cada atestado está associado a um agendamento
+    dias_afastamento = models.IntegerField()  # Número de dias de afastamento do paciente
+    cid = models.CharField(max_length=10)  # Código CID da condição médica do paciente
+    data_criacao = models.DateTimeField(auto_now_add=True)  # Data e hora de criação do atestado, com valor padrão automático
 
     @property
     def paciente(self):
         return self.agendamento.paciente
+    # Propriedade que retorna o paciente associado ao agendamento deste atestado
 
     @property
     def data_consulta(self):
         return self.agendamento.data_agendamento
+    # Propriedade que retorna a data do agendamento associado a este atestado
 
     @property
     def profissional(self):
         return self.agendamento.profissional_saude
+    # Propriedade que retorna o profissional de saúde associado ao agendamento deste atestado
 
     def __str__(self):
         return f"Atestado Médico para {self.paciente.nome} em {self.data_consulta.date()}"
+    # Método que retorna uma representação legível do objeto AtestadoMedico, incluindo o nome do paciente e a data da consulta
 
     class Meta:
-        ordering = ['-data_criacao']
-        verbose_name = 'Atestado Médico'
-        verbose_name_plural = 'Atestados Médicos'
+        ordering = ['-data_criacao']  # Define a ordem padrão de consulta como decrescente pela data de criação
+        verbose_name = 'Atestado Médico'  # Nome singular utilizado nos painéis de administração
+        verbose_name_plural = 'Atestados Médicos'  # Nome plural utilizado nos painéis de administração
