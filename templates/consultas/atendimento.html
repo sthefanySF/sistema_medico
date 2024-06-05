@@ -101,10 +101,16 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Finalizar Atendimento </button>
+        <div class="d-flex justify-content-center">
+          <!-- Botão para emitir atestado -->
+          <a href="{% url 'atestado_medico_create' agendamento_id=agendamento.id %}" class="btn btn-primary">Emitir Atestado</a>
+
+        </div>
+      
       </form>
     </div>
 
-    <h6 class="d-flex justify-content-center py-3">ATESTADO MEDICO</h6>
+    {% comment %} <h6 class="d-flex justify-content-center py-3">ATESTADO MEDICO</h6>
 
     <div class="atestado">
       <a href="" target="_blank" class="print-btn" style="border: none; float: right;">
@@ -125,9 +131,9 @@
           </span>
           Print
         </button>
-      </a>
+      </a> {% endcomment %}
 
-      <form action="">
+      {% comment %} <form action="">
         <label for="dias">Atesto que o paciente <span>{{ paciente.nome }}</span> esteve em consulta no dia <span>{% now 'd/m/Y' %}</span>, e necessita de <span><input class="input" name="dias" type="text" style="" /></span> dias de afastamento de suas atividades normais, para sua convalescença</label>
 
         <label for="cid">CID:</label>
@@ -139,7 +145,7 @@
 
         <img src="" alt="assinatura do medico" />
       </form>
-    </div>
+    </div> {% endcomment %}
 
     <h6 class="d-flex justify-content-center py-3">RECEITA MEDICA</h6>
 
