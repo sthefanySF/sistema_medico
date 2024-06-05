@@ -22,7 +22,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth.hashers import make_password
 
 from django.template.loader import render_to_string
@@ -35,6 +35,7 @@ from django.template.response import TemplateResponse
 # PARA ENVIAR E-MAIL
 from django.core.mail import send_mail
 from sistema_medico.settings import EMAIL_HOST_USER
+from django.conf import settings
 
 # para weasyprint e visualizar pdf
 from django.http import FileResponse
@@ -45,6 +46,10 @@ from weasyprint import HTML
 from django.core import serializers
 from django.core.serializers import serialize
 
+# permissoes de usuario
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 def home(request):
@@ -129,8 +134,11 @@ def paciente_excluir(request, pk):
 
     return render(request, 'consultas/excluir_paciente.html', {'paciente': paciente})
 
+def is_administrativo(user):
+    return user.groups.filter(name='administrativo').exists()
 
 @login_required
+@user_passes_test(is_administrativo)
 def listar_administrativo(request):
     administrativo = Administrativo.objects.all()
     return render(request, 'consultas/listagem_administrativo.html', {'administrativo': administrativo})
@@ -162,6 +170,9 @@ def administrativo_excluir(request, pk):
         return redirect('administrativoListagem')
 
     return render(request, 'consultas/excluir_administrativo.html', {'administrativo': administrativo})
+
+def is_profissionaldasaude(user):
+    return user.groups.filter(name='profissionais de saude').exists()
 
 @login_required
 def listar_profissionaldasaude(request):
@@ -324,82 +335,116 @@ class PacienteCreate(CreateView):
         print(form.errors)  
         return super().form_invalid(form)   
 
-class AdministrativoCreate(CreateView):
+class AdministrativoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Administrativo
-    fields = ['nome', 'data_nascimento','email','rg','cpf','sexo','matricula_siape','cargo_funcao','lotacao_de_exercicio','ddd_telefone','uf','cep','cidade','bairro','numero', 'complemento']
+    form_class = AdministrativoForm  # Substitua pelo seu formulário real
     template_name = 'consultas/cadastro_administrativo.html'
     success_url = reverse_lazy('administrativoListagem')
     
+    def test_func(self):
+        return is_administrativo(self.request.user)
+
     def form_valid(self, form):
-        messages.success(self.request, 'Cadastrado com sucesso! Um email foi enviado para definir a senha.')
-        response = super().form_valid(form)
-        
-        #usuário com base nos dados do formulário
-        username = form.cleaned_data['cpf']  
+        # Salva o formulário mas não commit para customizações adicionais
+        administrativo = form.save(commit=False)
+
+        # Criação do usuário com base nos dados do formulário
+        username = form.cleaned_data['cpf']
         email = form.cleaned_data['email']
         password = User.objects.make_random_password()  # Gera uma senha aleatória
-        #usuário associado ao Administrativo
-        usuario = User.objects.create_user(username=username, email=email, password=password)
-        #Associa o usuário criado ao campo 'usuario' do modelo Administrativo
-        self.object.usuario = usuario
-        #Armazena a senha no objeto Administrativo
-        self.object.senha_gerada = password
-        usuario.save()
-        self.object.save()
 
-        
-        return response
+        # Verifica se o nome de usuário já existe
+        if User.objects.filter(username=username).exists():
+            messages.error(self.request, 'CPF já cadastrado como nome de usuário. Por favor, utilize um CPF único.')
+            return self.form_invalid(form)
+
+        # Cria o usuário
+        usuario = User.objects.create_user(username=username, email=email, password=password)
+
+        # Associa o usuário criado ao campo 'usuario' do modelo Administrativo
+        administrativo.usuario = usuario
+
+        # Armazena a senha gerada no objeto Administrativo
+        administrativo.senha_gerada = password
+
+        # Salva o objeto Administrativo
+        administrativo.save()
+
+        # Adiciona o usuário ao grupo "administrativos"
+        grupo_administrativo = Group.objects.get(name='administrativo')
+        usuario.groups.add(grupo_administrativo)
+
+        # Enviar e-mail de confirmação (opcional)
+        assunto = 'Sistema Médico Pericial - UFAC - Confirmação de Cadastro'
+        message = f'Olá {administrativo.nome}! Seu cadastro foi confirmado com sucesso! ' \
+                  f'Seu login é o seu CPF. \n Por favor, clique no link abaixo para ' \
+                  f'redefinir sua senha: \n www.google.com.br'
+        try:
+            send_mail(assunto, message, EMAIL_HOST_USER, [email])
+            msg = 'Cadastrado com sucesso! Enviamos um e-mail de recuperação de senha.'
+        except:
+            msg = 'Cadastro realizado com sucesso!'
+
+        messages.success(self.request, msg)
+        return super().form_valid(form)
 
     def form_invalid(self, form):
         messages.error(self.request, 'Erro! Verifique os campos preenchidos e tente novamente.')
         return super().form_invalid(form)
 
+class ProfissionaldasaudeCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    model = Profissionaldasaude
+    form_class = ProfissionaldasaudeForm
+    template_name = 'consultas/cadastro_profissionaldasaude.html'
+    success_url = reverse_lazy('profissionaldasaudeListagem')
+    
+    def teste_func(self):
+        return is_profissionaldasaude(self.request.user)
 
-# CÓDIGO DA RAQUEL
-def ProfissionaldasaudeCreate(request):
+    def form_valid(self, form):
+        profissional = form.save(commit=False)
+        
+        username = form.cleaned_data['cpf']
+        email = form.cleaned_data['email']
+        password = User.objects.make_random_password()
+        
+        # Verifica se o nome de usuário já existe
+        if User.objects.filter(username=username).exists():
+            messages.error(self.request, 'CPF já cadastrado como nome de usuário. Por favor, utilize um CPF único.')
+            return self.form_invalid(form)
+        
+                # Cria o usuário
+        usuario = User.objects.create_user(username=username, email=email, password=password)
 
-    if request.method == 'POST':
-        formps = ProfissionaldasaudeForm(request.POST)
-        if formps.is_valid():
-            ps = formps.save(commit=False)
-            ps.save()
+        # Associa o usuário criado ao campo 'usuario' do modelo Profissionaldasaude
+        profissional.usuario = usuario
 
-            # Enviar e-mail de confirmação
+        # Armazena a senha gerada no objeto Profissionaldasaude
+        profissional.senha_gerada = password
+          
+        profissional.save()
+        
+        # Adiciona o usuário ao grupo "Profissionais da saude"
+        grupo_profissionaldasaude = Group.objects.get(name='profissionais de saude')
+        usuario.groups.add(grupo_profissionaldasaude)
 
-            # Variável obtendo campo 'email' do formulário
-            mail = request.POST.get('email')
+        # Enviar e-mail de confirmação
+        assunto = 'Sistema Médico Pericial - UFAC - Confirmação de Cadastro'
+        message = f'Olá {profissional.nome}! Seu cadastro foi confirmado com sucesso! ' \
+                  f'Seu login é o seu CPF. \n Por favor, clique no link abaixo para ' \
+                  f'redefinir sua senha: \n www.google.com.br'
+        try:
+            send_mail(assunto, message, EMAIL_HOST_USER, [email])
+            msg = 'Cadastrado com sucesso! Enviamos um e-mail de recuperação de senha.'
+        except:
+            msg = 'Cadastro realizado com sucesso!'
 
-            # Assunto no email
-            assunto = 'Sistema Médico Pericial - UFAC - Confirmação de Cadastro '
+        messages.success(self.request, msg)
+        return super().form_valid(form)
 
-            # Corpo do email
-            message = u'Olá %s! Seu cadastro foi confirmado com sucesso! ' \
-                      u'Seu login é o seu CPF. \n Por favor, clique no link abaixo para ' \
-                      u'redefinir sua senha: \n' \
-                      u'www.google.com.br' % (request.POST.get('nome'))
-
-            # Estrutura de controle try-except do python.
-            try:
-                # send_mail: função do django para envio de emails e seus argumentos.
-                # EMAIL_HOST_USER é o remetente.
-
-                send_mail(assunto, message, EMAIL_HOST_USER, [mail])
-                msg = 'Cadastrado com sucesso! Enviamos um e-mail de recuperação de senha.'
-
-            except:
-                # Em caso de falha e o e-mail não for encaminhado
-                msg = 'Cadastro realizado com sucesso!'
-
-
-            messages.success(request, msg)
-            return redirect(reverse_lazy('profissionaldasaudeListagem'))
-        else:
-            messages.error(request, 'Corrija o formulário!')
-
-    else:
-        formps = ProfissionaldasaudeForm()
-
-    return TemplateResponse(request, 'consultas/cadastro_profissionaldasaude.html', locals())
+    def form_invalid(self, form):
+        messages.error(self.request, 'Corrija o formulário!')
+        return super().form_invalid(form)
 
 
 
@@ -486,10 +531,29 @@ def download_comprovante(request, pk):
     return response
 
 
-class AtendimentoCreate(CreateView):
+@login_required
+@user_passes_test(is_profissionaldasaude)
+def criar_atendimento(request, agendamento_id):
+    if request.method == 'POST':
+        form = AtendimentoForm(request.POST)
+        if form.is_valid():
+            atendimento = form.save(commit=False)
+            atendimento.agendamento_id = agendamento_id
+            atendimento.save()
+            messages.success(request, 'Atendimento criado com sucesso!')
+            return redirect('listaAtendimentos')
+    else:
+        form = AtendimentoForm()
+
+    return render(request, 'consultas/atendimento_form.html', {'form': form})
+
+class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Atendimento
     form_class = AtendimentoForm
     template_name = 'consultas/atendimento.html'
+    
+    def test_func(self):
+        return is_profissionaldasaude(self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -652,9 +716,6 @@ def pdf_prontuario_medico(request, paciente_id):
     response['Content-Disposition'] = 'attachment; filename="prontuario_medico.pdf"'
     return response
 
-
-
-
 class AtestadoMedicoCreate(CreateView):
     model = AtestadoMedico
     form_class = AtestadoMedicoForm
@@ -701,3 +762,4 @@ class AtestadoMedicoCreate(CreateView):
         agendamento_id = self.kwargs['agendamento_id']
         # Retorna a URL de redirecionamento para a criação de um novo atestado com base no ID do agendamento
         return reverse('atestado_medico_create', kwargs={'agendamento_id': agendamento_id})
+
