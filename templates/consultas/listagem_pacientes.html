@@ -9,7 +9,6 @@
   {# Verifica se há message na views e mostra caso true #}
   {% if messages %}{% include 'messages.html' %}{% endif %}
 
-  
   <h4 class="text-center mb-5 text-white">LISTA DE PACIENTES</h4>
   <div class="mb-4" id="glass">
     <div class="d-flex justify-content-between pb-3">
@@ -29,7 +28,7 @@
         <th colspan="7" style="text-align: center;">Nome</th>
       </tr>
     </thead>
-    <tbody class="collapse-table" style="display: ;">
+    <tbody class="collapse-table">
       {% for paciente in pacientes %}
         <tr data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
           <td class="paciente-nome" colspan="3">
@@ -58,15 +57,56 @@
                 </div>
                 <div class="btn-group" role="group" aria-label="Ações">
                   <a href="{% url 'pacienteEditar' paciente.id %}" class="btn btn-primary">Editar</a>
-                  <a href="{% url 'pacienteExcluir' paciente.id %}" class="btn btn-danger ms-1">Excluir</a>
+                  <button type="button" class="btn btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#excluirModal{{ paciente.id }}">Excluir</button>
                 </div>
               </div>
             </div>
           </td>
         </tr>
+        <!-- Modal de Exclusão -->
+        <div class="modal fade" id="excluirModal{{ paciente.id }}" tabindex="-1" aria-labelledby="excluirModalLabel{{ paciente.id }}" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="excluirModalLabel{{ paciente.id }}">Confirmar Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <p>Você tem certeza de que deseja excluir este paciente?</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" onclick="excluirPaciente({{ paciente.id }})">Confirmar</button>
+              </div>
+            </div>
+          </div>
+        </div>
       {% endfor %}
     </tbody>
   </table>
+  
+  <script>
+    function excluirPaciente(pacienteId) {
+      $.ajax({
+        type: 'POST',
+        url: '{% url "pacienteExcluir" 0 %}'.replace('0', pacienteId),
+        data: {
+          'csrfmiddlewaretoken': '{{ csrf_token }}'
+        },
+        success: function(response) {
+          if (response.success) {
+            //alert('Paciente excluído com sucesso.');
+            location.reload();
+          } else {
+            alert('Erro: ' + response.error);
+          }
+        },
+        error: function(response) {
+          alert('Ocorreu um erro ao excluir o paciente.');
+        }
+      });
+    }
+  </script>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
@@ -137,7 +177,6 @@
     })
   </script>
 
-
   <style>
     .tm-section-down-arrow {
       width: 100%;
@@ -145,5 +184,3 @@
     }
   </style>
 {% endblock %}
-
-

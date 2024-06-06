@@ -21,64 +21,65 @@ from consulta.views import *
 from consulta import views
 
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
 
-    # Login
+    # Login and Logout
     path('login/', logar, name='login'),
     path('logout/', sair, name='sair'),
-
+    
     # Recuperar senha
     path('login/', include('login.urls')),
 
-
+    # Cadastro
     path('cadastro/administrativo/', AdministrativoCreate.as_view(), name='administrativoCreate'),
-
     path('cadastro/profissionaldasaude/', ProfissionaldasaudeCreate.as_view(), name='profissionaldasaudeCreate'),
-    # path('cadastro/profissionaldasaude/', ProfissionaldasaudeCreate.as_view(), name='profissionaldasaudeCreate'),
-
-    path('cadastro/paciente', PacienteCreate.as_view(), name='pacienteCreate'),
-
+    path('cadastro/paciente/', PacienteCreate.as_view(), name='pacienteCreate'),
+    
+    # Agendamento
     path('agendamento/form', AgendamentoCreate.as_view(), name='agendamentoCreate' ),
     path('agendamento/lista', listar_agendamentos, name='agendamentoListagem'),
+    path('agendamentos/<int:pk>/confirmar/', agendamento_confirmar, name='agendamentoConfirmar'),
+    path('agendamentos/<int:pk>/ausente/', agendamento_ausente, name='agendamentoAusente'),
+    path('agendamento/<int:pk>/confirmar/', confirm_agendamento, name='confirmAgendamento'),
+    path('agendamento/<int:pk>/download/', download_comprovante, name='downloadComprovante'),
+    path('reagendar/agendamento/<int:pk>/', views.reagendar_agendamento, name='reagendarAgendamento'),
+    path('cancelar_agendamento/<int:agendamento_id>/', cancelar_agendamento, name='cancelar_agendamento'),
+    
+    # Atendimento
+    path('atendimento/criar/<int:agendamento_id>', AtendimentoCreate.as_view(), name='criar_atendimento'),
+    path('atendimentos/', lista_atendimentos, name='listaAtendimentos'),
+    path('atendimentos/<int:atendimento_id>/', visualizar_atendimento, name='visualizarAtendimento'),
+    path('confirmar-atendimento/<int:agendamento_id>/', confirmar_atendimento, name='confirmar_atendimento'),
+    path('download-comprovante-atendimento/<int:atendimento_id>/', download_comprovante_atendimento, name='download_comprovante_atendimento'),
+    path('visualizar-comprovante-atendimento/<int:atendimento_id>/', views.visualizar_comprovante_atendimento, name='visualizar_comprovante_atendimento'),
+    
+    # Prontuario
+    path('prontuario_medico/<int:paciente_id>/', views.prontuario_medico, name='prontuario_medico'),
+    path('filtrar_prontuarios/', filtrar_prontuarios, name='filtrar_prontuarios'),
+    
+    # Atestado Medico
+    path('atestado_medico/create/<int:agendamento_id>/', AtestadoMedicoCreate.as_view(), name='atestado_medico_create'),
 
+    #pdfs
+    path('visualizar-pdf-exames/<int:atendimento_id>/', views.visualizar_pdf_exames, name='visualizar_pdf_exames'),
+    path('pdf_prontuario_medico/<int:paciente_id>/', views.pdf_prontuario_medico, name='pdf_prontuario_medico'),
+
+    # Listagens
     path('pacientes/', listar_pacientes, name= 'pacienteListagem' ),
     path('profissionaldasaude/', listar_profissionaldasaude, name= 'profissionaldasaudeListagem'),
     path('administrativo/', listar_administrativo, name= 'administrativoListagem'),
+
+    # Edição e Exclusão
     path('paciente/<int:pk>/editar/', paciente_editar, name='pacienteEditar'),
     path('paciente/<int:pk>/excluir/', paciente_excluir, name='pacienteExcluir'),
     path('administrativo/<int:pk>/editar/', administrativo_editar, name='administrativoEditar'),
     path('administrativo/<int:pk>/excluir/', administrativo_excluir, name='administrativoExcluir'),
     path('profissionaldasaude/<int:pk>/editar/', profissionaldasaude_editar, name='profissionaldasaudeEditar'),
     path('profissionaldasaude/<int:pk>/excluir/', profissionaldasaude_excluir, name='profissionaldasaudeExcluir'),
-    path('agendamentos/<int:pk>/confirmar/', agendamento_confirmar, name='agendamentoConfirmar'),
-    path('agendamentos/<int:pk>/ausente/', agendamento_ausente, name='agendamentoAusente'),
-    path('reagendar/agendamento/<int:pk>/', views.reagendar_agendamento, name='reagendarAgendamento'),
-    path('cancelar_agendamento/<int:agendamento_id>/', cancelar_agendamento, name='cancelar_agendamento'),
-    path('atendimento/criar/<int:agendamento_id>', AtendimentoCreate.as_view(), name='criar_atendimento'),
-    path('atendimentos/', lista_atendimentos, name='listaAtendimentos'),
-    path('atendimentos/<int:atendimento_id>/', visualizar_atendimento, name='visualizarAtendimento'),
-    # path('login/', user_login, name='login'),
-    path('agendamento/<int:pk>/confirmar/', confirm_agendamento, name='confirmAgendamento'),
-    path('agendamento/<int:pk>/download/', download_comprovante, name='downloadComprovante'),
-    path('confirmar-atendimento/<int:agendamento_id>/', confirmar_atendimento, name='confirmar_atendimento'),
-    path('download-comprovante-atendimento/<int:atendimento_id>/', download_comprovante_atendimento, name='download_comprovante_atendimento'),
-    path('visualizar-pdf-exames/<int:atendimento_id>/', views.visualizar_pdf_exames, name='visualizar_pdf_exames'),
-    path('visualizar-comprovante-atendimento/<int:atendimento_id>/', views.visualizar_comprovante_atendimento, name='visualizar_comprovante_atendimento'),
-    # path('prontuario/', prontuario_medico, name='prontuario_medico'),
-    path('prontuario_medico/<int:paciente_id>/', views.prontuario_medico, name='prontuario_medico'),
-    path('filtrar_prontuarios/', filtrar_prontuarios, name='filtrar_prontuarios'),
-    
-    
-    path('atestado_medico/create/<int:agendamento_id>/', AtestadoMedicoCreate.as_view(), name='atestado_medico_create'),
- 
-    # pdfs  
-    path('pdf_prontuario_medico/<int:paciente_id>/', views.pdf_prontuario_medico, name='pdf_prontuario_medico'),
-    
-    # path('cancelar/agendamento/<int:pk>/', views.cancelar_agendamento, name='cancelarAgendamento'),
-    path('', views.home, name='home'),
 
+    # Home
+    path('', views.home, name='home'),
 
 ]

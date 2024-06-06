@@ -7,6 +7,7 @@ from django.views.generic.edit import CreateView
 # from consulta.forms import AdministrativoForm, AgendamentoForm, AgendamentoReagendarForm, AtendimentoForm,
 # JustificativaCancelamentoForm, PacienteForm, PesquisaAgendamentoForm, ProfissionaldasaudeForm
 import json
+from django.http import JsonResponse
 from consulta.forms import *
 from django.views.decorators.http import require_POST
 from consulta.models import Atendimento, Paciente, Administrativo
@@ -14,6 +15,7 @@ from consulta.models import Agendamento, Paciente, Profissionaldasaude
 from datetime import date
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
+from django.shortcuts import get_object_or_404, redirect
 
 
 from django.contrib import messages
@@ -123,22 +125,26 @@ def paciente_editar(request, pk):
 
         return render(request, 'consultas/editar_paciente.html', {'form': form, 'paciente': paciente})
 
+@require_POST
 def paciente_excluir(request, pk):
     paciente = get_object_or_404(Paciente, pk=pk)
-
-    if request.method == 'POST':
+    
+    try:
         paciente.delete()
-        messages.error(request, 'Paciente excluido')
-        
+        messages.success(request, 'Paciente excluído')
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'success': True})
         return redirect('pacienteListagem')
+    except Exception as e:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'success': False, 'error': str(e)})
+        return render(request, 'consultas/excluir_paciente.html', {'paciente': paciente})
 
-    return render(request, 'consultas/excluir_paciente.html', {'paciente': paciente})
 
 def is_administrativo(user):
     return user.groups.filter(name='administrativo').exists()
 
 @login_required
-@user_passes_test(is_administrativo)
 def listar_administrativo(request):
     administrativo = Administrativo.objects.all()
     return render(request, 'consultas/listagem_administrativo.html', {'administrativo': administrativo})
@@ -250,8 +256,7 @@ def agendamento_ausente(request, pk):
     messages.warning(request, 'Agendamento definido como ausente!')
     return redirect('agendamentoListagem')
 
-from django.shortcuts import get_object_or_404, redirect
-from django.contrib import messages
+
 
 def reagendar_agendamento(request, pk):
     agendamento = get_object_or_404(Agendamento, pk=pk)
@@ -335,14 +340,12 @@ class PacienteCreate(CreateView):
         print(form.errors)  
         return super().form_invalid(form)   
 
-class AdministrativoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+class AdministrativoCreate(CreateView):
     model = Administrativo
     form_class = AdministrativoForm  # Substitua pelo seu formulário real
     template_name = 'consultas/cadastro_administrativo.html'
     success_url = reverse_lazy('administrativoListagem')
-    
-    def test_func(self):
-        return is_administrativo(self.request.user)
+
 
     def form_valid(self, form):
         # Salva o formulário mas não commit para customizações adicionais
@@ -392,15 +395,12 @@ class AdministrativoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         messages.error(self.request, 'Erro! Verifique os campos preenchidos e tente novamente.')
         return super().form_invalid(form)
 
-class ProfissionaldasaudeCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+class ProfissionaldasaudeCreate(CreateView):
     model = Profissionaldasaude
     form_class = ProfissionaldasaudeForm
     template_name = 'consultas/cadastro_profissionaldasaude.html'
     success_url = reverse_lazy('profissionaldasaudeListagem')
     
-    def teste_func(self):
-        return is_profissionaldasaude(self.request.user)
-
     def form_valid(self, form):
         profissional = form.save(commit=False)
         
@@ -532,7 +532,6 @@ def download_comprovante(request, pk):
 
 
 @login_required
-@user_passes_test(is_profissionaldasaude)
 def criar_atendimento(request, agendamento_id):
     if request.method == 'POST':
         form = AtendimentoForm(request.POST)
@@ -552,9 +551,18 @@ class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     form_class = AtendimentoForm
     template_name = 'consultas/atendimento.html'
     
+    # def test_func(self):
+    #     return is_profissionaldasaude(self.request.user)
+    
+    # permite todos acessarem
+    # def test_func(self):
+    #     return True
+    
+    # nega apenas o administrativo
     def test_func(self):
-        return is_profissionaldasaude(self.request.user)
-
+        user = self.request.user
+        return not is_administrativo(user)
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         agendamento_id = self.kwargs['agendamento_id']
