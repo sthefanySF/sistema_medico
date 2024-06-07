@@ -63,16 +63,58 @@
                   </div>
                   <div class="btn-group" role="group" aria-label="Ações">
                     <a href="{% url 'profissionaldasaudeEditar' profissionaldasaude.id %}" class="btn btn-primary">Editar</a>
-                    <a href="{% url 'profissionaldasaudeExcluir' profissionaldasaude.id %}" class="btn btn-danger ms-1">Excluir</a>
+                    <button type="button" class="btn btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#excluirModal{{ profissionaldasaude.id }}">Excluir</button>
                   </div>
                 </div>
               </div>
             </td>
           </tr>
+
+          <!-- Modal de Exclusão -->
+          <div class="modal fade" id="excluirModal{{ profissionaldasaude.id }}" tabindex="-1" aria-labelledby="excluirModalLabel{{ profissionaldasaude.id }}" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="excluirModalLabel{{ profissionaldasaude.id }}">Confirmar Exclusão</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <p>Você tem certeza de que deseja excluir {{ profissionaldasaude.nome }}?</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="button" class="btn btn-danger" onclick="excluirProfissional({{ profissionaldasaude.id }})">Confirmar</button>
+                </div>
+              </div>
+            </div>
+          </div>
         {% endfor %}
       </tbody>
     </table>
   </div>
+
+  <script>
+    function excluirProfissional(profissionaldasaudeId) {
+      $.ajax({
+        type: 'POST',
+        url: '{% url "profissionaldasaudeExcluir" 0 %}'.replace('0', profissionaldasaudeId),
+        data: {
+          'csrfmiddlewaretoken': '{{ csrf_token }}'
+        },
+        success: function(response) {
+          if (response.success) {
+            //alert('Administrativo excluído com sucesso.');
+            location.reload();
+          } else {
+            alert('Erro: ' + response.error);
+          }
+        },
+        error: function(response) {
+          alert('Ocorreu um erro ao excluir o proffisional da saude.');
+        }
+      });
+    }
+  </script>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
