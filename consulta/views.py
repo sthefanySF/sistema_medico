@@ -166,16 +166,32 @@ def administrativo_editar(request, pk):
 
         return render(request, 'consultas/editar_administrativo.html', {'form': form, 'administrativo': administrativo})
 
+
+@require_POST
 def administrativo_excluir(request, pk):
     administrativo = get_object_or_404(Administrativo, pk=pk)
 
-    if request.method == 'POST':
+    try:
         administrativo.delete()
-        messages.error(request, 'Administrativo excluido')
-        
+        messages.success(request, 'Administrativo excluído')
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'success': True})
         return redirect('administrativoListagem')
+    except Exception as e:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'success': False, 'error': str(e)})
+        return render(request, 'consultas/excluir_administrativo.html', {'administrativo': administrativo})
 
-    return render(request, 'consultas/excluir_administrativo.html', {'administrativo': administrativo})
+# def administrativo_excluir(request, pk):
+#     administrativo = get_object_or_404(Administrativo, pk=pk)
+
+#     if request.method == 'POST':
+#         administrativo.delete()
+#         messages.error(request, 'Administrativo excluido')
+        
+#         return redirect('administrativoListagem')
+
+#     return render(request, 'consultas/excluir_administrativo.html', {'administrativo': administrativo})
 
 def is_profissionaldasaude(user):
     return user.groups.filter(name='profissionais de saude').exists()
@@ -201,16 +217,32 @@ def profissionaldasaude_editar(request, pk):
 
     return render(request, 'consultas/editar_proSaude.html', {'form': form, 'profissionaldasaude': profissionaldasaude})
 
+@require_POST
 def profissionaldasaude_excluir(request, pk):
     profissionaldasaude = get_object_or_404(Profissionaldasaude, pk=pk)
 
-    if request.method == 'POST':
+    try:
         profissionaldasaude.delete()
-        messages.error(request, 'Profissional de saúde excluido')
-        
+        messages.success(request, 'profissional da saude excluído')
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'success': True})
         return redirect('profissionaldasaudeListagem')
+    except Exception as e:
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'success': False, 'error': str(e)})
+        return render(request, 'consultas/excluir_proSaude.html', {'profissionaldasaude': profissionaldasaude})
 
-    return render(request, 'consultas/excluir_proSaude.html', {'profissionaldasaude': profissionaldasaude})
+
+# def profissionaldasaude_excluir(request, pk):
+#     profissionaldasaude = get_object_or_404(Profissionaldasaude, pk=pk)
+
+#     if request.method == 'POST':
+#         profissionaldasaude.delete()
+#         messages.error(request, 'Profissional de saúde excluido')
+        
+#         return redirect('profissionaldasaudeListagem')
+
+#     return render(request, 'consultas/excluir_proSaude.html', {'profissionaldasaude': profissionaldasaude})
 
 
 def listar_agendamentos(request):
