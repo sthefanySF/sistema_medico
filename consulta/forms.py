@@ -186,25 +186,22 @@ class AtendimentoForm(forms.ModelForm):
     class Meta:
         model = Atendimento
         fields = ['anamnese', 'exame_fisico', 'exames_complementares', 'pdf_exames', 'diagnostico', 'conduta']
-        
-class AtestadoMedicoForm(forms.ModelForm):
-    # Definição dos campos não relacionados ao modelo
-    paciente = forms.CharField(label="Paciente", disabled=True, required=False)  # Campo para o nome do paciente
-    profissional = forms.CharField(label="Profissional de Saúde", disabled=True, required=False)  # Campo para o nome do profissional de saúde
-    data_agendamento = forms.CharField(label="Data do Agendamento", disabled=True, required=False)  # Campo para a data do agendamento
-    data_criacao = forms.CharField(label="Data de Criação", disabled=True, required=False)  # Campo para a data de criação
 
+class AtestadoMedicoForm(forms.ModelForm):
     class Meta:
         model = AtestadoMedico
-        fields = ['dias_afastamento', 'cid']  # Campos do modelo que serão incluídos no formulário
+        fields = ['dias_afastamento', 'cid']
 
     def __init__(self, *args, **kwargs):
-        agendamento = kwargs.pop('agendamento', None)  # Extrai o objeto 'agendamento' dos argumentos passados
-        super(AtestadoMedicoForm, self).__init__(*args, **kwargs)  # Chama o construtor da classe pai
+        agendamento = kwargs.pop('agendamento', None)
+        super(AtestadoMedicoForm, self).__init__(*args, **kwargs)
 
-        # Preenche os campos com informações do agendamento, se fornecido
         if agendamento:
-            self.fields['paciente'].initial = agendamento.paciente.nome  # Preenche o campo do paciente com o nome do paciente do agendamento
-            self.fields['profissional'].initial = agendamento.profissional_saude.nome  # Preenche o campo do profissional com o nome do profissional do agendamento
-            self.fields['data_agendamento'].initial = agendamento.data_agendamento.strftime('%Y-%m-%d %H:%M')  # Preenche o campo da data do agendamento com a data formatada do agendamento
-            self.fields['data_criacao'].initial = timezone.now().strftime('%Y-%m-%d %H:%M')  # Preenche o campo da data de criação com a data e hora atuais
+            self.fields['paciente'] = forms.CharField(
+                initial=agendamento.paciente.nome, label="Paciente", disabled=True, required=False)
+            self.fields['profissional'] = forms.CharField(
+                initial=agendamento.profissional_saude.nome, label="Profissional de Saúde", disabled=True, required=False)
+            self.fields['data_agendamento'] = forms.CharField(
+                initial=agendamento.data_agendamento.strftime('%Y-%m-%d %H:%M'), label="Data do Agendamento", disabled=True, required=False)
+            self.fields['data_criacao'] = forms.CharField(
+                initial=timezone.now().strftime('%Y-%m-%d %H:%M'), label="Data de Criação", disabled=True, required=False)

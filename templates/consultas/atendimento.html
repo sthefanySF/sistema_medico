@@ -100,52 +100,51 @@
           </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Finalizar Atendimento </button>
-        <div class="d-flex justify-content-center">
-          <!-- Botão para emitir atestado -->
-          <a href="{% url 'atestado_medico_create' agendamento_id=agendamento.id %}" class="btn btn-primary">Emitir Atestado</a>
+        <h6 class="d-flex justify-content-center py-3">ATESTADO MÉDICO</h6>
 
+        <div class="atestado">
+          <a href="" target="_blank" class="print-btn" style="border: none; float: right;">
+            <button class="print-btn">
+              <span class="printer-wrapper">
+                <span class="printer-container">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="black" viewBox="0 0 92 75">
+                    <path stroke-width="5" stroke="black" d="M12 37.5H80C85.2467 37.5 89.5 41.7533 89.5 47V69C89.5 70.933 87.933 72.5 86 72.5H6C4.067 72.5 2.5 70.933 2.5 69V47C2.5 41.7533 6.75329 37.5 12 37.5Z"></path>
+                    <mask fill="white" id="path-2-inside-1_30_7">
+                      <path d="M12 12C12 5.37258 17.3726 0 24 0H57C70.2548 0 81 10.7452 81 24V29H12V12Z"></path>
+                    </mask>
+                    <path mask="url(#path-2-inside-1_30_7)" fill="black" d="M7 12C7 2.61116 14.6112 -5 24 -5H57C73.0163 -5 86 7.98374 86 24H76C76 13.5066 67.4934 5 57 5H24C20.134 5 17 8.13401 17 12H7ZM81 29H12H81ZM7 29V12C7 2.61116 14.6112 -5 24 -5V5C20.134 5 17 8.13401 17 12V29H7ZM57 -5C73.0163 -5 86 7.98374 86 24V29H76V24C76 13.5066 67.4934 5 57 5V-5Z"></path>
+                    <circle fill="white" r="3" cy="49" cx="78"></circle>
+                  </svg>
+                </span>
+
+                <span class="printer-page-wrapper"><span class="printer-page"></span></span>
+              </span>
+              Print
+            </button>
+          </a>
+
+          <div id="form-atestado">
+            <div class="form-group">
+              <label for="dias_afastamento">Atesto que o paciente <span>{{ form.instance.agendamento.paciente.nome }}</span> esteve em consulta no dia <span>{{ form.instance.agendamento.data_agendamento|date:'d/m/Y' }}</span>, e necessita de <span><input class="input" name="dias_afastamento" type="text" value="{{ atestado_medico_form.dias_afastamento.value }}" /></span> dias de afastamento de suas atividades normais, para sua convalescença.</label>
+            </div>
+
+            <div class="form-group">
+              <label for="cid">CID:</label>
+              <input class="input" type="text" name="cid" value="{{ atestado_medico_form.cid.value }}" style="margin-top: 20px;" />
+            </div>
+
+            <p style="text-align: center;">Rio Branco - Acre {{ timezone.now|date:'d/m/Y' }}</p>
+
+            <div class="form-group">
+              <label>Profissional de Saúde:</label>
+              <p>{{ form.instance.agendamento.profissional_saude.nome }}</p>
+            </div>
+          </div>
         </div>
-      
+
+        <button type="submit" class="btn btn-primary">Salvar Atendimento e Emitir Atestado</button>
       </form>
     </div>
-
-    {% comment %} <h6 class="d-flex justify-content-center py-3">ATESTADO MEDICO</h6>
-
-    <div class="atestado">
-      <a href="" target="_blank" class="print-btn" style="border: none; float: right;">
-        <button class="print-btn">
-          <span class="printer-wrapper">
-            <span class="printer-container">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="black" viewBox="0 0 92 75">
-                <path stroke-width="5" stroke="black" d="M12 37.5H80C85.2467 37.5 89.5 41.7533 89.5 47V69C89.5 70.933 87.933 72.5 86 72.5H6C4.067 72.5 2.5 70.933 2.5 69V47C2.5 41.7533 6.75329 37.5 12 37.5Z"></path>
-                <mask fill="white" id="path-2-inside-1_30_7">
-                  <path d="M12 12C12 5.37258 17.3726 0 24 0H57C70.2548 0 81 10.7452 81 24V29H12V12Z"></path>
-                </mask>
-                <path mask="url(#path-2-inside-1_30_7)" fill="black" d="M7 12C7 2.61116 14.6112 -5 24 -5H57C73.0163 -5 86 7.98374 86 24H76C76 13.5066 67.4934 5 57 5H24C20.134 5 17 8.13401 17 12H7ZM81 29H12H81ZM7 29V12C7 2.61116 14.6112 -5 24 -5V5C20.134 5 17 8.13401 17 12V29H7ZM57 -5C73.0163 -5 86 7.98374 86 24V29H76V24C76 13.5066 67.4934 5 57 5V-5Z"></path>
-                <circle fill="white" r="3" cy="49" cx="78"></circle>
-              </svg>
-            </span>
-
-            <span class="printer-page-wrapper"><span class="printer-page"></span></span>
-          </span>
-          Print
-        </button>
-      </a> {% endcomment %}
-
-      {% comment %} <form action="">
-        <label for="dias">Atesto que o paciente <span>{{ paciente.nome }}</span> esteve em consulta no dia <span>{% now 'd/m/Y' %}</span>, e necessita de <span><input class="input" name="dias" type="text" style="" /></span> dias de afastamento de suas atividades normais, para sua convalescença</label>
-
-        <label for="cid">CID:</label>
-        <input class="input" type="text" style="margin-top: 20px;" name="cid" />
-
-        <p style="text-align: center;">
-          Rio Branco - Acre{% now 'd/m/Y' %}
-        </p>
-
-        <img src="" alt="assinatura do medico" />
-      </form>
-    </div> {% endcomment %}
 
     <h6 class="d-flex justify-content-center py-3">RECEITA MEDICA</h6>
 
@@ -172,11 +171,11 @@
 
       <form action="">
         <div class="receita-tipo">
-          <input name="radio" type="radio" checked>
+          <input name="radio" type="radio" checked />
           <label for="radio">Branca</label>
-          <input name="radio" type="radio">
+          <input name="radio" type="radio" />
           <label for="radio">Amarela</label>
-          <input name="radio" type="radio">
+          <input name="radio" type="radio" />
           <label for="radio">Azul</label>
         </div>
         <textarea name="" id="" style="width: 100%;height: 200px;"></textarea>
@@ -199,8 +198,7 @@
   </script>
 
   <style>
-
-    div.atestado form {
+    #form-atestado {
       border: 1px solid #ccc;
       padding: 25px;
       border-radius: 5px;
@@ -254,7 +252,7 @@
     textarea:active {
       transform: scale(0.99);
     }
-
+    
     #info-atendimento {
       background-color: #f8f9fa;
       margin-bottom: 20px;

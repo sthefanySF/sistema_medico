@@ -11,7 +11,7 @@ from django.http import JsonResponse
 from consulta.forms import *
 from django.views.decorators.http import require_POST
 from consulta.models import Atendimento, Paciente, Administrativo
-from consulta.models import Agendamento, Paciente, Profissionaldasaude
+from consulta.models import Agendamento, Paciente, Profissionaldasaude, AtestadoMedico
 from datetime import date
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
@@ -334,7 +334,15 @@ def cancelar_agendamento(request, agendamento_id):
 def visualizar_atendimento(request, atendimento_id):
     atendimento = get_object_or_404(Atendimento, id=atendimento_id)
     paciente = atendimento.agendamento.paciente
-    return render(request, 'consultas/visualizar_atendimento.html', {'atendimento': atendimento, 'paciente': paciente})
+    try:
+        atestado = AtestadoMedico.objects.get(agendamento=atendimento.agendamento)
+    except AtestadoMedico.DoesNotExist:
+        atestado = None
+    return render(request, 'consultas/visualizar_atendimento.html', {
+        'atendimento': atendimento,
+        'paciente': paciente,
+        'atestado': atestado
+    })
 
 def lista_atendimentos(request):
     atendimentos = Atendimento.objects.all()
@@ -583,14 +591,6 @@ class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     form_class = AtendimentoForm
     template_name = 'consultas/atendimento.html'
     
-    # def test_func(self):
-    #     return is_profissionaldasaude(self.request.user)
-    
-    # permite todos acessarem
-    # def test_func(self):
-    #     return True
-    
-    # nega apenas o administrativo
     def test_func(self):
         user = self.request.user
         return not is_administrativo(user)
@@ -600,23 +600,54 @@ class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         agendamento_id = self.kwargs['agendamento_id']
         agendamento = get_object_or_404(Agendamento, id=agendamento_id)
         context['agendamento'] = agendamento
+        context['atestado_medico_form'] = AtestadoMedicoForm(agendamento=agendamento)
         return context
 
-    def form_valid(self, form):
+    def post(self, request, *args, **kwargs):
+        self.object = None
         agendamento_id = self.kwargs['agendamento_id']
         agendamento = get_object_or_404(Agendamento, id=agendamento_id)
-        form.instance.agendamento = agendamento
         
-        # Salva o atendimento
-        atendimento = form.save()
+        atendimento_form = AtendimentoForm(request.POST, request.FILES)
+        atestado_medico_form = AtestadoMedicoForm(request.POST, agendamento=agendamento)
+        
+        if atendimento_form.is_valid():
+            return self.form_valid(atendimento_form, atestado_medico_form, agendamento)
+        else:
+            return self.form_invalid(atendimento_form, atestado_medico_form)
 
-        # Atualiza o status do agendamento para "atendido"
+    def form_valid(self, atendimento_form, atestado_medico_form, agendamento):
+        atendimento = atendimento_form.save(commit=False)
+        atendimento.agendamento = agendamento
+        atendimento.save()
+
         agendamento.status_atendimento = 'atendido'
         agendamento.save()
 
-        # Redireciona para a tela de confirmação de atendimento com o ID do Atendimento
-        return redirect('confirmar_atendimento', agendamento_id=agendamento_id)
+        # Verifica se os campos do atestado médico estão preenchidos antes de salvar
+        if atestado_medico_form.is_valid():
+            dias_afastamento = atestado_medico_form.cleaned_data.get('dias_afastamento')
+            cid = atestado_medico_form.cleaned_data.get('cid')
+            if dias_afastamento or cid:
+                atestado_medico = atestado_medico_form.save(commit=False)
+                atestado_medico.agendamento = agendamento
+                atestado_medico.save()
 
+        return redirect('confirmar_atendimento', agendamento_id=agendamento.id)
+
+    def form_invalid(self, atendimento_form, atestado_medico_form):
+        context = self.get_context_data()
+        context['form'] = atendimento_form
+        context['atestado_medico_form'] = atestado_medico_form
+        return self.render_to_response(context)
+
+
+    # def test_func(self):
+    #     return is_profissionaldasaude(self.request.user)
+    
+    # permite todos acessarem
+    # def test_func(self):
+    #     return True
 
 
 def confirmar_atendimento(request, agendamento_id):
@@ -763,33 +794,24 @@ class AtestadoMedicoCreate(CreateView):
 
     # Método chamado quando o formulário é válido
     def form_valid(self, form):
-        # Obtém o ID do agendamento a partir dos argumentos da URL
         agendamento_id = self.kwargs['agendamento_id']
-        # Obtém o objeto Agendamento associado ao ID
         agendamento = get_object_or_404(Agendamento, id=agendamento_id)
-        # Define o agendamento do atestado como o agendamento obtido
         form.instance.agendamento = agendamento
         return super().form_valid(form)
 
     # Método para passar argumentos extras para o formulário
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        # Obtém o ID do agendamento a partir dos argumentos da URL
         agendamento_id = self.kwargs['agendamento_id']
-        # Obtém o objeto Agendamento associado ao ID
         agendamento = get_object_or_404(Agendamento, id=agendamento_id)
-        # Passa o objeto Agendamento como argumento adicional para o formulário
         kwargs['agendamento'] = agendamento
         return kwargs
 
     # Método para adicionar dados adicionais ao contexto do template
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Obtém o ID do agendamento a partir dos argumentos da URL
         agendamento_id = self.kwargs['agendamento_id']
-        # Obtém o objeto Agendamento associado ao ID
         agendamento = get_object_or_404(Agendamento, id=agendamento_id)
-        # Adiciona informações do agendamento ao contexto
         context['paciente'] = agendamento.paciente.nome
         context['profissional'] = agendamento.profissional_saude.nome
         context['data_agendamento'] = agendamento.data_agendamento
@@ -798,8 +820,6 @@ class AtestadoMedicoCreate(CreateView):
 
     # Método para obter a URL de redirecionamento após o sucesso do envio do formulário
     def get_success_url(self):
-        # Obtém o ID do agendamento a partir dos argumentos da URL
         agendamento_id = self.kwargs['agendamento_id']
-        # Retorna a URL de redirecionamento para a criação de um novo atestado com base no ID do agendamento
         return reverse('atestado_medico_create', kwargs={'agendamento_id': agendamento_id})
 
