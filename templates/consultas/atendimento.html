@@ -125,19 +125,19 @@
 
           <div id="form-atestado">
             <div class="form-group">
-              <label for="dias_afastamento">Atesto que o paciente <span>{{ form.instance.agendamento.paciente.nome }}</span> esteve em consulta no dia <span>{{ form.instance.agendamento.data_agendamento|date:'d/m/Y' }}</span>, e necessita de <span><input class="input" name="dias_afastamento" type="text" value="{{ atestado_medico_form.dias_afastamento.value }}" /></span> dias de afastamento de suas atividades normais, para sua convalescença.</label>
+              <label for="dias_afastamento">Atesto que o(a) paciente <span>{{ agendamento.paciente.nome }}</span> esteve em consulta no dia <span>{{ agendamento.data_agendamento|date:'d/m/Y' }}</span>, e necessita de <span><input class="input" name="dias_afastamento" type="text" placeholder="Dias" value="{{ atestado_medico_form.dias_afastamento.value|default_if_none:"" }}" /></span> dias de afastamento de suas atividades normais, para sua convalescença.</label>
             </div>
 
             <div class="form-group">
               <label for="cid">CID:</label>
-              <input class="input" type="text" name="cid" value="{{ atestado_medico_form.cid.value }}" style="margin-top: 20px;" />
+              <input class="input" type="text" name="cid" placeholder="CID" value="{{ atestado_medico_form.cid.value|default_if_none:""}}" style="margin-top: 20px;" />
             </div>
 
-            <p style="text-align: center;">Rio Branco - Acre {{ timezone.now|date:'d/m/Y' }}</p>
+            <p style="text-align: center;">Rio Branco - Acre {{ agendamento.data_agendamento|date:'d/m/Y' }}</p>
 
             <div class="form-group">
               <label>Profissional de Saúde:</label>
-              <p>{{ form.instance.agendamento.profissional_saude.nome }}</p>
+              <p>{{ agendamento.profissional_saude.nome }}</p>
             </div>
           </div>
         </div>
