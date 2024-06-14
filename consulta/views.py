@@ -11,7 +11,7 @@ from django.http import JsonResponse
 from consulta.forms import *
 from django.views.decorators.http import require_POST
 from consulta.models import Atendimento, Paciente, Administrativo
-from consulta.models import Agendamento, Paciente, Profissionaldasaude, AtestadoMedico
+from consulta.models import Agendamento, Paciente, Profissionaldasaude, AtestadoMedico, ReceitaMedica
 from datetime import date
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
@@ -823,3 +823,25 @@ class AtestadoMedicoCreate(CreateView):
         agendamento_id = self.kwargs['agendamento_id']
         return reverse('atestado_medico_create', kwargs={'agendamento_id': agendamento_id})
 
+
+class CriarReceitaMedicaView(CreateView):
+    def get(self, request, agendamento_id):
+        agendamento = get_object_or_404(Agendamento, id=agendamento_id)
+        form = ReceitaMedicaForm(initial={'paciente_nome': agendamento.paciente.nome})  # Inicializa o formulário com o nome do paciente
+        return render(request, 'consultas/criar_receita_medica.html', {'form': form, 'agendamento': agendamento})
+
+    def post(self, request, agendamento_id):
+        agendamento = get_object_or_404(Agendamento, id=agendamento_id)
+        form = ReceitaMedicaForm(request.POST)
+        if form.is_valid():
+            receita = form.save(commit=False)
+            receita.agendamento = agendamento
+            receita.save()
+            
+        return render(request, 'consultas/criar_receita_medica.html', {'form': form, 'agendamento': agendamento})
+
+class ListarReceitasMedicasView(CreateView):
+    def get(self, request, agendamento_id):
+        agendamento = get_object_or_404(Agendamento, id=agendamento_id)
+        receitas = ReceitaMedica.objects.filter(agendamento=agendamento)
+        return render(request, 'listar_receitas_medicas.html', {'receitas': receitas, 'agendamento': agendamento})

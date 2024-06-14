@@ -146,7 +146,54 @@
       </form>
     </div>
 
-    <h6 class="d-flex justify-content-center py-3">RECEITA MEDICA</h6>
+    
+
+
+    <!-- Formulário de Receita Médica -->
+        <h6 class="d-flex justify-content-center py-3">RECEITA MÉDICA</h6>
+
+        <div class="receita">
+          <a href="" target="_blank" class="print-btn" style="border: none; float: right;">
+            <button class="print-btn">
+              <!-- Seu ícone SVG para impressão -->
+              Print
+            </button>
+          </a>
+
+          <div id="form-receita">
+            <div class="form-group">
+              <label for="prescricao">Prescrição:</label>
+              <textarea name="prescricao" id="prescricao" class="form-control" rows="4"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="dosagem">Dosagem:</label>
+              <input type="text" name="dosagem" id="dosagem" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label for="via_administrativa">Via Administrativa:</label>
+              <input type="text" name="via_administrativa" id="via_administrativa" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label for="modo_uso">Modo de Uso:</label>
+              <input type="text" name="modo_uso" id="modo_uso" class="form-control">
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salvar Atendimento e Emitir Atestado e Receita</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Botão para criar Receita Médica -->
+  <div class="text-center">
+    <a href="{% url 'criar_receita_medica' agendamento_id=agendamento.id %}" class="btn btn-primary">Criar Receita Médica</a>
+  </div>
+  </div>
+    {% comment %} <h6 class="d-flex justify-content-center py-3">RECEITA MEDICA</h6>
 
     <div class="receita">
       <a href="" target="_blank" class="print-btn" style="border: none; float: right;">
@@ -181,7 +228,7 @@
         <textarea name="" id="" style="width: 100%;height: 200px;"></textarea>
       </form>
     </div>
-  </div>
+  </div> {% endcomment %}
 
   <script>
     function updateFileName() {

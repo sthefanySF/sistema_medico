@@ -4,7 +4,7 @@ from datetime import datetime
 from django.utils import timezone
 from django import forms
 import json
-from .models import Atendimento, Administrativo, AtestadoMedico, Profissionaldasaude, Agendamento, Paciente
+from .models import Atendimento, Administrativo, AtestadoMedico, Profissionaldasaude, Agendamento, Paciente, ReceitaMedica
 from django.contrib.auth.models import User
 
 
@@ -205,3 +205,9 @@ class AtestadoMedicoForm(forms.ModelForm):
                 initial=agendamento.data_agendamento.strftime('%Y-%m-%d %H:%M'), label="Data do Agendamento", disabled=True, required=False)
             self.fields['data_criacao'] = forms.CharField(
                 initial=timezone.now().strftime('%Y-%m-%d %H:%M'), label="Data de Criação", disabled=True, required=False)
+            
+
+class ReceitaMedicaForm(forms.ModelForm):
+    class Meta:
+        model = ReceitaMedica
+        fields = ['prescricao', 'dosagem', 'via_administrativa', 'modo_uso']

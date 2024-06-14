@@ -82,4 +82,8 @@ urlpatterns = [
     # Home
     path('', views.home, name='home'),
 
+    # receita médica
+    path('agendamento/<int:agendamento_id>/criar_receita/', CriarReceitaMedicaView.as_view(), name='criar_receita_medica'),
+    path('agendamento/<int:agendamento_id>/receitas/', ListarReceitasMedicasView.as_view(), name='listar_receitas_medicas'),
+
 ]

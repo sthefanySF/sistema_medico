@@ -231,3 +231,32 @@ class AtestadoMedico(models.Model):
         ordering = ['-data_criacao']  
         verbose_name = 'Atestado Médico'  
         verbose_name_plural = 'Atestados Médicos'  
+
+        
+class ReceitaMedica(models.Model):
+    agendamento = models.ForeignKey(Agendamento, on_delete=models.CASCADE, related_name='receitas')
+    data_receita = models.DateTimeField(auto_now_add=True)
+    prescricao = models.TextField()
+    dosagem = models.CharField(max_length=100)
+    via_administrativa = models.CharField(max_length=100)
+    modo_uso = models.CharField(max_length=100)
+
+    @property
+    def paciente(self):
+        return self.agendamento.paciente
+    
+    @property
+    def data_consulta(self):
+        return self.agendamento.data_agendamento
+
+    @property
+    def profissional(self):
+        return self.agendamento.profissional_saude
+
+    def __str__(self):
+        return f"Receita Médica para {self.paciente.nome} em {self.data_consulta.date()}"
+
+    class Meta:
+        ordering = ['-data_receita']
+        verbose_name = 'Receita Médica'
+        verbose_name_plural = 'Receitas Médicas'
