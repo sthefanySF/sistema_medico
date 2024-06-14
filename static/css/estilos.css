@@ -318,7 +318,7 @@ O valor smooth faz a rolagem da página de forma suave. */
 }
 
 
-/* pagina listar atendimentos (lista_atendimentos.html) */
+/* pagina visualizar atendimentos (visualizar_atendimento.html) */
 
 .detalhes-atendimentos {
   margin: 20px;
@@ -351,7 +351,51 @@ O valor smooth faz a rolagem da página de forma suave. */
   border-image: linear-gradient(to right, #f8f9fa 25%, #81beff 50%, #f8f9fa 75%) 1;
 }
 
+
+dl #pdfs {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 3em;
+}
+
+dl #pdfs-name {
+  display: flex;
+  height: 3em;
+  align-items: center;
+}
+
+/* atestado e receita para atendiemtno e visualizar atendimento */
+#form-atestado {
+  border: 1px solid #ccc;
+  padding: 25px;
+  border-radius: 5px;
+}
+
+.atestado,
+.receita {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+.atestado a,
+.receita a {
+  text-decoration: none;
+  position: relative;
+  float: right;
+  bottom: 55px;
+}
+
 /* pagina atendimento (atendimento.html) */
+
+#info-atendimento {
+  background-color: #f8f9fa;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
 
 input#id_pdf_exames {
   display: none;
@@ -359,6 +403,11 @@ input#id_pdf_exames {
 
 textarea {
   border-radius: 10px;
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+textarea:active {
+  transform: scale(0.99);
 }
 
 #form-atend h6 {
@@ -407,6 +456,40 @@ textarea {
 
 .custum-file-upload input {
   display: none;
+}
+
+.input {
+  width: 10%;
+  max-width: 220px;
+  height: 30px;
+  padding: 12px;
+  border-radius: 5px;
+  border: 1.5px solid lightgrey;
+  outline: none;
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  box-shadow: 0px 0px 20px -18px;
+}
+
+.input:hover {
+  border: 1px solid lightgrey;
+  box-shadow: 0px 0px 20px -17px;
+}
+
+.input:active {
+  transform: scale(0.95);
+}
+
+.input:focus {
+  border: 1px solid grey;
+}
+
+/* pagina lista de atendimentos (lista_atendimento.html) */
+
+span.atend-data{
+  position:absolute;
+  right: 0;
+  font-weight:lighter ;
+  color: #8194a8;
 }
 
 /* pagina prontuario medico (prontuario_medico.html) */
@@ -525,3 +608,24 @@ label.form-check-label-pront {
 .print-btn:hover {
   background-color: rgb(239, 239, 239);
 }
+
+ /* cadastros e editar profissional da saude - paciente - administrativo*/
+ /* cadastro_proffisionaldasaude.html - editar_proffisionaldasaude.html */
+ /* cadastro_paciente.html - editar_paciente.html */
+ /* cadastro_administrativo.html - editar_administrativo.html */
+
+ #pessoais,
+ #endereco,
+ #cargo {
+   background-color: #f5f5f5;
+   padding: 20px;
+   border: 1px solid #ccc;
+   border-radius: 9px;
+   margin-bottom: 30px;
+   box-shadow: 9px 9px 20px -15px rgb(0, 0, 0);
+ }
+ 
+ #col-labels {
+   display: flex;
+   flex-direction: column;
+ }

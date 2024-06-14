@@ -336,8 +336,11 @@ def visualizar_atendimento(request, atendimento_id):
     paciente = atendimento.agendamento.paciente
     try:
         atestado = AtestadoMedico.objects.get(agendamento=atendimento.agendamento)
+        if atestado.dias_afastamento == 0 and atestado.cid == 'N/A':
+            atestado = None
     except AtestadoMedico.DoesNotExist:
         atestado = None
+    
     return render(request, 'consultas/visualizar_atendimento.html', {
         'atendimento': atendimento,
         'paciente': paciente,

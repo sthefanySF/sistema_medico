@@ -1,8 +1,10 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% load static %}
 
-{% block title %}Lista de Atendimentos{% endblock %}
+{% block title %}
+  Lista de Atendimentos
+{% endblock %}
 
 {% block content %}
   <div class="container">
@@ -11,24 +13,24 @@
     </div>
 
     <div id="glass">
-    <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="Pesquisar atendimento..." id="searchInput" />
-    </div>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Pesquisar atendimento..." id="searchInput" />
+      </div>
 
-    <ul class="list-group custom-list">
-      {% for atendimento in atendimentos %}
-        <li class="list-group-item">
-          <a href="{% url 'visualizarAtendimento' atendimento.id %}" class="atendimento-link">
-            {{ atendimento.agendamento.paciente.nome }}
-            {% if atendimento.profissional_saude %}
-              <span class="profissional-text"> - Dr(a): {{ atendimento.profissional_saude.nome }}</span>
-              <span class="atend-data">{{ atendimento.agendamento.data_agendamento | date:"d/m/Y " }}</span>
-            {% endif %}
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
-  </div>
+      <ul class="list-group custom-list">
+        {% for atendimento in atendimentos %}
+          <li class="list-group-item">
+            <a href="{% url 'visualizarAtendimento' atendimento.id %}" class="atendimento-link">
+              {{ atendimento.agendamento.paciente.nome }}
+              {% if atendimento.profissional_saude %}
+                <span class="profissional-text">- Dr(a): {{ atendimento.profissional_saude.nome }}</span>
+                <span class="atend-data">{{ atendimento.agendamento.data_agendamento|date:'d/m/Y ' }}</span>
+              {% endif %}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
     <div class="text-center mt-4">
       
       <a href="{% url 'home' %}" class="btn btn-primary">Voltar</a>
@@ -40,30 +42,18 @@
     $(document).ready(function () {
       // Ao digitar no campo de pesquisa
       $('#searchInput').on('keyup', function () {
-        var searchText = $(this).val().toLowerCase();
-  
+        var searchText = $(this).val().toLowerCase()
+    
         // Filtrar os itens da lista
         $('.list-group-item').each(function () {
-          var itemText = $(this).text().toLowerCase();
+          var itemText = $(this).text().toLowerCase()
           if (itemText.indexOf(searchText) !== -1) {
-            $(this).show();
+            $(this).show()
           } else {
-            $(this).hide();
+            $(this).hide()
           }
-        });
-      });
-    });
+        })
+      })
+    })
   </script>
-    
-  </script>
-
-  <style>
-    span.atend-data{
-      position:absolute;
-      right: 0;
-      font-weight:lighter ;
-      color: #8194a8;
-    }
-  </style>
-
 {% endblock %}
