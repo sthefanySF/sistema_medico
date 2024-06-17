@@ -211,3 +211,17 @@ class ReceitaMedicaForm(forms.ModelForm):
     class Meta:
         model = ReceitaMedica
         fields = ['prescricao', 'dosagem', 'via_administrativa', 'modo_uso']
+
+    def __init__(self, *args, **kwargs):
+        agendamento = kwargs.pop('agendamento', None)
+        super().__init__(*args, **kwargs)
+        
+        if agendamento:
+            self.fields['paciente_nome'] = forms.CharField(
+                initial=agendamento.paciente.nome, label="Paciente", disabled=True, required=False)
+            self.fields['profissional'] = forms.CharField(
+                initial=agendamento.profissional_saude.nome, label="Profissional de Saúde", disabled=True, required=False)
+            self.fields['data_agendamento'] = forms.CharField(
+                initial=agendamento.data_agendamento.strftime('%Y-%m-%d %H:%M'), label="Data do Agendamento", disabled=True, required=False)
+            self.fields['data_criacao'] = forms.CharField(
+                initial=timezone.now().strftime('%Y-%m-%d %H:%M'), label="Data de Criação", disabled=True, required=False)

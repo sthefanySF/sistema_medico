@@ -614,7 +614,7 @@ class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         
         atendimento_form = AtendimentoForm(request.POST, request.FILES)
         atestado_medico_form = AtestadoMedicoForm(request.POST, agendamento=agendamento)
-        receita_medica_form = ReceitaMedicaForm(request.POST)
+        receita_medica_form = ReceitaMedicaForm(request.POST, agendamento=agendamento)
         
         if atendimento_form.is_valid():
             return self.form_valid(atendimento_form, atestado_medico_form, receita_medica_form, agendamento)
@@ -845,18 +845,22 @@ class AtestadoMedicoCreate(CreateView):
 class CriarReceitaMedicaView(CreateView):
     def get(self, request, agendamento_id):
         agendamento = get_object_or_404(Agendamento, id=agendamento_id)
-        form = ReceitaMedicaForm(initial={'paciente_nome': agendamento.paciente.nome})  # Inicializa o formulário com o nome do paciente
+        form = ReceitaMedicaForm(agendamento=agendamento)
         return render(request, 'consultas/criar_receita_medica.html', {'form': form, 'agendamento': agendamento})
 
     def post(self, request, agendamento_id):
         agendamento = get_object_or_404(Agendamento, id=agendamento_id)
-        form = ReceitaMedicaForm(request.POST)
+        form = ReceitaMedicaForm(request.POST, agendamento=agendamento)
+        
         if form.is_valid():
             receita = form.save(commit=False)
             receita.agendamento = agendamento
             receita.save()
-            
+            return redirect('confirmar_atendimento', agendamento_id=agendamento.id)
+        
+        # Se o formulário da receita médica não for válido, renderiza novamente o formulário
         return render(request, 'consultas/criar_receita_medica.html', {'form': form, 'agendamento': agendamento})
+    
 
 class ListarReceitasMedicasView(CreateView):
     def get(self, request, agendamento_id):
