@@ -604,6 +604,7 @@ class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         agendamento = get_object_or_404(Agendamento, id=agendamento_id)
         context['agendamento'] = agendamento
         context['atestado_medico_form'] = AtestadoMedicoForm(agendamento=agendamento)
+        context['receita_medica_form'] = ReceitaMedicaForm()
         return context
 
     def post(self, request, *args, **kwargs):
@@ -613,13 +614,14 @@ class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         
         atendimento_form = AtendimentoForm(request.POST, request.FILES)
         atestado_medico_form = AtestadoMedicoForm(request.POST, agendamento=agendamento)
+        receita_medica_form = ReceitaMedicaForm(request.POST)
         
         if atendimento_form.is_valid():
-            return self.form_valid(atendimento_form, atestado_medico_form, agendamento)
+            return self.form_valid(atendimento_form, atestado_medico_form, receita_medica_form, agendamento)
         else:
-            return self.form_invalid(atendimento_form, atestado_medico_form)
+            return self.form_invalid(atendimento_form, atestado_medico_form, receita_medica_form)
 
-    def form_valid(self, atendimento_form, atestado_medico_form, agendamento):
+    def form_valid(self, atendimento_form, atestado_medico_form, receita_medica_form, agendamento):
         atendimento = atendimento_form.save(commit=False)
         atendimento.agendamento = agendamento
         atendimento.save()
@@ -635,14 +637,27 @@ class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
                 atestado_medico = atestado_medico_form.save(commit=False)
                 atestado_medico.agendamento = agendamento
                 atestado_medico.save()
+        
+        # Verifica se os campos da receita médica estão preenchidos antes de salvar
+        if receita_medica_form.is_valid():
+            prescricao = receita_medica_form.cleaned_data.get('prescricao')
+            dosagem = receita_medica_form.cleaned_data.get('dosagem')
+            via_administrativa = receita_medica_form.cleaned_data.get('via_administrativa')
+            modo_uso = receita_medica_form.cleaned_data.get('modo_uso')
+            if prescricao and dosagem and via_administrativa and modo_uso:
+                receita_medica = receita_medica_form.save(commit=False)
+                receita_medica.agendamento = agendamento
+                receita_medica.save()
 
         return redirect('confirmar_atendimento', agendamento_id=agendamento.id)
 
-    def form_invalid(self, atendimento_form, atestado_medico_form):
+    def form_invalid(self, atendimento_form, atestado_medico_form, receita_medica_form):
         context = self.get_context_data()
         context['form'] = atendimento_form
         context['atestado_medico_form'] = atestado_medico_form
+        context['receita_medica_form'] = receita_medica_form
         return self.render_to_response(context)
+
 
 
     # def test_func(self):
