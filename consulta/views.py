@@ -644,7 +644,7 @@ class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
             dosagem = receita_medica_form.cleaned_data.get('dosagem')
             via_administrativa = receita_medica_form.cleaned_data.get('via_administrativa')
             modo_uso = receita_medica_form.cleaned_data.get('modo_uso')
-            if prescricao and dosagem and via_administrativa and modo_uso:
+            if prescricao or dosagem or via_administrativa or modo_uso:
                 receita_medica = receita_medica_form.save(commit=False)
                 receita_medica.agendamento = agendamento
                 receita_medica.save()

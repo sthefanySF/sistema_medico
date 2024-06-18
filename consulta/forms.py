@@ -225,3 +225,9 @@ class ReceitaMedicaForm(forms.ModelForm):
                 initial=agendamento.data_agendamento.strftime('%Y-%m-%d %H:%M'), label="Data do Agendamento", disabled=True, required=False)
             self.fields['data_criacao'] = forms.CharField(
                 initial=timezone.now().strftime('%Y-%m-%d %H:%M'), label="Data de Criação", disabled=True, required=False)
+        
+        for field in self.fields:
+            self.fields[field].required = False
+            
+        # for f in self.fields:
+        #     self.fields[f].widget.attrs['class'] = 'input'
