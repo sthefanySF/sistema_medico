@@ -50,7 +50,7 @@
         <div class="row">
           <div class="col-md-4 mb-3">
             <h6>Anamnese</h6>
-            <label for="{{ form.anamnese.id_for_label }}" class="form-label label-title"></label>
+            <label for="{{ form.anamnese.id_for_label }}" class="form-label mb-3 label-title"></label>
             {{ form.anamnese }}
           </div>
 
@@ -125,13 +125,12 @@
 
           <div id="form-atestado">
             <div class="form-group">
-              <label for="dias_afastamento">Atesto que o(a) paciente <span>{{ agendamento.paciente.nome }}</span> esteve em consulta no dia <span>{{ agendamento.data_agendamento|date:'d/m/Y' }}</span>, e necessita de <span><input class="input" name="dias_afastamento" type="text" placeholder="Dias" value="{{ atestado_medico_form.dias_afastamento.value|default_if_none:"" }}" /></span> dias de afastamento de suas atividades normais, para sua convalescença.</label>
+              <label for="dias_afastamento">Atesto que o(a) paciente <span>{{ agendamento.paciente.nome }}</span> esteve em consulta no dia <span>{{ agendamento.data_agendamento|date:'d/m/Y' }}</span>, e necessita de <span><input class="input" name="dias_afastamento" type="text" placeholder="Dias" value="{{ atestado_medico_form.dias_afastamento.value|default_if_none:'' }}" /></span> dias de afastamento de suas atividades normais, para sua convalescença.</label>
             </div>
-
 
             <div class="form-group">
               <label for="cid">CID:</label>
-              <input class="input" type="text" name="cid" placeholder="CID" value="{{ atestado_medico_form.cid.value|default_if_none:""}}" style="margin-top: 20px;" />
+              <input class="input" type="text" name="cid" placeholder="CID" value="{{ atestado_medico_form.cid.value|default_if_none:'' }}" style="margin-top: 20px;" />
             </div>
 
             <p style="text-align: center;">Rio Branco - Acre {{ agendamento.data_agendamento|date:'d/m/Y' }}</p>
@@ -142,40 +141,65 @@
             </div>
           </div>
         </div>
-
-
-
         <!-- Formulário de Receita Médica -->
         <h6 class="d-flex justify-content-center py-3">RECEITA MÉDICA</h6>
-        <div class="form-group">
-          <label for="prescricao">Prescrição</label>
-          {{ receita_medica_form.prescricao }}
+
+        <div class="receita">
+          <a href="" target="_blank" class="print-btn" style="border: none; float: right;">
+            <button class="print-btn">
+              <span class="printer-wrapper">
+                <span class="printer-container">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="black" viewBox="0 0 92 75">
+                    <path stroke-width="5" stroke="black" d="M12 37.5H80C85.2467 37.5 89.5 41.7533 89.5 47V69C89.5 70.933 87.933 72.5 86 72.5H6C4.067 72.5 2.5 70.933 2.5 69V47C2.5 41.7533 6.75329 37.5 12 37.5Z"></path>
+                    <mask fill="white" id="path-2-inside-1_30_7">
+                      <path d="M12 12C12 5.37258 17.3726 0 24 0H57C70.2548 0 81 10.7452 81 24V29H12V12Z"></path>
+                    </mask>
+                    <path mask="url(#path-2-inside-1_30_7)" fill="black" d="M7 12C7 2.61116 14.6112 -5 24 -5H57C73.0163 -5 86 7.98374 86 24H76C76 13.5066 67.4934 5 57 5H24C20.134 5 17 8.13401 17 12H7ZM81 29H12H81ZM7 29V12C7 2.61116 14.6112 -5 24 -5V5C20.134 5 17 8.13401 17 12V29H7ZM57 -5C73.0163 -5 86 7.98374 86 24V29H76V24C76 13.5066 67.4934 5 57 5V-5Z"></path>
+                    <circle fill="white" r="3" cy="49" cx="78"></circle>
+                  </svg>
+                </span>
+
+                <span class="printer-page-wrapper"><span class="printer-page"></span></span>
+              </span>
+              Print
+            </button>
+          </a>
+          
+          <div class="d-flex">
+            <div class="col-md-6 d-flex flex-column">
+              <span class="text-center">PRESCRIÇÃO</span>
+              <div class="form-group d-flex flex-column">{{ receita_medica_form.prescricao }}</div>
+            </div>
+
+            <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
+              <div class="form-group d-flex flex-column col-md-8">
+                <label for="dosagem">Dosagem</label>
+                {{ receita_medica_form.dosagem }}
+              </div>
+              <div class="form-group d-flex flex-column col-md-8">
+                <label for="via_administrativa">Via Administrativa</label>
+                {{ receita_medica_form.via_administrativa }}
+              </div>
+              <div class="form-group d-flex flex-column col-md-8">
+                <label for="modo_uso">Modo de Uso</label>
+                {{ receita_medica_form.modo_uso }}
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="dosagem">Dosagem</label>
-          {{ receita_medica_form.dosagem }}
+
+        <div class="d-flex justify-content-center align-items-center mb-3">
+          <button type="submit" class="btn btn-primary">Salvar Atendimento e Emitir Atestado</button>
         </div>
-        <div class="form-group">
-          <label for="via_administrativa">Via Administrativa</label>
-          {{ receita_medica_form.via_administrativa }}
-        </div>
-        <div class="form-group">
-          <label for="modo_uso">Modo de Uso</label>
-          {{ receita_medica_form.modo_uso }}
-        </div>
-        
-        <button type="submit" class="btn btn-primary">Salvar Atendimento e Emitir Atestado</button>
       </form>
     </div>
 
-    
+    <!-- Botão para criar Receita Médica -->
+    {% comment %} <div class="text-center">
+      <a href="{% url 'criar_receita_medica' agendamento_id=agendamento.id %}" class="btn btn-primary">Criar Receita Médica</a>
+    </div> {% endcomment %}
+  </div>
 
-  <!-- Botão para criar Receita Médica -->
-  <div class="text-center">
-    <a href="{% url 'criar_receita_medica' agendamento_id=agendamento.id %}" class="btn btn-primary">Criar Receita Médica</a>
-  </div>
-  </div>
-    
   <script>
     function updateFileName() {
       var inputFile = document.getElementById('id_pdf_exames')
