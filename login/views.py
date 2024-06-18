@@ -13,46 +13,42 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth import login, authenticate, get_user_model
 from django.utils.encoding import force_str
+from django.conf import settings
 
 from sistema_medico.settings import EMAIL_HOST_USER
 from .forms import *
-
+from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 
 
+
 def redefinir_senha(request):
-    form = AlterarSenhaForm()
+    form = PasswordResetForm()
     if request.method == 'POST':
         email = request.POST.get('email')
-        form = AlterarSenhaForm(request.POST)
+        form = PasswordResetForm(request.POST)
         if form.is_valid():
             try:
                 usuario = User.objects.get(email=email)
                 form = PasswordResetForm({'email': usuario.email})
                 form.full_clean()
-
-            except:
+                form.save(
+                    domain_override=request.META['HTTP_HOST'],
+                    use_https=request.is_secure(),
+                    from_email=settings.EMAIL_HOST_USER,
+                    email_template_name='login/redefinir_senha_email.html',
+                    subject_template_name='login/redefinir_senha.txt',
+                    request=request,
+                )
+                messages.success(request, 'Um email foi enviado com instruções para redefinir sua senha.')
+                return HttpResponseRedirect(reverse_lazy('redefinir_senha_ok'))
+            except User.DoesNotExist:
                 messages.error(request, 'E-mail não localizado! Tente novamente.')
-                return TemplateResponse(request, 'login/redefinir_senha.html', locals())
-
-            opts = {
-                'domain_override': request.META['HTTP_HOST'],
-                'use_https': request.is_secure(),
-                'from_email': EMAIL_HOST_USER,
-                'email_template_name': 'login/redefinir_senha_email.html',
-                'subject_template_name': 'login/redefinir_senha.txt',
-                'request': request,
-            }
-            form.save(**opts)
-            context = {
-                'form': form,
-                'uid': usuario.id,
-                'token': default_token_generator,
-            }
-
-            return HttpResponseRedirect(reverse_lazy('redefinir_senha_ok'))
-    return TemplateResponse(request, 'login/redefinir_senha.html', locals())
+        else:
+            messages.error(request, 'Por favor, insira um email válido.')
+    
+    return TemplateResponse(request, 'login/redefinir_senha.html', {'form': form})
 
 
 def redefinir_senha_ok(request):

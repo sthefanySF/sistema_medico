@@ -34,6 +34,7 @@ EMAIL_HOST_USER = u'ufac.sistemas@gmail.com'
 EMAIL_HOST_PASSWORD = u'stnxqpugmztheugg'
 EMAIL_PORT = 587
 EMAIL_SUBJECT_PREFIX = 'Sistema de inscrições da Ufac'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
 
