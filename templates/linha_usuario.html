@@ -21,27 +21,42 @@
     </div>
   </div>
 
-  <div class="perfil">
-    <div class="card-user">
-        <div class="card_load"></div>
-        <div class="card_load_extreme_title"></div>
-        <div class="card_load_extreme_descripion"><p class="text-black" style="padding-left: 10px;">{{ user.username }}</p></div>
+<!-- templates/linha_usuario.html -->
+<div class="perfil">
+  <div class="card-user">
+    <div class="card_load">
+      <img src="{% static 'imagens/user.png' %}" alt="" />
     </div>
-    {% comment %} <div id="profissional" >
-        <p>{{ user.username }}</p>
-    </div> {% endcomment %}
-    {% comment %} <button style="border: none; background: none;">
-      <label class="arrow">
-        <input type="checkbox" checked="checked" />
-        <svg class="chevron-left" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512">
-            <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"></path>
-        </svg>
-        <svg class="chevron-down" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
-            <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
-        </svg>
-      </label>
-    </button> {% endcomment %}
+    {% if profissional_saude%}
+    <div class="d-flex align-items-center" id="card_title">
+      <span class="text-black" style="padding-left: 10px; font-size: 14px;">{{ profissional_saude.area }}</span>
+    </div>
+    {% elif administrativo%}
+    <div class="d-flex align-items-center" id="card_title">
+      <span class="text-black" style="padding-left: 10px; font-size: 14px;">{{ administrativo.cargo_funcao }}</span>
+    </div>
+    {% endif %}
+    <div class="d-flex align-items-center" id="card_descripion">
+      <span class="text-black" style="padding-left: 10px;">{{ request.user.username }}</span>
+    </div>
   </div>
+</div>
+
+
+  {% comment %} <div id="profissional">
+    <p>{{ user.username }}</p>
+  </div>
+  <button style="border: none; background: none;">
+    <label class="arrow">
+      <input type="checkbox" checked="checked" />
+      <svg class="chevron-left" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512">
+        <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l192 192c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 246.6 86.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-192 192z"></path>
+      </svg>
+      <svg class="chevron-down" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+        <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
+      </svg>
+    </label>
+  </button> {% endcomment %}
 
   <div class="svg-container">
     <!-- I crated SVG with: https://codepen.io/anthonydugois/pen/mewdyZ -->
@@ -126,174 +141,185 @@
 </nav>
 
 <style>
-    {% comment %} nav.navbar {
-        box-shadow: -2px -4px 20px 0px rgb(0 0 0);
+  {% comment %} nav.navbar {
+      box-shadow: -2px -4px 20px 0px rgb(0 0 0);
+  } {% endcomment %}
+
+  ul li a:hover {
+      background-color: #e0e0e0 ;
+  }
+  .fixed-button {
+      position: fixed;
+      right: 20px; /
+      z-index: 999;
+      background-color: #fff;
+  }
+
+  div.container-fluid {
+      padding-left: 0;
+  }
+
+  .navbar {
+      border-radius: 0 0 10px 10px;
+  }
+
+  .wave-bg {
+      position: absolute;
+      top: -25px;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1; /* Coloca o SVG atrás do conteúdo */
+  }
+
+  .wave-bg svg {
+      width: 100%;
+      height: auto;
+      rotate: 180deg;
+  }
+
+  .svg-container svg{
+      position: absolute;
+      width: 100%;
+      left: 0;
+      top: -310px;
+      z-index: -10;
+    }
+
+    .perfil{
+      position: absolute;
+      right: 0;
+      /*margin-right: 2.6em;*/
+      display: flex;
+      color: #000;
+    }
+
+    {% comment %} #profissional{
+      color: #000;
+      margin-right: 20px;
+    }
+
+    .arrow {
+      --color: #a5a5b0;
+      --size: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      cursor: pointer;
+      font-size: var(--size);
+      user-select: none;
+      fill: var(--color);
+    }
+    
+    .arrow .chevron-left {
+      position: absolute;
+      animation: keyframes-return .5s;
+    }
+    
+    .arrow .chevron-down {
+      position: absolute;
+      display: none;
+      animation: keyframes-fill .5s;
+    }
+    
+    /* ------ On check event ------ */
+    .arrow input:checked ~ .chevron-left {
+      display: none;
+    }
+    
+    .arrow input:checked ~ .chevron-down {
+      display: block;
+    }
+    
+    /* ------ Hide the default checkbox ------ */
+    .arrow input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+    
+    /* ------ Animation ------ */
+    @keyframes keyframes-fill {
+      0% {
+        transform: rotate(-90deg) scale(0);
+        opacity: 0;
+      }
+    
+      50% {
+        transform: rotate(0deg) scale(1.2);
+      }
+    }
+    
+    @keyframes keyframes-return {
+      0% {
+        transform: rotate(90deg) scale(0);
+        opacity: 0;
+      }
+    
+      50% {
+        transform: rotate(0deg) scale(1.2);
+      }
     } {% endcomment %}
 
-    ul li a:hover {
-        background-color: #e0e0e0 ;
+    .card-user {
+      width: 300px;
+      height: 90px;
+      border-radius: 20px;
+      padding: 12px 10px;
     }
-    .fixed-button {
-        position: fixed;
-        right: 20px; /
-        z-index: 999;
-        background-color: #fff;
+    
+    .card_load {
+      width: 70px;
+      height: 70px;
+      position: relative;
+      float: left;
+      background-color: #fff;
+      border-radius: 50%;
+      background-size: 200% 100%;
+      background-position: 100% 0;
+      animation: load89234 2s infinite;
+      box-shadow: 0 1px 25px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
     }
-
-    div.container-fluid {
-        padding-left: 0;
+    
+    .card_load img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; 
+      border-radius: 50%;
     }
-
-    .navbar {
-        border-radius: 0 0 10px 10px;
+    
+    #card_title {
+      width: 150px;
+      height: 22px;
+      position: relative;
+      float: left;
+      margin-left: 15px;
+      border-radius: 5px;
+      background-color: #fff;
+      background-size: 200% 100%;
+      background-position: 100% 0;
+      animation: load89234 2s infinite;
+      box-shadow: 0 1px 25px rgba(0,0,0,0.2);
     }
-
-    .wave-bg {
-        position: absolute;
-        top: -25px;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1; /* Coloca o SVG atrás do conteúdo */
+    
+    #card_descripion {
+      width: 190px;
+      height: 35px;
+      position: relative;
+      float: left;
+      margin-left: 15px;
+      border-radius: 5px;
+      background-color: #fff;
+      margin-top: 10px;
+      background-size: 200% 100%;
+      background-position: 100% 0;
+      animation: load89234 2s infinite;
+      box-shadow: 0 1px 25px rgba(0,0,0,0.2);
     }
-
-    .wave-bg svg {
-        width: 100%;
-        height: auto;
-        rotate: 180deg;
-    }
-
-    .svg-container svg{
-        position: absolute;
-        width: 100%;
-        left: 0;
-        top: -310px;
-        z-index: -10;
-      }
-
-      .perfil{
-        position: absolute;
-        right: 0;
-        /*margin-right: 2.6em;*/
-        display: flex;
-        color: #000;
-      }
-
-      {% comment %} #profissional{
-        color: #000;
-        margin-right: 20px;
-      }
-
-      .arrow {
-        --color: #a5a5b0;
-        --size: 30px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-        cursor: pointer;
-        font-size: var(--size);
-        user-select: none;
-        fill: var(--color);
-      }
-      
-      .arrow .chevron-left {
-        position: absolute;
-        animation: keyframes-return .5s;
-      }
-      
-      .arrow .chevron-down {
-        position: absolute;
-        display: none;
-        animation: keyframes-fill .5s;
-      }
-      
-      /* ------ On check event ------ */
-      .arrow input:checked ~ .chevron-left {
-        display: none;
-      }
-      
-      .arrow input:checked ~ .chevron-down {
-        display: block;
-      }
-      
-      /* ------ Hide the default checkbox ------ */
-      .arrow input {
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-        height: 0;
-        width: 0;
-      }
-      
-      /* ------ Animation ------ */
-      @keyframes keyframes-fill {
-        0% {
-          transform: rotate(-90deg) scale(0);
-          opacity: 0;
-        }
-      
-        50% {
-          transform: rotate(0deg) scale(1.2);
-        }
-      }
-      
-      @keyframes keyframes-return {
-        0% {
-          transform: rotate(90deg) scale(0);
-          opacity: 0;
-        }
-      
-        50% {
-          transform: rotate(0deg) scale(1.2);
-        }
-      } {% endcomment %}
-
-      .card-user {
-        width: 300px;
-        height: 90px;
-        border-radius: 20px;
-        padding: 12px 10px;
-      }
-      
-      .card_load {
-        width: 70px;
-        height: 70px;
-        position: relative;
-        float: left;
-        background-color: #fff;
-        border-radius: 50%;
-        background-size: 200% 100%;
-        background-position: 100% 0;
-        animation: load89234 2s infinite;
-        box-shadow: 0 1px 25px rgba(0,0,0,0.2);
-      }
-      
-      .card_load_extreme_title {
-        width: 190px;
-        height: 20px;
-        position: relative;
-        float: right;
-        border-radius: 5px;
-        background-color: #fff;
-        background-size: 200% 100%;
-        background-position: 100% 0;
-        animation: load89234 2s infinite;
-        box-shadow: 0 1px 25px rgba(0,0,0,0.2);
-      }
-      
-      .card_load_extreme_descripion {
-        width: 190px;
-        height: 38px;
-        position: relative;
-        float: right;
-        border-radius: 5px;
-        background-color: #fff;
-        margin-top: 10px;
-        background-size: 200% 100%;
-        background-position: 100% 0;
-        animation: load89234 2s infinite;
-        box-shadow: 0 1px 25px rgba(0,0,0,0.2);
-      }
 
 </style>
+
