@@ -340,11 +340,19 @@ def visualizar_atendimento(request, atendimento_id):
             atestado = None
     except AtestadoMedico.DoesNotExist:
         atestado = None
+
+
+    # Buscar a receita médica
+    try:
+        receita = ReceitaMedica.objects.get(agendamento=atendimento.agendamento)
+    except ReceitaMedica.DoesNotExist:
+        receita = None
     
     return render(request, 'consultas/visualizar_atendimento.html', {
         'atendimento': atendimento,
         'paciente': paciente,
-        'atestado': atestado
+        'atestado': atestado,
+        'receita': receita
     })
 
 def lista_atendimentos(request):
@@ -861,9 +869,3 @@ class CriarReceitaMedicaView(CreateView):
         # Se o formulário da receita médica não for válido, renderiza novamente o formulário
         return render(request, 'consultas/criar_receita_medica.html', {'form': form, 'agendamento': agendamento})
     
-
-class ListarReceitasMedicasView(CreateView):
-    def get(self, request, agendamento_id):
-        agendamento = get_object_or_404(Agendamento, id=agendamento_id)
-        receitas = ReceitaMedica.objects.filter(agendamento=agendamento)
-        return render(request, 'listar_receitas_medicas.html', {'receitas': receitas, 'agendamento': agendamento})

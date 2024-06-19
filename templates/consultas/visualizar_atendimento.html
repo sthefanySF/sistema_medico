@@ -129,6 +129,38 @@
     <p class="text-center">Não há atestado médico disponível para este atendimento.</p>
   {% endif %}
 
+
+  <h6 class="d-flex justify-content-center py-3">RECEITA MÉDICA</h6>
+  <div class="receita">
+    {% if receita %}
+      <div class="d-flex">
+        <div class="col-md-6 d-flex flex-column">
+          <span class="text-center">PRESCRIÇÃO</span>
+          <div class="form-group d-flex flex-column">
+            {{ receita.prescricao }}
+          </div>
+        </div>
+
+        <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
+          <div class="form-group d-flex flex-column col-md-8">
+            <label>Dosagem</label>
+            {{ receita.dosagem }}
+          </div>
+          <div class="form-group d-flex flex-column col-md-8">
+            <label>Via Administrativa</label>
+            {{ receita.via_administrativa }}
+          </div>
+          <div class="form-group d-flex flex-column col-md-8">
+            <label>Modo de Uso</label>
+            {{ receita.modo_uso }}
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <p class="text-center">Nenhuma receita médica registrada.</p>
+    {% endif %}
+  </div>
+
   <div class="d-flex justify-content-around mt-3">
     <a href="{% url 'listaAtendimentos' %}" class="btn btn-primary">Voltar para Lista de Atendimentos</a>
     <a href="{% url 'visualizar_comprovante_atendimento' atendimento_id=atendimento.id %}" class="btn btn-primary" target="_blank">Visualizar comprovante de atendimento</a>
