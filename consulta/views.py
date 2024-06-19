@@ -60,6 +60,23 @@ def home(request):
 def prontuario_medico(request):
     return render(request, 'consultas/prontuario_medico.html')
 
+@login_required
+def linha_usuario(request):
+    user = request.user
+    context = {
+        'user': user,
+    }
+
+    profissional_saude = Profissionaldasaude.objects.filter(usuario=user).first()
+    context['profissional_saude'] = profissional_saude
+
+    administrativo = Administrativo.objects.filter(usuario=user).first()
+    context['administrativo'] = administrativo
+
+    print("Context:", context)  # Debugging
+
+    return render(request, 'linha_usuario.html', context)
+
 def logar(request):
     if request.user.is_authenticated:
         return redirect('agendamentoListagem')
