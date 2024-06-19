@@ -1,148 +1,125 @@
 <!-- login.html -->
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
-{% block title %}Login{% endblock %}
+{% block title %}
+  Login
+{% endblock %}
 
 {% block content %}
-    {% if messages %}{% include 'messages.html' %}{% endif %}
-    <div class="container" style="display: flex;">
-
-            {% load static %}
-            <div class="contents">
-                <span style="font-weight: bold; font-size: larger; text-align: start;">ACESSE:</span>
-                <div class="card">
-                    <a href="https://app.ufac.br/observatorio/pericia/" target="_blank">
-                    <img src="{% static 'imagens/pericia_medica.png' %}" style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px;">
-                    </a>
-                </div>
-
-            </div>
-
-            <div class="container-login ">
-
-
-            <div class="m-3">
-                <div class="text-center">
-                    <span class=" display-6 "><b>Setor Médico Pericial - Consultas</b>
-                        <i class="fa fa-heartbeat fa-2x" style=" margin: auto; float: left"></i>
-                    </span>
-
-                <hr class="my-4">
-                     <span style="font-size: 20px">
-                         Você é técnico ou profissional de saúde do setor?<br> Faça seu login para ter acesso ao sistema.
-                     </span>
-                </div>
-                <br><br>
-                {#<a class="btn btn-primary btn-lg" href="#" role="button">Saiba mais</a>#}
-
-                <div class="row justify-content-center mt-4">
-                    <div class="col-md-5 col-md-offset-2" style="">
-                        <div class="">
-                            <div class="card-header">
-                                {#                            <h5 class="card-title ">Faça login para acessar o sistema</h5>#}
-                                {#<i class="fa fa-user-md fa-3x" style="float: right"></i>#}
-                                <h3 style="text-align: center; font-weight: lighter;">LOGIN</h3>
-
-                            </div>
-                            <div class="card-body">
-
-                                <form method="post" role="form">
-                                    {% csrf_token %}
-
-                                    <div>
-                                        <input class="input" placeholder="Usuário" name="usuario" id="usuario"
-                                               autofocus required>
-                                        
-
-                                        <br>
-
-
-                                        <input class="input" placeholder="Senha" name="senha" type="password"
-                                               value="" required>
-
-                                        <br>
-                                        <div class="text-center mt-4">
-                                            <button class="btn btn-primary center-block" type="submit">
-                                                <b>Acessar&nbsp;<span class="fa fa-sign-in"></span></b>
-                                            </button>
-
-                                        </div>
-                                        <hr>
-
-                                    </div>
-
-                                </form>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="text-center">
-                <button type="button" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                        title="Recuperação de senha" onclick="window.location='{% url 'redefinir_senha' %}'">
-                    <b>Esqueceu sua senha?</b>
-                </button>
-            </div>
-
-        </div>
-
-
-
+  {% if messages %}{% include 'messages.html' %}{% endif %}
+  <div class="container" style="display: flex;">
+    {% load static %}
+    <div class="contents">
+      <span style="font-weight: bold; font-size: larger; text-align: start;">ACESSE:</span>
+      <div class="card">
+        <a href="https://app.ufac.br/observatorio/pericia/" target="_blank"><img src="{% static 'imagens/pericia_medica.png' %}" style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px;" /></a>
+      </div>
     </div>
 
-    <style>
+    <div class="container-login">
+      <div class="m-3">
+        <div class="text-center">
+          <span class="display-6">
+            <b>Setor Médico Pericial - Consultas</b>
+            <i class="fa fa-heartbeat fa-2x" style=" margin: auto; float: left"></i>
+          </span>
 
-        .input {
-            width: 100%;
-            margin: 15px 0px;
-            height: 45px;
-            padding: 12px;
-            border-radius: 5px;
-            border: 1.5px solid lightgrey;
-            outline: none;
-            transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-            box-shadow: 0px 0px 20px -18px;
-          }
-          
-          .input:hover {
-            border: 2px solid lightgrey;
-            box-shadow: 0px 0px 20px -17px;
-          }
-          
-          .input:active {
-            transform: scale(0.95);
-          }
-          
-          .input:focus {
-            border: 2px solid grey;
-          }
+          <hr class="my-4" />
+          <span style="font-size: 20px">Você é técnico ou profissional de saúde do setor?<br /> Faça seu login para ter acesso ao sistema.</span>
+        </div>
+        <br /><br />
+        {# <a class="btn btn-primary btn-lg" href="#" role="button">Saiba mais</a> #}
 
-        nav.navbar,footer {
-            z-index: 1;
-        }
+        <div class="row justify-content-center mt-4">
+          <div class="col-md-5 col-md-offset-2" style="">
+            <div class="">
+              <div class="card-header">
+                {# <h5 class="card-title ">Faça login para acessar o sistema</h5> #}
+                {# <i class="fa fa-user-md fa-3x" style="float: right"></i> #}
+                <h3 style="text-align: center; font-weight: lighter;">LOGIN</h3>
+              </div>
+              <div class="card-body">
+                <form method="post" role="form">
+                  {% csrf_token %}
 
-        .contents{
- 
-            max-width: 50%;
-        }
+                  <div>
+                    <input class="input" placeholder="Usuário" name="usuario" id="usuario" autofocus required />
 
-        .card {
-            width: 30em;
-            height: auto;
-            background: rgb(236, 236, 236);
-            box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-            transition: .5s, color .10s;
-            text-align: ;
-        }
+                    <br />
 
-       .card:hover {
-            transform: translate(0px, -3px);
-        } 
+                    <input class="input" placeholder="Senha" name="senha" type="password" value="" required />
 
-        .container{
-            z-index: 1;
-        }
+                    <br />
+                    <div class="text-center mt-4">
+                      <button class="btn btn-primary center-block" type="submit"><b>Acessar&nbsp;<span class="fa fa-sign-in"></span></b></button>
+                    </div>
+                    <hr />
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="text-center">
+        <button type="button" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Recuperação de senha" onclick="window.location='{% url 'redefinir_senha' %}'"><b>Esqueceu sua senha?</b></button>
+      </div>
+    </div>
+  </div>
 
-    </style>
+  <style>
+    .input {
+      width: 100%;
+      margin: 15px 0px;
+      height: 45px;
+      padding: 12px;
+      border-radius: 5px;
+      border: 1.5px solid lightgrey;
+      outline: none;
+      transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+      box-shadow: 0px 0px 20px -18px;
+    }
+    
+    .input:hover {
+      border: 2px solid lightgrey;
+      box-shadow: 0px 0px 20px -17px;
+    }
+    
+    .input:active {
+      transform: scale(0.95);
+    }
+    
+    .input:focus {
+      border: 2px solid grey;
+    }
+    
+    nav.navbar,
+    footer {
+      z-index: 1;
+    }
+    
+    .contents {
+      max-width: 50%;
+    }
+    
+    .card {
+      width: 30em;
+      height: auto;
+      background: rgb(236, 236, 236);
+      box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+      transition: 0.5s, color 0.1s;
+      text-align: ;
+    }
+    
+    .card:hover {
+      transform: translate(0px, -3px);
+    }
+    
+    .container {
+      z-index: 1;
+    }
+    .perfil {
+        display: none;
+    }
+  </style>
 {% endblock %}

@@ -36,9 +36,15 @@
       <span class="text-black" style="padding-left: 10px; font-size: 14px;">{{ administrativo.cargo_funcao }}</span>
     </div>
     {% endif %}
+    {%if profissional_saude %}
     <div class="d-flex align-items-center" id="card_descripion">
-      <span class="text-black" style="padding-left: 10px;">{{ request.user.username }}</span>
+      <span class="text-black" style="padding-left: 10px;">{{ profissional_saude.nome }}</span>
     </div>
+    {% elif administrativo %}
+    <div class="d-flex align-items-center" id="card_descripion">
+      <span class="text-black" style="padding-left: 10px;">{{ administrativo.nome }}</span>
+    </div>
+    {% endif %}
   </div>
 </div>
 
