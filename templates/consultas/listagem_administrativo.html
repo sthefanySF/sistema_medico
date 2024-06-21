@@ -55,13 +55,14 @@
                 </div>
                 <div class="btn-group" role="group" aria-label="Ações">
                   <a href="{% url 'administrativoEditar' administrativo.id %}" class="btn btn-primary">Editar</a>
+                  <button class="btn btn-warning ms-1" data-bs-toggle="modal" data-bs-target="#editarModal{{ administrativo.id }}">Editar</button>
                   <button class="btn btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#excluirModal{{ administrativo.id }}">Excluir</button>
                 </div>
               </div>
             </div>
           </td>
         </tr>
-        
+
         <!-- Modal de Exclusão -->
         <div class="modal fade" id="excluirModal{{ administrativo.id }}" tabindex="-1" aria-labelledby="excluirModalLabel{{ administrativo.id }}" aria-hidden="true">
           <div class="modal-dialog">
@@ -80,33 +81,181 @@
             </div>
           </div>
         </div>
-        
+
+        <!-- Modal de Edição -->
+        <div class="modal fade" id="editarModal{{ administrativo.id }}" tabindex="-1" aria-labelledby="editarModalLabel{{ administrativo.id }}" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="editarModalLabel{{ administrativo.id }}">Editar Usuário</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="editarForm{{ administrativo.id }}">
+                  {% csrf_token %}
+                  <!-- Include the form fields here, similar to the initial form structure -->
+                  <div class="m-4">
+                    <div class="m-2">
+                      <div class="col-sm-12" id="pessoais">
+                        <div class="col mb-3">
+                          <label for="nome{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Nome</b></label>
+                          <input type="text" class="form-control" id="nome{{ administrativo.id }}" name="nome" value="{{ administrativo.nome }}" />
+                        </div>
+
+                        <div class="col mb-3">
+                          <label for="email{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>E-mail</b></label>
+                          <input type="email" class="form-control" id="email{{ administrativo.id }}" name="email" value="{{ administrativo.email }}" />
+                        </div>
+
+                        <div class="row mb-3">
+                          <div class="col-sm-6">
+                            <label for="cpf{{administrativo.id}}" class="col-sm-2 col-form-label"><b>CPF</b></label>
+                            <input type="cpf" class="form-control" id="cpf{{ administrativo.id }}" name="CPF" value="{{ administrativo.cpf }}" />
+                          </div>
+
+                          <div class="col-sm-6">
+                            <label for="rg{{administrativo.id}}" class="col-sm-2 col-form-label"><b>RG</b></label>
+                            <input type="rg" class="form-control" id="rg{{ administrativo.id }}" name="RG" value="{{ administrativo.rg }}" />
+                          </div>
+                        </div>
+
+                        <div class="row mb-3">
+                          <div class="col-sm-6">
+                            <label for="data_nascimento{{administrativo.id}}" class="col-sm-6 col-form-label"><b>Data Nascimento</b></label>
+                            <input type="date" class="form-control" id="data_nascimento{{ administrativo.id }}" name="data_nascimento" value="{{ administrativo.data_nascimento|date:'Y-m-d' }}">
+                          </div>
+
+                          <div class="col-sm-6">
+                            <label for="sexo{{administrativo.id}}" class="col-sm-2 col-form-label"><b>Sexo</b></label>
+                            <select class="form-control" id="sexo{{ administrativo.id }}" name="sexo">
+                              <option value="M" {% if administrativo.sexo == 'M' %} selected {% endif %}>Masculino</option>
+                              <option value="F" {% if administrativo.sexo == 'F' %} selected {% endif %}>Feminino</option>
+                            </select>
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <div class="col-sm-12" id="endereco">
+                        <div class="col mb-3">
+                          <label for="bairrorua{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Bairro e Rua</b></label>
+                          <input type="text" class="form-control" id="bairrorua{{ administrativo.id }}" name="bairrorua" value="{{ administrativo.bairro }}" />
+                        </div>
+
+                        <div class="row bm-3">
+                          <div class="col-sm-6">
+                            <label for="numero{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Número</b></label>
+                            <input type="text" class="form-control" id="numero{{ administrativo.id }}" name="numero" value="{{ administrativo.numero }}" />
+                          </div>
+                          <div class="col-sm-6">
+                            <label for="cidade{{ administrativo.id}}" class="col-sm-2 col-form-label"><b>Cidade</b></label>
+                            <input type="text" class="form-control" id="cidade{{ administrativo.id }}" name="cidade" value="{{ administrativo.cidade }}" />
+                          </div>
+                        </div>
+
+                        <div class="row bm-3">
+                          <div class="col-sm-6">
+                            <label for="uf{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>UF</b></label>
+                            <select class="form-control" id="uf{{ administrativo.id }}" name="uf">
+                              {% for uf_choice in UF_CHOICE %}
+                                <option value="{{ uf_choice }}" {% if administrativo.uf == uf_choice.0 %} selected {% endif %}>{{ uf_choice }}</option>
+                              {% endfor %}
+                            </select>
+                          </div>
+                          <div class="col-sm-6">
+                            <label for="cep{{ administrativo.id}}" class="col-sm-2 col-form-label"><b>CEP</b></label>
+                            <input type="text" class="form-control" id="cep{{ administrativo.id }}" name="cep" value="{{ administrativo.cep }}" />
+                          </div>
+                        </div>
+
+                        <div class="col mb-3">
+                          <label for="telefone{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Telefone</b></label>
+                          <input type="text" class="form-control" id="telefone{{ administrativo.id }}" name="telefone" value="{{ administrativo.ddd_telefone }}" />
+                        </div>
+
+                        <div class="col mb-3">
+                          <label for="complemento{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Complemento</b></label>
+                          <input type="text" class="form-control" id="complemento{{ administrativo.id }}" name="complemento" value="{{ administrativo.complemento }}" />
+                        </div>
+                      </div>
+
+                      <div class="col-sm-12" id="cargo">
+                        <div class="col mb-3">
+                          <label for="cargo_funcao{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Cargo/Função</b></label>
+                          <input type="text" class="form-control" id="cargo_funcao{{ administrativo.id }}" name="cargo_funcao" value="{{ administrativo.cargo_funcao }}" />
+                        </div>
+
+                        <div class="row bm-3">
+                          <div class="col-sm-6">
+                            <label for="lotacao_de_exercicio{{ administrativo.id }}" class="col-sm-6 col-form-label"><b>Lotação de Exercicio</b></label>
+                            <input type="text" class="form-control" id="lotacao_de_exercicio{{ administrativo.id }}" name="lotacao_de_exercicio" value="{{ administrativo.lotacao_de_exercicio }}" />
+                          </div>
+                          <div class="col-sm-6">
+                            <label for="matricula_siape{{ administrativo.id}}" class="col-sm-6 col-form-label"><b>Matricula Siape</b></label>
+                            <input type="text" class="form-control" id="matricula_siape{{ administrativo.id }}" name="matricula_siape" value="{{ administrativo.matricula_siape }}" />
+                          </div>
+                        </div>
+
+                      </div>
+
+                    </div>
+                  </div>
+                  <div class="modal-footer d-flex justify-content-center align-items-center">
+                    <button type="button" class="btn btn-primary" onclick="editarAdministrativo({{ administrativo.id }})">Salvar Alterações</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
       {% endfor %}
     </tbody>
-</table>
+  </table>
 
-<script>
-  function excluirAdministrativo(administrativoId) {
-    $.ajax({
-      type: 'POST',
-      url: '{% url "administrativoExcluir" 0 %}'.replace('0', administrativoId),
-      data: {
-        'csrfmiddlewaretoken': '{{ csrf_token }}'
-      },
-      success: function(response) {
-        if (response.success) {
-          //alert('Administrativo excluído com sucesso.');
-          location.reload();
-        } else {
-          alert('Erro: ' + response.error);
+  <script>
+    function editarAdministrativo(id) {
+      var form = $('#editarForm' + id);
+      $.ajax({
+        type: 'POST',
+        url: "{% url 'editar_administrativo' %}",
+        data: form.serialize(),
+        success: function(response) {
+          // Handle success response
+          $('#editarModal' + id).modal('hide');
+          // Update the list or show a success message
+        },
+        error: function(response) {
+          // Handle error response
+          alert('Erro ao editar o usuário.');
         }
-      },
-      error: function(response) {
-        alert('Ocorreu um erro ao excluir o administrativo.');
-      }
-    });
-  }
-</script>
+      });
+    }
+  </script>
+
+  <script>
+    function excluirAdministrativo(administrativoId) {
+      $.ajax({
+        type: 'POST',
+        url: '{% url "administrativoExcluir" 0 %}'.replace('0', administrativoId),
+        data: {
+          csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function (response) {
+          if (response.success) {
+            //alert('Administrativo excluído com sucesso.');
+            location.reload()
+          } else {
+            alert('Erro: ' + response.error)
+          }
+        },
+        error: function (response) {
+          alert('Ocorreu um erro ao excluir o administrativo.')
+        }
+      })
+    }
+  </script>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>

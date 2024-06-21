@@ -78,6 +78,8 @@ urlpatterns = [
     path('administrativo/<int:pk>/excluir/', administrativo_excluir, name='administrativoExcluir'),
     path('profissionaldasaude/<int:pk>/editar/', profissionaldasaude_editar, name='profissionaldasaudeEditar'),
     path('profissionaldasaude/<int:pk>/excluir/', profissionaldasaude_excluir, name='profissionaldasaudeExcluir'),
+    
+    path('editar_administrativo/', editar_administrativo, name='editar_administrativo'),#modal editar
 
     # Home
     path('', views.home, name='home'),
