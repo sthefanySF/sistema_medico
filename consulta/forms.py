@@ -48,10 +48,7 @@ class PacienteForm(forms.ModelForm):
 class AdministrativoForm(forms.ModelForm):
     class Meta:
         model = Administrativo
-        # fields = ['nome', 'data_nascimento', 'email', 'rg', 'cpf', 'sexo', 'matricula_siape', 'cargo_funcao','orgao',
-        #           'lotacao_de_exercicio', 'ddd_telefone','uf','cep', 'cidade', 'bairro',  'numero',  'complemento']
         fields = '__all__'
-        
         
         labels = {
             'data_nascimento': 'Data de Nascimento',
@@ -60,13 +57,10 @@ class AdministrativoForm(forms.ModelForm):
             'lotacao_de_exercicio':'Lotação de Exercício',
             'matricula_siape': 'Matrícula SIAPE',
         }
-        
-        
-        
+         
         widgets = {
             'sexo': forms.Select(choices=[('M', 'Masculino'), ('F', 'Feminino')]),
         }
-
 
     def __init__(self, *args, **kwargs):
         super(AdministrativoForm, self).__init__(*args, **kwargs)
