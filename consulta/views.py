@@ -306,6 +306,12 @@ def listar_agendamentos(request):
 
 def agendamento_confirmar(request, pk):
     agendamento = get_object_or_404(Agendamento, pk=pk)
+    
+    # Verifica se a data do agendamento é igual à data atual
+    if agendamento.data_agendamento.date() != timezone.now().date():
+        messages.error(request, 'O agendamento só pode ser confirmado na data do agendamento.')
+        return redirect('agendamentoListagem')
+    
     agendamento.status_atendimento = 'confirmado'
     agendamento.save()
     messages.success(request, 'Agendamento confirmado!')
