@@ -6,6 +6,7 @@ from django import forms
 import json
 from .models import Atendimento, Administrativo, AtestadoMedico, Profissionaldasaude, Agendamento, Paciente, ReceitaMedica
 from django.contrib.auth.models import User
+from .choices import UF_CHOICE
 
 
 class PacienteForm(forms.ModelForm):
@@ -54,26 +55,25 @@ class AdministrativoForm(forms.ModelForm):
             'data_nascimento': 'Data de Nascimento',
             'cargo_funcao': 'Cargo/Função',
             'ddd_telefone': 'DDD Telefone',
-            'lotacao_de_exercicio':'Lotação de Exercício',
+            'lotacao_de_exercicio': 'Lotação de Exercício',
             'matricula_siape': 'Matrícula SIAPE',
         }
          
         widgets = {
             'sexo': forms.Select(choices=[('M', 'Masculino'), ('F', 'Feminino')]),
+            'uf': forms.Select(choices=UF_CHOICE),  # Certifique-se de incluir o widget correto
         }
 
     def __init__(self, *args, **kwargs):
         super(AdministrativoForm, self).__init__(*args, **kwargs)
-        # self.fields['data_nascimento'].error_messages = {'required': 'Email é um campo obrigatório.'}
-
         for f in self.fields:
             self.fields[f].widget.attrs['class'] = 'form-control'
 
     def clean_data_nascimento(self):
-        data_nascimeto = self.cleaned_data.get('data_nascimento')
-        if data_nascimeto > datetime.now().date():
+        data_nascimento = self.cleaned_data.get('data_nascimento')
+        if data_nascimento > datetime.now().date():
             raise forms.ValidationError('Informe uma data válida.')
-        return data_nascimeto
+        return data_nascimento
 
 
 # class UserForm(forms.ModelForm):
