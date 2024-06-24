@@ -166,18 +166,33 @@ def listar_administrativo(request):
     administrativo = Administrativo.objects.all()
     return render(request, 'consultas/listagem_administrativo.html', {'administrativo': administrativo})
 
+
+# modal
 @login_required
 def editar_administrativo(request):
-    if request.method == 'POST' and request.is_ajax():
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        print("Recebendo POST request via AJAX")
         id = request.POST.get('id')
+        print(f"ID recebido: {id}")
         administrativo = get_object_or_404(Administrativo, id=id)
         form = AdministrativoForm(request.POST, instance=administrativo)
         if form.is_valid():
             form.save()
+            print("Formulário válido e salvo com sucesso.")
             return JsonResponse({'success': True})
         else:
+            print(f"Formulário inválido: {form.errors}")
             return JsonResponse({'success': False, 'errors': form.errors})
-    return JsonResponse({'success': False, 'message': 'Requisição inválida'})
+    else:
+        print("Recebendo GET request")
+        id = request.GET.get('id')
+        administrativo = get_object_or_404(Administrativo, id=id)
+        form = AdministrativoForm(instance=administrativo)
+        context = {
+            'form': form,
+            'administrativo': administrativo
+        }
+        return render(request, 'consultas/editar_administrativo.html', context)
 
 
 @login_required
