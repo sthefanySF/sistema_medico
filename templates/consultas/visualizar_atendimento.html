@@ -129,30 +129,27 @@
     <p class="text-center">Não há atestado médico disponível para este atendimento.</p>
   {% endif %}
 
-
   <h6 class="d-flex justify-content-center py-3">RECEITA MÉDICA</h6>
   <div class="receita">
     {% if receita %}
       <div class="d-flex">
         <div class="col-md-6 d-flex flex-column">
           <span class="text-center">PRESCRIÇÃO</span>
-          <div class="form-group d-flex flex-column">
-            {{ receita.prescricao }}
-          </div>
+          <div class="campo">{{ receita.prescricao }}</div>
         </div>
 
         <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
           <div class="form-group d-flex flex-column col-md-8">
             <label>Dosagem</label>
-            {{ receita.dosagem }}
+            <div class="campo">{{ receita.dosagem }}</div>
           </div>
           <div class="form-group d-flex flex-column col-md-8">
             <label>Via Administrativa</label>
-            {{ receita.via_administrativa }}
+            <div class="campo">{{ receita.via_administrativa }}</div>
           </div>
           <div class="form-group d-flex flex-column col-md-8">
             <label>Modo de Uso</label>
-            {{ receita.modo_uso }}
+            <div class="campo">{{ receita.modo_uso }}</div>
           </div>
         </div>
       </div>
@@ -167,30 +164,36 @@
   </div>
 
   <style>
-/* .input {
-  width: 10%;
-  max-width: 220px;
-  height: 30px;
-  padding: 12px;
-  border-radius: 5px;
-  border: 1.5px solid lightgrey;
-  outline: none;
-  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-  box-shadow: 0px 0px 20px -18px;
-}
 
-.input:hover {
-  border: 1px solid lightgrey;
-  box-shadow: 0px 0px 20px -17px;
-}
-
-.input:active {
-  transform: scale(0.95);
-}
-
-.input:focus {
-  border: 1px solid grey;
-} */
-
+    div.campo{
+      background-color: #fff;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    /* .input {
+      width: 10%;
+      max-width: 220px;
+      height: 30px;
+      padding: 12px;
+      border-radius: 5px;
+      border: 1.5px solid lightgrey;
+      outline: none;
+      transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+      box-shadow: 0px 0px 20px -18px;
+    }
+    
+    .input:hover {
+      border: 1px solid lightgrey;
+      box-shadow: 0px 0px 20px -17px;
+    }
+    
+    .input:active {
+      transform: scale(0.95);
+    }
+    
+    .input:focus {
+      border: 1px solid grey;
+    } */
   </style>
 {% endblock %}
