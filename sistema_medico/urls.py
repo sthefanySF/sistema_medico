@@ -80,7 +80,7 @@ urlpatterns = [
     path('profissionaldasaude/<int:pk>/excluir/', profissionaldasaude_excluir, name='profissionaldasaudeExcluir'),
     
     path('editar_administrativo/', views.editar_administrativo, name='editar_administrativo'),#modal editar
-
+    path('editar_paciente/', views.editar_paciente, name='editar_paciente'),#modal editar
     # Home
     path('', views.home, name='home'),
 

@@ -157,6 +157,32 @@ def paciente_excluir(request, pk):
             return JsonResponse({'success': False, 'error': str(e)})
         return render(request, 'consultas/excluir_paciente.html', {'paciente': paciente})
 
+#modal
+@login_required
+def editar_paciente(request):
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        print("Recebendo POST request via AJAX")
+        id = request.POST.get('id')
+        print(f"ID recebido: {id}")
+        paciente = get_object_or_404(Paciente, id=id)
+        form = PacienteForm(request.POST, instance=paciente)
+        if form.is_valid():
+            form.save()
+            print("Formulário válido e salvo com sucesso.")
+            return JsonResponse({'success': True})
+        else:
+            print(f"Formulário inválido: {form.errors}")
+            return JsonResponse({'success': False, 'errors': form.errors})
+    else:
+        print("Recebendo GET request")
+        id = request.GET.get('id')
+        paciente = get_object_or_404(Paciente, id=id)
+        form = PacienteForm(instance=paciente)
+        context = {
+            'form': form,
+            'paciente': paciente
+        }
+        return render(request, 'consultas/editar_paciente.html', context)
 
 def is_administrativo(user):
     return user.groups.filter(name='administrativo').exists()
@@ -165,7 +191,6 @@ def is_administrativo(user):
 def listar_administrativo(request):
     administrativo = Administrativo.objects.all()
     return render(request, 'consultas/listagem_administrativo.html', {'administrativo': administrativo})
-
 
 # modal
 @login_required

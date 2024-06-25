@@ -56,7 +56,8 @@
                   <p>Matrícula: {{ paciente.matricula }}</p>
                 </div>
                 <div class="btn-group" role="group" aria-label="Ações">
-                  <a href="{% url 'pacienteEditar' paciente.id %}" class="btn btn-primary">Editar</a>
+                  {% comment %} <a href="{% url 'pacienteEditar' paciente.id %}" class="btn btn-primary">Editar</a> {% endcomment %}
+                  <button class="btn btn-primary ms-1" data-bs-toggle="modal" data-bs-target="#editarModal{{ paciente.id }}">Editar</button>
                   <button type="button" class="btn btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#excluirModal{{ paciente.id }}">Excluir</button>
                 </div>
               </div>
@@ -81,30 +82,206 @@
             </div>
           </div>
         </div>
+
+        <!-- Modal de Edição -->
+        <div class="modal fade" id="editarModal{{ paciente.id }}" tabindex="-1" aria-labelledby="editarModalLabel{{ paciente.id }}" aria-hidden="true">
+          <div class="modal-dialog modal-lg" id="glass">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="editarModalLabel{{ paciente.id }}">Editar Usuário</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="editarForm{{ paciente.id }}" method="post" action="{% url 'editar_paciente' %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="id" value="{{ paciente.id }}">
+                  <div class="m-4">
+                    <div class="m-2">
+                      <div class="col-sm-12" id="pessoais">
+                        <div class="col mb-3">
+                          <label for="nome{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Nome</b></label>
+                          <input type="text" class="form-control" id="nome{{ paciente.id }}" name="nome" value="{{ paciente.nome }}" />
+                        </div>
+        
+                        <div class="col mb-3">
+                          <label for="email{{ paciente.id }}" class="col-sm-2 col-form-label"><b>E-mail</b></label>
+                          <input type="email" class="form-control" id="email{{ paciente.id }}" name="email" value="{{ paciente.email }}" />
+                        </div>
+        
+                        <div class="row mb-3">
+                          <div class="col-sm-6">
+                            <label for="cpf{{paciente.id}}" class="col-sm-2 col-form-label"><b>CPF</b></label>
+                            <input type="text" class="form-control" id="cpf{{ paciente.id }}" name="cpf" value="{{ paciente.cpf }}" />
+                          </div>
+        
+                          <div class="col-sm-6">
+                            <label for="rg{{paciente.id}}" class="col-sm-2 col-form-label"><b>RG</b></label>
+                            <input type="text" class="form-control" id="rg{{ paciente.id }}" name="rg" value="{{ paciente.rg }}" />
+                          </div>
+                        </div>
+        
+                        <div class="row mb-3">
+                          <div class="col-sm-6">
+                            <label for="data_nascimento{{paciente.id}}" class="col-sm-6 col-form-label"><b>Data Nascimento</b></label>
+                            <input type="date" class="form-control" id="data_nascimento{{ paciente.id }}" name="data_nascimento" value="{{ paciente.data_nascimento|date:'Y-m-d' }}">
+                          </div>
+        
+                          <div class="col-sm-6">
+                            <label for="sexo{{paciente.id}}" class="col-sm-2 col-form-label"><b>Sexo</b></label>
+                            <select class="form-control" id="sexo{{ paciente.id }}" name="sexo">
+                              <option value="M" {% if paciente.sexo == 'M' %} selected {% endif %}>Masculino</option>
+                              <option value="F" {% if paciente.sexo == 'F' %} selected {% endif %}>Feminino</option>
+                            </select>
+                          </div>
+                        </div>
+        
+                      </div>
+        
+                      <div class="col-sm-12" id="endereco">
+                        <div class="col mb-3">
+                          <label for="bairro{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Bairro</b></label>
+                          <input type="text" class="form-control" id="bairro{{ paciente.id }}" name="bairro" value="{{ paciente.bairro }}" />
+                        </div>
+        
+                        <div class="row bm-3">
+                          <div class="col-sm-6">
+                            <label for="numero{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Número</b></label>
+                            <input type="text" class="form-control" id="numero{{ paciente.id }}" name="numero" value="{{ paciente.numero }}" />
+                          </div>
+                          <div class="col-sm-6">
+                            <label for="cidade{{ paciente.id}}" class="col-sm-2 col-form-label"><b>Cidade</b></label>
+                            <input type="text" class="form-control" id="cidade{{ paciente.id }}" name="cidade" value="{{ paciente.cidade }}" />
+                          </div>
+                        </div>
+        
+                        <div class="row bm-3">
+                          <div class="col-sm-6">
+                            <label for="uf{{ paciente.id }}" class="col-sm-2 col-form-label"><b>UF</b></label>
+                            <select class="form-control" id="uf{{ paciente.id }}" name="uf">
+                              <option value="AC" {% if paciente.uf == 'AC' %} selected {% endif %}>Acre</option>
+                              <option value="AL" {% if paciente.uf == 'AL' %} selected {% endif %}>Alagoas</option>
+                              <option value="AM" {% if paciente.uf == 'AM' %} selected {% endif %}>Amazonas</option>
+                              <option value="AP" {% if paciente.uf == 'AP' %} selected {% endif %}>Amapá</option>
+                              <option value="BA" {% if paciente.uf == 'BA' %} selected {% endif %}>Bahia</option>
+                              <option value="CE" {% if paciente.uf == 'CE' %} selected {% endif %}>Ceará</option>
+                              <option value="DF" {% if paciente.uf == 'DF' %} selected {% endif %}>Distrito Federal</option>
+                              <option value="ES" {% if paciente.uf == 'ES' %} selected {% endif %}>Espírito Santo</option>
+                              <option value="GO" {% if paciente.uf == 'GO' %} selected {% endif %}>Goiás</option>
+                              <option value="MA" {% if paciente.uf == 'MA' %} selected {% endif %}>Maranhão</option>
+                              <option value="MT" {% if paciente.uf == 'MT' %} selected {% endif %}>Mato Grosso</option>
+                              <option value="MS" {% if paciente.uf == 'MS' %} selected {% endif %}>Mato Grosso do Sul</option>
+                              <option value="MG" {% if paciente.uf == 'MG' %} selected {% endif %}>Minas Gerais</option>
+                              <option value="PA" {% if paciente.uf == 'PA' %} selected {% endif %}>Pará</option>
+                              <option value="PB" {% if paciente.uf == 'PB' %} selected {% endif %}>Paraíba</option>
+                              <option value="PE" {% if paciente.uf == 'PE' %} selected {% endif %}>Pernambuco</option>
+                              <option value="PI" {% if paciente.uf == 'PI' %} selected {% endif %}>Piauí</option>
+                              <option value="PR" {% if paciente.uf == 'PR' %} selected {% endif %}>Paraná</option>
+                              <option value="RJ" {% if paciente.uf == 'RJ' %} selected {% endif %}>Rio de Janeiro</option>
+                              <option value="RN" {% if paciente.uf == 'RN' %} selected {% endif %}>Rio Grande do Norte</option>
+                              <option value="RO" {% if paciente.uf == 'RO' %} selected {% endif %}>Rondônia</option>
+                              <option value="RR" {% if paciente.uf == 'RR' %} selected {% endif %}>Roraima</option>
+                              <option value="RS" {% if paciente.uf == 'RS' %} selected {% endif %}>Rio Grande do Sul</option>
+                              <option value="SC" {% if paciente.uf == 'SC' %} selected {% endif %}>Santa Catarina</option>
+                              <option value="SE" {% if paciente.uf == 'SE' %} selected {% endif %}>Sergipe</option>
+                              <option value="SP" {% if paciente.uf == 'SP' %} selected {% endif %}>São Paulo</option>
+                              <option value="TO" {% if paciente.uf == 'TO' %} selected {% endif %}>Tocantins</option>
+                            </select>
+                          </div>
+                          <div class="col-sm-6">
+                            <label for="cep{{ paciente.id}}" class="col-sm-2 col-form-label"><b>CEP</b></label>
+                            <input type="text" class="form-control" id="cep{{ paciente.id }}" name="cep" value="{{ paciente.cep }}" />
+                          </div>
+                        </div>
+        
+                        <div class="col mb-3">
+                          <label for="telefone{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Telefone</b></label>
+                          <input type="text" class="form-control" id="telefone{{ paciente.id }}" name="ddd_telefone" value="{{ paciente.ddd_telefone }}" />
+                        </div>
+        
+                        <div class="col mb-3">
+                          <label for="complemento{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Complemento</b></label>
+                          <input type="text" class="form-control" id="complemento{{ paciente.id }}" name="complemento" value="{{ paciente.complemento }}" />
+                        </div>
+                      </div>
+        
+                      <div class="col-sm-12" id="cargo">
+                        <div class="col mb-3">
+                          <label for="matricula{{ paciente.id}}" class="col-sm-6 col-form-label"><b>Matricula Siape</b></label>
+                          <input type="text" class="form-control" id="matricula{{ paciente.id }}" name="matricula" value="{{ paciente.matricula }}" />
+                        </div>
+        
+                        <div class="row bm-3">
+                          <div class="col-sm-6">
+                            <label for="tipo_paciente{{ paciente.id }}" class="col-sm-6 col-form-label"><b>Tipo de Paciente</b></label>
+                            <input type="text" class="form-control" id="tipo_paciente{{ paciente.id }}" name="tipo_paciente" value="{{ paciente.tipo_paciente }}" />
+                          </div>
+                          <div class="col-sm-6">
+                            <label for="cargo_funcao{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Cargo/Função</b></label>
+                            <input type="text" class="form-control" id="cargo_funcao{{ paciente.id }}" name="cargo_funcao" value="{{ paciente.cargo_funcao }}" />  
+                          </div>
+                        </div>
+        
+                      </div>
+        
+                    </div>
+                  </div>
+                  <div class="modal-footer d-flex justify-content-center align-items-center">
+                    <button type="button" class="btn btn-primary" onclick="editarPaciente({{ paciente.id }})">Salvar Alterações</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
       {% endfor %}
     </tbody>
   </table>
-  
+
+  <script>
+    function editarPaciente(id) {
+      var form = $('#editarForm' + id);
+      $.ajax({
+        type: 'POST',
+        url: form.attr('action'),
+        data: form.serialize(),
+        success: function(response) {
+          if (response.success) {
+            $('#editarModal' + id).modal('hide');
+            // Atualizar a lista ou mostrar uma mensagem de sucesso
+            location.reload(); // Recarrega a página
+          } else {
+            alert('Erro ao editar os dados: ' + JSON.stringify(response.errors));
+          }
+        },
+        error: function(response) {
+          alert('Erro ao editar os dados: ' + response.responseText);
+        }
+      });
+    }
+  </script>
+
   <script>
     function excluirPaciente(pacienteId) {
       $.ajax({
         type: 'POST',
         url: '{% url "pacienteExcluir" 0 %}'.replace('0', pacienteId),
         data: {
-          'csrfmiddlewaretoken': '{{ csrf_token }}'
+          csrfmiddlewaretoken: '{{ csrf_token }}'
         },
-        success: function(response) {
+        success: function (response) {
           if (response.success) {
             //alert('Paciente excluído com sucesso.');
-            location.reload();
+            location.reload()
           } else {
-            alert('Erro: ' + response.error);
+            alert('Erro: ' + response.error)
           }
         },
-        error: function(response) {
-          alert('Ocorreu um erro ao excluir o paciente.');
+        error: function (response) {
+          alert('Ocorreu um erro ao excluir o paciente.')
         }
-      });
+      })
     }
   </script>
 

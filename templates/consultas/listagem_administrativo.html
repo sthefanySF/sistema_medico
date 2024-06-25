@@ -54,8 +54,8 @@
                   <p>Cargo: {{ administrativo.cargo_funcao }}</p>
                 </div>
                 <div class="btn-group" role="group" aria-label="Ações">
-                  <a href="{% url 'administrativoEditar' administrativo.id %}" class="btn btn-primary">Editar</a>
-                  <button class="btn btn-warning ms-1" data-bs-toggle="modal" data-bs-target="#editarModal{{ administrativo.id }}">Editar</button>
+                  {% comment %} <a href="{% url 'administrativoEditar' administrativo.id %}" class="btn btn-primary">Editar</a> {% endcomment %}
+                  <button class="btn btn-primary ms-1" data-bs-toggle="modal" data-bs-target="#editarModal{{ administrativo.id }}">Editar</button>
                   <button class="btn btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#excluirModal{{ administrativo.id }}">Excluir</button>
                 </div>
               </div>
