@@ -220,6 +220,8 @@ def editar_administrativo(request):
         return render(request, 'consultas/editar_administrativo.html', context)
 
 
+
+
 @login_required
 def administrativo_editar(request, pk):
         administrativo = get_object_or_404(Administrativo, pk=pk)
@@ -270,6 +272,33 @@ def is_profissionaldasaude(user):
 def listar_profissionaldasaude(request):
     profissionaldasaude = Profissionaldasaude.objects.all()
     return render(request, 'consultas/listagem_profissionaldasaude.html', {'profissionaldasaude': profissionaldasaude})
+
+#modal
+@login_required
+def editar_profissionaldasaude(request):
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        print("Recebendo POST request via AJAX")
+        id = request.POST.get('id')
+        print(f"ID recebido: {id}")
+        profissionaldasaude = get_object_or_404(Profissionaldasaude, id=id)
+        form = ProfissionaldasaudeForm(request.POST, instance=profissionaldasaude)
+        if form.is_valid():
+            form.save()
+            print("Formulário válido e salvo com sucesso.")
+            return JsonResponse({'success': True})
+        else:
+            print(f"Formulário inválido: {form.errors}")
+            return JsonResponse({'success': False, 'errors': form.errors})
+    else:
+        print("Recebendo GET request")
+        id = request.GET.get('id')
+        profissionaldasaude = get_object_or_404(Profissionaldasaude, id=id)
+        form = ProfissionaldasaudeForm(instance=profissionaldasaude)
+        context = {
+            'form': form,
+            'profissionaldasaude': profissionaldasaude
+        }
+        return render(request, 'consultas/editar_profissionaldasaude.html', context)
 
 
 @login_required
