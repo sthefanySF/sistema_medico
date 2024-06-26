@@ -21,7 +21,7 @@
       </div>
 
       <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Pesquisar paciente..." id="searchInput" />
+        <input type="text" class="form-control" placeholder="Pesquisar por profissional da saude..." id="searchInput" />
       </div>
     </div>
 
@@ -62,7 +62,8 @@
                     <p>Conselho: {{ profissionaldasaude.conselho }}</p>
                   </div>
                   <div class="btn-group" role="group" aria-label="Ações">
-                    <a href="{% url 'profissionaldasaudeEditar' profissionaldasaude.id %}" class="btn btn-primary">Editar</a>
+                    {% comment %} <a href="{% url 'profissionaldasaudeEditar' profissionaldasaude.id %}" class="btn btn-warning">Editar</a> {% endcomment %}
+                    <button class="btn btn-primary ms-1" data-bs-toggle="modal" data-bs-target="#editarModal{{ profissionaldasaude.id }}">Editar</button>
                     <button type="button" class="btn btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#excluirModal{{ profissionaldasaude.id }}">Excluir</button>
                   </div>
                 </div>
@@ -88,10 +89,205 @@
               </div>
             </div>
           </div>
+
+          <!-- Modal de Edição -->
+        <div class="modal fade" id="editarModal{{ profissionaldasaude.id }}" tabindex="-1" aria-labelledby="editarModalLabel{{ profissionaldasaude.id }}" aria-hidden="true">
+          <div class="modal-dialog modal-lg" id="glass">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="editarModalLabel{{ profissionaldasaude.id }}">Editar Usuário</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="editarForm{{ profissionaldasaude.id }}" method="post" action="{% url 'editar_profissionaldasaude' %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="id" value="{{ profissionaldasaude.id }}">
+                  <div class="m-4">
+                    <div class="m-2">
+                      <div class="col-sm-12" id="pessoais">
+                        <div class="col mb-3">
+                          <label for="nome{{ profissionaldasaude.id }}" class="col-sm-2 col-form-label"><b>Nome</b></label>
+                          <input type="text" class="form-control" id="nome{{ profissionaldasaude.id }}" name="nome" value="{{ profissionaldasaude.nome }}" />
+                        </div>
+        
+                        <div class="col mb-3">
+                          <label for="email{{ profissionaldasaude.id }}" class="col-sm-2 col-form-label"><b>E-mail</b></label>
+                          <input type="email" class="form-control" id="email{{ profissionaldasaude.id }}" name="email" value="{{ profissionaldasaude.email }}" />
+                        </div>
+        
+                        <div class="row mb-3">
+                          <div class="col-sm-6">
+                            <label for="cpf{{profissionaldasaude.id}}" class="col-sm-2 col-form-label"><b>CPF</b></label>
+                            <input type="text" class="form-control" id="cpf{{ profissionaldasaude.id }}" name="cpf" value="{{ profissionaldasaude.cpf }}" />
+                          </div>
+        
+                          <div class="col-sm-6">
+                            <label for="rg{{profissionaldasaude.id}}" class="col-sm-2 col-form-label"><b>RG</b></label>
+                            <input type="text" class="form-control" id="rg{{ profissionaldasaude.id }}" name="rg" value="{{ profissionaldasaude.rg }}" />
+                          </div>
+                        </div>
+        
+                        <div class="row mb-3">
+                          <div class="col-sm-6">
+                            <label for="data_nascimento{{profissionaldasaude.id}}" class="col-sm-6 col-form-label"><b>Data Nascimento</b></label>
+                            <input type="date" class="form-control" id="data_nascimento{{ profissionaldasaude.id }}" name="data_nascimento" value="{{ profissionaldasaude.data_nascimento|date:'Y-m-d' }}">
+                          </div>
+        
+                          <div class="col-sm-6">
+                            <label for="sexo{{profissionaldasaude.id}}" class="col-sm-2 col-form-label"><b>Sexo</b></label>
+                            <select class="form-control" id="sexo{{ profissionaldasaude.id }}" name="sexo">
+                              <option value="M" {% if profissionaldasaude.sexo == 'M' %} selected {% endif %}>Masculino</option>
+                              <option value="F" {% if profissionaldasaude.sexo == 'F' %} selected {% endif %}>Feminino</option>
+                            </select>
+                          </div>
+                        </div>
+        
+                      </div>
+        
+                      <div class="col-sm-12" id="endereco">
+                        <div class="col mb-3">
+                          <label for="bairro{{ profissionaldasaude.id }}" class="col-sm-2 col-form-label"><b>Bairro e rua</b></label>
+                          <input type="text" class="form-control" id="bairro{{ profissionaldasaude.id }}" name="bairro" value="{{ profissionaldasaude.bairro }}" />
+                        </div>
+        
+                        <div class="row bm-3">
+                          <div class="col-sm-6">
+                            <label for="numero{{ profissionaldasaude.id }}" class="col-sm-2 col-form-label"><b>Número</b></label>
+                            <input type="text" class="form-control" id="numero{{ profissionaldasaude.id }}" name="numero" value="{{ profissionaldasaude.numero }}" />
+                          </div>
+                          <div class="col-sm-6">
+                            <label for="cidade{{ profissionaldasaude.id}}" class="col-sm-2 col-form-label"><b>Cidade</b></label>
+                            <input type="text" class="form-control" id="cidade{{ profissionaldasaude.id }}" name="cidade" value="{{ profissionaldasaude.cidade }}" />
+                          </div>
+                        </div>
+        
+                        <div class="row bm-3">
+                          <div class="col-sm-6">
+                            <label for="uf{{ profissionaldasaude.id }}" class="col-sm-2 col-form-label"><b>UF</b></label>
+                            <select class="form-control" id="uf{{ profissionaldasaude.id }}" name="uf">
+                              <option value="AC" {% if profissionaldasaude.uf == 'AC' %} selected {% endif %}>Acre</option>
+                              <option value="AL" {% if profissionaldasaude.uf == 'AL' %} selected {% endif %}>Alagoas</option>
+                              <option value="AM" {% if profissionaldasaude.uf == 'AM' %} selected {% endif %}>Amazonas</option>
+                              <option value="AP" {% if profissionaldasaude.uf == 'AP' %} selected {% endif %}>Amapá</option>
+                              <option value="BA" {% if profissionaldasaude.uf == 'BA' %} selected {% endif %}>Bahia</option>
+                              <option value="CE" {% if profissionaldasaude.uf == 'CE' %} selected {% endif %}>Ceará</option>
+                              <option value="DF" {% if profissionaldasaude.uf == 'DF' %} selected {% endif %}>Distrito Federal</option>
+                              <option value="ES" {% if profissionaldasaude.uf == 'ES' %} selected {% endif %}>Espírito Santo</option>
+                              <option value="GO" {% if profissionaldasaude.uf == 'GO' %} selected {% endif %}>Goiás</option>
+                              <option value="MA" {% if profissionaldasaude.uf == 'MA' %} selected {% endif %}>Maranhão</option>
+                              <option value="MT" {% if profissionaldasaude.uf == 'MT' %} selected {% endif %}>Mato Grosso</option>
+                              <option value="MS" {% if profissionaldasaude.uf == 'MS' %} selected {% endif %}>Mato Grosso do Sul</option>
+                              <option value="MG" {% if profissionaldasaude.uf == 'MG' %} selected {% endif %}>Minas Gerais</option>
+                              <option value="PA" {% if profissionaldasaude.uf == 'PA' %} selected {% endif %}>Pará</option>
+                              <option value="PB" {% if profissionaldasaude.uf == 'PB' %} selected {% endif %}>Paraíba</option>
+                              <option value="PE" {% if profissionaldasaude.uf == 'PE' %} selected {% endif %}>Pernambuco</option>
+                              <option value="PI" {% if profissionaldasaude.uf == 'PI' %} selected {% endif %}>Piauí</option>
+                              <option value="PR" {% if profissionaldasaude.uf == 'PR' %} selected {% endif %}>Paraná</option>
+                              <option value="RJ" {% if profissionaldasaude.uf == 'RJ' %} selected {% endif %}>Rio de Janeiro</option>
+                              <option value="RN" {% if profissionaldasaude.uf == 'RN' %} selected {% endif %}>Rio Grande do Norte</option>
+                              <option value="RO" {% if profissionaldasaude.uf == 'RO' %} selected {% endif %}>Rondônia</option>
+                              <option value="RR" {% if profissionaldasaude.uf == 'RR' %} selected {% endif %}>Roraima</option>
+                              <option value="RS" {% if profissionaldasaude.uf == 'RS' %} selected {% endif %}>Rio Grande do Sul</option>
+                              <option value="SC" {% if profissionaldasaude.uf == 'SC' %} selected {% endif %}>Santa Catarina</option>
+                              <option value="SE" {% if profissionaldasaude.uf == 'SE' %} selected {% endif %}>Sergipe</option>
+                              <option value="SP" {% if profissionaldasaude.uf == 'SP' %} selected {% endif %}>São Paulo</option>
+                              <option value="TO" {% if profissionaldasaude.uf == 'TO' %} selected {% endif %}>Tocantins</option>
+                            </select>
+                          </div>
+                          <div class="col-sm-6">
+                            <label for="cep{{ profissionaldasaude.id}}" class="col-sm-2 col-form-label"><b>CEP</b></label>
+                            <input type="text" class="form-control" id="cep{{ profissionaldasaude.id }}" name="cep" value="{{ profissionaldasaude.cep }}" />
+                          </div>
+                        </div>
+        
+                        <div class="col mb-3">
+                          <label for="telefone{{ profissionaldasaude.id }}" class="col-sm-2 col-form-label"><b>Telefone</b></label>
+                          <input type="text" class="form-control" id="telefone{{ profissionaldasaude.id }}" name="ddd_telefone" value="{{ profissionaldasaude.ddd_telefone }}" />
+                        </div>
+        
+                        <div class="col mb-3">
+                          <label for="complemento{{ profissionaldasaude.id }}" class="col-sm-2 col-form-label"><b>Complemento</b></label>
+                          <input type="text" class="form-control" id="complemento{{ profissionaldasaude.id }}" name="complemento" value="{{ profissionaldasaude.complemento }}" />
+                        </div>
+                      </div>
+        
+                      <div class="col-sm-12" id="cargo">
+
+                        <div class="row bm-3">
+                          <div class="col-sm-6">
+                            <label for="identificacao_unica{{ profissionaldasaude.id }}" class="col-sm-2 col-form-label"><b>Siape</b></label>
+                            <input type="text" class="form-control" id="identificacao_unica{{ profissionaldasaude.id }}" name="identificacao_unica" value="{{ profissionaldasaude.identificacao_unica }}" />
+                          </div>
+                          <div class="col-sm-6">
+                            <label for="area{{ profissionaldasaude.id}}" class="col-sm-2 col-form-label"><b>Área</b></label>
+                            <input type="text" class="form-control" id="area{{ profissionaldasaude.id }}" name="area" value="{{ profissionaldasaude.area }}" />
+                          </div>
+                        </div>
+
+                        <div class="row bm-3">
+                          <div class="col-sm-6">
+                            <label for="unidade_siass{{ profissionaldasaude.id }}" class="col-sm-12 col-form-label"><b>Unidade SIASS</b></label>
+                            <input type="text" class="form-control" id="unidade_siass{{ profissionaldasaude.id }}" name="unidade_siass" value="{{ profissionaldasaude.unidade_siass }}" />
+                          </div>
+                          <div class="col-sm-6">
+                            <label for="formacao{{ profissionaldasaude.id}}" class="col-sm-2 col-form-label"><b>Formação</b></label>
+                            <input type="text" class="form-control" id="formacao{{ profissionaldasaude.id }}" name="formacao" value="{{ profissionaldasaude.formacao }}" />
+                          </div>
+                        </div>
+
+                        <div class="row bm-3">
+                          <div class="col-sm-6">
+                            <label for="conselho{{ profissionaldasaude.id }}" class="col-sm-2 col-form-label"><b>Conselho</b></label>
+                            <input type="text" class="form-control" id="conselho{{ profissionaldasaude.id }}" name="conselho" value="{{ profissionaldasaude.conselho }}" />
+                          </div>
+                          <div class="col-sm-6">
+                            <label for="registro{{ profissionaldasaude.id}}" class="col-sm-2 col-form-label"><b>Registro</b></label>
+                            <input type="text" class="form-control" id="registro{{ profissionaldasaude.id }}" name="registro" value="{{ profissionaldasaude.registro }}" />
+                          </div>
+                        </div>
+                        
+        
+                      </div>
+        
+                    </div>
+                  </div>
+                  <div class="modal-footer d-flex justify-content-center align-items-center">
+                    <button type="button" class="btn btn-primary" onclick="editarProfissionaldasaude({{ profissionaldasaude.id }})">Salvar Alterações</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {% endfor %}
       </tbody>
     </table>
   </div>
+
+  <script>
+    function editarProfissionaldasaude(id) {
+      var form = $('#editarForm' + id);
+      $.ajax({
+        type: 'POST',
+        url: form.attr('action'),
+        data: form.serialize(),
+        success: function(response) {
+          if (response.success) {
+            $('#editarModal' + id).modal('hide');
+            // Atualizar a lista ou mostrar uma mensagem de sucesso
+            location.reload(); // Recarrega a página
+          } else {
+            alert('Erro ao editar os dados: ' + JSON.stringify(response.errors));
+          }
+        },
+        error: function(response) {
+          alert('Erro ao editar os dados: ' + response.responseText);
+        }
+      });
+    }
+  </script>
 
   <script>
     function excluirProfissional(profissionaldasaudeId) {
