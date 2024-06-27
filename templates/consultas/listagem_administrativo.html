@@ -15,6 +15,8 @@
       <a class="btn btn-primary" href="{% url 'home' %}">Voltar</a>
       <a href="#" class="btn btn-primary btn-expand-all">Expandir todos</a>
       <a class="btn btn-primary" href="{% url 'administrativoCreate' %}">Cadastrar</a>
+      <a class="btn btn-warning" href="#" data-bs-toggle="modal" data-bs-target="#cadastroModal">Cadastrar</a>
+
     </div>
 
     <div class="input-group mb-3">
@@ -82,161 +84,312 @@
           </div>
         </div>
 
-<!-- Modal de Edição -->
-<div class="modal fade" id="editarModal{{ administrativo.id }}" tabindex="-1" aria-labelledby="editarModalLabel{{ administrativo.id }}" aria-hidden="true">
-  <div class="modal-dialog modal-lg" id="glass">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="editarModalLabel{{ administrativo.id }}">Editar Usuário</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form id="editarForm{{ administrativo.id }}" method="post" action="{% url 'editar_administrativo' %}">
-          {% csrf_token %}
-          <input type="hidden" name="id" value="{{ administrativo.id }}">
-          <div class="m-4">
-            <div class="m-2">
-              <div class="col-sm-12" id="pessoais">
-                <div class="col mb-3">
-                  <label for="nome{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Nome</b></label>
-                  <input type="text" class="form-control" id="nome{{ administrativo.id }}" name="nome" value="{{ administrativo.nome }}" />
-                </div>
-
-                <div class="col mb-3">
-                  <label for="email{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>E-mail</b></label>
-                  <input type="email" class="form-control" id="email{{ administrativo.id }}" name="email" value="{{ administrativo.email }}" />
-                </div>
-
-                <div class="row mb-3">
-                  <div class="col-sm-6">
-                    <label for="cpf{{administrativo.id}}" class="col-sm-2 col-form-label"><b>CPF</b></label>
-                    <input type="text" class="form-control" id="cpf{{ administrativo.id }}" name="cpf" value="{{ administrativo.cpf }}" />
-                  </div>
-
-                  <div class="col-sm-6">
-                    <label for="rg{{administrativo.id}}" class="col-sm-2 col-form-label"><b>RG</b></label>
-                    <input type="text" class="form-control" id="rg{{ administrativo.id }}" name="rg" value="{{ administrativo.rg }}" />
-                  </div>
-                </div>
-
-                <div class="row mb-3">
-                  <div class="col-sm-6">
-                    <label for="data_nascimento{{administrativo.id}}" class="col-sm-6 col-form-label"><b>Data Nascimento</b></label>
-                    <input type="date" class="form-control" id="data_nascimento{{ administrativo.id }}" name="data_nascimento" value="{{ administrativo.data_nascimento|date:'Y-m-d' }}">
-                  </div>
-
-                  <div class="col-sm-6">
-                    <label for="sexo{{administrativo.id}}" class="col-sm-2 col-form-label"><b>Sexo</b></label>
-                    <select class="form-control" id="sexo{{ administrativo.id }}" name="sexo">
-                      <option value="M" {% if administrativo.sexo == 'M' %} selected {% endif %}>Masculino</option>
-                      <option value="F" {% if administrativo.sexo == 'F' %} selected {% endif %}>Feminino</option>
-                    </select>
-                  </div>
-                </div>
-
+        <!-- Modal de Edição -->
+        <div class="modal fade" id="editarModal{{ administrativo.id }}" tabindex="-1" aria-labelledby="editarModalLabel{{ administrativo.id }}" aria-hidden="true">
+          <div class="modal-dialog modal-lg" id="glass">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="editarModalLabel{{ administrativo.id }}">Editar Usuário</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
+              <div class="modal-body">
+                <form id="editarForm{{ administrativo.id }}" method="post" action="{% url 'editar_administrativo' %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="id" value="{{ administrativo.id }}">
+                  <div class="m-4">
+                    <div class="m-2">
+                      <div class="col-sm-12" id="pessoais">
+                        <div class="col mb-3">
+                          <label for="nome{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Nome</b></label>
+                          <input type="text" class="form-control" id="nome{{ administrativo.id }}" name="nome" value="{{ administrativo.nome }}" />
+                        </div>
 
-              <div class="col-sm-12" id="endereco">
-                <div class="col mb-3">
-                  <label for="bairro{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Bairro</b></label>
-                  <input type="text" class="form-control" id="bairro{{ administrativo.id }}" name="bairro" value="{{ administrativo.bairro }}" />
-                </div>
+                        <div class="col mb-3">
+                          <label for="email{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>E-mail</b></label>
+                          <input type="email" class="form-control" id="email{{ administrativo.id }}" name="email" value="{{ administrativo.email }}" />
+                        </div>
 
-                <div class="row bm-3">
-                  <div class="col-sm-6">
-                    <label for="numero{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Número</b></label>
-                    <input type="text" class="form-control" id="numero{{ administrativo.id }}" name="numero" value="{{ administrativo.numero }}" />
+                        <div class="row mb-3">
+                          <div class="col-sm-6">
+                            <label for="cpf{{administrativo.id}}" class="col-sm-2 col-form-label"><b>CPF</b></label>
+                            <input type="text" class="form-control" id="cpf{{ administrativo.id }}" name="cpf" value="{{ administrativo.cpf }}" />
+                          </div>
+
+                          <div class="col-sm-6">
+                            <label for="rg{{administrativo.id}}" class="col-sm-2 col-form-label"><b>RG</b></label>
+                            <input type="text" class="form-control" id="rg{{ administrativo.id }}" name="rg" value="{{ administrativo.rg }}" />
+                          </div>
+                        </div>
+
+                        <div class="row mb-3">
+                          <div class="col-sm-6">
+                            <label for="data_nascimento{{administrativo.id}}" class="col-sm-6 col-form-label"><b>Data Nascimento</b></label>
+                            <input type="date" class="form-control" id="data_nascimento{{ administrativo.id }}" name="data_nascimento" value="{{ administrativo.data_nascimento|date:'Y-m-d' }}">
+                          </div>
+
+                          <div class="col-sm-6">
+                            <label for="sexo{{administrativo.id}}" class="col-sm-2 col-form-label"><b>Sexo</b></label>
+                            <select class="form-control" id="sexo{{ administrativo.id }}" name="sexo">
+                              <option value="M" {% if administrativo.sexo == 'M' %} selected {% endif %}>Masculino</option>
+                              <option value="F" {% if administrativo.sexo == 'F' %} selected {% endif %}>Feminino</option>
+                            </select>
+                          </div>
+                        </div>
+
+                      </div>
+
+                      <div class="col-sm-12" id="endereco">
+                        <div class="col mb-3">
+                          <label for="bairro{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Bairro</b></label>
+                          <input type="text" class="form-control" id="bairro{{ administrativo.id }}" name="bairro" value="{{ administrativo.bairro }}" />
+                        </div>
+
+                        <div class="row bm-3">
+                          <div class="col-sm-6">
+                            <label for="numero{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Número</b></label>
+                            <input type="text" class="form-control" id="numero{{ administrativo.id }}" name="numero" value="{{ administrativo.numero }}" />
+                          </div>
+                          <div class="col-sm-6">
+                            <label for="cidade{{ administrativo.id}}" class="col-sm-2 col-form-label"><b>Cidade</b></label>
+                            <input type="text" class="form-control" id="cidade{{ administrativo.id }}" name="cidade" value="{{ administrativo.cidade }}" />
+                          </div>
+                        </div>
+
+                        <div class="row bm-3">
+                          <div class="col-sm-6">
+                            <label for="uf{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>UF</b></label>
+                            <select class="form-control" id="uf{{ administrativo.id }}" name="uf">
+                              <option value="AC" {% if administrativo.uf == 'AC' %} selected {% endif %}>Acre</option>
+                              <option value="AL" {% if administrativo.uf == 'AL' %} selected {% endif %}>Alagoas</option>
+                              <option value="AM" {% if administrativo.uf == 'AM' %} selected {% endif %}>Amazonas</option>
+                              <option value="AP" {% if administrativo.uf == 'AP' %} selected {% endif %}>Amapá</option>
+                              <option value="BA" {% if administrativo.uf == 'BA' %} selected {% endif %}>Bahia</option>
+                              <option value="CE" {% if administrativo.uf == 'CE' %} selected {% endif %}>Ceará</option>
+                              <option value="DF" {% if administrativo.uf == 'DF' %} selected {% endif %}>Distrito Federal</option>
+                              <option value="ES" {% if administrativo.uf == 'ES' %} selected {% endif %}>Espírito Santo</option>
+                              <option value="GO" {% if administrativo.uf == 'GO' %} selected {% endif %}>Goiás</option>
+                              <option value="MA" {% if administrativo.uf == 'MA' %} selected {% endif %}>Maranhão</option>
+                              <option value="MT" {% if administrativo.uf == 'MT' %} selected {% endif %}>Mato Grosso</option>
+                              <option value="MS" {% if administrativo.uf == 'MS' %} selected {% endif %}>Mato Grosso do Sul</option>
+                              <option value="MG" {% if administrativo.uf == 'MG' %} selected {% endif %}>Minas Gerais</option>
+                              <option value="PA" {% if administrativo.uf == 'PA' %} selected {% endif %}>Pará</option>
+                              <option value="PB" {% if administrativo.uf == 'PB' %} selected {% endif %}>Paraíba</option>
+                              <option value="PE" {% if administrativo.uf == 'PE' %} selected {% endif %}>Pernambuco</option>
+                              <option value="PI" {% if administrativo.uf == 'PI' %} selected {% endif %}>Piauí</option>
+                              <option value="PR" {% if administrativo.uf == 'PR' %} selected {% endif %}>Paraná</option>
+                              <option value="RJ" {% if administrativo.uf == 'RJ' %} selected {% endif %}>Rio de Janeiro</option>
+                              <option value="RN" {% if administrativo.uf == 'RN' %} selected {% endif %}>Rio Grande do Norte</option>
+                              <option value="RO" {% if administrativo.uf == 'RO' %} selected {% endif %}>Rondônia</option>
+                              <option value="RR" {% if administrativo.uf == 'RR' %} selected {% endif %}>Roraima</option>
+                              <option value="RS" {% if administrativo.uf == 'RS' %} selected {% endif %}>Rio Grande do Sul</option>
+                              <option value="SC" {% if administrativo.uf == 'SC' %} selected {% endif %}>Santa Catarina</option>
+                              <option value="SE" {% if administrativo.uf == 'SE' %} selected {% endif %}>Sergipe</option>
+                              <option value="SP" {% if administrativo.uf == 'SP' %} selected {% endif %}>São Paulo</option>
+                              <option value="TO" {% if administrativo.uf == 'TO' %} selected {% endif %}>Tocantins</option>
+                            </select>
+                          </div>
+                          <div class="col-sm-6">
+                            <label for="cep{{ administrativo.id}}" class="col-sm-2 col-form-label"><b>CEP</b></label>
+                            <input type="text" class="form-control" id="cep{{ administrativo.id }}" name="cep" value="{{ administrativo.cep }}" />
+                          </div>
+                        </div>
+
+                        <div class="col mb-3">
+                          <label for="telefone{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Telefone</b></label>
+                          <input type="text" class="form-control" id="telefone{{ administrativo.id }}" name="ddd_telefone" value="{{ administrativo.ddd_telefone }}" />
+                        </div>
+
+                        <div class="col mb-3">
+                          <label for="complemento{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Complemento</b></label>
+                          <input type="text" class="form-control" id="complemento{{ administrativo.id }}" name="complemento" value="{{ administrativo.complemento }}" />
+                        </div>
+                      </div>
+
+                      <div class="col-sm-12" id="cargo">
+                        <div class="col mb-3">
+                          <label for="cargo_funcao{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Cargo/Função</b></label>
+                          <input type="text" class="form-control" id="cargo_funcao{{ administrativo.id }}" name="cargo_funcao" value="{{ administrativo.cargo_funcao }}" />
+                        </div>
+
+                        <div class="row bm-3">
+                          <div class="col-sm-6">
+                            <label for="lotacao_de_exercicio{{ administrativo.id }}" class="col-sm-6 col-form-label"><b>Lotação de Exercicio</b></label>
+                            <input type="text" class="form-control" id="lotacao_de_exercicio{{ administrativo.id }}" name="lotacao_de_exercicio" value="{{ administrativo.lotacao_de_exercicio }}" />
+                          </div>
+                          <div class="col-sm-6">
+                            <label for="matricula_siape{{ administrativo.id}}" class="col-sm-6 col-form-label"><b>Matricula Siape</b></label>
+                            <input type="text" class="form-control" id="matricula_siape{{ administrativo.id }}" name="matricula_siape" value="{{ administrativo.matricula_siape }}" />
+                          </div>
+                        </div>
+
+                      </div>
+
+                    </div>
                   </div>
-                  <div class="col-sm-6">
-                    <label for="cidade{{ administrativo.id}}" class="col-sm-2 col-form-label"><b>Cidade</b></label>
-                    <input type="text" class="form-control" id="cidade{{ administrativo.id }}" name="cidade" value="{{ administrativo.cidade }}" />
+                  <div class="modal-footer d-flex justify-content-center align-items-center">
+                    <button type="button" class="btn btn-primary" onclick="editarAdministrativo({{ administrativo.id }})">Salvar Alterações</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                   </div>
-                </div>
-
-                <div class="row bm-3">
-                  <div class="col-sm-6">
-                    <label for="uf{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>UF</b></label>
-                    <select class="form-control" id="uf{{ administrativo.id }}" name="uf">
-                      <option value="AC" {% if administrativo.uf == 'AC' %} selected {% endif %}>Acre</option>
-                      <option value="AL" {% if administrativo.uf == 'AL' %} selected {% endif %}>Alagoas</option>
-                      <option value="AM" {% if administrativo.uf == 'AM' %} selected {% endif %}>Amazonas</option>
-                      <option value="AP" {% if administrativo.uf == 'AP' %} selected {% endif %}>Amapá</option>
-                      <option value="BA" {% if administrativo.uf == 'BA' %} selected {% endif %}>Bahia</option>
-                      <option value="CE" {% if administrativo.uf == 'CE' %} selected {% endif %}>Ceará</option>
-                      <option value="DF" {% if administrativo.uf == 'DF' %} selected {% endif %}>Distrito Federal</option>
-                      <option value="ES" {% if administrativo.uf == 'ES' %} selected {% endif %}>Espírito Santo</option>
-                      <option value="GO" {% if administrativo.uf == 'GO' %} selected {% endif %}>Goiás</option>
-                      <option value="MA" {% if administrativo.uf == 'MA' %} selected {% endif %}>Maranhão</option>
-                      <option value="MT" {% if administrativo.uf == 'MT' %} selected {% endif %}>Mato Grosso</option>
-                      <option value="MS" {% if administrativo.uf == 'MS' %} selected {% endif %}>Mato Grosso do Sul</option>
-                      <option value="MG" {% if administrativo.uf == 'MG' %} selected {% endif %}>Minas Gerais</option>
-                      <option value="PA" {% if administrativo.uf == 'PA' %} selected {% endif %}>Pará</option>
-                      <option value="PB" {% if administrativo.uf == 'PB' %} selected {% endif %}>Paraíba</option>
-                      <option value="PE" {% if administrativo.uf == 'PE' %} selected {% endif %}>Pernambuco</option>
-                      <option value="PI" {% if administrativo.uf == 'PI' %} selected {% endif %}>Piauí</option>
-                      <option value="PR" {% if administrativo.uf == 'PR' %} selected {% endif %}>Paraná</option>
-                      <option value="RJ" {% if administrativo.uf == 'RJ' %} selected {% endif %}>Rio de Janeiro</option>
-                      <option value="RN" {% if administrativo.uf == 'RN' %} selected {% endif %}>Rio Grande do Norte</option>
-                      <option value="RO" {% if administrativo.uf == 'RO' %} selected {% endif %}>Rondônia</option>
-                      <option value="RR" {% if administrativo.uf == 'RR' %} selected {% endif %}>Roraima</option>
-                      <option value="RS" {% if administrativo.uf == 'RS' %} selected {% endif %}>Rio Grande do Sul</option>
-                      <option value="SC" {% if administrativo.uf == 'SC' %} selected {% endif %}>Santa Catarina</option>
-                      <option value="SE" {% if administrativo.uf == 'SE' %} selected {% endif %}>Sergipe</option>
-                      <option value="SP" {% if administrativo.uf == 'SP' %} selected {% endif %}>São Paulo</option>
-                      <option value="TO" {% if administrativo.uf == 'TO' %} selected {% endif %}>Tocantins</option>
-                    </select>
-                  </div>
-                  <div class="col-sm-6">
-                    <label for="cep{{ administrativo.id}}" class="col-sm-2 col-form-label"><b>CEP</b></label>
-                    <input type="text" class="form-control" id="cep{{ administrativo.id }}" name="cep" value="{{ administrativo.cep }}" />
-                  </div>
-                </div>
-
-                <div class="col mb-3">
-                  <label for="telefone{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Telefone</b></label>
-                  <input type="text" class="form-control" id="telefone{{ administrativo.id }}" name="ddd_telefone" value="{{ administrativo.ddd_telefone }}" />
-                </div>
-
-                <div class="col mb-3">
-                  <label for="complemento{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Complemento</b></label>
-                  <input type="text" class="form-control" id="complemento{{ administrativo.id }}" name="complemento" value="{{ administrativo.complemento }}" />
-                </div>
+                </form>
               </div>
-
-              <div class="col-sm-12" id="cargo">
-                <div class="col mb-3">
-                  <label for="cargo_funcao{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Cargo/Função</b></label>
-                  <input type="text" class="form-control" id="cargo_funcao{{ administrativo.id }}" name="cargo_funcao" value="{{ administrativo.cargo_funcao }}" />
-                </div>
-
-                <div class="row bm-3">
-                  <div class="col-sm-6">
-                    <label for="lotacao_de_exercicio{{ administrativo.id }}" class="col-sm-6 col-form-label"><b>Lotação de Exercicio</b></label>
-                    <input type="text" class="form-control" id="lotacao_de_exercicio{{ administrativo.id }}" name="lotacao_de_exercicio" value="{{ administrativo.lotacao_de_exercicio }}" />
-                  </div>
-                  <div class="col-sm-6">
-                    <label for="matricula_siape{{ administrativo.id}}" class="col-sm-6 col-form-label"><b>Matricula Siape</b></label>
-                    <input type="text" class="form-control" id="matricula_siape{{ administrativo.id }}" name="matricula_siape" value="{{ administrativo.matricula_siape }}" />
-                  </div>
-                </div>
-
-              </div>
-
             </div>
           </div>
-          <div class="modal-footer d-flex justify-content-center align-items-center">
-            <button type="button" class="btn btn-primary" onclick="editarAdministrativo({{ administrativo.id }})">Salvar Alterações</button>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
+        </div>
       {% endfor %}
+
+      <!-- Modal cadastrar -->
+      <div class="modal fade" id="cadastroModal" tabindex="-1" aria-labelledby="cadastroModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="cadastroModalLabel">Cadastro Administrativo</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="cadastroForm" method="POST" action="{% url 'administrativoCreate' %}">
+                {% csrf_token %}
+                <div class="m-2">
+                  <!-- Restante do formulário -->
+                  <div class="m-2">
+                    <div class="mb-3 row">
+                      <div class="col-sm-12" id="pessoais">
+                        <div class="col mb-3">
+                          <label for="{{ form.nome.id_for_label }}" class="col-sm-2 col-form-label"><b>Nome</b></label>
+                          <div class="col-sm-12">{{ form.nome }}</div>
+                        </div>
+
+                        <div class="col mb-3">
+                          <label for="{{ form.email.id_for_label }}" class="col-sm-2 col-form-label"><b>E-mail</b></label>
+                          <div class="col-sm-12">{{ form.email }}</div>
+                        </div>
+
+                        <div class="row mb-3">
+                          <div class="col-sm-6">
+                            <label for="{{ form.cpf.id_for_label }}" class="col-sm-2 col-form-label"><b>CPF</b></label>
+                            <div class="col-sm-12">{{ form.cpf }}</div>
+                          </div>
+
+                          <div class="col-sm-6">
+                            <label for="{{ form.rg.id_for_label }}" class="col-sm-2 col-form-label"><b>RG</b></label>
+                            <div class="col-sm-12">{{ form.rg }}</div>
+                          </div>
+                        </div>
+
+                        <div class="row mb-3">
+                          <div class="col-sm-6">
+                            <label for="{{ form.data_nascimento.id_for_label }}" class="col-sm-6 col-form-label"><b>Data de Nascimento</b></label>
+                            <div class="col-sm-12">{{ form.data_nascimento }}</div>
+                          </div>
+
+                          <div class="col-sm-6">
+                            <label for="{{ form.sexo.id_for_label }}" class="col-sm-2 col-form-label"><b>Sexo</b></label>
+                            <div class="col-sm-12">{{ form.sexo }}</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-12" id="endereco">
+                        <div class="col mb-3">
+                          <label for="{{ form.bairro.id_for_label }}" class="col-sm-2 col-form-label"><b>Bairro e Rua</b></label>
+                          <div class="col-sm-12">{{ form.bairro }}</div>
+                        </div>
+
+                        <div class="row mb-3">
+                          <div class="col-sm-6">
+                            <label for="{{ form.numero.id_for_label }}" class="col-sm-2 col-form-label"><b>Número</b></label>
+                            <div class="col-sm-12">{{ form.numero }}</div>
+                          </div>
+                          <div class="col-sm-6">
+                            <label for="{{ form.cidade.id_for_label }}" class="col-sm-2 col-form-label"><b>Cidade</b></label>
+                            <div class="col-sm-12">{{ form.cidade }}</div>
+                          </div>
+                        </div>
+
+                        <div class="row mb-3">
+                          <div class="col-sm-6">
+                            <label for="{{ form.uf.id_for_label }}" class="col-sm-2 col-form-label"><b>UF</b></label>
+                            <div class="col-sm-12">{{ form.uf }}</div>
+                          </div>
+                          <div class="col-sm-6">
+                            <label for="{{ form.cep.id_for_label }}" class="col-sm-2 col-form-label"><b>CEP</b></label>
+                            <div class="col-sm-12">{{ form.cep }}</div>
+                          </div>
+                        </div>
+
+                        <div class="col mb-3">
+                          <label for="{{ form.ddd_telefone.id_for_label }}" class="col-sm-2 col-form-label"><b>Telefone</b></label>
+                          <div class="col-sm-12">{{ form.ddd_telefone }}</div>
+                        </div>
+
+                        <div class="col mb-3">
+                          <label for="{{ form.complemento.id_for_label }}" class="col-sm-2 col-form-label"><b>Complemento</b></label>
+                          <div class="col-sm-12">{{ form.complemento }}</div>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-12" id="cargo">
+                        <div class="mb-3 row">
+                          <label for="{{ form.cargo_funcao.id_for_label }}" class="col-sm-2 col-form-label"><b>Cargo/Função</b></label>
+                          <div class="col-sm-12">{{ form.cargo_funcao }}</div>
+                        </div>
+
+                        <div class="row mb-3">
+                          <div class="col-sm-6">
+                            <label for="{{ form.lotacao_de_exercicio.id_for_label }}" class="col-sm-12 col-form-label"><b>Lotação de Exercício</b></label>
+                            <div class="col-sm-12">{{ form.lotacao_de_exercicio }}</div>
+                          </div>
+                          <div class="col-sm-6">
+                            <label for="{{ form.matricula_siape.id_for_label }}" class="col-sm-12 col-form-label"><b>Matricula Siape</b></label>
+                            <div class="col-sm-12">{{ form.matricula_siape }}</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="mb-3 row">
+                        <div class="text-center">
+                          <button type="submit" class="btn btn-primary"><b>Cadastrar</b></button>
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><b>Cancelar</b></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
     </tbody>
   </table>
+
+  <script>
+    $(document).ready(function(){
+      $('#cadastroForm').on('submit', function(event){
+        event.preventDefault(); // Evita o envio tradicional do formulário
+  
+        $.ajax({
+          type: 'POST',
+          url: $(this).attr('action'),
+          data: $(this).serialize(),
+          success: function(response) {
+            if (response.success) {
+              $('#cadastroModal').modal('hide');
+              // Atualizar a lista ou mostrar uma mensagem de sucesso
+              location.reload(); // Recarrega a página
+            } else {
+              alert('Erro ao cadastrar o usuário: ' + JSON.stringify(response.errors));
+            }
+          },
+          error: function(response) {
+            alert('Erro ao cadastrar o usuário: ' + response.responseText);
+          }
+        });
+      });
+    });
+  </script>
 
   <script>
     function editarAdministrativo(id) {

@@ -61,7 +61,7 @@ def prontuario_medico(request):
     return render(request, 'consultas/prontuario_medico.html')
 
 @login_required
-def linha_usuario(request):
+def linha_usuario(request): #mostrar o usuario logado
     user = request.user
     context = {
         'user': user,
@@ -190,7 +190,8 @@ def is_administrativo(user):
 @login_required
 def listar_administrativo(request):
     administrativo = Administrativo.objects.all()
-    return render(request, 'consultas/listagem_administrativo.html', {'administrativo': administrativo})
+    form = AdministrativoForm()
+    return render(request, 'consultas/listagem_administrativo.html', {'administrativo': administrativo, 'form': form})
 
 # modal
 @login_required
@@ -242,10 +243,14 @@ def administrativo_editar(request, pk):
 @require_POST
 def administrativo_excluir(request, pk):
     administrativo = get_object_or_404(Administrativo, pk=pk)
+    usuario = administrativo.usuario
 
     try:
         administrativo.delete()
-        messages.success(request, 'Administrativo excluído')
+        if usuario:
+            usuario.delete()  # Exclui o usuário relacionado, se existir
+        messages.success(request, 'Administrativo e usuário excluídos com sucesso')
+        
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             return JsonResponse({'success': True})
         return redirect('administrativoListagem')
@@ -498,42 +503,35 @@ class PacienteCreate(CreateView):
 
 class AdministrativoCreate(CreateView):
     model = Administrativo
-    form_class = AdministrativoForm  # Substitua pelo seu formulário real
+    form_class = AdministrativoForm
     template_name = 'consultas/cadastro_administrativo.html'
     success_url = reverse_lazy('administrativoListagem')
 
+    def is_ajax(self):
+        return self.request.headers.get('x-requested-with') == 'XMLHttpRequest'
 
     def form_valid(self, form):
-        # Salva o formulário mas não commit para customizações adicionais
         administrativo = form.save(commit=False)
 
-        # Criação do usuário com base nos dados do formulário
         username = form.cleaned_data['cpf']
         email = form.cleaned_data['email']
-        password = User.objects.make_random_password()  # Gera uma senha aleatória
+        password = User.objects.make_random_password()
 
-        # Verifica se o nome de usuário já existe
         if User.objects.filter(username=username).exists():
+            if self.is_ajax():
+                return JsonResponse({'success': False, 'errors': {'username': 'CPF já cadastrado como nome de usuário. Por favor, utilize um CPF único.'}})
             messages.error(self.request, 'CPF já cadastrado como nome de usuário. Por favor, utilize um CPF único.')
             return self.form_invalid(form)
 
-        # Cria o usuário
         usuario = User.objects.create_user(username=username, email=email, password=password)
 
-        # Associa o usuário criado ao campo 'usuario' do modelo Administrativo
         administrativo.usuario = usuario
-
-        # Armazena a senha gerada no objeto Administrativo
         administrativo.senha_gerada = password
-
-        # Salva o objeto Administrativo
         administrativo.save()
 
-        # Adiciona o usuário ao grupo "administrativos"
         grupo_administrativo = Group.objects.get(name='administrativo')
         usuario.groups.add(grupo_administrativo)
 
-        # Enviar e-mail de confirmação (opcional)
         assunto = 'Sistema Médico Pericial - UFAC - Confirmação de Cadastro'
         message = f'Olá {administrativo.nome}! Seu cadastro foi confirmado com sucesso! ' \
                   f'Seu login é o seu CPF. \n Por favor, clique no link abaixo para ' \
@@ -544,10 +542,15 @@ class AdministrativoCreate(CreateView):
         except:
             msg = 'Cadastro realizado com sucesso!'
 
+        if self.is_ajax():
+            return JsonResponse({'success': True, 'message': msg})
+
         messages.success(self.request, msg)
         return super().form_valid(form)
 
     def form_invalid(self, form):
+        if self.is_ajax():
+            return JsonResponse({'success': False, 'errors': form.errors})
         messages.error(self.request, 'Erro! Verifique os campos preenchidos e tente novamente.')
         return super().form_invalid(form)
 
