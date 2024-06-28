@@ -124,7 +124,8 @@ def sair(request):
 @login_required
 def listar_pacientes(request):
     pacientes = Paciente.objects.all()
-    return render(request, 'consultas/listagem_pacientes.html', {'pacientes': pacientes})
+    form = PacienteForm()
+    return render(request, 'consultas/listagem_pacientes.html', {'pacientes': pacientes, 'form': form})
 
 @login_required
 def paciente_editar(request, pk):
@@ -276,7 +277,8 @@ def is_profissionaldasaude(user):
 @login_required
 def listar_profissionaldasaude(request):
     profissionaldasaude = Profissionaldasaude.objects.all()
-    return render(request, 'consultas/listagem_profissionaldasaude.html', {'profissionaldasaude': profissionaldasaude})
+    form = ProfissionaldasaudeForm()
+    return render(request, 'consultas/listagem_profissionaldasaude.html', {'profissionaldasaude': profissionaldasaude, 'form': form})
 
 #modal
 @login_required
@@ -324,10 +326,14 @@ def profissionaldasaude_editar(request, pk):
 @require_POST
 def profissionaldasaude_excluir(request, pk):
     profissionaldasaude = get_object_or_404(Profissionaldasaude, pk=pk)
+    usuario = profissionaldasaude.usuario
 
     try:
         profissionaldasaude.delete()
+        if usuario:
+            usuario.delete()
         messages.success(request, 'profissional da saude excluído')
+        
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             return JsonResponse({'success': True})
         return redirect('profissionaldasaudeListagem')
@@ -489,17 +495,28 @@ class PacienteCreate(CreateView):
     template_name = 'consultas/cadastro_paciente.html'
     success_url = reverse_lazy('pacienteListagem')
 
+    def is_ajax(self):
+        return self.request.headers.get('x-requested-with') == 'XMLHttpRequest'
+
     def form_valid(self, form):
+        cpf = form.cleaned_data['cpf']
+        if Paciente.objects.filter(cpf=cpf).exists():
+            if self.is_ajax():
+                return JsonResponse({'success': False, 'errors': {'cpf': 'CPF já cadastrado. Por favor, utilize um CPF único.'}})
+            messages.error(self.request, 'CPF já cadastrado. Por favor, utilize um CPF único.')
+            return self.form_invalid(form)
+
         response = super().form_valid(form)
         messages.success(self.request, 'Paciente cadastrado com sucesso!')
-        print("Paciente cadastrado com sucesso!")
+        if self.is_ajax():
+            return JsonResponse({'success': True, 'message': 'Paciente cadastrado com sucesso!'})
         return response
 
     def form_invalid(self, form):
+        if self.is_ajax():
+            return JsonResponse({'success': False, 'errors': form.errors})
         messages.error(self.request, 'Erro ao cadastrar o paciente. Verifique os dados e tente novamente.')
-        print("Erro ao cadastrar o paciente.")
-        print(form.errors)  
-        return super().form_invalid(form)   
+        return super().form_invalid(form) 
 
 class AdministrativoCreate(CreateView):
     model = Administrativo
@@ -560,34 +577,31 @@ class ProfissionaldasaudeCreate(CreateView):
     template_name = 'consultas/cadastro_profissionaldasaude.html'
     success_url = reverse_lazy('profissionaldasaudeListagem')
     
+    def is_ajax(self):
+        return self.request.headers.get('x-requested-with') == 'XMLHttpRequest'
+
     def form_valid(self, form):
         profissional = form.save(commit=False)
-        
+
         username = form.cleaned_data['cpf']
         email = form.cleaned_data['email']
         password = User.objects.make_random_password()
-        
-        # Verifica se o nome de usuário já existe
+
         if User.objects.filter(username=username).exists():
+            if self.is_ajax():
+                return JsonResponse({'success': False, 'errors': {'username': 'CPF já cadastrado como nome de usuário. Por favor, utilize um CPF único.'}})
             messages.error(self.request, 'CPF já cadastrado como nome de usuário. Por favor, utilize um CPF único.')
             return self.form_invalid(form)
-        
-                # Cria o usuário
+
         usuario = User.objects.create_user(username=username, email=email, password=password)
 
-        # Associa o usuário criado ao campo 'usuario' do modelo Profissionaldasaude
         profissional.usuario = usuario
-
-        # Armazena a senha gerada no objeto Profissionaldasaude
         profissional.senha_gerada = password
-          
         profissional.save()
-        
-        # Adiciona o usuário ao grupo "Profissionais da saude"
-        grupo_profissionaldasaude = Group.objects.get(name='profissionais de saude')
-        usuario.groups.add(grupo_profissionaldasaude)
 
-        # Enviar e-mail de confirmação
+        grupo_profissional = Group.objects.get(name='profissionais de saude')
+        usuario.groups.add(grupo_profissional)
+
         assunto = 'Sistema Médico Pericial - UFAC - Confirmação de Cadastro'
         message = f'Olá {profissional.nome}! Seu cadastro foi confirmado com sucesso! ' \
                   f'Seu login é o seu CPF. \n Por favor, clique no link abaixo para ' \
@@ -598,13 +612,17 @@ class ProfissionaldasaudeCreate(CreateView):
         except:
             msg = 'Cadastro realizado com sucesso!'
 
+        if self.is_ajax():
+            return JsonResponse({'success': True, 'message': msg})
+
         messages.success(self.request, msg)
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.error(self.request, 'Corrija o formulário!')
+        if self.is_ajax():
+            return JsonResponse({'success': False, 'errors': form.errors})
+        messages.error(self.request, 'Erro! Verifique os campos preenchidos e tente novamente.')
         return super().form_invalid(form)
-
 
 
 

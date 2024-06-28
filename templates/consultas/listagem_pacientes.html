@@ -14,7 +14,7 @@
     <div class="d-flex justify-content-between pb-3">
       <a class="btn btn-primary" href="{% url 'home' %}">Voltar</a>
       <a href="#" class="btn btn-primary btn-expand-all">Expandir todos</a>
-      <a class="btn btn-primary" href="{% url 'pacienteCreate' %}">Cadastrar</a>
+      <button class="btn btn-primary" href="#" data-bs-toggle="modal" data-bs-target="#cadastroModal">Cadastrar</button>
     </div>
 
     <div class="input-group mb-3">
@@ -94,7 +94,7 @@
               <div class="modal-body">
                 <form id="editarForm{{ paciente.id }}" method="post" action="{% url 'editar_paciente' %}">
                   {% csrf_token %}
-                  <input type="hidden" name="id" value="{{ paciente.id }}">
+                  <input type="hidden" name="id" value="{{ paciente.id }}" />
                   <div class="m-4">
                     <div class="m-2">
                       <div class="col-sm-12" id="pessoais">
@@ -102,58 +102,57 @@
                           <label for="nome{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Nome</b></label>
                           <input type="text" class="form-control" id="nome{{ paciente.id }}" name="nome" value="{{ paciente.nome }}" />
                         </div>
-        
+
                         <div class="col mb-3">
                           <label for="email{{ paciente.id }}" class="col-sm-2 col-form-label"><b>E-mail</b></label>
                           <input type="email" class="form-control" id="email{{ paciente.id }}" name="email" value="{{ paciente.email }}" />
                         </div>
-        
+
                         <div class="row mb-3">
                           <div class="col-sm-6">
-                            <label for="cpf{{paciente.id}}" class="col-sm-2 col-form-label"><b>CPF</b></label>
+                            <label for="cpf{{ paciente.id }}" class="col-sm-2 col-form-label"><b>CPF</b></label>
                             <input type="text" class="form-control" id="cpf{{ paciente.id }}" name="cpf" value="{{ paciente.cpf }}" />
                           </div>
-        
+
                           <div class="col-sm-6">
-                            <label for="rg{{paciente.id}}" class="col-sm-2 col-form-label"><b>RG</b></label>
+                            <label for="rg{{ paciente.id }}" class="col-sm-2 col-form-label"><b>RG</b></label>
                             <input type="text" class="form-control" id="rg{{ paciente.id }}" name="rg" value="{{ paciente.rg }}" />
                           </div>
                         </div>
-        
+
                         <div class="row mb-3">
                           <div class="col-sm-6">
-                            <label for="data_nascimento{{paciente.id}}" class="col-sm-6 col-form-label"><b>Data Nascimento</b></label>
-                            <input type="date" class="form-control" id="data_nascimento{{ paciente.id }}" name="data_nascimento" value="{{ paciente.data_nascimento|date:'Y-m-d' }}">
+                            <label for="data_nascimento{{ paciente.id }}" class="col-sm-6 col-form-label"><b>Data Nascimento</b></label>
+                            <input type="date" class="form-control" id="data_nascimento{{ paciente.id }}" name="data_nascimento" value="{{ paciente.data_nascimento|date:'Y-m-d' }}" />
                           </div>
-        
+
                           <div class="col-sm-6">
-                            <label for="sexo{{paciente.id}}" class="col-sm-2 col-form-label"><b>Sexo</b></label>
+                            <label for="sexo{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Sexo</b></label>
                             <select class="form-control" id="sexo{{ paciente.id }}" name="sexo">
                               <option value="M" {% if paciente.sexo == 'M' %} selected {% endif %}>Masculino</option>
                               <option value="F" {% if paciente.sexo == 'F' %} selected {% endif %}>Feminino</option>
                             </select>
                           </div>
                         </div>
-        
                       </div>
-        
+
                       <div class="col-sm-12" id="endereco">
                         <div class="col mb-3">
                           <label for="bairro{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Bairro</b></label>
                           <input type="text" class="form-control" id="bairro{{ paciente.id }}" name="bairro" value="{{ paciente.bairro }}" />
                         </div>
-        
+
                         <div class="row bm-3">
                           <div class="col-sm-6">
                             <label for="numero{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Número</b></label>
                             <input type="text" class="form-control" id="numero{{ paciente.id }}" name="numero" value="{{ paciente.numero }}" />
                           </div>
                           <div class="col-sm-6">
-                            <label for="cidade{{ paciente.id}}" class="col-sm-2 col-form-label"><b>Cidade</b></label>
+                            <label for="cidade{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Cidade</b></label>
                             <input type="text" class="form-control" id="cidade{{ paciente.id }}" name="cidade" value="{{ paciente.cidade }}" />
                           </div>
                         </div>
-        
+
                         <div class="row bm-3">
                           <div class="col-sm-6">
                             <label for="uf{{ paciente.id }}" class="col-sm-2 col-form-label"><b>UF</b></label>
@@ -188,28 +187,28 @@
                             </select>
                           </div>
                           <div class="col-sm-6">
-                            <label for="cep{{ paciente.id}}" class="col-sm-2 col-form-label"><b>CEP</b></label>
+                            <label for="cep{{ paciente.id }}" class="col-sm-2 col-form-label"><b>CEP</b></label>
                             <input type="text" class="form-control" id="cep{{ paciente.id }}" name="cep" value="{{ paciente.cep }}" />
                           </div>
                         </div>
-        
+
                         <div class="col mb-3">
                           <label for="telefone{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Telefone</b></label>
                           <input type="text" class="form-control" id="telefone{{ paciente.id }}" name="ddd_telefone" value="{{ paciente.ddd_telefone }}" />
                         </div>
-        
+
                         <div class="col mb-3">
                           <label for="complemento{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Complemento</b></label>
                           <input type="text" class="form-control" id="complemento{{ paciente.id }}" name="complemento" value="{{ paciente.complemento }}" />
                         </div>
                       </div>
-        
+
                       <div class="col-sm-12" id="cargo">
                         <div class="col mb-3">
-                          <label for="matricula{{ paciente.id}}" class="col-sm-6 col-form-label"><b>Matricula Siape</b></label>
+                          <label for="matricula{{ paciente.id }}" class="col-sm-6 col-form-label"><b>Matricula Siape</b></label>
                           <input type="text" class="form-control" id="matricula{{ paciente.id }}" name="matricula" value="{{ paciente.matricula }}" />
                         </div>
-        
+
                         <div class="row bm-3">
                           <div class="col-sm-6">
                             <label for="tipo_paciente{{ paciente.id }}" class="col-sm-6 col-form-label"><b>Tipo de Paciente</b></label>
@@ -217,12 +216,10 @@
                           </div>
                           <div class="col-sm-6">
                             <label for="cargo_funcao{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Cargo/Função</b></label>
-                            <input type="text" class="form-control" id="cargo_funcao{{ paciente.id }}" name="cargo_funcao" value="{{ paciente.cargo_funcao }}" />  
+                            <input type="text" class="form-control" id="cargo_funcao{{ paciente.id }}" name="cargo_funcao" value="{{ paciente.cargo_funcao }}" />
                           </div>
                         </div>
-        
                       </div>
-        
                     </div>
                   </div>
                   <div class="modal-footer d-flex justify-content-center align-items-center">
@@ -234,31 +231,181 @@
             </div>
           </div>
         </div>
-
       {% endfor %}
+
+      <!-- Modal cadastrar -->
+      <div class="modal fade" id="cadastroModal" tabindex="-1" aria-labelledby="cadastroModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" id="glass">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="cadastroModalLabel">Cadastro Profissional da Saúde</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="cadastroForm" method="POST" action="{% url 'pacienteCreate' %}">
+                {% csrf_token %}
+                <div class="col-md-10 offset-md-1">
+                  <div class="m-2">
+                    <div class="col-sm-12" id="pessoais">
+                      <div class="col">
+                        <label for="{{ form.nome.id_for_label }}" class="col-sm-2 col-form-label"><b>Nome</b></label>
+                        <div class="col-sm-12">{{ form.nome }}</div>
+                      </div>
+
+                      <div class="col">
+                        <label for="{{ form.email.id_for_label }}" class="col-sm-2 col-form-label"><b>E-mail</b></label>
+                        <div class="col-sm-12">
+                          {% with field=form.email %}
+                            {% include 'field.html' %}
+                          {% endwith %}
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <label for="{{ form.cpf.id_for_label }}" class="col-sm-2 col-form-label"><b>CPF</b></label>
+                          <div class="col-sm-12">
+                            {% with field=form.cpf %}
+                              {% include 'field.html' %}
+                            {% endwith %}
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <label for="{{ form.rg.id_for_label }}" class="col-sm-2 col-form-label"><b>RG</b></label>
+                          <div class="col-sm-12">{{ form.rg }}</div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <label for="{{ form.data_nascimento.id_for_label }}" class="col-sm-12 col-form-label"><b>Data de Nascimento</b></label>
+                          <div class="col-sm-12">
+                            {% with field=form.data_nascimento %}
+                              {% include 'field.html' %}
+                            {% endwith %}
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <label for="{{ form.sexo.id_for_label }}" class="col-sm-2 col-form-label"><b>Sexo</b></label>
+                          <div class="col-sm-12">{{ form.sexo }}</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-12" id="endereco">
+                      <div class="col">
+                        <label for="{{ form.bairro.id_for_label }}" class="col-sm-2 col-form-label"><b>Bairro e Rua</b></label>
+                        <div class="col-sm-12">{{ form.bairro }}</div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <label for="{{ form.numero.id_for_label }}" class="col-sm-2 col-form-label"><b>Número</b></label>
+                          <div class="col-sm-12">{{ form.numero }}</div>
+                        </div>
+                        <div class="col-sm-6">
+                          <label for="{{ form.cidade.id_for_label }}" class="col-sm-2 col-form-label"><b>Cidade</b></label>
+                          <div class="col-sm-12">{{ form.cidade }}</div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <label for="{{ form.uf.id_for_label }}" class="col-sm-2 col-form-label"><b>UF</b></label>
+                          <div class="col-sm-12">{{ form.uf }}</div>
+                        </div>
+                        <div class="col-sm-6">
+                          <label for="{{ form.cep.id_for_label }}" class="col-sm-2 col-form-label"><b>CEP</b></label>
+                          <div class="col-sm-12">{{ form.cep }}</div>
+                        </div>
+                      </div>
+                      <div class="col">
+                        <label for="{{ form.ddd_telefone.id_for_label }}" class="col-sm-2 col-form-label"><b>Telefone</b></label>
+                        <div class="col-sm-12">{{ form.ddd_telefone }}</div>
+                      </div>
+                      <div class="col">
+                        <label for="{{ form.complemento.id_for_label }}" class="col-sm-2 col-form-label"><b>Complemento</b></label>
+                        <div class="col-sm-12">{{ form.complemento }}</div>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-12" id="cargo">
+                      <div class="col">
+                        <label for="{{ form.matricula.id_for_label }}" class="col-sm-2 col-form-label"><b>Matrícula/Siape</b></label>
+                        <div class="col-sm-12">{{ form.matricula }}</div>
+                      </div>
+                      <div class="col">
+                        <label for="{{ form.tipo_paciente.id_for_label }}" class="col-sm-2 col-form-label"><b>Tipo de Paciente</b></label>
+                        <div class="col-sm-12">{{ form.tipo_paciente }}</div>
+                      </div>
+                      <div class="col">
+                        <label for="{{ form.cargo_funcao.id_for_label }}" class="col-sm-2 col-form-label"><b>Cargo/Função</b></label>
+                        <div class="col-sm-12">{{ form.cargo_funcao }}</div>
+                      </div>
+                      <div class="col">
+                        <label for="{{ form.lotacao_de_exercicio.id_for_label }}" class="col-sm-2 col-form-label">{{ form.fields.lotacao_de_exercicio.label }}</label>
+                        <div class="col-sm-4">{{ form.lotacao_de_exercicio }}</div>
+                      </div>
+                    </div>
+
+                    <div class="text-center">
+                      <button type="submit" style="margin-bottom: 2px" class="btn btn-primary">Cadastrar</button>
+                      <a class="btn btn-secondary" style="line-height: 2; margin-bottom: 2px" href="{% url 'pacienteListagem' %}">Voltar</a>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </tbody>
   </table>
 
   <script>
+    $(document).ready(function () {
+      $('#cadastroForm').on('submit', function (event) {
+        event.preventDefault() // Evita o envio tradicional do formulário
+    
+        $.ajax({
+          type: 'POST',
+          url: $(this).attr('action'),
+          data: $(this).serialize(),
+          success: function (response) {
+            if (response.success) {
+              $('#cadastroModal').modal('hide')
+              // Atualizar a lista ou mostrar uma mensagem de sucesso
+              location.reload() // Recarrega a página
+            } else {
+              alert('Erro ao cadastrar o usuário: ' + JSON.stringify(response.errors))
+            }
+          },
+          error: function (response) {
+            alert('Erro ao cadastrar o usuário: ' + response.responseText)
+          }
+        })
+      })
+    })
+  </script>
+
+  <script>
     function editarPaciente(id) {
-      var form = $('#editarForm' + id);
+      var form = $('#editarForm' + id)
       $.ajax({
         type: 'POST',
         url: form.attr('action'),
         data: form.serialize(),
-        success: function(response) {
+        success: function (response) {
           if (response.success) {
-            $('#editarModal' + id).modal('hide');
+            $('#editarModal' + id).modal('hide')
             // Atualizar a lista ou mostrar uma mensagem de sucesso
-            location.reload(); // Recarrega a página
+            location.reload() // Recarrega a página
           } else {
-            alert('Erro ao editar os dados: ' + JSON.stringify(response.errors));
+            alert('Erro ao editar os dados: ' + JSON.stringify(response.errors))
           }
         },
-        error: function(response) {
-          alert('Erro ao editar os dados: ' + response.responseText);
+        error: function (response) {
+          alert('Erro ao editar os dados: ' + response.responseText)
         }
-      });
+      })
     }
   </script>
 

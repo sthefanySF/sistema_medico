@@ -14,9 +14,7 @@
     <div class="d-flex justify-content-between pb-3">
       <a class="btn btn-primary" href="{% url 'home' %}">Voltar</a>
       <a href="#" class="btn btn-primary btn-expand-all">Expandir todos</a>
-      <a class="btn btn-primary" href="{% url 'administrativoCreate' %}">Cadastrar</a>
-      <a class="btn btn-warning" href="#" data-bs-toggle="modal" data-bs-target="#cadastroModal">Cadastrar</a>
-
+      <button class="btn btn-primary" href="#" data-bs-toggle="modal" data-bs-target="#cadastroModal">Cadastrar</button>
     </div>
 
     <div class="input-group mb-3">
@@ -95,7 +93,7 @@
               <div class="modal-body">
                 <form id="editarForm{{ administrativo.id }}" method="post" action="{% url 'editar_administrativo' %}">
                   {% csrf_token %}
-                  <input type="hidden" name="id" value="{{ administrativo.id }}">
+                  <input type="hidden" name="id" value="{{ administrativo.id }}" />
                   <div class="m-4">
                     <div class="m-2">
                       <div class="col-sm-12" id="pessoais">
@@ -111,31 +109,22 @@
 
                         <div class="row mb-3">
                           <div class="col-sm-6">
-                            <label for="cpf{{administrativo.id}}" class="col-sm-2 col-form-label"><b>CPF</b></label>
+                            <label for="cpf{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>CPF</b></label>
                             <input type="text" class="form-control" id="cpf{{ administrativo.id }}" name="cpf" value="{{ administrativo.cpf }}" />
                           </div>
 
                           <div class="col-sm-6">
-                            <label for="rg{{administrativo.id}}" class="col-sm-2 col-form-label"><b>RG</b></label>
+                            <label for="rg{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>RG</b></label>
                             <input type="text" class="form-control" id="rg{{ administrativo.id }}" name="rg" value="{{ administrativo.rg }}" />
                           </div>
                         </div>
 
                         <div class="row mb-3">
                           <div class="col-sm-6">
-                            <label for="data_nascimento{{administrativo.id}}" class="col-sm-6 col-form-label"><b>Data Nascimento</b></label>
-                            <input type="date" class="form-control" id="data_nascimento{{ administrativo.id }}" name="data_nascimento" value="{{ administrativo.data_nascimento|date:'Y-m-d' }}">
-                          </div>
-
-                          <div class="col-sm-6">
-                            <label for="sexo{{administrativo.id}}" class="col-sm-2 col-form-label"><b>Sexo</b></label>
-                            <select class="form-control" id="sexo{{ administrativo.id }}" name="sexo">
-                              <option value="M" {% if administrativo.sexo == 'M' %} selected {% endif %}>Masculino</option>
-                              <option value="F" {% if administrativo.sexo == 'F' %} selected {% endif %}>Feminino</option>
-                            </select>
+                            <label for="data_nascimento{{ administrativo.id }}" class="col-sm-6 col-form-label"><b>Data Nascimento</b></label>
+                            <input type="date" class="form-control" id="data_nascimento{{ administrativo.id }}" name="data_nascimento" value="{{ administrativo.data_nascimento|date:'Y-m-d' }}" />
                           </div>
                         </div>
-
                       </div>
 
                       <div class="col-sm-12" id="endereco">
@@ -150,7 +139,7 @@
                             <input type="text" class="form-control" id="numero{{ administrativo.id }}" name="numero" value="{{ administrativo.numero }}" />
                           </div>
                           <div class="col-sm-6">
-                            <label for="cidade{{ administrativo.id}}" class="col-sm-2 col-form-label"><b>Cidade</b></label>
+                            <label for="cidade{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Cidade</b></label>
                             <input type="text" class="form-control" id="cidade{{ administrativo.id }}" name="cidade" value="{{ administrativo.cidade }}" />
                           </div>
                         </div>
@@ -188,8 +177,9 @@
                               <option value="TO" {% if administrativo.uf == 'TO' %} selected {% endif %}>Tocantins</option>
                             </select>
                           </div>
+
                           <div class="col-sm-6">
-                            <label for="cep{{ administrativo.id}}" class="col-sm-2 col-form-label"><b>CEP</b></label>
+                            <label for="cep{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>CEP</b></label>
                             <input type="text" class="form-control" id="cep{{ administrativo.id }}" name="cep" value="{{ administrativo.cep }}" />
                           </div>
                         </div>
@@ -217,13 +207,11 @@
                             <input type="text" class="form-control" id="lotacao_de_exercicio{{ administrativo.id }}" name="lotacao_de_exercicio" value="{{ administrativo.lotacao_de_exercicio }}" />
                           </div>
                           <div class="col-sm-6">
-                            <label for="matricula_siape{{ administrativo.id}}" class="col-sm-6 col-form-label"><b>Matricula Siape</b></label>
+                            <label for="matricula_siape{{ administrativo.id }}" class="col-sm-6 col-form-label"><b>Matricula Siape</b></label>
                             <input type="text" class="form-control" id="matricula_siape{{ administrativo.id }}" name="matricula_siape" value="{{ administrativo.matricula_siape }}" />
                           </div>
                         </div>
-
                       </div>
-
                     </div>
                   </div>
                   <div class="modal-footer d-flex justify-content-center align-items-center">
@@ -242,14 +230,13 @@
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="cadastroModalLabel">Cadastro Administrativo</h5>
+              <h5 class="modal-title" id="cadastroModalLabel">Cadastro de Paciente</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <form id="cadastroForm" method="POST" action="{% url 'administrativoCreate' %}">
+              <form id="cadastroForm" method="POST" action="{% url 'pacienteCreate' %}">
                 {% csrf_token %}
                 <div class="m-2">
-                  <!-- Restante do formulário -->
                   <div class="m-2">
                     <div class="mb-3 row">
                       <div class="col-sm-12" id="pessoais">
@@ -359,9 +346,6 @@
           </div>
         </div>
       </div>
-
-
-
     </tbody>
   </table>
 
@@ -369,7 +353,7 @@
     $(document).ready(function(){
       $('#cadastroForm').on('submit', function(event){
         event.preventDefault(); // Evita o envio tradicional do formulário
-  
+
         $.ajax({
           type: 'POST',
           url: $(this).attr('action'),
@@ -380,11 +364,11 @@
               // Atualizar a lista ou mostrar uma mensagem de sucesso
               location.reload(); // Recarrega a página
             } else {
-              alert('Erro ao cadastrar o usuário: ' + JSON.stringify(response.errors));
+              alert('Erro ao cadastrar o paciente: ' + JSON.stringify(response.errors));
             }
           },
           error: function(response) {
-            alert('Erro ao cadastrar o usuário: ' + response.responseText);
+            alert('Erro ao cadastrar o paciente: ' + response.responseText);
           }
         });
       });
@@ -393,24 +377,24 @@
 
   <script>
     function editarAdministrativo(id) {
-      var form = $('#editarForm' + id);
+      var form = $('#editarForm' + id)
       $.ajax({
         type: 'POST',
         url: form.attr('action'),
         data: form.serialize(),
-        success: function(response) {
+        success: function (response) {
           if (response.success) {
-            $('#editarModal' + id).modal('hide');
+            $('#editarModal' + id).modal('hide')
             // Atualizar a lista ou mostrar uma mensagem de sucesso
-            location.reload(); // Recarrega a página
+            location.reload() // Recarrega a página
           } else {
-            alert('Erro ao editar o usuário: ' + JSON.stringify(response.errors));
+            alert('Erro ao editar o usuário: ' + JSON.stringify(response.errors))
           }
         },
-        error: function(response) {
-          alert('Erro ao editar o usuário: ' + response.responseText);
+        error: function (response) {
+          alert('Erro ao editar o usuário: ' + response.responseText)
         }
-      });
+      })
     }
   </script>
 
