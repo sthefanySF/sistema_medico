@@ -2,8 +2,6 @@
 {% block title %}Lista de Agendamentos{% endblock %}
 {% load static %}
 
-
-
 {% block content %}
 
 {% if messages %}{% include 'messages.html' %}{% endif %}
@@ -13,51 +11,35 @@
 </div>
 
 <div class="d-flex justify-content-between align-items-center" id="glass">
-
   <a class="btn btn-danger" href="{% url 'home' %}" style="margin-bottom: 3px; max-height: 50px; box-shadow: 0px 2px 20px -10px rgb(0, 0, 0);">
     Voltar
   </a>
 
   <div class="mb-4 d-flex align-items-center" id="" style="margin-left: 60px;">
-    <form method="get" class="mx-auto" style="max-width: 600px; min-width: 410px; " > 
+    <form method="get" class="mx-auto" style="max-width: 600px; min-width: 410px;">
       <div class="row">
-        {% comment %} <div class="col" style="margin-bottom: 3px">
-          <input type="text" name="cpf" class="form-control" placeholder="CPF do paciente">
-        </div>
-  
-        <div class="col" style="margin-bottom: 3px">
-          <input type="date" name="data_agendamento" class="form-control" placeholder="Data do agendamento">
-        </div> {% endcomment %}
-  
         <div class="row align-items-end">
-          <div class="col-md-12 mb-3" style="">
+          <div class="col-md-12 mb-3">
             <label for="profissional_saude" class="form-label text-white">Profissional de Saúde:</label>
             <select name="profissional_saude" id="profissional_saude" class="form-select">
               <option value="" selected>Selecione um profissional</option>
               <option value="todos" class="destacado">Listar Todos</option>
               {% for profissional in profissionais_saude %}
-                  <option value="{{ profissional.id }}" {% if request.GET.profissional_saude == profissional.id|stringformat:"s" %}selected{% endif %}>{{ profissional.nome }}</option>
+                <option value="{{ profissional.id }}" {% if request.GET.profissional_saude == profissional.id|stringformat:"s" %}selected{% endif %}>{{ profissional.nome }}</option>
               {% endfor %}
-          </select>
+            </select>
           </div>
         </div>
       </div>
-        
     </form>
   </div>
-  
+
   <a class="btn btn-primary" href="{% url 'agendamentoCreate' %}" style="margin-bottom: 3px; max-height: 50px; box-shadow: 0px 2px 20px -10px rgb(0, 0, 0);">
     Agendar
   </a>
 </div>
 
-
-
-
-
-
 <div class="table-responsive">
-
   <table id="example" class="table table-striped nowrap table-bordered" style="width:100%">
     <thead>
       <tr class="custom-table-row">
@@ -74,122 +56,153 @@
 
     <tbody>
       {% for agendamento in agendamentos %}
-      <tr>
-        <td>{{ agendamento.paciente.nome }}</td>
-        <td>{{ agendamento.paciente.cpf }}</td>
-        <td>{{ agendamento.profissional_saude.nome }}</td>
-        <td>{{ agendamento.data_agendamento | date:"d/m/Y " }}</td>
-        <td>
-          {% if agendamento.prioridade_atendimento %}
-          <i class="fa fa-circle text-success text-center" ></i>
-          {% else %}
-          <i class="fa fa-circle text-danger text-center" ></i>
-          {% endif %}
-        </td>
-
-        <td>
-
-          {% if agendamento.turno == 'manha' %}
-          Manhã
-          {% elif agendamento.turno == 'tarde' %}
-          Tarde
-          {% else %}
-          {{ agendamento.turno }}
-          {% endif %}
-        </td>
-
-        <td>
-          {% if agendamento.status_atendimento == 'pendente' %}
-          <div class="btn-group" role="group" aria-label="Status">
-            <a href="{% url 'agendamentoConfirmar' agendamento.id %}" class="btn btn-success">Confirmar</a>
-            
-          </div>
-          {% elif agendamento.status_atendimento == 'confirmado' %}
-          Confirmado
-          {% elif agendamento.status_atendimento == 'ausente' %}
-          Ausente
-          {% elif agendamento.status_atendimento == 'atendido' %}
-          Atendido
-          {% else %}
-          Cancelado
-          {% endif %}
-        </td>
-
-        <td>
-          <div class="btn-group" role="group" aria-label="Ações">
-            <button type="button" 
-                    class="btn btn-secondary ms-1 btn-lg custom-btn" 
-                    data-status="{{ agendamento.status_atendimento }}" 
-                    onclick="reagendarAgendamento({{ agendamento.id }}, '{{ agendamento.status_atendimento }}')" 
-                    title="Reagendar"
-                    {% if agendamento.status_atendimento != 'pendente' %}disabled{% endif %}>
-                <i class="fa fa-calendar-o" aria-hidden="true"></i>
-            </button>   
-            
-            <button type="button" class="btn btn-danger ms-1 btn-lg custom-btn {% if agendamento.status_atendimento != 'pendente' %}disabled{% endif %}" data-status="{{ agendamento.status_atendimento }}" data-bs-toggle="modal" data-bs-target="#cancelarModal{{ agendamento.id }}" title="Cancelar">
-              <i class="fa fa-times" aria-hidden="true"></i>
-            </button>
-          
-            {% if agendamento.status_atendimento == 'confirmado' %}
-            <button type="button" 
-                    class="btn btn-success ms-1 btn-lg custom-btn" 
-                    onclick="redirecionar('{% url 'criar_atendimento' agendamento.id %}')" 
-                    title="Atender">
-                <i class="fa fa-check-square-o" aria-hidden="true"></i>
-            </button>
+        <tr>
+          <td>{{ agendamento.paciente.nome }}</td>
+          <td>{{ agendamento.paciente.cpf }}</td>
+          <td>{{ agendamento.profissional_saude.nome }}</td>
+          <td>{{ agendamento.data_agendamento | date:"d/m/Y " }}</td>
+          <td>
+            {% if agendamento.prioridade_atendimento %}
+              <i class="fa fa-circle text-success text-center"></i>
             {% else %}
-            <button type="button" 
-                    class="btn btn-success ms-1 btn-lg custom-btn disabled" 
-                    disabled>
-                <i class="fa fa-check-square-o" aria-hidden="true"></i>
-            </button>
-            {% endif %}           
-           
-            <button type="button" class="btn btn-info ms-1 btn-lg custom-btn" onclick="redirecionar('{% url 'confirmAgendamento' agendamento.id %}')" title="Visualizar"><i class="fa fa-eye" aria-hidden="true"></i></button>
-          </div>
+              <i class="fa fa-circle text-danger text-center"></i>
+            {% endif %}
+          </td>
 
+          <td>
+            {% if agendamento.turno == 'manha' %}
+              Manhã
+            {% elif agendamento.turno == 'tarde' %}
+              Tarde
+            {% else %}
+              {{ agendamento.turno }}
+            {% endif %}
+          </td>
 
-          <div class="modal fade" id="cancelarModal{{ agendamento.id }}" tabindex="-1" aria-labelledby="cancelarModalLabel{{ agendamento.id }}" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="cancelarModalLabel{{ agendamento.id }}">Cancelar Agendamento</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <p>Ao cancelar esse agendamento ele não poderá mais ser atendido. Informe a justificativa para o cancelamento:</p>
-                  <textarea id="justificativa_cancelamento_{{ agendamento.id }}" class="form-control" rows="4" placeholder="Digite a justificativa aqui"></textarea>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                  <button type="button" class="btn btn-danger" onclick="cancelarAgendamento({{ agendamento.id }})">Confirmar Cancelamento</button>
+          <td>
+            {% if agendamento.status_atendimento == 'pendente' %}
+              <div class="btn-group" role="group" aria-label="Status">
+                <a href="{% url 'agendamentoConfirmar' agendamento.id %}" class="btn btn-success">Confirmar</a>
+              </div>
+            {% elif agendamento.status_atendimento == 'confirmado' %}
+              Confirmado
+            {% elif agendamento.status_atendimento == 'ausente' %}
+              Ausente
+            {% elif agendamento.status_atendimento == 'atendido' %}
+              Atendido
+            {% else %}
+              Cancelado
+            {% endif %}
+          </td>
 
+          <td>
+            <div class="btn-group" role="group" aria-label="Ações">
+              <button type="button" 
+                      class="btn btn-secondary ms-1 btn-lg custom-btn" 
+                      data-status="{{ agendamento.status_atendimento }}" 
+                      data-bs-toggle="modal" 
+                      data-bs-target="#reagendarModal{{ agendamento.id }}" 
+                      title="Reagendar"
+                      {% if agendamento.status_atendimento != 'pendente' %}disabled{% endif %}>
+                  <i class="fa fa-calendar-o" aria-hidden="true"></i>
+              </button>   
+
+              <button type="button" class="btn btn-danger ms-1 btn-lg custom-btn {% if agendamento.status_atendimento != 'pendente' %}disabled{% endif %}" data-status="{{ agendamento.status_atendimento }}" data-bs-toggle="modal" data-bs-target="#cancelarModal{{ agendamento.id }}" title="Cancelar">
+                <i class="fa fa-times" aria-hidden="true"></i>
+              </button>
+            
+              {% if agendamento.status_atendimento == 'confirmado' %}
+              <button type="button" 
+                      class="btn btn-success ms-1 btn-lg custom-btn" 
+                      onclick="redirecionar('{% url 'criar_atendimento' agendamento.id %}')" 
+                      title="Atender">
+                  <i class="fa fa-check-square-o" aria-hidden="true"></i>
+              </button>
+              {% else %}
+              <button type="button" 
+                      class="btn btn-success ms-1 btn-lg custom-btn disabled" 
+                      disabled>
+                  <i class="fa fa-check-square-o" aria-hidden="true"></i>
+              </button>
+              {% endif %}           
+            
+              <button type="button" class="btn btn-info ms-1 btn-lg custom-btn" onclick="redirecionar('{% url 'confirmAgendamento' agendamento.id %}')" title="Visualizar"><i class="fa fa-eye" aria-hidden="true"></i></button>
+            </div>
+
+            <!-- Modal para cancelar agendamento -->
+            <div class="modal fade" id="cancelarModal{{ agendamento.id }}" tabindex="-1" aria-labelledby="cancelarModalLabel{{ agendamento.id }}" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="cancelarModalLabel{{ agendamento.id }}">Cancelar Agendamento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <p>Ao cancelar esse agendamento ele não poderá mais ser atendido. Informe a justificativa para o cancelamento:</p>
+                    <textarea id="justificativa_cancelamento_{{ agendamento.id }}" class="form-control" rows="4" placeholder="Digite a justificativa aqui"></textarea>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-danger" onclick="cancelarAgendamento({{ agendamento.id }})">Confirmar Cancelamento</button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-      
-        </td>
-
-      </tr>
+        
+            <!-- Modal de Reagendamento -->
+            <div class="modal fade" id="reagendarModal{{ agendamento.id }}" tabindex="-1" aria-labelledby="reagendarModalLabel{{ agendamento.id }}" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="reagendarModalLabel{{ agendamento.id }}">Reagendar Agendamento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div id="errorContainer{{ agendamento.id }}"></div>
+                    <form id="reagendarForm{{ agendamento.id }}" method="POST">
+                      {% csrf_token %}
+                      <div class="mb-3" style="font-weight: bold">
+                        <label for="profissional_saude_{{ agendamento.id }}">Profissional de Saúde</label>
+                        <select id="profissional_saude_{{ agendamento.id }}" name="profissional_saude" class="form-select">
+                          {% for profissional in profissionais_saude %}
+                            <option value="{{ profissional.id }}" {% if agendamento.profissional_saude.id == profissional.id %}selected{% endif %}>{{ profissional.nome }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                      <div class="mb-3" style="font-weight: bold">
+                        <label for="data_agendamento_{{ agendamento.id }}">Data do Agendamento</label>
+                        <input type="date" id="data_agendamento_{{ agendamento.id }}" name="data_agendamento" class="form-control" value="{{ agendamento.data_agendamento|date:'Y-m-d' }}">
+                      </div>
+                      <div class="mb-3" style="font-weight: bold">
+                        <label for="turno_{{ agendamento.id }}">Turno</label>
+                        <select id="turno_{{ agendamento.id }}" name="turno" class="form-select">
+                          <option value="manha" {% if agendamento.turno == 'manha' %}selected{% endif %}>Manhã</option>
+                          <option value="tarde" {% if agendamento.turno == 'tarde' %}selected{% endif %}>Tarde</option>
+                        </select>
+                      </div>
+                      <div class="mb-3 form-check" style="font-weight: bold">
+                        <input type="checkbox" id="prioridade_atendimento_{{ agendamento.id }}" name="prioridade_atendimento" class="form-check-input" {% if agendamento.prioridade_atendimento %}checked{% endif %}>
+                        <label class="form-check-label" for="prioridade_atendimento_{{ agendamento.id }}">Prioridade de Atendimento</label>
+                      </div>
+                      <div class="text-center">
+                        <button type="button" class="btn btn-primary" onclick="reagendarAgendamento({{ agendamento.id }})">Reagendar</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
       {% endfor %}
     </tbody>
-
   </table>
-
-  
-
 </div>
-    {#  Chama função de voltar ao topo  #}
-    <button onclick="voltarTopo()" id="btnTopo">
-        <i id="arrow" class="fa fa-arrow-up fa-lg"></i>
-    </button>
 
-<script>
-  function redirecionar(url) {
-      window.location.href = url;
-  }
-</script>
+<button onclick="voltarTopo()" id="btnTopo">
+  <i id="arrow" class="fa fa-arrow-up fa-lg"></i>
+</button>
 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
@@ -197,39 +210,31 @@
       responsive: true,
       language: {
         url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/pt-PT.json',
-    },
+      },
     });
   });
-</script>
-<script>
+
   $(document).ready(function() {
     $('#profissional_saude').change(function() {
-      // Envie automaticamente o formulário quando o valor do campo de seleção for alterado
       $(this).closest('form').submit();
     });
   });
-</script>
 
-<script>
   function redirecionar(url) {
     window.location.href = url;
   }
 
-
-</script>
-
-<script>
   function cancelarAgendamento(agendamentoId) {
     var button = document.querySelector('[data-bs-target="#cancelarModal' + agendamentoId + '"]');
     var status = button.getAttribute('data-status');
-  
+
     if (status !== 'pendente') {
       alert('Não é possível cancelar um agendamento que não está pendente.');
-      return; // Saia da função se o status não for pendente
+      return;
     }
-  
+
     var justificativa = document.getElementById('justificativa_cancelamento_' + agendamentoId).value;
-  
+
     $.ajax({
       type: 'POST',
       url: '/cancelar_agendamento/' + agendamentoId + '/',
@@ -240,7 +245,7 @@
       success: function(response) {
         if (response.success) {
           alert(response.message);
-          location.reload(); // Recarrega a página para atualizar o status na tabela
+          location.reload();
         } else {
           alert('Erro: ' + response.errors);
         }
@@ -250,27 +255,54 @@
       }
     });
   }
-  
 
-  function reagendarAgendamento(agendamentoId, status) {
+  function reagendarAgendamento(agendamentoId) {
+    var status = document.querySelector('[data-bs-target="#reagendarModal' + agendamentoId + '"]').getAttribute('data-status');
+
     if (status !== 'pendente') {
       alert('Este agendamento não pode ser reagendado porque não está pendente.');
       return;
     }
-    // Redirecionar para a página de reagendamento
-    window.location.href = `/reagendar/agendamento/${agendamentoId}/`;
-  }
 
+    var form = $('#reagendarForm' + agendamentoId);
+    var formData = form.serialize();
+
+    $.ajax({
+      type: 'POST',
+      url: '/reagendar/agendamento/' + agendamentoId + '/',
+      data: formData,
+      success: function(response) {
+        if (response.success) {
+          alert(response.message);
+          location.reload();
+        } else {
+          var errorContainer = $('#errorContainer' + agendamentoId);
+          errorContainer.empty(); // Clear any previous errors
+
+          var errors = response.errors;
+          var errorMessages = '';
+          for (var field in errors) {
+            if (errors.hasOwnProperty(field)) {
+              errors[field].forEach(function(error) {
+                errorMessages += '<p class="text-danger">' + error.message + '</p>';
+              });
+            }
+          }
+          errorContainer.html(errorMessages);
+        }
+      },
+      error: function(response) {
+        alert('Ocorreu um erro ao reagendar o agendamento.');
+      }
+    });
+  }
 </script>
 
-
-
 <style>
-
-.dataTables_filter{
+  .dataTables_filter {
     display: flex;
     justify-content: flex-end;
-}
+  }
 </style>
 
 {% endblock %}

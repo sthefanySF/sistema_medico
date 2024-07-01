@@ -410,21 +410,18 @@ def reagendar_agendamento(request, pk):
     agendamento = get_object_or_404(Agendamento, pk=pk)
 
     if agendamento.status_atendimento != 'pendente':
-        messages.error(request, 'Este agendamento não pode ser reagendado porque não está pendente.')
-        return redirect('agendamentoListagem')
+        return JsonResponse({'success': False, 'errors': 'Este agendamento não pode ser reagendado porque não está pendente.'})
 
     if request.method == 'POST':
         form = AgendamentoReagendarForm(request.POST, instance=agendamento)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Reagendado com sucesso!')
-            return redirect('agendamentoListagem')
+            return JsonResponse({'success': True, 'message': 'Reagendado com sucesso!'})
         else:
-            messages.error(request, 'Informe uma data válida!')
+            errors = form.errors.get_json_data()
+            return JsonResponse({'success': False, 'errors': errors})
     else:
-        form = AgendamentoReagendarForm(instance=agendamento)
-
-    return render(request, 'consultas/reagendar_agendamento.html', {'form': form, 'agendamento': agendamento})
+        return JsonResponse({'success': False, 'errors': 'Método de requisição inválido.'})
 
 
 @require_POST  # Certifica que a função aceita apenas requisições POST
@@ -939,59 +936,3 @@ def pdf_prontuario_medico(request, paciente_id):
     response['Content-Disposition'] = 'attachment; filename="prontuario_medico.pdf"'
     return response
 
-class AtestadoMedicoCreate(CreateView):
-    model = AtestadoMedico
-    form_class = AtestadoMedicoForm
-    template_name = 'consultas/atestado_medico.html'
-
-    # Método chamado quando o formulário é válido
-    def form_valid(self, form):
-        agendamento_id = self.kwargs['agendamento_id']
-        agendamento = get_object_or_404(Agendamento, id=agendamento_id)
-        form.instance.agendamento = agendamento
-        return super().form_valid(form)
-
-    # Método para passar argumentos extras para o formulário
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        agendamento_id = self.kwargs['agendamento_id']
-        agendamento = get_object_or_404(Agendamento, id=agendamento_id)
-        kwargs['agendamento'] = agendamento
-        return kwargs
-
-    # Método para adicionar dados adicionais ao contexto do template
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        agendamento_id = self.kwargs['agendamento_id']
-        agendamento = get_object_or_404(Agendamento, id=agendamento_id)
-        context['paciente'] = agendamento.paciente.nome
-        context['profissional'] = agendamento.profissional_saude.nome
-        context['data_agendamento'] = agendamento.data_agendamento
-        context['data_criacao'] = timezone.now()
-        return context
-
-    # Método para obter a URL de redirecionamento após o sucesso do envio do formulário
-    def get_success_url(self):
-        agendamento_id = self.kwargs['agendamento_id']
-        return reverse('atestado_medico_create', kwargs={'agendamento_id': agendamento_id})
-
-
-class CriarReceitaMedicaView(CreateView):
-    def get(self, request, agendamento_id):
-        agendamento = get_object_or_404(Agendamento, id=agendamento_id)
-        form = ReceitaMedicaForm(agendamento=agendamento)
-        return render(request, 'consultas/criar_receita_medica.html', {'form': form, 'agendamento': agendamento})
-
-    def post(self, request, agendamento_id):
-        agendamento = get_object_or_404(Agendamento, id=agendamento_id)
-        form = ReceitaMedicaForm(request.POST, agendamento=agendamento)
-        
-        if form.is_valid():
-            receita = form.save(commit=False)
-            receita.agendamento = agendamento
-            receita.save()
-            return redirect('confirmar_atendimento', agendamento_id=agendamento.id)
-        
-        # Se o formulário da receita médica não for válido, renderiza novamente o formulário
-        return render(request, 'consultas/criar_receita_medica.html', {'form': form, 'agendamento': agendamento})
-    

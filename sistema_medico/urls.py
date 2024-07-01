@@ -44,7 +44,6 @@ urlpatterns = [
     path('agendamentos/<int:pk>/ausente/', agendamento_ausente, name='agendamentoAusente'),
     path('agendamento/<int:pk>/confirmar/', confirm_agendamento, name='confirmAgendamento'),
     path('agendamento/<int:pk>/download/', download_comprovante, name='downloadComprovante'),
-    path('reagendar/agendamento/<int:pk>/', views.reagendar_agendamento, name='reagendarAgendamento'),
     path('cancelar_agendamento/<int:agendamento_id>/', cancelar_agendamento, name='cancelar_agendamento'),
     
     # Atendimento
@@ -59,8 +58,6 @@ urlpatterns = [
     path('prontuario_medico/<int:paciente_id>/', views.prontuario_medico, name='prontuario_medico'),
     path('filtrar_prontuarios/', filtrar_prontuarios, name='filtrar_prontuarios'),
     
-    # Atestado Medico
-    path('atestado_medico/create/<int:agendamento_id>/', AtestadoMedicoCreate.as_view(), name='atestado_medico_create'),
 
     #pdfs
     path('visualizar-pdf-exames/<int:atendimento_id>/', views.visualizar_pdf_exames, name='visualizar_pdf_exames'),
@@ -85,8 +82,6 @@ urlpatterns = [
     # Home
     path('', views.home, name='home'),
 
-    # receita médica
-    path('agendamento/<int:agendamento_id>/criar_receita/', CriarReceitaMedicaView.as_view(), name='criar_receita_medica'),
-    
+
 
 ]
