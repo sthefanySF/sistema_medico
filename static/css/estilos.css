@@ -370,7 +370,7 @@ O valor smooth faz a rolagem da página de forma suave. */
 
 /* estulo para os inputs */
 input {
-  padding: 12px;
+  padding-left: 5px;
   border-radius: 5px;
   border: 1.5px solid lightgrey;
   outline: none;
