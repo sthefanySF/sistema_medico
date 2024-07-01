@@ -35,6 +35,14 @@
       {% endblock %}
     </div>
 
+    {# loading #}
+    <div class="loading" id="loading-screen" style="display: none;" >
+      <svg width="64px" height="48px">
+        <polyline points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24" id="back"></polyline>
+        <polyline points="0.157 23.954, 14 23.954, 21.843 48, 43 0, 50 24, 64 24" id="front"></polyline>
+      </svg>
+    </div>
+
     <footer class="text-center mt-4" style="background-color: #0C4DA2; color: white; padding: 10px;">
       <p>&copy; {{ year }} Universidade Federal do Acre | Rodovia BR 364, km 04 | Email: medico@.com | Telefone: 68999212325</p>
     </footer>
@@ -53,7 +61,18 @@
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
 
+    {# loader #}
     <script>
+      function showLoading() {
+        document.getElementById("loading-screen").style.display = "flex";
+      }
+      
+      function hideLoading() {
+        document.getElementById("loading-screen").style.display = "none";
+      }
+    </script>
+
+  <script>
     {# Máscara de formatação Jquery #}
     $(function ($) {
         $('#id_data_agendamento').mask('99/99/9999');
