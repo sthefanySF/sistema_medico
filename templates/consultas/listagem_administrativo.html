@@ -348,31 +348,38 @@
       </div>
     </tbody>
   </table>
-
+  
   <script>
-    $(document).ready(function(){
-      $('#cadastroForm').on('submit', function(event){
-        event.preventDefault(); // Evita o envio tradicional do formulário
+  $(document).ready(function(){
+    $('#cadastroForm').on('submit', function(event){
+      event.preventDefault(); 
+      // Mostrar tela de carregamento
+      $('#loading-screen').show();
+      $(this).find('button[type="submit"]').prop('disabled', true);
 
-        $.ajax({
-          type: 'POST',
-          url: $(this).attr('action'),
-          data: $(this).serialize(),
-          success: function(response) {
-            if (response.success) {
-              $('#cadastroModal').modal('hide');
-              // Atualizar a lista ou mostrar uma mensagem de sucesso
-              location.reload(); // Recarrega a página
-            } else {
-              alert('Erro ao cadastrar o paciente: ' + JSON.stringify(response.errors));
-            }
-          },
-          error: function(response) {
-            alert('Erro ao cadastrar o paciente: ' + response.responseText);
+      $.ajax({
+        type: 'POST',
+        url: $(this).attr('action'),
+        data: $(this).serialize(),
+        success: function(response) {
+          $('#loading-screen').hide(); // Esconder tela de carregamento
+          $('#cadastroForm').find('button[type="submit"]').prop('disabled', false);
+
+          if (response.success) {
+            $('#cadastroModal').modal('hide');
+            location.reload();
+          } else {
+            alert('Erro ao cadastrar o Funcionário Administrativo: ' + JSON.stringify(response.errors));
           }
-        });
+        },
+        error: function(response) {
+          $('#loading-screen').hide(); // Esconder tela de carregamento
+          $('#cadastroForm').find('button[type="submit"]').prop('disabled', false);
+          alert('Erro ao cadastrar o Funcionário Administrativo: ' + response.responseText);
+        }
       });
     });
+  });
   </script>
 
   <script>

@@ -400,30 +400,38 @@
   </div>
 
   <script>
-    $(document).ready(function () {
-      $('#cadastroForm').on('submit', function (event) {
-        event.preventDefault() // Evita o envio tradicional do formulário
-    
+    $(document).ready(function(){
+      $('#cadastroForm').on('submit', function(event){
+        event.preventDefault();
+  
+        // Mostrar tela de carregamento
+        $('#loading-screen').show();
+        $(this).find('button[type="submit"]').prop('disabled', true);
+  
         $.ajax({
           type: 'POST',
           url: $(this).attr('action'),
           data: $(this).serialize(),
-          success: function (response) {
+          success: function(response) {
+            $('#loading-screen').hide(); // Esconder tela de carregamento
+            $('#cadastroForm').find('button[type="submit"]').prop('disabled', false);
+  
             if (response.success) {
-              $('#cadastroModal').modal('hide')
-              // Atualizar a lista ou mostrar uma mensagem de sucesso
-              location.reload() // Recarrega a página
+              $('#cadastroModal').modal('hide');
+              location.reload();
             } else {
-              alert('Erro ao cadastrar o usuário: ' + JSON.stringify(response.errors))
+              alert('Erro ao cadastrar o profissional da saúde: ' + JSON.stringify(response.errors));
             }
           },
-          error: function (response) {
-            alert('Erro ao cadastrar o usuário: ' + response.responseText)
+          error: function(response) {
+            $('#loading-screen').hide(); // Esconder tela de carregamento
+            $('#cadastroForm').find('button[type="submit"]').prop('disabled', false);
+            alert('Erro ao cadastrar o profissional da saúde: ' + response.responseText);
           }
-        })
-      })
-    })
-  </script>
+        });
+      });
+    });
+    </script>
 
   <script>
     function editarProfissionaldasaude(id) {
