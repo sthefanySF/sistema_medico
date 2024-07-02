@@ -617,7 +617,7 @@ label.form-check-label-pront {
 }
 
 .print-btn {
-  width: 100px;
+  min-width: 100px;
   height: 45px;
   display: flex;
   align-items: center;

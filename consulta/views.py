@@ -929,10 +929,46 @@ def pdf_prontuario_medico(request, paciente_id):
 
     html = render_to_string('pdfs/pdf_prontuario_medico.html', context)
 
-    # Use WeasyPrint para transformar o HTML em PDF.
+    # WeasyPrint para transformar o HTML em PDF.
     pdf = HTML(string=html, base_url=request.build_absolute_uri()).write_pdf()
 
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="prontuario_medico.pdf"'
+    return response
+
+def pdf_atestado_medico(request, atendimento_id):
+    atendimento = get_object_or_404(Atendimento, id=atendimento_id)
+    agendamento = atendimento.agendamento
+    atestado = get_object_or_404(AtestadoMedico, agendamento=agendamento)
+    paciente_nome = atestado.paciente.nome.replace(' ', '_').lower()
+    
+    context = {
+        'atendimento': atendimento,
+        'atestado': atestado,
+    }
+
+    html = render_to_string('pdfs/pdf_atestado_medico.html', context)
+    pdf = HTML(string=html, base_url=request.build_absolute_uri()).write_pdf()
+
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="atestado_{paciente_nome}.pdf"'
+    return response
+
+def pdf_receita_medica(request, atendimento_id):
+    atendimento = get_object_or_404(Atendimento, id=atendimento_id)
+    agendamento = atendimento.agendamento
+    receita = get_object_or_404(ReceitaMedica, agendamento=agendamento)
+    paciente_nome = receita.paciente.nome.replace(' ', '_').lower()
+
+    context = {
+        'atendimento': atendimento,
+        'receita': receita,
+    }
+
+    html = render_to_string('pdfs/pdf_receita_medica.html', context)
+    pdf = HTML(string=html, base_url=request.build_absolute_uri()).write_pdf()
+
+    response = HttpResponse(pdf, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="receita_{paciente_nome}.pdf"'
     return response
 
