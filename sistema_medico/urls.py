@@ -62,6 +62,8 @@ urlpatterns = [
     #pdfs
     path('visualizar-pdf-exames/<int:atendimento_id>/', views.visualizar_pdf_exames, name='visualizar_pdf_exames'),
     path('pdf_prontuario_medico/<int:paciente_id>/', views.pdf_prontuario_medico, name='pdf_prontuario_medico'),
+    path('atendimento/<int:atendimento_id>/atestado/', pdf_atestado_medico, name='pdf_atestado_medico'),
+    path('atendimento/<int:atendimento_id>/receita/', pdf_receita_medica, name='pdf_receita_medica'),
 
     # Listagens
     path('pacientes/', listar_pacientes, name= 'pacienteListagem' ),
