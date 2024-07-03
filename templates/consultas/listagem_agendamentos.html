@@ -257,45 +257,46 @@
   }
 
   function reagendarAgendamento(agendamentoId) {
+    console.log("Reagendando agendamento com ID:", agendamentoId);
     var status = document.querySelector('[data-bs-target="#reagendarModal' + agendamentoId + '"]').getAttribute('data-status');
 
     if (status !== 'pendente') {
-      alert('Este agendamento não pode ser reagendado porque não está pendente.');
-      return;
+        alert('Este agendamento não pode ser reagendado porque não está pendente.');
+        return;
     }
 
     var form = $('#reagendarForm' + agendamentoId);
     var formData = form.serialize();
 
     $.ajax({
-      type: 'POST',
-      url: '/reagendar/agendamento/' + agendamentoId + '/',
-      data: formData,
-      success: function(response) {
-        if (response.success) {
-          alert(response.message);
-          location.reload();
-        } else {
-          var errorContainer = $('#errorContainer' + agendamentoId);
-          errorContainer.empty(); // Clear any previous errors
+        type: 'POST',
+        url: '/reagendar/agendamento/' + agendamentoId + '/',
+        data: formData,
+        success: function(response) {
+            if (response.success) {
+                alert(response.message);
+                location.reload();
+            } else {
+                var errorContainer = $('#errorContainer' + agendamentoId);
+                errorContainer.empty(); // Clear any previous errors
 
-          var errors = response.errors;
-          var errorMessages = '';
-          for (var field in errors) {
-            if (errors.hasOwnProperty(field)) {
-              errors[field].forEach(function(error) {
-                errorMessages += '<p class="text-danger">' + error.message + '</p>';
-              });
+                var errors = response.errors;
+                var errorMessages = '';
+                for (var field in errors) {
+                    if (errors.hasOwnProperty(field)) {
+                        errors[field].forEach(function(error) {
+                            errorMessages += '<p class="text-danger">' + error.message + '</p>';
+                        });
+                    }
+                }
+                errorContainer.html(errorMessages);
             }
-          }
-          errorContainer.html(errorMessages);
+        },
+        error: function(response) {
+            alert('Ocorreu um erro ao reagendar o agendamento.');
         }
-      },
-      error: function(response) {
-        alert('Ocorreu um erro ao reagendar o agendamento.');
-      }
     });
-  }
+}
 </script>
 
 <style>

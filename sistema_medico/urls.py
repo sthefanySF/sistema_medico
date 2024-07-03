@@ -45,6 +45,7 @@ urlpatterns = [
     path('agendamento/<int:pk>/confirmar/', confirm_agendamento, name='confirmAgendamento'),
     path('agendamento/<int:pk>/download/', download_comprovante, name='downloadComprovante'),
     path('cancelar_agendamento/<int:agendamento_id>/', cancelar_agendamento, name='cancelar_agendamento'),
+    path('reagendar/agendamento/<int:pk>/', reagendar_agendamento, name='reagendarAgendamento'),
     
     # Atendimento
     path('atendimento/criar/<int:agendamento_id>', AtendimentoCreate.as_view(), name='criar_atendimento'),
