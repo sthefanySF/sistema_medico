@@ -370,7 +370,8 @@ def listar_agendamentos(request):
 
     # Atualiza os status dos agendamentos
     for agendamento in agendamentos:
-        agendamento.atualizar_status()
+        if agendamento.status_atendimento != 'atendido':
+            agendamento.atualizar_status()
 
     # Ordena os agendamentos pela data em ordem decrescente
     agendamentos = agendamentos.order_by('-data_agendamento')
