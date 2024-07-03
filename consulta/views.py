@@ -381,9 +381,6 @@ def listar_agendamentos(request):
     })
 
 
-
-
-
 def agendamento_confirmar(request, pk):
     agendamento = get_object_or_404(Agendamento, pk=pk)
     
