@@ -153,7 +153,7 @@ class Agendamento(models.Model):
         ('ausente', 'Ausente'),
         ('pendente', 'Pendente'),
         ('cancelado', 'Cancelado'),
-        ('atendido', 'Atendido'),  # Adicionando o novo status "atendido"
+        ('atendido', 'Atendido'),
     ], default='pendente')
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
     profissional_saude = models.ForeignKey(Profissionaldasaude, on_delete=models.CASCADE)
@@ -167,10 +167,11 @@ class Agendamento(models.Model):
 
     def atualizar_status(self):
         now = timezone.now().date()  # Obtém apenas a data atual
-        if self.data_agendamento.date() < now:
-            # Se a data do agendamento for anterior à data atual
+        if self.data_agendamento.date() < now and self.status_atendimento not in ['atendido', 'confirmado']:
+            # Se a data do agendamento for anterior à data atual e não estiver atendido ou confirmado
             self.status_atendimento = 'ausente'
             self.save()
+
     class Meta:
         ordering = ['-data_agendamento', 'paciente__nome']
         verbose_name = 'Agendamento'
