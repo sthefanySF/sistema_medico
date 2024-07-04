@@ -358,6 +358,7 @@ def profissionaldasaude_excluir(request, pk):
 def listar_agendamentos(request):
     # Obtém o valor do filtro do profissional de saúde a partir dos parâmetros da query
     profissional_id = request.GET.get('profissional_saude')
+    form = AgendamentoForm()
 
     # Busca todos os profissionais de saúde
     profissionais_saude = Profissionaldasaude.objects.all()
@@ -378,7 +379,7 @@ def listar_agendamentos(request):
 
     return render(request, 'consultas/listagem_agendamentos.html', {
         'agendamentos': agendamentos,
-        'profissionais_saude': profissionais_saude
+        'profissionais_saude': profissionais_saude,'form': form
     })
 
 
@@ -569,7 +570,7 @@ class AdministrativoCreate(CreateView):
 class ProfissionaldasaudeCreate(CreateView):
     model = Profissionaldasaude
     form_class = ProfissionaldasaudeForm
-    template_name = 'consultas/cadastro_profissionaldasaude.html'
+    # template_name = 'consultas/cadastro_profissionaldasaude.html'
     success_url = reverse_lazy('profissionaldasaudeListagem')
     
     def is_ajax(self):
@@ -647,7 +648,7 @@ class ProfissionaldasaudeCreate(CreateView):
 class AgendamentoCreate(CreateView):
     model = Agendamento
     form_class = AgendamentoForm
-    template_name = 'consultas/forms_agendamento.html'
+    template_name = 'consultas/listagem_agendamentos.html'  # Use o template atual aqui
     success_url = reverse_lazy('agendamentoListagem')
 
     def form_valid(self, form):
@@ -657,14 +658,14 @@ class AgendamentoCreate(CreateView):
         # Redireciona para a tela de confirmação
         return redirect('confirmAgendamento', pk=self.object.pk)
 
+   
     def form_invalid(self, form):
+        # Adiciona uma mensagem de erro para exibir no modal
         messages.error(self.request, 'Erro ao realizar o agendamento. Verifique os dados e tente novamente.')
-        print("Erro ao realizar o agendamento.")
-        print(form.errors)  
         
-        # Renderizar o template novamente com o formulário inválido
+        # Retorna o contexto atual com o formulário inválido e a mensagem de erro
         return self.render_to_response(self.get_context_data(form=form))
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['messages'] = messages.get_messages(self.request)

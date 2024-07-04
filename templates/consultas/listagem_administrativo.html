@@ -124,6 +124,13 @@
                             <label for="data_nascimento{{ administrativo.id }}" class="col-sm-6 col-form-label"><b>Data Nascimento</b></label>
                             <input type="date" class="form-control" id="data_nascimento{{ administrativo.id }}" name="data_nascimento" value="{{ administrativo.data_nascimento|date:'Y-m-d' }}" />
                           </div>
+                          <div class="col-sm-6">
+                            <label for="sexo{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Sexo</b></label>
+                            <select class="form-control" id="sexo{{ paciente.id }}" name="sexo">
+                              <option value="M" {% if paciente.sexo == 'M' %} selected {% endif %}>Masculino</option>
+                              <option value="F" {% if paciente.sexo == 'F' %} selected {% endif %}>Feminino</option>
+                            </select>
+                          </div>
                         </div>
                       </div>
 

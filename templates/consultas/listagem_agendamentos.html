@@ -34,9 +34,9 @@
     </form>
   </div>
 
-  <a class="btn btn-primary" href="{% url 'agendamentoCreate' %}" style="margin-bottom: 3px; max-height: 50px; box-shadow: 0px 2px 20px -10px rgb(0, 0, 0);">
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agendamentoModal" style="margin-bottom: 3px; max-height: 50px; box-shadow: 0px 2px 20px -10px rgb(0, 0, 0);">
     Agendar
-  </a>
+  </button>
 </div>
 
 <div class="table-responsive">
@@ -148,7 +148,65 @@
                 </div>
               </div>
             </div>
-        
+
+         <!-- Modal de Agendamento -->
+          <div class="modal fade" id="agendamentoModal" tabindex="-1" aria-labelledby="agendamentoModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="agendamentoModalLabel">Agendamento de Pacientes</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="agendamentoForm" method="POST" action="{% url 'agendamentoCreate' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="status_atendimento" value="pendente">
+
+                            <!-- Contêiner para mensagens de erro -->
+                            <div id="formErrors" class="alert alert-danger d-none"></div>
+
+                            <!-- Campo Paciente -->
+                            <div class="mb-3">
+                                <label for="id_paciente" class="form-label"><b>Paciente</b></label>
+                                {{ form.paciente }}
+                            </div>
+
+                            <!-- Campo Profissional de Saúde -->
+                            <div class="mb-3">
+                                <label for="id_profissional_saude" class="form-label"><b>Profissional de Saúde</b></label>
+                                {{ form.profissional_saude }}
+                            </div>
+
+                            <!-- Campo Data do Agendamento -->
+                            <div class="mb-3">
+                                <label for="id_data_agendamento" class="form-label"><b>Data do Agendamento</b></label>
+                                {{ form.data_agendamento }}
+                            </div>
+
+                            <!-- Campo Turno -->
+                            <div class="mb-3">
+                                <label for="id_turno" class="form-label"><b>Turno</b></label>
+                                {{ form.turno }}
+                            </div>
+
+                            <!-- Campo Prioridade de Atendimento -->
+                            <div class="mb-3 form-check">
+                                {{ form.prioridade_atendimento }}
+                                <label class="form-check-label" for="id_prioridade_atendimento"><b>Prioridade de Atendimento</b></label>
+                            </div>
+
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary"><b>Agendar</b></button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><b>Cancelar</b></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+
+
             <!-- Modal de Reagendamento -->
             <div class="modal fade" id="reagendarModal{{ agendamento.id }}" tabindex="-1" aria-labelledby="reagendarModalLabel{{ agendamento.id }}" aria-hidden="true">
               <div class="modal-dialog">
@@ -158,29 +216,28 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <div id="errorContainer{{ agendamento.id }}"></div>
                     <form id="reagendarForm{{ agendamento.id }}" method="POST">
                       {% csrf_token %}
-                      <div class="mb-3" style="font-weight: bold">
-                        <label for="profissional_saude_{{ agendamento.id }}">Profissional de Saúde</label>
+                      <div class="mb-3">
+                        <label for="profissional_saude">Profissional de Saúde</label>
                         <select id="profissional_saude_{{ agendamento.id }}" name="profissional_saude" class="form-select">
                           {% for profissional in profissionais_saude %}
                             <option value="{{ profissional.id }}" {% if agendamento.profissional_saude.id == profissional.id %}selected{% endif %}>{{ profissional.nome }}</option>
                           {% endfor %}
                         </select>
                       </div>
-                      <div class="mb-3" style="font-weight: bold">
-                        <label for="data_agendamento_{{ agendamento.id }}">Data do Agendamento</label>
+                      <div class="mb-3">
+                        <label for="data_agendamento">Data do Agendamento</label>
                         <input type="date" id="data_agendamento_{{ agendamento.id }}" name="data_agendamento" class="form-control" value="{{ agendamento.data_agendamento|date:'Y-m-d' }}">
                       </div>
-                      <div class="mb-3" style="font-weight: bold">
-                        <label for="turno_{{ agendamento.id }}">Turno</label>
+                      <div class="mb-3">
+                        <label for="turno">Turno</label>
                         <select id="turno_{{ agendamento.id }}" name="turno" class="form-select">
                           <option value="manha" {% if agendamento.turno == 'manha' %}selected{% endif %}>Manhã</option>
                           <option value="tarde" {% if agendamento.turno == 'tarde' %}selected{% endif %}>Tarde</option>
                         </select>
                       </div>
-                      <div class="mb-3 form-check" style="font-weight: bold">
+                      <div class="mb-3 form-check">
                         <input type="checkbox" id="prioridade_atendimento_{{ agendamento.id }}" name="prioridade_atendimento" class="form-check-input" {% if agendamento.prioridade_atendimento %}checked{% endif %}>
                         <label class="form-check-label" for="prioridade_atendimento_{{ agendamento.id }}">Prioridade de Atendimento</label>
                       </div>
@@ -297,6 +354,59 @@
     });
 }
 </script>
+
+<script>
+  $(document).ready(function() {
+    $('#agendamentoForm').on('submit', function(event) {
+        event.preventDefault();
+
+        var form = $(this);
+        var formData = form.serialize();
+
+        $.ajax({
+            type: 'POST',
+            url: form.attr('action'),
+            data: formData,
+            success: function(response) {
+                if (response.success) {
+                    location.reload();
+                } else {
+                    showErrorMessages(response.errors);
+                }
+            },
+            error: function(xhr) {
+                if (xhr.status === 400) {
+                    var response = xhr.responseJSON;
+                    showErrorMessages(response.errors);
+                } else {
+                    alert('Ocorreu um erro ao agendar.');
+                }
+            }
+        });
+    });
+
+    function showErrorMessages(errors) {
+        var errorMessages = '';
+        var parsedErrors = JSON.parse(errors); // Parse the JSON string
+
+        for (var field in parsedErrors) {
+            if (parsedErrors.hasOwnProperty(field)) {
+                parsedErrors[field].forEach(function(error) {
+                    if (error.message === "A data do agendamento não pode ser no passado.") {
+                        errorMessages += '<p>Data do agendamento não pode ser no passado. Por favor, escolha uma data futura.</p>';
+                    } else {
+                        errorMessages += '<p>' + error.message + '</p>';
+                    }
+                });
+            }
+        }
+        $('#formErrors').html(errorMessages).removeClass('d-none');
+        $('#agendamentoModal').modal('show'); // Ensure the modal stays open
+    }
+});
+
+</script>
+
 
 <style>
   .dataTables_filter {
