@@ -274,11 +274,10 @@
         data: formData,
         success: function(response) {
             if (response.success) {
-                alert(response.message);
                 location.reload();
             } else {
                 var errorContainer = $('#errorContainer' + agendamentoId);
-                errorContainer.empty(); // Clear any previous errors
+                errorContainer.empty(); // Limpar erros anteriores
 
                 var errors = response.errors;
                 var errorMessages = '';

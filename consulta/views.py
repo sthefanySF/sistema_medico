@@ -414,7 +414,7 @@ def reagendar_agendamento(request, pk):
         form = AgendamentoReagendarForm(request.POST, instance=agendamento)
         if form.is_valid():
             form.save()
-            return JsonResponse({'success': True, 'message': 'Reagendado com sucesso!'})
+            return JsonResponse({'success': True})
         else:
             errors = form.errors.get_json_data()
             return JsonResponse({'success': False, 'errors': errors})
