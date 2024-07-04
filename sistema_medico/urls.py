@@ -45,6 +45,7 @@ urlpatterns = [
     path('agendamento/<int:pk>/confirmar/', confirm_agendamento, name='confirmAgendamento'),
     path('agendamento/<int:pk>/download/', download_comprovante, name='downloadComprovante'),
     path('cancelar_agendamento/<int:agendamento_id>/', cancelar_agendamento, name='cancelar_agendamento'),
+    path('reagendar/agendamento/<int:pk>/', reagendar_agendamento, name='reagendarAgendamento'),
     
     # Atendimento
     path('atendimento/criar/<int:agendamento_id>', AtendimentoCreate.as_view(), name='criar_atendimento'),
@@ -62,6 +63,8 @@ urlpatterns = [
     #pdfs
     path('visualizar-pdf-exames/<int:atendimento_id>/', views.visualizar_pdf_exames, name='visualizar_pdf_exames'),
     path('pdf_prontuario_medico/<int:paciente_id>/', views.pdf_prontuario_medico, name='pdf_prontuario_medico'),
+    path('atendimento/<int:atendimento_id>/atestado/', pdf_atestado_medico, name='pdf_atestado_medico'),
+    path('atendimento/<int:atendimento_id>/receita/', pdf_receita_medica, name='pdf_receita_medica'),
 
     # Listagens
     path('pacientes/', listar_pacientes, name= 'pacienteListagem' ),

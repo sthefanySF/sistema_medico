@@ -370,7 +370,7 @@ O valor smooth faz a rolagem da página de forma suave. */
 
 /* estulo para os inputs */
 input {
-  padding: 12px;
+  padding-left: 5px;
   border-radius: 5px;
   border: 1.5px solid lightgrey;
   outline: none;
@@ -617,7 +617,7 @@ label.form-check-label-pront {
 }
 
 .print-btn {
-  width: 100px;
+  min-width: 100px;
   height: 45px;
   display: flex;
   align-items: center;
