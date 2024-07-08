@@ -376,6 +376,10 @@ def listar_agendamentos(request):
         'profissionais_saude': profissionais_saude,
         'form': form
     })
+    
+def confirm_agendamento(request, pk):
+    agendamento = get_object_or_404(Agendamento, pk=pk)
+    return render(request, 'consultas/confirm_agendamento.html', {'agendamento': agendamento})
 
 
 def agendamento_confirmar(request, pk):
@@ -665,9 +669,7 @@ class AgendamentoCreate(CreateView):
         context['messages'] = messages.get_messages(self.request)
         return context
 
-def confirm_agendamento(request, pk):
-    agendamento = get_object_or_404(Agendamento, pk=pk)
-    return render(request, 'consultas/confirm_agendamento.html', {'agendamento': agendamento})
+
 
 def download_comprovante(request, pk):
     agendamento = get_object_or_404(Agendamento, pk=pk)
