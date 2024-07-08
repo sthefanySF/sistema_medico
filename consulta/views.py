@@ -641,12 +641,19 @@ class ProfissionaldasaudeCreate(CreateView):
 class AgendamentoCreate(CreateView):
     model = Agendamento
     form_class = AgendamentoForm
-    template_name = 'consultas/listagem_agendamentos.html'  # Use o template atual aqui
+    template_name = 'consultas/listagem_agendamentos.html'
     success_url = reverse_lazy('agendamentoListagem')
 
     def form_valid(self, form):
         self.object = form.save()
-        agendamento_data = render_to_string('consultas/agendamento_row.html', {'agendamento': self.object})
+        agendamento_data = {
+            'paciente': self.object.paciente.nome,
+            'profissional_saude': self.object.profissional_saude.nome,
+            'data_agendamento': self.object.data_agendamento.strftime('%d/%m/%Y'),
+            'turno': self.object.get_turno_display(),
+            'prioridade_atendimento': 'Sim' if self.object.prioridade_atendimento else 'Não',
+            'download_url': reverse_lazy('downloadComprovante', kwargs={'pk': self.object.pk})
+        }
         return JsonResponse({'success': True, 'agendamento': agendamento_data})
 
     def form_invalid(self, form):
@@ -657,20 +664,7 @@ class AgendamentoCreate(CreateView):
         context = super().get_context_data(**kwargs)
         context['messages'] = messages.get_messages(self.request)
         return context
-    
 
-    def generate_pdf(self, agendamento):
-        html_content = render_to_string('consultas/comprovantePdf_agendamento.html', {'agendamento': agendamento})
-
-        pdf_file = io.BytesIO()
-        pisa_status = pisa.CreatePDF(html_content, dest=pdf_file)
-
-        if pisa_status.err:
-            raise Exception("Erro ao gerar PDF.")
-
-        pdf_file.seek(0)
-        return pdf_file
-    
 def confirm_agendamento(request, pk):
     agendamento = get_object_or_404(Agendamento, pk=pk)
     return render(request, 'consultas/confirm_agendamento.html', {'agendamento': agendamento})
