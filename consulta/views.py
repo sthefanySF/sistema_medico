@@ -356,30 +356,25 @@ def profissionaldasaude_excluir(request, pk):
 
 
 def listar_agendamentos(request):
-    # Obtém o valor do filtro do profissional de saúde a partir dos parâmetros da query
     profissional_id = request.GET.get('profissional_saude')
     form = AgendamentoForm()
-
-    # Busca todos os profissionais de saúde
     profissionais_saude = Profissionaldasaude.objects.all()
 
-    # Filtra os agendamentos com base no profissional de saúde, se um profissional for selecionado
     if profissional_id and profissional_id != 'todos':
         agendamentos = Agendamento.objects.filter(profissional_saude_id=profissional_id)
     else:
         agendamentos = Agendamento.objects.all()
 
-    # Atualiza os status dos agendamentos
     for agendamento in agendamentos:
         if agendamento.status_atendimento != 'atendido':
             agendamento.atualizar_status()
 
-    # Ordena os agendamentos pela data em ordem decrescente
     agendamentos = agendamentos.order_by('-data_agendamento')
 
     return render(request, 'consultas/listagem_agendamentos.html', {
         'agendamentos': agendamentos,
-        'profissionais_saude': profissionais_saude,'form': form
+        'profissionais_saude': profissionais_saude,
+        'form': form
     })
 
 
@@ -643,8 +638,6 @@ class ProfissionaldasaudeCreate(CreateView):
 #         print(form.errors)
 #         return super().form_invalid(form)
 
-
-
 class AgendamentoCreate(CreateView):
     model = Agendamento
     form_class = AgendamentoForm
@@ -652,19 +645,13 @@ class AgendamentoCreate(CreateView):
     success_url = reverse_lazy('agendamentoListagem')
 
     def form_valid(self, form):
-        # Criar o objeto apenas se o formulário for válido
-        response = super().form_valid(form)
+        self.object = form.save()
+        agendamento_data = render_to_string('consultas/agendamento_row.html', {'agendamento': self.object})
+        return JsonResponse({'success': True, 'agendamento': agendamento_data})
 
-        # Redireciona para a tela de confirmação
-        return redirect('confirmAgendamento', pk=self.object.pk)
-
-   
     def form_invalid(self, form):
-        # Adiciona uma mensagem de erro para exibir no modal
-        messages.error(self.request, 'Erro ao realizar o agendamento. Verifique os dados e tente novamente.')
-        
-        # Retorna o contexto atual com o formulário inválido e a mensagem de erro
-        return self.render_to_response(self.get_context_data(form=form))
+        errors = form.errors.as_json()
+        return JsonResponse({'success': False, 'errors': errors}, status=400)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
