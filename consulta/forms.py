@@ -133,9 +133,9 @@ class AgendamentoForm(forms.ModelForm):
             'paciente': forms.Select(attrs={'class': 'form-control'}),
             'profissional_saude': forms.Select(attrs={'class': 'form-control'}),
             'data_agendamento': forms.DateTimeInput(attrs={'class': 'form-control'}),
-            'turno': forms.Select(attrs={'class': 'form-control'}),  # Adicione esta linha
+            'turno': forms.Select(attrs={'class': 'form-control'}), 
             'prioridade_atendimento': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'status_atendimento': forms.HiddenInput(attrs={'value': 'pendente'}),  # Defina o valor padrão aqui
+            'status_atendimento': forms.HiddenInput(attrs={'value': 'pendente'}), 
         }
 
 

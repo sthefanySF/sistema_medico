@@ -34,9 +34,10 @@
     </form>
   </div>
 
-  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agendamentoModal" style="margin-bottom: 3px; max-height: 50px; box-shadow: 0px 2px 20px -10px rgb(0, 0, 0);">
+  <!-- Botão para abrir o Modal -->
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agendamentoModal{{ agendamento.id }}">
     Agendar
-  </button>
+</button>
 </div>
 
 <div class="table-responsive">
@@ -149,64 +150,6 @@
               </div>
             </div>
 
-         <!-- Modal de Agendamento -->
-          <div class="modal fade" id="agendamentoModal" tabindex="-1" aria-labelledby="agendamentoModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="agendamentoModalLabel">Agendamento de Pacientes</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="agendamentoForm" method="POST" action="{% url 'agendamentoCreate' %}">
-                            {% csrf_token %}
-                            <input type="hidden" name="status_atendimento" value="pendente">
-
-                            <!-- Contêiner para mensagens de erro -->
-                            <div id="formErrors" class="alert alert-danger d-none"></div>
-
-                            <!-- Campo Paciente -->
-                            <div class="mb-3">
-                                <label for="id_paciente" class="form-label"><b>Paciente</b></label>
-                                {{ form.paciente }}
-                            </div>
-
-                            <!-- Campo Profissional de Saúde -->
-                            <div class="mb-3">
-                                <label for="id_profissional_saude" class="form-label"><b>Profissional de Saúde</b></label>
-                                {{ form.profissional_saude }}
-                            </div>
-
-                            <!-- Campo Data do Agendamento -->
-                            <div class="mb-3">
-                                <label for="id_data_agendamento" class="form-label"><b>Data do Agendamento</b></label>
-                                {{ form.data_agendamento }}
-                            </div>
-
-                            <!-- Campo Turno -->
-                            <div class="mb-3">
-                                <label for="id_turno" class="form-label"><b>Turno</b></label>
-                                {{ form.turno }}
-                            </div>
-
-                            <!-- Campo Prioridade de Atendimento -->
-                            <div class="mb-3 form-check">
-                                {{ form.prioridade_atendimento }}
-                                <label class="form-check-label" for="id_prioridade_atendimento"><b>Prioridade de Atendimento</b></label>
-                            </div>
-
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-primary"><b>Agendar</b></button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><b>Cancelar</b></button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-          </div>
-
-
-
             <!-- Modal de Reagendamento -->
             <div class="modal fade" id="reagendarModal{{ agendamento.id }}" tabindex="-1" aria-labelledby="reagendarModalLabel{{ agendamento.id }}" aria-hidden="true">
               <div class="modal-dialog">
@@ -256,6 +199,62 @@
     </tbody>
   </table>
 </div>
+
+    <!-- Modal de Agendamento -->
+    <div class="modal fade" id="agendamentoModal{{ agendamento.id }}" tabindex="-1" aria-labelledby="agendamentoModalLabel{{ agendamento.id }}" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="agendamentoModalLabel{{ agendamento.id }}">Agendamento de Pacientes</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <form id="agendamentoForm{{ agendamento.id }}" method="POST" action="{% url 'agendamentoCreate' %}">
+                      {% csrf_token %}
+                      <input type="hidden" name="status_atendimento" value="pendente">
+
+                      <!-- Contêiner para mensagens de erro -->
+                      <div id="formErrors{{ agendamento.id }}" class="alert alert-danger d-none"></div>
+
+                      <!-- Campo Paciente -->
+                      <div class="mb-3">
+                          <label for="id_paciente" class="form-label"><b>Paciente</b></label>
+                          {{ form.paciente }}
+                      </div>
+
+                      <!-- Campo Profissional de Saúde -->
+                      <div class="mb-3">
+                          <label for="id_profissional_saude" class="form-label"><b>Profissional de Saúde</b></label>
+                          {{ form.profissional_saude }}
+                      </div>
+
+                      <!-- Campo Data do Agendamento -->
+                      <div class="mb-3">
+                          <label for="id_data_agendamento" class="form-label"><b>Data do Agendamento</b></label>
+                          {{ form.data_agendamento }}
+                      </div>
+
+                      <!-- Campo Turno -->
+                      <div class="mb-3">
+                          <label for="id_turno" class="form-label"><b>Turno</b></label>
+                          {{ form.turno }}
+                      </div>
+
+                      <!-- Campo Prioridade de Atendimento -->
+                      <div class="mb-3 form-check">
+                          {{ form.prioridade_atendimento }}
+                          <label class="form-check-label" for="id_prioridade_atendimento"><b>Prioridade de Atendimento</b></label>
+                      </div>
+
+                      <div class="modal-footer d-flex justify-content-center align-items-center">
+                          <button type="submit" class="btn btn-primary"><b>Agendar</b></button>
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><b>Cancelar</b></button>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+    </div>
 
 <button onclick="voltarTopo()" id="btnTopo">
   <i id="arrow" class="fa fa-arrow-up fa-lg"></i>
@@ -357,55 +356,63 @@
 
 <script>
   $(document).ready(function() {
-    $('#agendamentoForm').on('submit', function(event) {
-        event.preventDefault();
+      $('#agendamentoForm').on('submit', function(event) {
+          event.preventDefault();
+  
+          var form = $(this);
+          var formData = form.serialize();
+          var formErrorsId = '#formErrors';
+          var submitButton = form.find('button[type="submit"]');
+          var originalButtonText = submitButton.html();
+  
+          // no botão para indicar carregamento spinner
+          submitButton.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Agendando...').attr('disabled', true);
+  
+          $.ajax({
+              type: 'POST',
+              url: form.attr('action'),
+              data: formData,
+              success: function(response) {
+                  if (response.success) {
+                      location.reload();
+                  } else {
+                      showErrorMessages(response.errors, formErrorsId);
+                      submitButton.html(originalButtonText).attr('disabled', false);
+                  }
+              },
+              error: function(xhr) {
+                  if (xhr.status === 400) {
+                      var response = xhr.responseJSON;
+                      showErrorMessages(response.errors, formErrorsId);
+                  } else {
+                      alert('Ocorreu um erro ao agendar.');
+                  }
+                  submitButton.html(originalButtonText).attr('disabled', false);
+              }
+          });
+      });
+  
+      function showErrorMessages(errors, formErrorsId) {
+          var errorMessages = '';
+          var parsedErrors = JSON.parse(errors);
+  
+          for (var field in parsedErrors) {
+              if (parsedErrors.hasOwnProperty(field)) {
+                  parsedErrors[field].forEach(function(error) {
+                      if (error.message === "A data do agendamento não pode ser no passado.") {
+                          errorMessages += '<p>Data do agendamento não pode ser no passado. Por favor, escolha uma data futura.</p>';
+                      } else {
+                          errorMessages += '<p>' + error.message + '</p>';
+                      }
+                  });
+              }
+          }
+          $(formErrorsId).html(errorMessages).removeClass('d-none');
+          $('#agendamentoModal').modal('show');
+      }
+  });
+  </script>
 
-        var form = $(this);
-        var formData = form.serialize();
-
-        $.ajax({
-            type: 'POST',
-            url: form.attr('action'),
-            data: formData,
-            success: function(response) {
-                if (response.success) {
-                    location.reload();
-                } else {
-                    showErrorMessages(response.errors);
-                }
-            },
-            error: function(xhr) {
-                if (xhr.status === 400) {
-                    var response = xhr.responseJSON;
-                    showErrorMessages(response.errors);
-                } else {
-                    alert('Ocorreu um erro ao agendar.');
-                }
-            }
-        });
-    });
-
-    function showErrorMessages(errors) {
-        var errorMessages = '';
-        var parsedErrors = JSON.parse(errors); // Parse the JSON string
-
-        for (var field in parsedErrors) {
-            if (parsedErrors.hasOwnProperty(field)) {
-                parsedErrors[field].forEach(function(error) {
-                    if (error.message === "A data do agendamento não pode ser no passado.") {
-                        errorMessages += '<p>Data do agendamento não pode ser no passado. Por favor, escolha uma data futura.</p>';
-                    } else {
-                        errorMessages += '<p>' + error.message + '</p>';
-                    }
-                });
-            }
-        }
-        $('#formErrors').html(errorMessages).removeClass('d-none');
-        $('#agendamentoModal').modal('show'); // Ensure the modal stays open
-    }
-});
-
-</script>
 
 
 <style>
