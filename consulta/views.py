@@ -1,3 +1,5 @@
+import tempfile
+import os
 from audioop import reverse
 from imaplib import _Authenticator
 from multiprocessing import AuthenticationError
@@ -43,6 +45,7 @@ from django.conf import settings
 from django.http import FileResponse
 from django.template.loader import get_template
 from weasyprint import HTML
+
 
 #filtrar pacientes
 from django.core import serializers
@@ -642,32 +645,91 @@ class ProfissionaldasaudeCreate(CreateView):
 #         print(form.errors)
 #         return super().form_invalid(form)
 
+
 class AgendamentoCreate(CreateView):
     model = Agendamento
     form_class = AgendamentoForm
-    template_name = 'consultas/listagem_agendamentos.html'
+    template_name = 'consultas/forms_agendamento.html'
     success_url = reverse_lazy('agendamentoListagem')
 
     def form_valid(self, form):
-        self.object = form.save()
-        agendamento_data = {
-            'paciente': self.object.paciente.nome,
-            'profissional_saude': self.object.profissional_saude.nome,
-            'data_agendamento': self.object.data_agendamento.strftime('%d/%m/%Y'),
-            'turno': self.object.get_turno_display(),
-            'prioridade_atendimento': 'Sim' if self.object.prioridade_atendimento else 'Não',
-            'download_url': reverse_lazy('downloadComprovante', kwargs={'pk': self.object.pk})
-        }
-        return JsonResponse({'success': True, 'agendamento': agendamento_data})
+        # Criar o objeto apenas se o formulário for válido
+        response = super().form_valid(form)
+
+        # Redireciona para a tela de confirmação
+        return redirect('confirmAgendamento', pk=self.object.pk)
 
     def form_invalid(self, form):
-        errors = form.errors.as_json()
-        return JsonResponse({'success': False, 'errors': errors}, status=400)
+        messages.error(self.request, 'Erro ao realizar o agendamento. Verifique os dados e tente novamente.')
+        print("Erro ao realizar o agendamento.")
+        print(form.errors)  
 
+        # Se a solicitação for AJAX, retorna um JSON com os erros
+        if self.request.is_ajax():
+            errors = form.errors.as_json()
+            return JsonResponse({'success': False, 'errors': errors}, status=400)
+
+        # Renderizar o template novamente com o formulário inválido
+        return self.render_to_response(self.get_context_data(form=form))
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['messages'] = messages.get_messages(self.request)
         return context
+    
+    def generate_pdf(self, agendamento):
+        html_content = render_to_string('consultas/comprovantePdf_agendamento.html', {'agendamento': agendamento})
+
+        pdf_file = io.BytesIO()
+        pisa_status = pisa.CreatePDF(html_content, dest=pdf_file)
+
+        if pisa_status.err:
+            raise Exception("Erro ao gerar PDF.")
+
+        pdf_file.seek(0)
+        return pdf_file
+    
+    
+    
+    
+# class AgendamentoCreate(CreateView):
+#     model = Agendamento
+#     form_class = AgendamentoForm
+#     template_name = 'consultas/listagem_agendamentos.html'
+#     success_url = reverse_lazy('agendamentoListagem')
+
+#     def form_valid(self, form):
+#         self.object = form.save()
+#         agendamento_data = {
+#             'id': self.object.id,
+#             'paciente': self.object.paciente.nome,
+#             'cpf': self.object.paciente.cpf,
+#             'profissional_saude': self.object.profissional_saude.nome,
+#             'data_agendamento': self.object.data_agendamento.strftime('%d/%m/%Y'),
+#             'turno': self.object.get_turno_display(),
+#             'prioridade_atendimento': 'Sim' if self.object.prioridade_atendimento else 'Não',
+#             'status_atendimento': self.object.status_atendimento,
+#             'download_url': reverse_lazy('downloadComprovante', kwargs={'pk': self.object.pk})
+#         }
+#         return JsonResponse({'success': True, 'agendamento': agendamento_data})
+
+#     def form_invalid(self, form):
+#         errors = form.errors.as_json()
+#         return JsonResponse({'success': False, 'errors': errors}, status=400)
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['messages'] = messages.get_messages(self.request)
+#         return context
+    
+#     def generate_pdf(self, agendamento):
+#         html_content = render_to_string('consultas/comprovantePdf_agendamento.html', {'agendamento': agendamento})
+#         pdf_file = io.BytesIO()
+#         pisa_status = pisa.CreatePDF(html_content, dest=pdf_file)
+#         if pisa_status.err:
+#             raise Exception("Erro ao gerar PDF.")
+#         pdf_file.seek(0)
+#         return pdf_file
 
 
 
@@ -682,7 +744,7 @@ def download_comprovante(request, pk):
     pdf_file.seek(0)
 
     response = HttpResponse(pdf_file.read(), content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename=Comprovante_Agendamento_{agendamento.id}.pdf'
+    response['Content-Disposition'] = f'inline; filename=Comprovante_Agendamento_{agendamento.id}.pdf'
 
     return response
 
@@ -800,7 +862,7 @@ def download_comprovante_atendimento(request, atendimento_id):
     # Configura o conteúdo do PDF para download
     pdf_file.seek(0)
     response = HttpResponse(pdf_file, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename=comprovante_atendimento_{atendimento_id}.pdf'
+    response['Content-Disposition'] = f'inline; filename=comprovante_atendimento_{atendimento_id}.pdf'
     
     return response
 
@@ -915,7 +977,7 @@ def pdf_prontuario_medico(request, paciente_id):
     pdf = HTML(string=html, base_url=request.build_absolute_uri()).write_pdf()
 
     response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="prontuario_medico.pdf"'
+    response['Content-Disposition'] = 'inline; filename="prontuario_medico.pdf"'
     return response
 
 def pdf_atestado_medico(request, atendimento_id):
@@ -930,10 +992,20 @@ def pdf_atestado_medico(request, atendimento_id):
     }
 
     html = render_to_string('pdfs/pdf_atestado_medico.html', context)
-    pdf = HTML(string=html, base_url=request.build_absolute_uri()).write_pdf()
+    
+    # Cria um arquivo temporário
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
+        HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(target=temp_pdf.name)
+        
+        # Lê o conteúdo do arquivo temporário
+        temp_pdf.seek(0)
+        pdf_content = temp_pdf.read()
 
-    response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="atestado_{paciente_nome}.pdf"'
+    # Remove o arquivo temporário
+    os.remove(temp_pdf.name)
+    
+    response = HttpResponse(pdf_content, content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="atestado_{paciente_nome}.pdf"'
     return response
 
 def pdf_receita_medica(request, atendimento_id):
@@ -948,9 +1020,19 @@ def pdf_receita_medica(request, atendimento_id):
     }
 
     html = render_to_string('pdfs/pdf_receita_medica.html', context)
-    pdf = HTML(string=html, base_url=request.build_absolute_uri()).write_pdf()
+    
+    # Cria um arquivo temporário
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
+        HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(target=temp_pdf.name)
+        
+        # Lê o conteúdo do arquivo temporário
+        temp_pdf.seek(0)
+        pdf_content = temp_pdf.read()
 
-    response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="receita_{paciente_nome}.pdf"'
+    # Remove o arquivo temporário
+    os.remove(temp_pdf.name)
+    
+    response = HttpResponse(pdf_content, content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="receita_{paciente_nome}.pdf"'
     return response
 
