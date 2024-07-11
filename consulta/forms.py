@@ -57,10 +57,11 @@ class AdministrativoForm(forms.ModelForm):
             'ddd_telefone': 'DDD Telefone',
             'lotacao_de_exercicio': 'Lotação de Exercício',
             'matricula_siape': 'Matrícula SIAPE',
+            'nome_social': 'Nome Social'  # Novo campo
         }
-         
+        
         widgets = {
-            'sexo': forms.Select(choices=[('M', 'Masculino'), ('F', 'Feminino')]),
+            'sexo': forms.Select(choices=Administrativo.SEXO_CHOICES),
             'uf': forms.Select(choices=UF_CHOICE),  # Certifique-se de incluir o widget correto
         }
 

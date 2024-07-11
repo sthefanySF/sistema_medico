@@ -31,7 +31,7 @@
       {% for administrativo in administrativo %}
         <tr data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
           <td class="administrativo-nome" colspan="3">
-            {{ administrativo.nome }}
+            {{ administrativo.nome }}{% if administrativo.nome_social %} ({{ administrativo.nome_social }}){% endif %}
             <span style="color: #bbbbbb">- {{ administrativo.cargo_funcao }}</span>
             <span style="display: none;">{{ administrativo.data_nascimento|date:'d/m/Y' }}-{{ administrativo.email }}-{{ administrativo.rg }}-{{ administrativo.cpf }}{{ administrativo.setor }}-{{ administrativo.cargo }}</span>
             <a href="#" aria-expanded="false" class="accordion-toggle"></a>
@@ -98,8 +98,13 @@
                     <div class="m-2">
                       <div class="col-sm-12" id="pessoais">
                         <div class="col mb-3">
-                          <label for="nome{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Nome</b></label>
+                          <label for="nome{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Nome Completo</b></label>
                           <input type="text" class="form-control" id="nome{{ administrativo.id }}" name="nome" value="{{ administrativo.nome }}" />
+                        </div>
+
+                        <div class="col mb-3">
+                          <label for="nome_social{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Nome Social</b></label>  <!-- Novo campo -->
+                          <input type="text" class="form-control" id="nome_social{{ administrativo.id }}" name="nome_social" value="{{ administrativo.nome_social }}" />
                         </div>
 
                         <div class="col mb-3">
@@ -124,13 +129,14 @@
                             <label for="data_nascimento{{ administrativo.id }}" class="col-sm-6 col-form-label"><b>Data Nascimento</b></label>
                             <input type="date" class="form-control" id="data_nascimento{{ administrativo.id }}" name="data_nascimento" value="{{ administrativo.data_nascimento|date:'Y-m-d' }}" />
                           </div>
-                          <div class="col-sm-6">
-                            <label for="sexo{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Sexo</b></label>
-                            <select class="form-control" id="sexo{{ paciente.id }}" name="sexo">
-                              <option value="M" {% if paciente.sexo == 'M' %} selected {% endif %}>Masculino</option>
-                              <option value="F" {% if paciente.sexo == 'F' %} selected {% endif %}>Feminino</option>
+                          <div class="col mb-3">
+                            <label for="sexo{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Sexo</b></label>
+                            <select class="form-control" id="sexo{{ administrativo.id }}" name="sexo">
+                                <option value="M" {% if administrativo.sexo == 'M' %}selected{% endif %}>Masculino</option>
+                                <option value="F" {% if administrativo.sexo == 'F' %}selected{% endif %}>Feminino</option>
+                                <option value="O" {% if administrativo.sexo == 'O' %}selected{% endif %}>Outro</option>  
                             </select>
-                          </div>
+                        </div>
                         </div>
                       </div>
 
@@ -253,6 +259,11 @@
                         </div>
 
                         <div class="col mb-3">
+                          <label for="nome_social" class="col-sm-2 col-form-label"><b>Nome Social</b></label> <!-- Novo campo -->
+                          <input type="text" class="form-control" id="nome_social" name="nome_social" />
+                        </div>
+
+                        <div class="col mb-3">
                           <label for="{{ form.email.id_for_label }}" class="col-sm-2 col-form-label"><b>E-mail</b></label>
                           <div class="col-sm-12">{{ form.email }}</div>
                         </div>
@@ -275,10 +286,13 @@
                             <div class="col-sm-12">{{ form.data_nascimento }}</div>
                           </div>
 
-                          <div class="col-sm-6">
-                            <label for="{{ form.sexo.id_for_label }}" class="col-sm-2 col-form-label"><b>Sexo</b></label>
-                            <div class="col-sm-12">{{ form.sexo }}</div>
-                          </div>
+                          <div class="col mb-3">
+                            <label for="sexo" class="col-sm-2 col-form-label"><b>Sexo</b></label>
+                            <select class="form-control" id="sexo" name="sexo">
+                                <option value="M">Masculino</option>
+                                <option value="F">Feminino</option>
+                                <option value="O">Outro</option>  
+                            </select>
                         </div>
                       </div>
 

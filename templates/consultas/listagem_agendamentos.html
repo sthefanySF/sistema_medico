@@ -473,6 +473,23 @@
 });
 </script>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const forms = document.querySelectorAll('form[id^="agendamentoForm"]');
+    forms.forEach(form => {
+        form.addEventListener('submit', function (event) {
+            const paciente = form.querySelector('#id_paciente').value;
+            const dataAgendamento = form.querySelector('#id_data_agendamento').value;
+
+            if (!paciente || !dataAgendamento) {
+                event.preventDefault();
+                alert('Por favor, preencha todos os campos obrigatórios.');
+            }
+        });
+    });
+});
+</script>
+
 
 
 <style>
