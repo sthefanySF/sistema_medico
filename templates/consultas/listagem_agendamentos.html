@@ -159,6 +159,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
+                    <div id="errorContainer{{ agendamento.id }}"></div>
                     <form id="reagendarForm{{ agendamento.id }}" method="POST">
                       {% csrf_token %}
                       <div class="mb-3">
@@ -209,12 +210,10 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+        <div id="errorContainerAgendamento{{ agendamento.id }}"></div>
         <form id="agendamentoForm{{ agendamento.id }}" method="POST" action="{% url 'agendamentoCreate' %}">
           {% csrf_token %}
           <input type="hidden" name="status_atendimento" value="pendente" />
-
-          <!-- Contêiner para mensagens de erro -->
-          <div id="formErrors{{ agendamento.id }}" class="alert alert-danger d-none"></div>
 
           <!-- Campo Paciente -->
           <div class="mb-3">
@@ -252,10 +251,9 @@
           </div>
         </form>
       </div>
-
-
     </div>
   </div>
+</div>
 
   <!-- Área de Confirmação -->
   <div id="confirmationArea{{ agendamento.id }}" class="confirmation-area d-none mt-4">
@@ -398,16 +396,16 @@
   $(document).ready(function() {
       $('form[id^="agendamentoForm"]').on('submit', function(event) {
           event.preventDefault();
-  
+
           var form = $(this);
           var formData = form.serialize();
           var formId = form.attr('id').replace('agendamentoForm', '');
-          var formErrorsId = '#formErrors' + formId;
+          var formErrorsId = '#errorContainerAgendamento' + formId;
           var submitButton = form.find('button[type="submit"]');
           var originalButtonText = submitButton.html();
-  
+
           submitButton.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Agendando...').attr('disabled', true);
-  
+
           $.ajax({
               type: 'POST',
               url: form.attr('action'),
@@ -432,21 +430,19 @@
               }
           });
       });
-  
+
       function showErrorMessages(errors, formErrorsId) {
           var errorMessages = '';
-          var parsedErrors = JSON.parse(errors);
-  
-          for (var field in parsedErrors) {
-              if (parsedErrors.hasOwnProperty(field)) {
-                  parsedErrors[field].forEach(function(error) {
-                      errorMessages += '<p>' + error.message + '</p>';
+          for (var field in errors) {
+              if (errors.hasOwnProperty(field)) {
+                  errors[field].forEach(function(error) {
+                      errorMessages += '<p class="text-danger">' + error.message + '</p>';
                   });
               }
           }
           $(formErrorsId).html(errorMessages).removeClass('d-none');
       }
-  
+
       function showConfirmation(data, id) {
           $('#confirmPaciente' + id).text(data.paciente);
           $('#confirmProfissionalSaude' + id).text(data.profissional_saude);
@@ -454,7 +450,7 @@
           $('#confirmTurno' + id).text(data.turno);
           $('#confirmPrioridadeAtendimento' + id).text(data.prioridade_atendimento);
           $('#downloadComprovante' + id).attr('href', data.download_url);
-  
+
           $('#confirmationArea' + id).removeClass('d-none');
       }
   });
