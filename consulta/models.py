@@ -71,13 +71,20 @@ def validate_unique_email(value):
         raise ValidationError('Email já cadastrado.')
 
 class Administrativo(models.Model):
+    SEXO_CHOICES = [
+        ('M', 'Masculino'),
+        ('F', 'Feminino'),
+        ('O', 'Outro') 
+    ]
+    
     usuario = models.OneToOneField(User, on_delete=models.SET_NULL, blank=True, null=True)
     nome = models.CharField(max_length=100, verbose_name='Nome Completo')
+    nome_social = models.CharField(max_length=100, blank=True, null=True, verbose_name='Nome Social')  # Novo campo
     data_nascimento = models.DateField(verbose_name='Data de nascimento', validators=[data_nasc_valida])
     email = models.EmailField()
     rg = models.CharField(max_length=20)
     cpf = models.CharField(max_length=14, validators=[validate_cpf, MinLengthValidator(11)])
-    sexo = models.CharField(max_length=1, choices=[('M', 'Masculino'), ('F', 'Feminino')])
+    sexo = models.CharField(max_length=1, choices=SEXO_CHOICES)
     cargo_funcao = models.CharField(max_length=50, default='')
     cep = models.CharField(max_length=9)
     cidade = models.CharField(max_length=50)
@@ -167,9 +174,14 @@ class Agendamento(models.Model):
 
     def atualizar_status(self):
         now = timezone.now().date()  # Obtém apenas a data atual
-        if self.data_agendamento.date() < now and self.status_atendimento not in ['atendido', 'confirmado']:
-            # Se a data do agendamento for anterior à data atual e não estiver atendido ou confirmado
-            self.status_atendimento = 'ausente'
+        if self.data_agendamento.date() < now:
+            # Se a data do agendamento for anterior à data atual
+            if self.status_atendimento not in ['atendido', 'confirmado']:
+                # Se o status não estiver em 'atendido' ou 'confirmado'
+                self.status_atendimento = 'ausente'
+            elif self.status_atendimento == 'confirmed' and self.status_atendimento != 'atendido':
+                # Se o status estiver 'confirmado' mas não 'atendido'
+                self.status_atendimento = 'ausente'
             self.save()
 
     class Meta:
