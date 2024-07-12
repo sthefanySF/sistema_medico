@@ -624,74 +624,6 @@ class ProfissionaldasaudeCreate(CreateView):
 
 
 
-
-# class ProfissionaldasaudeCreate(CreateView):
-#     model = Profissionaldasaude
-#     fields = ['nome', 'data_nascimento','email','rg','cpf','sexo','identificacao_unica','area','formacao','conselho','registro','unidade_siass','ddd_telefone','uf','cep','cidade','bairro','numero', 'complemento']
-#     template_name = 'consultas/cadastro_profissionaldasaude.html'
-#     success_url = reverse_lazy('profissionaldasaudeListagem')
-#
-#
-#
-#     def form_valid(self, form):
-#         response = super().form_valid(form)
-#         messages.success(self.request, 'Profissional da saúde cadastrado com sucesso!')
-#         print("Profissional da saúde cadastrado com sucesso!")
-#         return response
-#
-#     def form_invalid(self, form):
-#         messages.error(self.request, 'Erro ao cadastrar o profissional da saúde. Verifique os dados e tente novamente.')
-#         print("Erro ao cadastrar o profissional da saúde.")
-#         print(form.errors)
-#         return super().form_invalid(form)
-
-
-class AgendamentoCreate(CreateView):
-    model = Agendamento
-    form_class = AgendamentoForm
-    template_name = 'consultas/forms_agendamento.html'
-    success_url = reverse_lazy('agendamentoListagem')
-
-    def form_valid(self, form):
-        # Criar o objeto apenas se o formulário for válido
-        response = super().form_valid(form)
-
-        # Redireciona para a tela de confirmação
-        return redirect('confirmAgendamento', pk=self.object.pk)
-
-    def form_invalid(self, form):
-        messages.error(self.request, 'Erro ao realizar o agendamento. Verifique os dados e tente novamente.')
-        print("Erro ao realizar o agendamento.")
-        print(form.errors)  
-
-        # Se a solicitação for AJAX, retorna um JSON com os erros
-        if self.request.is_ajax():
-            errors = form.errors.as_json()
-            return JsonResponse({'success': False, 'errors': errors}, status=400)
-
-        # Renderizar o template novamente com o formulário inválido
-        return self.render_to_response(self.get_context_data(form=form))
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['messages'] = messages.get_messages(self.request)
-        return context
-    
-    def generate_pdf(self, agendamento):
-        html_content = render_to_string('consultas/comprovantePdf_agendamento.html', {'agendamento': agendamento})
-
-        pdf_file = io.BytesIO()
-        pisa_status = pisa.CreatePDF(html_content, dest=pdf_file)
-
-        if pisa_status.err:
-            raise Exception("Erro ao gerar PDF.")
-
-        pdf_file.seek(0)
-        return pdf_file
-    
-    
-    
-    
 # class AgendamentoCreate(CreateView):
 #     model = Agendamento
 #     form_class = AgendamentoForm
@@ -701,22 +633,28 @@ class AgendamentoCreate(CreateView):
 #     def form_valid(self, form):
 #         self.object = form.save()
 #         agendamento_data = {
-#             'id': self.object.id,
 #             'paciente': self.object.paciente.nome,
-#             'cpf': self.object.paciente.cpf,
 #             'profissional_saude': self.object.profissional_saude.nome,
 #             'data_agendamento': self.object.data_agendamento.strftime('%d/%m/%Y'),
 #             'turno': self.object.get_turno_display(),
 #             'prioridade_atendimento': 'Sim' if self.object.prioridade_atendimento else 'Não',
-#             'status_atendimento': self.object.status_atendimento,
 #             'download_url': reverse_lazy('downloadComprovante', kwargs={'pk': self.object.pk})
 #         }
 #         return JsonResponse({'success': True, 'agendamento': agendamento_data})
 
 #     def form_invalid(self, form):
-#         errors = form.errors.as_json()
-#         return JsonResponse({'success': False, 'errors': errors}, status=400)
+#         messages.error(self.request, 'Erro ao realizar o agendamento. Verifique os dados e tente novamente.')
+#         print("Erro ao realizar o agendamento.")
+#         print(form.errors)  
 
+#         # Se a solicitação for AJAX, retorna um JSON com os erros
+#         if self.request.is_ajax():
+#             errors = form.errors.as_json()
+#             return JsonResponse({'success': False, 'errors': errors}, status=400)
+
+#         # Renderizar o template novamente com o formulário inválido
+#         return self.render_to_response(self.get_context_data(form=form))
+    
 #     def get_context_data(self, **kwargs):
 #         context = super().get_context_data(**kwargs)
 #         context['messages'] = messages.get_messages(self.request)
@@ -724,12 +662,46 @@ class AgendamentoCreate(CreateView):
     
 #     def generate_pdf(self, agendamento):
 #         html_content = render_to_string('consultas/comprovantePdf_agendamento.html', {'agendamento': agendamento})
+
 #         pdf_file = io.BytesIO()
 #         pisa_status = pisa.CreatePDF(html_content, dest=pdf_file)
+
 #         if pisa_status.err:
 #             raise Exception("Erro ao gerar PDF.")
+
 #         pdf_file.seek(0)
 #         return pdf_file
+    
+    
+    
+    
+class AgendamentoCreate(CreateView):
+    model = Agendamento
+    form_class = AgendamentoForm
+    template_name = 'consultas/listagem_agendamentos.html'
+    success_url = reverse_lazy('agendamentoListagem')
+
+    def form_valid(self, form):
+        self.object = form.save()
+        agendamento_data = {
+            'paciente': self.object.paciente.nome,
+            'profissional_saude': self.object.profissional_saude.nome,
+            'data_agendamento': self.object.data_agendamento.strftime('%d/%m/%Y'),
+            'turno': self.object.get_turno_display(),
+            'prioridade_atendimento': 'Sim' if self.object.prioridade_atendimento else 'Não',
+            'download_url': reverse_lazy('downloadComprovante', kwargs={'pk': self.object.pk})
+        }
+        return JsonResponse({'success': True, 'agendamento': agendamento_data})
+
+    def form_invalid(self, form):
+        errors = form.errors.as_json()
+        return JsonResponse({'success': False, 'errors': errors}, status=400)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['messages'] = messages.get_messages(self.request)
+        return context
+
 
 
 

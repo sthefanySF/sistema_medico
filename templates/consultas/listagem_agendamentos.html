@@ -215,31 +215,26 @@
           {% csrf_token %}
           <input type="hidden" name="status_atendimento" value="pendente" />
 
-          <!-- Campo Paciente -->
           <div class="mb-3">
             <label for="id_paciente" class="form-label"><b>Paciente</b></label>
             {{ form.paciente }}
           </div>
 
-          <!-- Campo Profissional de Saúde -->
           <div class="mb-3">
             <label for="id_profissional_saude" class="form-label"><b>Profissional de Saúde</b></label>
             {{ form.profissional_saude }}
           </div>
 
-          <!-- Campo Data do Agendamento -->
           <div class="mb-3">
             <label for="id_data_agendamento" class="form-label"><b>Data do Agendamento</b></label>
             {{ form.data_agendamento }}
           </div>
 
-          <!-- Campo Turno -->
           <div class="mb-3">
             <label for="id_turno" class="form-label"><b>Turno</b></label>
             {{ form.turno }}
           </div>
 
-          <!-- Campo Prioridade de Atendimento -->
           <div class="mb-3 form-check">
             {{ form.prioridade_atendimento }}
             <label class="form-check-label" for="id_prioridade_atendimento"><b>Prioridade de Atendimento</b></label>
@@ -253,7 +248,7 @@
       </div>
     </div>
   </div>
-</div>
+
 
   <!-- Área de Confirmação -->
   <div id="confirmationArea{{ agendamento.id }}" class="confirmation-area d-none mt-4">
@@ -285,7 +280,7 @@
           </tbody>
         </table>
         <div class="d-flex justify-content-between mt-2">
-          <a class="btn btn-primary btn-sm" id="downloadComprovante{{ agendamento.id }}" href="#">Baixar Comprovante &nbsp;<i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>
+          <a class="btn btn-primary btn-sm" id="downloadComprovante{{ agendamento.id }}" href="#" target="_blank">Baixar Comprovante &nbsp;<i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>
           <button class="btn btn-warning" data-bs-dismiss="modal"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i>&nbsp;Voltar para agendamento</button>
         </div>
       </div>
@@ -393,66 +388,49 @@
 </script>
 
 <script>
-  $(document).ready(function() {
-      $('form[id^="agendamentoForm"]').on('submit', function(event) {
-          event.preventDefault();
-
-          var form = $(this);
-          var formData = form.serialize();
-          var formId = form.attr('id').replace('agendamentoForm', '');
-          var formErrorsId = '#errorContainerAgendamento' + formId;
-          var submitButton = form.find('button[type="submit"]');
-          var originalButtonText = submitButton.html();
-
-          submitButton.html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Agendando...').attr('disabled', true);
-
-          $.ajax({
-              type: 'POST',
-              url: form.attr('action'),
-              data: formData,
-              success: function(response) {
-                  if (response.success) {
-                      showConfirmation(response.agendamento, formId);
-                      submitButton.html(originalButtonText).attr('disabled', false);
-                  } else {
-                      showErrorMessages(response.errors, formErrorsId);
-                      submitButton.html(originalButtonText).attr('disabled', false);
-                  }
-              },
-              error: function(xhr) {
-                  if (xhr.status === 400) {
-                      var response = xhr.responseJSON;
-                      showErrorMessages(response.errors, formErrorsId);
-                  } else {
-                      alert('Ocorreu um erro ao agendar.');
-                  }
-                  submitButton.html(originalButtonText).attr('disabled', false);
-              }
-          });
-      });
-
-      function showErrorMessages(errors, formErrorsId) {
-          var errorMessages = '';
-          for (var field in errors) {
-              if (errors.hasOwnProperty(field)) {
-                  errors[field].forEach(function(error) {
-                      errorMessages += '<p class="text-danger">' + error.message + '</p>';
-                  });
-              }
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('form[id^="agendamentoForm"]').forEach(function(form) {
+      form.addEventListener('submit', function(event) {
+        event.preventDefault();
+  
+        const formData = new FormData(form);
+        const agendamentoId = form.id.replace('agendamentoForm', '');
+  
+        fetch(form.action, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+          },
+          body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            document.getElementById(`confirmPaciente${agendamentoId}`).innerText = data.agendamento.paciente;
+            document.getElementById(`confirmProfissionalSaude${agendamentoId}`).innerText = data.agendamento.profissional_saude;
+            document.getElementById(`confirmDataAgendamento${agendamentoId}`).innerText = data.agendamento.data_agendamento;
+            document.getElementById(`confirmTurno${agendamentoId}`).innerText = data.agendamento.turno;
+            document.getElementById(`confirmPrioridadeAtendimento${agendamentoId}`).innerText = data.agendamento.prioridade_atendimento;
+            document.getElementById(`downloadComprovante${agendamentoId}`).href = data.agendamento.download_url;
+            
+            const confirmationArea = document.getElementById(`confirmationArea${agendamentoId}`);
+            confirmationArea.classList.remove('d-none');
+            confirmationArea.scrollIntoView({ behavior: 'smooth' });
+  
+            const agendamentoModal = new bootstrap.Modal(document.getElementById(`agendamentoModal${agendamentoId}`));
+            agendamentoModal.hide();
+          } else {
+            const errorContainer = document.getElementById(`errorContainerAgendamento${agendamentoId}`);
+            errorContainer.innerHTML = '';
+            for (const [field, errors] of Object.entries(data.errors)) {
+              const errorMessages = errors.map(error => `<div class="alert alert-danger">${error.message}</div>`).join('');
+              errorContainer.innerHTML += `<div>${errorMessages}</div>`;
+            }
           }
-          $(formErrorsId).html(errorMessages).removeClass('d-none');
-      }
-
-      function showConfirmation(data, id) {
-          $('#confirmPaciente' + id).text(data.paciente);
-          $('#confirmProfissionalSaude' + id).text(data.profissional_saude);
-          $('#confirmDataAgendamento' + id).text(data.data_agendamento);
-          $('#confirmTurno' + id).text(data.turno);
-          $('#confirmPrioridadeAtendimento' + id).text(data.prioridade_atendimento);
-          $('#downloadComprovante' + id).attr('href', data.download_url);
-
-          $('#confirmationArea' + id).removeClass('d-none');
-      }
+        })
+        .catch(error => console.error('Erro:', error));
+      });
+    });
   });
 </script>
 
@@ -472,25 +450,6 @@
     });
 });
 </script>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const forms = document.querySelectorAll('form[id^="agendamentoForm"]');
-    forms.forEach(form => {
-        form.addEventListener('submit', function (event) {
-            const paciente = form.querySelector('#id_paciente').value;
-            const dataAgendamento = form.querySelector('#id_data_agendamento').value;
-
-            if (!paciente || !dataAgendamento) {
-                event.preventDefault();
-                alert('Por favor, preencha todos os campos obrigatórios.');
-            }
-        });
-    });
-});
-</script>
-
-
 
 <style>
   .dataTables_filter {
