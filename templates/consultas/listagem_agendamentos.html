@@ -388,23 +388,36 @@
 </script>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('form[id^="agendamentoForm"]').forEach(function(form) {
-      form.addEventListener('submit', function(event) {
-        event.preventDefault();
-  
-        const formData = new FormData(form);
-        const agendamentoId = form.id.replace('agendamentoForm', '');
-  
-        fetch(form.action, {
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('form[id^="agendamentoForm"]').forEach(function(form) {
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const formData = new FormData(form);
+      const agendamentoId = form.id.replace('agendamentoForm', '');
+
+      // Obter a data do campo data_agendamento do formulário
+      const dataAgendamento = formData.get('data_agendamento');
+      const hoje = new Date(); // Data de hoje
+
+      // Verificar se a data selecionada é no passado
+      if (new Date(dataAgendamento) < hoje) {
+          const errorContainer = document.getElementById(`errorContainerAgendamento${agendamentoId}`);
+          errorContainer.innerHTML = `<div class="alert alert-danger">Não é possível agendar para uma data no passado.</div>`;
+          return; // Impede o envio do formulário
+      }
+
+      fetch(form.action, {
           method: 'POST',
           headers: {
-            'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+              'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
           },
           body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
+      })
+      .then(response => response.json())
+      .then(data => {
+          const errorContainer = document.getElementById(`errorContainerAgendamento${agendamentoId}`);
+          errorContainer.innerHTML = ''; // Limpar erros anteriores
           if (data.success) {
             document.getElementById(`confirmPaciente${agendamentoId}`).innerText = data.agendamento.paciente;
             document.getElementById(`confirmProfissionalSaude${agendamentoId}`).innerText = data.agendamento.profissional_saude;
@@ -419,19 +432,23 @@
   
             const agendamentoModal = new bootstrap.Modal(document.getElementById(`agendamentoModal${agendamentoId}`));
             agendamentoModal.hide();
-          } else {
-            const errorContainer = document.getElementById(`errorContainerAgendamento${agendamentoId}`);
-            errorContainer.innerHTML = '';
-            for (const [field, errors] of Object.entries(data.errors)) {
-              const errorMessages = errors.map(error => `<div class="alert alert-danger">${error.message}</div>`).join('');
-              errorContainer.innerHTML += `<div>${errorMessages}</div>`;
-            }
-          }
-        })
-        .catch(error => console.error('Erro:', error));
+                } else {
+                    if (data.errors) {
+                      if (Array.isArray(data.errors)) {
+                          const errorMessages = data.errors.map(error => `<div class="alert alert-danger">${error.message}</div>`).join('');
+                          errorContainer.innerHTML = `<div>${errorMessages}</div>`;
+                      } else {
+                          errorContainer.innerHTML = `<div class="alert alert-danger">${data.errors}</div>`;
+                      }
+                  } else {
+                      errorContainer.innerHTML = '<div class="alert alert-danger">Erro desconhecido ao processar o formulário.</div>';
+                  }
+              }
+          })
+          .catch(error => console.error('Erro:', error));
       });
-    });
   });
+});
 </script>
 
 <script>

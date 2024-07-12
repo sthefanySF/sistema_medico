@@ -1,6 +1,8 @@
 
 
 from datetime import datetime
+from datetime import date
+from django.utils.timezone import now
 from django.utils import timezone
 from django import forms
 import json
@@ -109,16 +111,11 @@ class ProfissionaldasaudeForm(forms.ModelForm):
 
 class AgendamentoForm(forms.ModelForm):
     def clean_data_agendamento(self):
-        # Obtém a data de agendamento do formulário
         data_agendamento = self.cleaned_data.get('data_agendamento')
-        
-        # Verifica se a data de agendamento é no passado
-        if data_agendamento.date() < datetime.now().date():
 
-            # Se for no passado, levanta uma exceção de ValidationError
-            raise forms.ValidationError("A data do agendamento não pode ser no passado.")
-        
-        # Retorna a data de agendamento se tudo estiver válido
+        if data_agendamento and data_agendamento.date() < timezone.now().date():
+            raise forms.ValidationError("Não é possível agendar para uma data no passado.")
+
         return data_agendamento
 
     class Meta:
