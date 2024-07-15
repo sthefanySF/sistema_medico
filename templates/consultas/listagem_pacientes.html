@@ -32,7 +32,7 @@
       {% for paciente in pacientes %}
         <tr data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
           <td class="paciente-nome" colspan="3">
-            {{ paciente.nome }}
+            {{ paciente.nome }}{% if paciente.nome_social %} ({{ paciente.nome_social }}){% endif %}
             <span style="color: #bbbbbb">- {{ paciente.get_sexo_display }}</span>
             <span style="display: none;">{{ paciente.data_nascimento|date:'d/m/Y' }}-{{ paciente.email }}-{{ paciente.rg }}-{{ paciente.cpf }}-{{ paciente.tipo_paciente }}-{{ paciente.matricula }}</span>
             <a href="#" aria-expanded="false" class="accordion-toggle"></a>
@@ -104,6 +104,12 @@
                         </div>
 
                         <div class="col mb-3">
+                          <label for="nome_social{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Nome Social</b></label>  
+                          <input type="text" class="form-control" id="nome_social{{ paciente.id }}" name="nome_social" value="{{ paciente.nome_social }}" />
+                        </div>
+
+
+                        <div class="col mb-3">
                           <label for="email{{ paciente.id }}" class="col-sm-2 col-form-label"><b>E-mail</b></label>
                           <input type="email" class="form-control" id="email{{ paciente.id }}" name="email" value="{{ paciente.email }}" />
                         </div>
@@ -131,6 +137,7 @@
                             <select class="form-control" id="sexo{{ paciente.id }}" name="sexo">
                               <option value="M" {% if paciente.sexo == 'M' %} selected {% endif %}>Masculino</option>
                               <option value="F" {% if paciente.sexo == 'F' %} selected {% endif %}>Feminino</option>
+                              <option value="F" {% if paciente.sexo == 'O' %} selected {% endif %}>Outro</option>
                             </select>
                           </div>
                         </div>
@@ -250,6 +257,11 @@
                       <div class="col">
                         <label for="{{ form.nome.id_for_label }}" class="col-sm-2 col-form-label"><b>Nome</b></label>
                         <div class="col-sm-12">{{ form.nome }}</div>
+                      </div>
+
+                      <div class="col mb-3">
+                        <label for="nome_social{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Nome Social</b></label>  
+                        <input type="text" class="form-control" id="nome_social{{ paciente.id }}" name="nome_social" value="{{ paciente.nome_social }}" />
                       </div>
 
                       <div class="col">
