@@ -694,7 +694,8 @@ class AgendamentoCreate(CreateView):
         return JsonResponse({'success': True, 'agendamento': agendamento_data})
 
     def form_invalid(self, form):
-        errors = form.errors.as_json()
+        # Corrigindo a estrutura de retorno de erros para um objeto JSON adequado
+        errors = form.errors.get_json_data()
         return JsonResponse({'success': False, 'errors': errors}, status=400)
 
     def get_context_data(self, **kwargs):

@@ -114,7 +114,7 @@ class AgendamentoForm(forms.ModelForm):
         data_agendamento = self.cleaned_data.get('data_agendamento')
 
         if data_agendamento and data_agendamento.date() < timezone.now().date():
-            raise forms.ValidationError("Não é possível agendar para uma data no passado.")
+            raise forms.ValidationError("Data incorreta, ajustes data do agendamento e tente novamente!")
 
         return data_agendamento
 
