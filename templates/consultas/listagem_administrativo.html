@@ -31,7 +31,13 @@
       {% for administrativo in administrativo %}
         <tr data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
           <td class="administrativo-nome" colspan="3">
-            {{ administrativo.nome }}{% if administrativo.nome_social %} ({{ administrativo.nome_social }}){% endif %}
+
+            {% if  administrativo.nome_social %}
+              {{  administrativo.nome_social }}
+            {% else %}
+              {{  administrativo.nome }}
+            {% endif %}
+            
             <span style="color: #bbbbbb">- {{ administrativo.cargo_funcao }}</span>
             <span style="display: none;">{{ administrativo.data_nascimento|date:'d/m/Y' }}-{{ administrativo.email }}-{{ administrativo.rg }}-{{ administrativo.cpf }}{{ administrativo.setor }}-{{ administrativo.cargo }}</span>
             <a href="#" aria-expanded="false" class="accordion-toggle"></a>
