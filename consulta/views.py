@@ -928,6 +928,7 @@ def filtrar_prontuarios(request):
 def pdf_prontuario_medico(request, paciente_id):
     paciente = Paciente.objects.get(pk=paciente_id)
     medicos_ids = request.GET.get('medicos')
+    atendimentos_ids = request.GET.get('atendimentos')
 
     if medicos_ids:
         medicos_ids = [int(id) for id in medicos_ids.split(",")]
@@ -935,9 +936,12 @@ def pdf_prontuario_medico(request, paciente_id):
         ids_agendamentos = paciente.agendamento_set.filter(profissional_saude__id__in=medicos_ids).values_list('id', flat=True)
         atendimentos = Atendimento.objects.filter(agendamento__id__in=ids_agendamentos)
     else:
-        # Se nenhum médico for selecionado, obter todos os atendimentos do paciente
         atendimentos = Atendimento.objects.filter(agendamento__paciente=paciente)
-        
+
+    if atendimentos_ids:
+        atendimentos_ids = [int(id) for id in atendimentos_ids.split(",")]
+        atendimentos = atendimentos.filter(id__in=atendimentos_ids)
+
     context = {
         'paciente': paciente,
         'atendimentos': atendimentos,

@@ -57,23 +57,26 @@
 
   <dl id="patient-info" style="background-color: #f8f9fa;">
     {% for atendimento in atendimentos %}
-      <div id="" class="flex d-flex justify-content-evenly">
-        <p><strong>Atendido por Dr(a) </strong><span>{{ atendimento.profissional_saude.nome }}</span></p>
-        <p><strong>Area: </strong><span>{{ atendimento.profissional_saude.area }}</span></p>
-        <p><strong>Data do Atendimento: </strong><span>{{ atendimento.data_atendimento }}</span></p>
-      </div>
+        <div id="" class="flex d-flex justify-content-evenly">
+            <input type="checkbox" class="select-atendimento" value="{{ atendimento.id }}">
+            <p><strong>Atendido por Dr(a) </strong><span>{{ atendimento.profissional_saude.nome }}</span></p>
+            <p><strong>Area: </strong><span>{{ atendimento.profissional_saude.area }}</span></p>
+            <p><strong>Data do Atendimento: </strong><span>{{ atendimento.data_atendimento }}</span></p>
+        </div>
 
-      <dd id="diag">
-        <p><strong>Anamnese:</strong> {{ atendimento.anamnese }}<br /></p>
-        <p><strong>Exame Físico:</strong> {{ atendimento.exame_fisico }}<br /></p>
-        <p><strong>Exames Complementares:</strong> {{ atendimento.exames_complementares }}<br /></p>
-        <p><strong>Diagnóstico:</strong> {{ atendimento.diagnostico }}<br />
-        </p><p><strong>Conduta:</strong> {{ atendimento.conduta }}<br /> </p>
-      </dd>
-      {% empty %}
-      <dt>Nenhum atendimento registrado para este paciente.</dt>
+        <dd id="diag">
+            <p><strong>Anamnese:</strong> {{ atendimento.anamnese }}<br /></p>
+            <p><strong>Exame Físico:</strong> {{ atendimento.exame_fisico }}<br /></p>
+            <p><strong>Exames Complementares:</strong> {{ atendimento.exames_complementares }}<br /></p>
+            <p><strong>Diagnóstico:</strong> {{ atendimento.diagnostico }}<br /></p>
+            <p><strong>Conduta:</strong> {{ atendimento.conduta }}<br /> </p>
+        </dd>
+    {% empty %}
+        <dt>Nenhum atendimento registrado para este paciente.</dt>
     {% endfor %}
-  </dl>
+</dl>
+
+<button id="print-selected" class="btn btn-primary">Imprimir Selecionados</button>
 
   <script>
     var dropdown = document.querySelector('.dropdown')
@@ -92,8 +95,21 @@
       dropdownMenu.style.display = 'none'
     })
   </script>
+
+
+  <script>
+    //captura o prontuario selecionado
+    document.getElementById('print-selected').addEventListener('click', function (e) {
+      e.preventDefault();
+      var selectedAtendimentos = Array.from(document.querySelectorAll('.select-atendimento:checked')).map(function (input) {
+        return input.value;
+      });
+      var url = "{% url 'pdf_prontuario_medico' paciente.id %}?medicos={{ medicos_ids|join:',' }}&atendimentos=" + selectedAtendimentos.join(',');
+      window.open(url, '_blank');
+    });
+  </script>
   
-{% comment %} filtragem por medicos {% endcomment %}
+  {% comment %} filtragem por medicos {% endcomment %}
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script>
     $(document).ready(function () {
@@ -131,7 +147,7 @@
     })
   </script>
 
-  <script>{% comment %} capturara id do medico {% endcomment %}
+  <script>// capturara id do medico
     document.getElementById('filtro-form').addEventListener('submit', function (e) {
       e.preventDefault()
       var medicos = Array.from(document.querySelectorAll('input[name="medicos"]:checked')).map(function (input) {
@@ -142,7 +158,7 @@
     })
   </script>
 
-  <script>{% comment %}  botão exibir todos {% endcomment %}
+  <script>// botão exibir todos 
     document.getElementById('exibir-todos-btn').addEventListener('click', function (e) {
       e.preventDefault()
       // Limpar os checkboxes selecionados dentro do dropdown
