@@ -100,27 +100,6 @@
           </div>
         </div>
 
-        <h6 class="d-flex justify-content-center py-3">ATESTADO MÉDICO</h6>
-
-        <div class="atestado">
-          <div id="form-atestado">
-            <div class="form-group">
-              <label for="dias_afastamento">Atesto que o(a) paciente <span>{{ agendamento.paciente.nome }}</span> esteve em consulta no dia <span>{{ agendamento.data_agendamento|date:'d/m/Y' }}</span>, e necessita de <span><input class="input" name="dias_afastamento" type="text" placeholder="Dias" value="{{ atestado_medico_form.dias_afastamento.value|default_if_none:'' }}" /></span> dias de afastamento de suas atividades normais, para sua convalescença.</label>
-            </div>
-
-            <div class="form-group">
-              <label for="cid">CID:</label>
-              <input class="input" type="text" name="cid" placeholder="CID" value="{{ atestado_medico_form.cid.value|default_if_none:'' }}" style="margin-top: 20px;" />
-            </div>
-
-            <p style="text-align: center;">Rio Branco - Acre {{ agendamento.data_agendamento|date:'d/m/Y' }}</p>
-
-            <div class="form-group">
-              <label>Profissional de Saúde:</label>
-              <p>{{ agendamento.profissional_saude.nome }}</p>
-            </div>
-          </div>
-        </div>
         <!-- Formulário de Receita Médica -->
         <h6 class="d-flex justify-content-center py-3">RECEITA MÉDICA</h6>
 
@@ -147,6 +126,29 @@
             </div>
           </div>
         </div>
+
+        <h6 class="d-flex justify-content-center py-3">ATESTADO MÉDICO</h6>
+
+        <div class="atestado">
+          <div id="form-atestado">
+            <div class="form-group">
+              <label for="dias_afastamento">Atesto que o(a) paciente <span>{{ agendamento.paciente.nome }}</span> esteve em consulta no dia <span>{{ agendamento.data_agendamento|date:'d/m/Y' }}</span>, e necessita de <span><input class="input" name="dias_afastamento" type="text" placeholder="Dias" value="{{ atestado_medico_form.dias_afastamento.value|default_if_none:'' }}" /></span> dias de afastamento de suas atividades normais, para sua convalescença.</label>
+            </div>
+
+            <div class="form-group">
+              <label for="cid">CID:</label>
+              <input class="input" type="text" name="cid" placeholder="CID" value="{{ atestado_medico_form.cid.value|default_if_none:'' }}" style="margin-top: 20px;" />
+            </div>
+
+            <p style="text-align: center;">Rio Branco - Acre {{ agendamento.data_agendamento|date:'d/m/Y' }}</p>
+
+            <div class="form-group">
+              <label>Profissional de Saúde:</label>
+              <p>{{ agendamento.profissional_saude.nome }}</p>
+            </div>
+          </div>
+        </div>
+        
 
         <div class="d-flex justify-content-center align-items-center mb-3">
           <button type="submit" class="btn btn-primary">Salvar Atendimento</button>
