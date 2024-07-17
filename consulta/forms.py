@@ -23,12 +23,13 @@ class PacienteForm(forms.ModelForm):
             'tipo_paciente': 'Tipo de Paciente',
             'cargo_funcao': 'Cargo/Função',
             'ddd_telefone': 'DDD Telefone',
+            'nome_social': 'Nome Social', 
         }
         
         
         
         widgets = {
-            'sexo': forms.Select(choices=[('M', 'Masculino'), ('F', 'Feminino')]),
+            'sexo': forms.Select(choices=Paciente.SEXO_CHOICES),
             'tipo_paciente': forms.Select(choices=Paciente.TIPO_PACIENTE_CHOICES),
         }
         
@@ -59,7 +60,7 @@ class AdministrativoForm(forms.ModelForm):
             'ddd_telefone': 'DDD Telefone',
             'lotacao_de_exercicio': 'Lotação de Exercício',
             'matricula_siape': 'Matrícula SIAPE',
-            'nome_social': 'Nome Social'  # Novo campo
+            'nome_social': 'Nome Social' 
         }
         
         widgets = {

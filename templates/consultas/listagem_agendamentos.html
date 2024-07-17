@@ -58,9 +58,24 @@
     <tbody>
       {% for agendamento in agendamentos %}
         <tr>
-          <td>{{ agendamento.paciente.nome }}</td>
+          <td>
+            
+          {% if agendamento.paciente.nome_social %}
+            {{ agendamento.paciente.nome_social }}
+          {% else %}
+            {{ agendamento.paciente.nome }}
+          {% endif %}
+
+        </td>
           <td>{{ agendamento.paciente.cpf }}</td>
-          <td>{{ agendamento.profissional_saude.nome }}</td>
+          <td>
+            {% if agendamento.profissional_saude.nome_social %}
+              {{ agendamento.profissional_saude.nome_social }}
+            {% else %}
+              {{ agendamento.profissional_saude.nome }}
+            {% endif %}
+            
+          </td>
           <td>{{ agendamento.data_agendamento | date:"d/m/Y " }}</td>
           <td>
             {% if agendamento.prioridade_atendimento %}
@@ -166,7 +181,14 @@
                         <label for="profissional_saude">Profissional de Saúde</label>
                         <select id="profissional_saude_{{ agendamento.id }}" name="profissional_saude" class="form-select">
                           {% for profissional in profissionais_saude %}
-                            <option value="{{ profissional.id }}" {% if agendamento.profissional_saude.id == profissional.id %}selected{% endif %}>{{ profissional.nome }}</option>
+                            <option value="{{ profissional.id }}" {% if agendamento.profissional_saude.id == profissional.id %}selected{% endif %}>
+                            {% if profissional.nome_social %}
+                              {{ profissional.nome_social }}
+                            {% else %}
+                              {{ profissional.nome }}
+                            {% endif %}
+                            
+                            </option>
                           {% endfor %}
                         </select>
                       </div>

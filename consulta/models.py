@@ -22,12 +22,20 @@ def data_nasc_valida(value):
 
 
 class Paciente(models.Model):
+
+    SEXO_CHOICES = [
+        ('M', 'Masculino'),
+        ('F', 'Feminino'),
+        ('O', 'Outro') 
+    ]
+    
     nome = models.CharField(max_length=100)
+    nome_social = models.CharField(max_length=100, blank=True, null=True, verbose_name='Nome Social')  
     data_nascimento = models.DateField(verbose_name='Data de Nascimento', validators=[data_nasc_valida], blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     rg = models.CharField(max_length=20, blank=True, null=True)
     cpf = models.CharField(max_length=14, validators=[validate_cpf, MinLengthValidator(11)])
-    sexo = models.CharField(max_length=1, choices=[('M', 'Masculino'), ('F', 'Feminino')])
+    sexo = models.CharField(max_length=1, choices=SEXO_CHOICES)
     matricula = models.CharField(max_length=20)
     TIPO_PACIENTE_CHOICES = [
         ('Aluno', 'Aluno'),
@@ -79,7 +87,7 @@ class Administrativo(models.Model):
     
     usuario = models.OneToOneField(User, on_delete=models.SET_NULL, blank=True, null=True)
     nome = models.CharField(max_length=100, verbose_name='Nome Completo')
-    nome_social = models.CharField(max_length=100, blank=True, null=True, verbose_name='Nome Social')  # Novo campo
+    nome_social = models.CharField(max_length=100, blank=True, null=True, verbose_name='Nome Social')  
     data_nascimento = models.DateField(verbose_name='Data de nascimento', validators=[data_nasc_valida])
     email = models.EmailField()
     rg = models.CharField(max_length=20)
@@ -112,13 +120,19 @@ class Administrativo(models.Model):
 
     
 class Profissionaldasaude(models.Model):
+    SEXO_CHOICES = [
+        ('M', 'Masculino'),
+        ('F', 'Feminino'),
+        ('O', 'Outro') 
+    ]
     usuario = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
     nome = models.CharField('Nome Completo', max_length=100)
+    nome_social = models.CharField(max_length=100, blank=True, null=True, verbose_name='Nome Social')  
     data_nascimento = models.DateField(u'Data de Nascimento', validators=[data_nasc_valida])
     email = models.EmailField()
     rg = models.CharField(max_length=20)
     cpf = models.CharField(max_length=14, validators=[validate_cpf, MinLengthValidator(11)])
-    sexo = models.CharField(max_length=1, choices=[('M', 'Masculino'), ('F', 'Feminino')]) #O parâmetro choices em um campo CharField ou IntegerField é usado para fornecer uma lista de escolhas para esse campo
+    sexo = models.CharField(max_length=1, choices=SEXO_CHOICES)
     identificacao_unica = models.CharField(max_length=50, default='')
     cep = models.CharField(max_length=9)
     cidade = models.CharField(max_length=50)
