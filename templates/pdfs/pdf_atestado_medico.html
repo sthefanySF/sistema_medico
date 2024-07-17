@@ -77,8 +77,9 @@
     <div class="signature">
       <p>Profissional de Saúde:</p>
       <p>
-        <strong>{{ atestado.profissional }}</strong>
+        <strong>{{ atestado.profissional.nome }}</strong>
       </p>
+      <label>Conselho/CMR: {{ atestado.profissional.conselho }}</label>
     </div>
   </body>
 </html>
