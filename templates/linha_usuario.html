@@ -8,13 +8,17 @@
   <div class="header-container">
     <div class="container-fluid">
       <div class="navbar">
-        <a class="navbar-brand text-white" href="#"><img src="{% static 'imagens/logo_ufac_2.png' %}" style="margin: auto; display: flex;" /></a>
+        <a class="navbar-brand text-white" href="#">
+{#            <img src="{% static 'imagens/logo_ufac_2.png' %}" style="margin: auto; display: flex;" />#}
+            <img src="{% static 'imagens/logo_ufac_2.png' %}"/>
+        </a>
         <span class="topo">
-          <h1>Sistema Médico pericial</h1>
-          <h6>Universidade Federal do Acre</h6>
+{#          <h1>Sistema Médico Pericial</h1>#}
+          <h3>Universidade Federal do Acre</h3>
         </span>
       </div>
-      <button class="navbar-toggler fixed-button" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+      <button class="navbar-toggler fixed-button" type="button" data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
         {% comment %} <span class="navbar-toggler-icon" style="filter: brightness(0) invert(1);"></span> {% endcomment %}
         <span class="navbar-toggler-icon" style=""></span>
       </button>
@@ -276,7 +280,7 @@
       border-radius: 20px;
       padding: 12px 10px;
     }
-    
+
     .card_load {
       width: 70px;
       height: 70px;
@@ -290,14 +294,14 @@
       box-shadow: 0 1px 25px rgba(0, 0, 0, 0.2);
       overflow: hidden;
     }
-    
+
     .card_load img {
       width: 100%;
       height: 100%;
-      object-fit: cover; 
+      object-fit: cover;
       border-radius: 50%;
     }
-    
+
     #card_title {
       width: 150px;
       height: 22px;
@@ -311,7 +315,7 @@
       animation: load89234 2s infinite;
       box-shadow: 0 1px 25px rgba(0,0,0,0.2);
     }
-    
+
     #card_descripion {
       width: 190px;
       height: 35px;
