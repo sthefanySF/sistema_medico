@@ -22,9 +22,20 @@ from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 
 
+class CustomPasswordResetForm(PasswordResetForm):
+    email = forms.EmailField(
+        max_length=254,
+        widget=forms.EmailInput(attrs={
+            'class': 'form-control',
+            'autofocus': True,
+            'placeholder': 'Digite seu email'
+        })
+    )
+
 
 def redefinir_senha(request):
-    form = PasswordResetForm()
+    # form = PasswordResetForm()   - Substituí o form para o personalizado para facil manipulação
+    form = CustomPasswordResetForm()
     if request.method == 'POST':
         email = request.POST.get('email')
         form = PasswordResetForm(request.POST)
