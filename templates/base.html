@@ -18,6 +18,9 @@
     <link rel="stylesheet" href="{% static 'font-awesome-4.6.3/css/font-awesome.css' %}" />
 
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" />
+
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
   </head>
 
   <body style="min-height: 100vh; display: flex; flex-direction: column;">
@@ -62,6 +65,7 @@
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
 
     {# loader #}
+
     <script>
       function showLoading() {
         document.getElementById("loading-screen").style.display = "flex";
@@ -72,49 +76,70 @@
       }
     </script>
 
-  <script>
-    {# Máscara de formatação Jquery #}
-    $(function ($) {
-        $('#id_data_agendamento').mask('99/99/9999');
-        $('#id_data_nascimento').mask('99/99/9999');
-        $("#id_cep").mask("99999-999");
-    });
+    <script>
+        {# Máscara de formatação Jquery #}
+        $(function ($) {
+            {#$('#id_data_agendamento').mask('99/99/9999');#}
+            $('#id_data_nascimento').mask('99/99/9999');
+            $("#id_cep").mask("99999-999");
+        });
 
-    {# Botão de voltar ao topo #}
-    if ($('#btnTopo').length > 0) {
-        window.onscroll = function () {
-            scroll();
-        }
+        {# Botão de voltar ao topo #}
+        if ($('#btnTopo').length > 0) {
+            window.onscroll = function () {
+                scroll();
+            }
 
-        function scroll() {
-            var btn = document.getElementById("btnTopo");
-            if (document.documentElement.scrollTop > 100) {
-                btn.style.display = "block";
-            } else {
-                btn.style.display = "none";
+            function scroll() {
+                var btn = document.getElementById("btnTopo");
+                if (document.documentElement.scrollTop > 100) {
+                    btn.style.display = "block";
+                } else {
+                    btn.style.display = "none";
+                }
+            }
+
+            function voltarTopo() {
+                document.documentElement.scrollTop = 0;
             }
         }
 
-        function voltarTopo() {
-            document.documentElement.scrollTop = 0;
-        }
-    }
+        {# Desaparecer Messages automaticamente #}
+        setTimeout(function () {
+            $(".alert").fadeOut("slow", function () {
+                $(this).alert("close");
+            });
+        }, 4000);
 
-    {# Desaparecer Messages automaticamente #}
-    setTimeout(function () {
-        $(".alert").fadeOut("slow", function () {
-            $(this).alert("close");
+        setTimeout(function () {
+            $(".errorlist").fadeOut("slow", function () {
+                $(this).alert("close");
+            });
+        }, 6000);
+    </script>
+
+    <script>
+
+        {# Calendário #}
+        $(document).ready(function () {
+            $("#id_data_agendamento").datepicker({
+                dateFormat: 'dd/mm/yy'
+            });
         });
-    }, 4000);
 
-    setTimeout(function () {
-        $(".errorlist").fadeOut("slow", function () {
-            $(this).alert("close");
+
+        {# Tooltip #}
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+
+         $(function () {
+            $(".btn").tooltip();
         });
-    }, 6000);
-</script>
 
-<script>
+    </script>
+
+    <script>
   ;(function () {
     // Variables
     var $curve = document.getElementById('curve')

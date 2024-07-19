@@ -115,7 +115,7 @@ class AgendamentoForm(forms.ModelForm):
         data_agendamento = self.cleaned_data.get('data_agendamento')
 
         if data_agendamento and data_agendamento.date() < timezone.now().date():
-            raise forms.ValidationError("Data incorreta, ajustes data do agendamento e tente novamente!")
+            raise forms.ValidationError("Data incorreta! Ajuste a data do agendamento e tente novamente.")
 
         return data_agendamento
 
@@ -131,7 +131,9 @@ class AgendamentoForm(forms.ModelForm):
         widgets = {
             'paciente': forms.Select(attrs={'class': 'form-control'}),
             'profissional_saude': forms.Select(attrs={'class': 'form-control'}),
-            'data_agendamento': forms.DateTimeInput(attrs={'class': 'form-control'}),
+
+            'data_agendamento': forms.DateTimeInput(attrs={'type': 'date', 'class': 'form-control'}),
+
             'turno': forms.Select(attrs={'class': 'form-control'}), 
             'prioridade_atendimento': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'status_atendimento': forms.HiddenInput(attrs={'value': 'pendente'}), 
