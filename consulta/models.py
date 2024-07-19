@@ -193,7 +193,7 @@ class Agendamento(models.Model):
             if self.status_atendimento not in ['atendido', 'confirmado']:
                 # Se o status não estiver em 'atendido' ou 'confirmado'
                 self.status_atendimento = 'ausente'
-            elif self.status_atendimento == 'confirmed' and self.status_atendimento != 'atendido':
+            elif self.status_atendimento == 'confirmado' and not self.status_atendimento == 'atendido':
                 # Se o status estiver 'confirmado' mas não 'atendido'
                 self.status_atendimento = 'ausente'
             self.save()

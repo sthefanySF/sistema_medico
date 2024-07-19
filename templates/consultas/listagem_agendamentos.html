@@ -41,9 +41,10 @@
 </div>
 
 <div class="table-responsive">
-  <table id="example" class="table table-striped nowrap table-bordered"
-         data-toggle="tooltip" data-popper-placement="top" title="Clique para ordenar" style="width:100%">
-    <thead>
+{#  <table id="example" class="table table-striped nowrap table-bordered"#}
+  <table class="table table-striped nowrap table-bordered"
+         style="vertical-align: middle; width: 100%">
+    <thead data-toggle="tooltip" data-popper-placement="top" title="Clique para ordenar">
       <tr class="custom-table-row">
         <th scope="col" class="text-center">Paciente</th>
         <th scope="col" class="text-center">CPF</th>
@@ -102,13 +103,22 @@
                 <a href="{% url 'agendamentoConfirmar' agendamento.id %}" class="btn btn-success">Confirmar</a>
               </div>
             {% elif agendamento.status_atendimento == 'confirmado' %}
-              Confirmado
+              <div class="rounded-1 bg-success text-center text-white">
+                Confirmado
+              </div>
             {% elif agendamento.status_atendimento == 'ausente' %}
-              Ausente
+              <div class="rounded-1 bg-warning text-center">
+                Ausente
+              </div>
             {% elif agendamento.status_atendimento == 'atendido' %}
-              Atendido
+              <div class="rounded-1 bg-primary text-center text-white">
+                Atendido
+              </div>
+
             {% else %}
-              Cancelado
+              <div class="rounded-1 bg-danger text-center text-white">
+                Cancelado
+              </div>
             {% endif %}
           </td>
 
@@ -426,7 +436,8 @@
         // Verificar se a data selecionada é no passado
         if (new Date(dataAgendamento) < hoje) {
             const errorContainer = document.getElementById(`errorContainerAgendamento${agendamentoId}`);
-            errorContainer.innerHTML = `<div class="alert alert-danger">Data incorreta, ajustes data do agendamento e tente novamente!</div>`;
+            errorContainer.innerHTML = `<div class="alert alert-danger">Data incorreta!
+                                            Ajuste a data do agendamento e tente novamente.</div>`;
             return; // Impede o envio do formulário
         }
   
@@ -469,7 +480,8 @@
                         errorContainer.innerHTML = `<div>${errorMessages}</div>`;
                     }
                 } else {
-                    errorContainer.innerHTML = '<div class="alert alert-danger">Erro desconhecido ao processar o formulário.</div>';
+                    errorContainer.innerHTML = '<div class="alert alert-danger">' +
+                        'Erro desconhecido ao processar o formulário.</div>';
                 }
             }
         })
