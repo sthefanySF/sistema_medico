@@ -181,11 +181,12 @@ O valor smooth faz a rolagem da página de forma suave. */
   bottom: 12rem;
   height: 40px;
   width: 41px;
-  background: #b5b8ba;
-  border: 2px solid #979797;
-  border-radius: 100%;
+  background: #83c9ff;
+  border: 1px solid #0476e7;
+  border-radius: 20px;
   display: none;
   overflow: hidden;
+  box-shadow: 0 5px 5px 0 rgba(0,0,0,.25);
 
 
 }

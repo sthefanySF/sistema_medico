@@ -390,7 +390,7 @@ def agendamento_confirmar(request, pk):
     
     # Verifica se a data do agendamento é igual à data atual
     if agendamento.data_agendamento.date() != timezone.now().date():
-        messages.error(request, 'O agendamento só pode ser confirmado na data do agendamento.')
+        messages.error(request, 'O agendamento só pode ser confirmado na data prevista.')
         return redirect('agendamentoListagem')
     
     agendamento.status_atendimento = 'confirmado'
