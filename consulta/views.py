@@ -105,7 +105,7 @@ def logar(request):
 @login_required()
 def sair(request):
     logout(request)
-    return redirect('home')
+    return redirect('login')
 
 # def login(request):
 #     if request.method == 'POST':
