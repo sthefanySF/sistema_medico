@@ -69,6 +69,7 @@ urlpatterns = [
     path('pdf_receita_medica/<int:atendimento_id>/<str:tipo>/', pdf_receita_medica, name='pdf_receita_medica_controle'),
 
 
+
     
     # Listagens
     path('pacientes/', listar_pacientes, name= 'pacienteListagem' ),
