@@ -261,12 +261,17 @@ class AtestadoMedico(models.Model):
 
         
 class ReceitaMedica(models.Model):
+    TIPO_CHOICES = (
+        ('simples', 'Simples'),
+        ('controle_especial', 'Controle Especial'),
+    )
     agendamento = models.ForeignKey(Agendamento, on_delete=models.CASCADE, related_name='receitas')
     data_receita = models.DateTimeField(auto_now_add=True)
     prescricao = models.TextField()
     dosagem = models.CharField(max_length=100)
     via_administrativa = models.CharField(max_length=100)
     modo_uso = models.CharField(max_length=100)
+    tipo = models.CharField(max_length=20, choices=TIPO_CHOICES, default='simples')
 
     @property
     def paciente(self):

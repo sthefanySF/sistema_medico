@@ -20,22 +20,28 @@
                 {% comment %} <p><strong>Descrição:</strong> {{ atendimento.descricao }}</p> {% endcomment %}
             </div>
     
-          <div class="d-flex justify-content-between mt-2">
-            <a type="submit" class="btn btn-primary btn-sm" style="margin-bottom: 2px;" methods="POST" href="{% url 'download_comprovante_atendimento' atendimento_id=atendimento.pk %}">Baixar Comprovante &nbsp;<i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>
-            
-            <a href="{% url 'pdf_receita_medica' atendimento.id %}" target="_blank" class="print-btn" style="border: none; text-decoration: none;;">
-                <button class="print-btn">
-                  Imprimir Receita
-                </button>
-            </a>
-
-            <a href="{% url 'pdf_atestado_medico' atendimento.id %}" target="_blank" class="print-btn" style="border: none; text-decoration: none;">
-                <button class="print-btn">
-                  Imprimir Atestado
-                </button>
-            </a>
-            
-            <a style="justify-content: right; margin-bottom: 2px" class="btn btn-warning" href="{% url 'agendamentoListagem' %}"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i>&nbsp;Voltar para agendamento</a>
+            <div class="d-flex justify-content-between mt-2">
+              <a type="submit" class="btn btn-primary btn-sm" style="margin-bottom: 2px;" methods="POST" href="{% url 'download_comprovante_atendimento' atendimento_id=atendimento.pk %}">Baixar Comprovante &nbsp;<i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>
+              
+              <a href="{% url 'pdf_receita_medica' atendimento.id %}" target="_blank" class="print-btn" style="border: none; text-decoration: none;">
+                  <button class="print-btn">
+                    Imprimir Receita
+                  </button>
+              </a>
+          
+              <a href="{% url 'pdf_receita_medica_controle' atendimento.id %}" target="_blank" class="print-btn" style="border: none; text-decoration: none;">
+                  <button class="print-btn">
+                    Imprimir Receita de Controle Especial
+                  </button>
+              </a>
+          
+              <a href="{% url 'pdf_atestado_medico' atendimento.id %}" target="_blank" class="print-btn" style="border: none; text-decoration: none;">
+                  <button class="print-btn">
+                    Imprimir Atestado
+                  </button>
+              </a>
+              
+              <a style="justify-content: right; margin-bottom: 2px" class="btn btn-warning" href="{% url 'agendamentoListagem' %}"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i>&nbsp;Voltar para agendamento</a>
           </div>
         </div>
     </div>
