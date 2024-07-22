@@ -126,7 +126,7 @@ def sair(request):
 
 @login_required
 def listar_pacientes(request):
-    pacientes = Paciente.objects.all()
+    pacientes = Paciente.objects.all().order_by('nome')
     form = PacienteForm()
     return render(request, 'consultas/listagem_pacientes.html', {'pacientes': pacientes, 'form': form})
 

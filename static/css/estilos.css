@@ -193,8 +193,8 @@ O valor smooth faz a rolagem da página de forma suave. */
 
 /* Muda a aparência do botão quando passa o cursor em cima */
 #btnTopo:hover {
-  background: #9ca0a3;
-  border: none;
+  background: #c9e8ff;
+  border: 1px solid #0476e7;
 }
 
 /*estilo para as opçoes de profissional de saude em agendamento*/
