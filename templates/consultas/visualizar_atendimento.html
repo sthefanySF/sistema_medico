@@ -90,66 +90,67 @@
   <h6 class="d-flex justify-content-center py-3">RECEITA MÉDICA</h6>
 
   <div class="receita">
-    {% if receita_simples or receita_controle_especial %}
-        {% if receita_simples %}
-        <a href="{% url 'pdf_receita_medica' atendimento.id %}" target="_blank" class="print-btn" style="border: none; float: right;">
-          <button class="print-btn">
-            Print
-          </button>
-        </a>
-        <div class="d-flex">
-            <div class="col-md-6 d-flex flex-column">
-              <span class="text-center">PRESCRIÇÃO</span>
-              <div class="campo">{{ receita_simples.prescricao }}</div>
-            </div>
-            <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
-              <div class="form-group d-flex flex-column col-md-8">
-                <label>Dosagem</label>
-                <div class="campo">{{ receita_simples.dosagem }}</div>
+      {% if receita_simples or receita_controle_especial %}
+          {% if receita_simples %}
+          <a href="{% url 'pdf_receita_medica' atendimento.id %}" target="_blank" class="print-btn" style="border: none; float: right;">
+            <button class="print-btn">
+              Imprimir Receita Simples
+            </button>
+          </a>
+          <div class="d-flex">
+              <div class="col-md-6 d-flex flex-column">
+                <span class="text-center">PRESCRIÇÃO</span>
+                <div class="campo">{{ receita_simples.prescricao }}</div>
               </div>
-              <div class="form-group d-flex flex-column col-md-8">
-                <label>Via Administrativa</label>
-                <div class="campo">{{ receita_simples.via_administrativa }}</div>
+              <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
+                <div class="form-group d-flex flex-column col-md-8">
+                  <label>Dosagem</label>
+                  <div class="campo">{{ receita_simples.dosagem }}</div>
+                </div>
+                <div class="form-group d-flex flex-column col-md-8">
+                  <label>Via Administrativa</label>
+                  <div class="campo">{{ receita_simples.via_administrativa }}</div>
+                </div>
+                <div class="form-group d-flex flex-column col-md-8">
+                  <label>Modo de Uso</label>
+                  <div class="campo">{{ receita_simples.modo_uso }}</div>
+                </div>
               </div>
-              <div class="form-group d-flex flex-column col-md-8">
-                <label>Modo de Uso</label>
-                <div class="campo">{{ receita_simples.modo_uso }}</div>
-              </div>
-            </div>
-        </div>
-        {% endif %}
+          </div>
+          {% endif %}
 
-        {% if receita_controle_especial %}
-        <a href="{% url 'pdf_receita_medica_controle' atendimento.id %}" target="_blank" class="print-btn" style="border: none; float: right;">
-          <button class="print-btn">
-            Print
-          </button>
-        </a>
-        <div class="d-flex">
-            <div class="col-md-6 d-flex flex-column">
-              <span class="text-center">PRESCRIÇÃO</span>
-              <div class="campo">{{ receita_controle_especial.prescricao }}</div>
-            </div>
-            <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
-              <div class="form-group d-flex flex-column col-md-8">
-                <label>Dosagem</label>
-                <div class="campo">{{ receita_controle_especial.dosagem }}</div>
+          {% if receita_controle_especial %}
+          <a href="{% url 'pdf_receita_medica_com_tipo' atendimento.id 'controle_especial' %}" target="_blank" class="print-btn" style="border: none; float: right;">
+            <button class="print-btn">
+              Imprimir Receita de Controle Especial
+            </button>
+          </a>
+          <div class="d-flex">
+              <div class="col-md-6 d-flex flex-column">
+                <span class="text-center">PRESCRIÇÃO</span>
+                <div class="campo">{{ receita_controle_especial.prescricao }}</div>
               </div>
-              <div class="form-group d-flex flex-column col-md-8">
-                <label>Via Administrativa</label>
-                <div class="campo">{{ receita_controle_especial.via_administrativa }}</div>
+              <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
+                <div class="form-group d-flex flex-column col-md-8">
+                  <label>Dosagem</label>
+                  <div class="campo">{{ receita_controle_especial.dosagem }}</div>
+                </div>
+                <div class="form-group d-flex flex-column col-md-8">
+                  <label>Via Administrativa</label>
+                  <div class="campo">{{ receita_controle_especial.via_administrativa }}</div>
+                </div>
+                <div class="form-group d-flex flex-column col-md-8">
+                  <label>Modo de Uso</label>
+                  <div class="campo">{{ receita_controle_especial.modo_uso }}</div>
+                </div>
               </div>
-              <div class="form-group d-flex flex-column col-md-8">
-                <label>Modo de Uso</label>
-                <div class="campo">{{ receita_controle_especial.modo_uso }}</div>
-              </div>
-            </div>
-        </div>
-        {% endif %}
-    {% else %}
-      <p class="text-center">Nenhuma receita médica registrada.</p>
-    {% endif %}
-</div>
+          </div>
+          {% endif %}
+      {% else %}
+        <p class="text-center">Nenhuma receita médica registrada.</p>
+      {% endif %}
+  </div>
+
 
   <h6 class="d-flex justify-content-center py-3">ATESTADO MÉDICO</h6>
 
