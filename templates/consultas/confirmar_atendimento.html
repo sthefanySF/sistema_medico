@@ -29,10 +29,10 @@
                   </button>
               </a>
           
-              <a href="{% url 'pdf_receita_medica_controle' atendimento.id %}" target="_blank" class="print-btn" style="border: none; text-decoration: none;">
-                  <button class="print-btn">
+              <a href="{% url 'pdf_receita_medica_controle' atendimento.id 'controle_especial' %}" target="_blank" class="print-btn" style="border: none; text-decoration: none;">
+                <button class="print-btn">
                     Imprimir Receita de Controle Especial
-                  </button>
+                </button>
               </a>
           
               <a href="{% url 'pdf_atestado_medico' atendimento.id %}" target="_blank" class="print-btn" style="border: none; text-decoration: none;">
