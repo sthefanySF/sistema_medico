@@ -7,25 +7,36 @@
 
 {% block content %}
   {% if messages %}{% include 'messages.html' %}{% endif %}
+
   <div class="container" style="display: flex;">
     {% load static %}
+
     <div class="contents">
-      <span style="font-weight: bold; font-size: larger; text-align: start;">ACESSE:</span>
-      <div class="card">
-        <a href="https://app.ufac.br/observatorio/pericia/" target="_blank"><img src="{% static 'imagens/pericia_medica.png' %}" style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px;" /></a>
+        <div class="card my-3">
+          <a href="https://app.ufac.br/observatorio/pericia/" target="_blank">
+              <img src="{% static 'imagens/pericia_medica.png' %}"
+                   style="width: 100%; height: 100%; object-fit: contain; border-radius: 5px;"/>
+          </a>
       </div>
+      <div class="text-center mt-4" style="font-size: 21px; text-align: start;">
+          Perícia médica para alunos? Acesse&nbsp;&nbsp;<i class="fa fa-hand-o-up" aria-hidden="true"></i>
+          <hr>
+      </div> <br>
     </div>
 
+
+    {# Container de login - Disivão das telas     #}
     <div class="container-login">
       <div class="m-3">
         <div class="text-center">
-          <span class="display-6">
-            <b>Setor Médico Pericial - Consultas</b>
+           <span style="font-size: 2.5rem;">
+            Setor Médico Pericial - Consultas
             <i class="fa fa-heartbeat fa-2x" style=" margin: auto; float: left"></i>
           </span>
 
           <hr class="my-4" />
-          <span style="font-size: 20px">Você é técnico ou profissional de saúde do setor?<br /> Faça seu login para ter acesso ao sistema.</span>
+          <span style="font-size: 20px">Você é técnico ou profissional de saúde do setor?<br />
+              Faça seu login para ter acesso ao sistema.</span>
         </div>
         <br /><br />
         {# <a class="btn btn-primary btn-lg" href="#" role="button">Saiba mais</a> #}
@@ -33,15 +44,16 @@
         <div class="row justify-content-center mt-4">
           <div class="col-md-5 col-md-offset-2" style="">
             <div class="">
+
               <div class="card-header">
-                {# <h5 class="card-title ">Faça login para acessar o sistema</h5> #}
-                {# <i class="fa fa-user-md fa-3x" style="float: right"></i> #}
-                <h3 style="text-align: center; font-weight: lighter;">LOGIN</h3>
+                 <h3 style="text-align: center; font-weight: lighter;">
+                    LOGIN&nbsp;&nbsp;<i class="fa fa-user-md"></i>
+                </h3>
               </div>
+
               <div class="card-body">
                 <form method="post" role="form">
                   {% csrf_token %}
-
                   <div>
                     <input class="input" placeholder="Usuário" name="usuario" id="usuario" autofocus required />
 
@@ -51,19 +63,29 @@
 
                     <br />
                     <div class="text-center mt-4">
-                      <button class="btn btn-primary center-block" type="submit"><b>Acessar&nbsp;<span class="fa fa-sign-in"></span></b></button>
+                      <button class="btn btn-primary center-block" type="submit">
+                          Acessar&nbsp;<span class="fa fa-sign-in"></span>
+                      </button>
                     </div>
                     <hr />
                   </div>
+
                 </form>
               </div>
+
             </div>
           </div>
         </div>
       </div>
-      <div class="text-center">
-        <button type="button" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Recuperação de senha" onclick="window.location='{% url 'redefinir_senha' %}'"><b>Esqueceu sua senha?</b></button>
+
+      <div class="text-center my-5">
+        <a class=" text-secondary" style="text-decoration: none; font-size: 18px"
+                data-bs-toggle="tooltip" data-bs-placement="bottom"
+                title="Recuperação de senha" href="{% url 'redefinir_senha' %}">
+            Esqueceu sua senha? &nbsp;<i class="fa fa-unlock-alt" aria-hidden="true"></i>
+        </a>
       </div>
+
     </div>
   </div>
 

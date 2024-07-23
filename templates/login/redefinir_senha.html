@@ -8,27 +8,25 @@
     <form method="post">
         {% csrf_token %}
         <div class="row justify-content-center">
-            <div class="col-md-5">
+            <div class="col-md-6">
                 <div class="card border-primary">
                     <div class="card-header">
-                        <p class="text-primary mt-2"><b>Insira seu e-mail</b></p>
+                        <span class="text-primary"><b>Insira seu e-mail</b></span>
                     </div>
                     <div class="card-body">
-                        <div class="form-group">
-                            <label for="id_email">Email:</label>
+                        <div class="form-group mb-2">
+                            <label for="id_email"></label>
                             {{ form.email }}
-                        </div>
-                        <div class="row">
-                            <div class="text-center">
-                                <br>
-                                <button class="btn btn-primary" type="submit">
-                                    <b>Enviar</b>
-                                </button>
-                                <button class="btn btn-warning" type="button"
-                                        onclick="window.location='{% url 'login' %}'" style="line-height: 2;">
-                                    <b>Retornar</b>
-                                </button>
-                            </div>
+                        </div> <br><br>
+
+                        <div class="text-center mb-3">
+                            <button class="btn btn-sm btn-primary" type="submit" style="line-height: 1;">
+                                <b>Enviar&nbsp;<i class="fa fa-paper-plane" aria-hidden="true"></i></b>
+                            </button>
+                            <button class="btn btn-sm btn-warning" type="button"
+                                    onclick="window.location='{% url 'login' %}'" style="line-height: 1.9;">
+                                <b><i class="fa fa-arrow-circle-left" aria-hidden="true"></i>&nbsp;Retornar</b>
+                            </button>
                         </div>
                     </div>
                 </div>

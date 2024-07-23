@@ -105,7 +105,7 @@ def logar(request):
 @login_required()
 def sair(request):
     logout(request)
-    return redirect('home')
+    return redirect('login')
 
 # def login(request):
 #     if request.method == 'POST':
@@ -126,7 +126,7 @@ def sair(request):
 
 @login_required
 def listar_pacientes(request):
-    pacientes = Paciente.objects.all()
+    pacientes = Paciente.objects.all().order_by('nome')
     form = PacienteForm()
     return render(request, 'consultas/listagem_pacientes.html', {'pacientes': pacientes, 'form': form})
 
@@ -390,7 +390,7 @@ def agendamento_confirmar(request, pk):
     
     # Verifica se a data do agendamento é igual à data atual
     if agendamento.data_agendamento.date() != timezone.now().date():
-        messages.error(request, 'O agendamento só pode ser confirmado na data do agendamento.')
+        messages.error(request, 'O agendamento só pode ser confirmado na data prevista.')
         return redirect('agendamentoListagem')
     
     agendamento.status_atendimento = 'confirmado'
