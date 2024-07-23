@@ -103,33 +103,48 @@
         <!-- Formulário de Receita Médica -->
         <h6 class="d-flex justify-content-center py-3">RECEITA MÉDICA</h6>
 
-        <div class="receita">          
-          <div class="d-flex">
-            <div class="col-md-6 d-flex flex-column">
-              <span class="text-center">PRESCRIÇÃO</span>
-              <div class="form-group d-flex flex-column">{{ receita_medica_form.prescricao }}</div>
+        <div class="receita">
+          <div class="tipo-receita">
+            <div class="controle">
+                <label for="controle">Controle Especial</label>
+                <input type="radio" name="tipo_receita" id="controle" value="controle_especial" />
             </div>
-
-            <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
-              <div class="form-group d-flex flex-column col-md-8">
-                <label for="dosagem">Dosagem</label>
-                {{ receita_medica_form.dosagem }}
-              </div>
-              <div class="form-group d-flex flex-column col-md-8">
-                <label for="via_administrativa">Via Administrativa</label>
-                {{ receita_medica_form.via_administrativa }}
-              </div>
-              <div class="form-group d-flex flex-column col-md-8">
-                <label for="modo_uso">Modo de Uso</label>
-                {{ receita_medica_form.modo_uso }}
-              </div>
+            <div class="simples">
+                <label for="simples">Simples</label>
+                <input type="radio" name="tipo_receita" id="simples" value="simples" />
             </div>
           </div>
-        </div>
+          <div class="d-flex">
+              <div class="col-md-6 d-flex flex-column">
+                  <span class="text-center">PRESCRIÇÃO</span>
+                  <div class="form-group d-flex flex-column">{{ receita_medica_form.prescricao }}</div>
+              </div>
+              <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
+                  <div class="form-group d-flex flex-column col-md-8">
+                      <label for="dosagem">Dosagem</label>
+                      {{ receita_medica_form.dosagem }}
+                  </div>
+                  <div class="form-group d-flex flex-column col-md-8">
+                      <label for="via_administrativa">Via Administrativa</label>
+                      {{ receita_medica_form.via_administrativa }}
+                  </div>
+                  <div class="form-group d-flex flex-column col-md-8">
+                      <label for="modo_uso">Modo de Uso</label>
+                      {{ receita_medica_form.modo_uso }}
+                  </div>
+              </div>
+          </div>
+      </div>
 
         <h6 class="d-flex justify-content-center py-3">ATESTADO MÉDICO</h6>
 
         <div class="atestado">
+          <a href="" target="_blank" class="print-btn" style="border: none; float: right;">
+            <button class="print-btn">
+              Editar
+            </button>
+          </a>
+
           <div id="form-atestado">
             <div class="form-group">
               <label for="dias_afastamento">Atesto que o(a) paciente <span>{{ agendamento.paciente.nome }}</span> esteve em consulta no dia <span>{{ agendamento.data_agendamento|date:'d/m/Y' }}</span>, e necessita de <span><input class="input" name="dias_afastamento" type="text" placeholder="Dias" value="{{ atestado_medico_form.dias_afastamento.value|default_if_none:'' }}" /></span> dias de afastamento de suas atividades normais, para sua convalescença.</label>
@@ -155,11 +170,6 @@
         </div>
       </form>
     </div>
-
-    <!-- Botão para criar Receita Médica -->
-    {% comment %} <div class="text-center">
-      <a href="{% url 'criar_receita_medica' agendamento_id=agendamento.id %}" class="btn btn-primary">Criar Receita Médica</a>
-    </div> {% endcomment %}
   </div>
 
   <script>
@@ -175,4 +185,37 @@
     
     document.getElementById('id_pdf_exames').addEventListener('change', updateFileName)
   </script>
+
+<style>
+  div.tipo-receita {
+    min-width: 100px;
+    width: 30%;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    background-color: white;
+    border: 1px solid rgb(213, 213, 213);
+    border-radius: 10px;
+    gap: 10px;
+    font-size: 16px;
+    overflow: hidden;
+    font-weight: 500;
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.065);
+    text-decoration: none;
+    position: relative;
+    padding: 20px 20px;
+    right: -833px;
+    bottom: 50px;
+  }
+
+  .controle, .simples {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px ;
+    cursor: pointer;
+  }
+</style>
+
 {% endblock %}

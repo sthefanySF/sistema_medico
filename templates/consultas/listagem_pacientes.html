@@ -73,7 +73,7 @@
         </tr>
         <!-- Modal de Exclusão -->
         <div class="modal fade" id="excluirModal{{ paciente.id }}" tabindex="-1" aria-labelledby="excluirModalLabel{{ paciente.id }}" aria-hidden="true">
-          <div class="modal-dialog">
+          <div class="modal-dialog" id="glass">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="excluirModalLabel{{ paciente.id }}">Confirmar Exclusão</h5>
@@ -258,7 +258,7 @@
             <div class="modal-body">
               <form id="cadastroForm" method="POST" action="{% url 'pacienteCreate' %}">
                 {% csrf_token %}
-                <div class="col-md-10 offset-md-1">
+                <div class="m-2">
                   <div class="m-2">
                     <div class="col-sm-12" id="pessoais">
                       <div class="col">

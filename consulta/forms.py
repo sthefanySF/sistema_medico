@@ -205,7 +205,7 @@ class AtestadoMedicoForm(forms.ModelForm):
 class ReceitaMedicaForm(forms.ModelForm):
     class Meta:
         model = ReceitaMedica
-        fields = ['prescricao', 'dosagem', 'via_administrativa', 'modo_uso']
+        fields = ['prescricao', 'dosagem', 'via_administrativa', 'modo_uso', 'tipo']
 
     def __init__(self, *args, **kwargs):
         agendamento = kwargs.pop('agendamento', None)
