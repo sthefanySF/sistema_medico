@@ -120,7 +120,7 @@
           {% endif %}
 
           {% if receita_controle_especial %}
-          <a href="{% url 'pdf_receita_medica_com_tipo' atendimento.id 'controle_especial' %}" target="_blank" class="print-btn" style="border: none; float: right;">
+          <a href="{% url 'pdf_receita_medica_controle' atendimento.id 'controle_especial' %}" target="_blank" class="print-btn" style="border: none; float: right;">
             <button class="print-btn">
               Imprimir Receita de Controle Especial
             </button>
