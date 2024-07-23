@@ -66,6 +66,8 @@ urlpatterns = [
     path('pdf_prontuario_medico/<int:paciente_id>/', views.pdf_prontuario_medico, name='pdf_prontuario_medico'),
     path('atendimento/<int:atendimento_id>/atestado/', pdf_atestado_medico, name='pdf_atestado_medico'),
     path('atendimento/<int:atendimento_id>/receita/', pdf_receita_medica, name='pdf_receita_medica'),
+    path('pdf_receita_medica/<int:atendimento_id>/<str:tipo>/', pdf_receita_medica, name='pdf_receita_medica_controle'),
+
 
 
     

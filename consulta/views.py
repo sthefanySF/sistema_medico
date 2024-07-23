@@ -985,7 +985,7 @@ def pdf_atestado_medico(request, atendimento_id):
     response['Content-Disposition'] = f'inline; filename="atestado_{paciente_nome}.pdf"'
     return response
 
-def pdf_receita_medica(request, atendimento_id):
+def pdf_receita_medica(request, atendimento_id, tipo=None):
     atendimento = get_object_or_404(Atendimento, id=atendimento_id)
     agendamento = atendimento.agendamento
     receita = get_object_or_404(ReceitaMedica, agendamento=agendamento)
@@ -996,7 +996,13 @@ def pdf_receita_medica(request, atendimento_id):
         'receita': receita,
     }
 
-    html = render_to_string('pdfs/pdf_receita_medica.html', context)
+    # Verifica o tipo de receita para escolher o template correto
+    if tipo == 'controle_especial' or receita.tipo == 'controle_especial':
+        template_path = 'pdfs/pdf_receita_medica_controle.html'
+    else:
+        template_path = 'pdfs/pdf_receita_medica.html'
+
+    html = render_to_string(template_path, context)
     
     # Cria um arquivo temporário
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
