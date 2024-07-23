@@ -684,8 +684,8 @@ class AgendamentoCreate(CreateView):
     def form_valid(self, form):
         self.object = form.save()
         agendamento_data = {
-            'paciente': self.object.paciente.nome,
-            'profissional_saude': self.object.profissional_saude.nome,
+            'paciente': self.object.paciente.get_display_name(),
+            'profissional_saude': self.object.profissional_saude.get_display_name(),
             'data_agendamento': self.object.data_agendamento.strftime('%d/%m/%Y'),
             'turno': self.object.get_turno_display(),
             'prioridade_atendimento': 'Sim' if self.object.prioridade_atendimento else 'Não',
