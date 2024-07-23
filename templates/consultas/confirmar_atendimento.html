@@ -14,8 +14,8 @@
     <div class="p-4" id="glass">
         <div class="card p-4">
             <div class="infos">
-                <p><strong>Paciente:</strong> {{ atendimento.agendamento.paciente.nome }}</p>
-                <p><strong>Profissional de Saúde:</strong> {{ atendimento.agendamento.profissional_saude.nome }}</p>
+                <p><strong>Paciente:</strong> {{ atendimento.agendamento.paciente.get_display_name }}</p>
+                <p><strong>Profissional de Saúde:</strong> {{ atendimento.agendamento.profissional_saude.get_display_name }}</p>
                 <p><strong>Data do Atendimento:</strong> {{ atendimento.data_atendimento|date:'d/m/Y' }}</p>
                 {% comment %} <p><strong>Descrição:</strong> {{ atendimento.descricao }}</p> {% endcomment %}
             </div>

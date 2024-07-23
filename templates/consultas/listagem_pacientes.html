@@ -33,13 +33,7 @@
         <tr data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
           
           <td class="paciente-nome" colspan="3">
-
-          {% if paciente.nome_social %}
-            {{ paciente.nome_social }}
-          {% else %}
-            {{ paciente.nome }}
-          {% endif %}
-
+            {{ paciente.get_display_name }}
             <span style="color: #bbbbbb">- {{ paciente.get_sexo_display }}</span>
             <span style="display: none;">{{ paciente.data_nascimento|date:'d/m/Y' }}-{{ paciente.email }}-{{ paciente.rg }}-{{ paciente.cpf }}-{{ paciente.tipo_paciente }}-{{ paciente.matricula }}</span>
             <a href="#" aria-expanded="false" class="accordion-toggle"></a>

@@ -13,7 +13,7 @@
     <h1 style="text-align: center; font-size:xx-large; padding-bottom: 20px;">COMPROVANTE DE AGENDAMENTO</h1>
     <div class="info" style="font-size:x-large; padding-top: 10px;">
       <p>
-        <strong>Paciente:</strong> {{ agendamento.paciente.nome }}
+        <strong>Paciente:</strong> {{ agendamento.paciente.get_display_name }}
       </p>
       <p>
         <strong>Profissional de Saúde:</strong> {{ agendamento.profissional_saude.nome }}

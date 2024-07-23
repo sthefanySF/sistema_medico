@@ -12,7 +12,7 @@
 
     <dl class="row p-3 border align-items-start" id="info-atendimento">
       <dt class="col-sm-3 border-bottom label-title">Nome do paciente:</dt>
-      <dd class="col-sm-9 border-bottom">{{ agendamento.paciente.nome }}</dd>
+      <dd class="col-sm-9 border-bottom">{{ agendamento.paciente.get_display_name }}</dd>
 
       <dt class="col-sm-3 border-bottom label-title">Tipo de paciente:</dt>
       <dd class="col-sm-9 border-bottom">{{ agendamento.paciente.tipo_paciente }}</dd>

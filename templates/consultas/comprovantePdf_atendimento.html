@@ -14,7 +14,7 @@
     <h1 style="text-align: center; font-size:xx-large; padding-bottom: 20px;">COMPROVANTE DE ATENDIMENTO</h1>
 
     <div class="info" style="font-size:x-large; padding-top: 10px;">
-      <p>Declaro, para os devidos fins, que o Sr(a). <strong>{{ atendimento.paciente.nome }}</strong>, inscrito no CPF sob o nº <strong>{{ atendimento.paciente.cpf }}</strong>, esteve presente em consulta médica no dia <strong>{{ atendimento.agendamento.data_agendamento}}</strong>, tendo sido atendido pelo profissional de saúde <strong>{{ atendimento.agendamento.profissional_saude }}</strong>.</p>
+      <p>Declaro, para os devidos fins, que o Sr(a). <strong>{{ atendimento.paciente.get_display_name }}</strong>, inscrito no CPF sob o nº <strong>{{ atendimento.paciente.cpf }}</strong>, esteve presente em consulta médica no dia <strong>{{ atendimento.agendamento.data_agendamento}}</strong>, tendo sido atendido pelo profissional de saúde <strong>{{ atendimento.agendamento.profissional_saude }}</strong>.</p>
     </div>
   </body>
 </html>

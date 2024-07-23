@@ -21,9 +21,9 @@
         {% for atendimento in atendimentos %}
           <li class="list-group-item">
             <a href="{% url 'visualizarAtendimento' atendimento.id %}" class="atendimento-link">
-              {{ atendimento.agendamento.paciente.nome }}
+              {{ atendimento.agendamento.paciente.get_display_name}}
               {% if atendimento.profissional_saude %}
-                <span class="profissional-text">- Dr(a): {{ atendimento.profissional_saude.nome }}</span>
+                <span class="profissional-text">- Dr(a): {{ atendimento.profissional_saude.get_display_name }}</span>
                 <span class="atend-data">{{ atendimento.agendamento.data_agendamento|date:'d/m/Y ' }}</span>
               {% endif %}
             </a>

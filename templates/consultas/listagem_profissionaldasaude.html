@@ -36,12 +36,7 @@
           <tr data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
             
             <td class="profissionaldasaude-nome" colspan="3">
-              {% if  profissionaldasaude.nome_social %}
-                {{  profissionaldasaude.nome_social }}
-              {% else %}
-                {{  profissionaldasaude.nome }}
-              {% endif %}
-
+                {{  profissionaldasaude.get_display_name }}
               <span style="color: #bbbbbb">- {{ profissionaldasaude.area }}</span>
               <span style="display: none;">{{ profissionaldasaude.data_nascimento|date:'d/m/Y' }}-{{ profissionaldasaude.email }}-{{ profissionaldasaude.rg }}-{{ profissionaldasaude.cpf }}-{{ profissionaldasaude.identificacao_unica }}-{{ profissionaldasaude.area }}-{{ profissionaldasaude.unidade_siass }}-{{ profissionaldasaude.conselho }}</span>
               <a href="#" aria-expanded="false" class="accordion-toggle"></a>

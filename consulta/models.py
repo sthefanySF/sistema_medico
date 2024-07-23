@@ -61,7 +61,10 @@ class Paciente(models.Model):
 
 
     def __str__(self):
-        return self.nome
+        return self.get_display_name()
+    
+    def get_display_name(self):
+        return self.nome_social if self.nome_social else self.nome
 
     
     
@@ -105,8 +108,10 @@ class Administrativo(models.Model):
     matricula_siape = models.CharField(max_length=20)
 
     def __str__(self):
-        return self.nome
+        return self.get_display_name()
     
+    def get_display_name(self):
+        return self.nome_social if self.nome_social else self.nome
     
     def idade(self):
         today = date.today()
@@ -149,7 +154,10 @@ class Profissionaldasaude(models.Model):
 
 
     def __str__(self):
-        return self.nome
+        return self.get_display_name()
+    
+    def get_display_name(self):
+        return self.nome_social if self.nome_social else self.nome
     
     def idade(self):
         today = date.today()

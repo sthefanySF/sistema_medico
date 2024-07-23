@@ -68,24 +68,10 @@
             <tbody>
             {% for agendamento in agendamentos %}
                 <tr>
-                    <td>
+                    <td> {{ agendamento.paciente.get_display_name }}</td>
 
-                        {% if agendamento.paciente.nome_social %}
-                            {{ agendamento.paciente.nome_social }}
-                        {% else %}
-                            {{ agendamento.paciente.nome }}
-                        {% endif %}
-
-                    </td>
                     <td>{{ agendamento.paciente.cpf }}</td>
-                    <td>
-                        {% if agendamento.profissional_saude.nome_social %}
-                            {{ agendamento.profissional_saude.nome_social }}
-                        {% else %}
-                            {{ agendamento.profissional_saude.nome }}
-                        {% endif %}
-
-                    </td>
+                    <td> {{ agendamento.profissional_saude.get_display_name }} </td>
                     <td>{{ agendamento.data_agendamento | date:"d/m/Y " }}</td>
                     <td>
                         {% if agendamento.prioridade_atendimento %}

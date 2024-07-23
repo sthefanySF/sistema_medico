@@ -34,8 +34,8 @@
 
                    <tbody>
                    <tr>
-                       <td style="color: blue"><b>{{ agendamento.paciente.nome }}</b>
-                       <td style="color: blue"><b>{{ agendamento.profissional_saude.nome }}</b></td>
+                       <td style="color: blue"><b>{{ agendamento.paciente.get_display_name }}</b>
+                       <td style="color: blue"><b>{{ agendamento.profissional_saude.get_display_name }}</b></td>
 
 
                        <td style="color: blue"><b>{{ agendamento.data_agendamento|date:"d/m/Y" }}</b></td>
