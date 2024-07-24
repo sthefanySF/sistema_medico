@@ -44,7 +44,7 @@ from django.conf import settings
 # para weasyprint e visualizar pdf
 from django.http import FileResponse
 from django.template.loader import get_template
-from weasyprint import HTML
+from weasyprint import HTML, CSS
 
 
 #filtrar pacientes
@@ -448,6 +448,8 @@ def cancelar_agendamento(request, agendamento_id):
 def visualizar_atendimento(request, atendimento_id):
     atendimento = get_object_or_404(Atendimento, id=atendimento_id)
     paciente = atendimento.agendamento.paciente
+    
+    # Buscar o atestado médico
     try:
         atestado = AtestadoMedico.objects.get(agendamento=atendimento.agendamento)
         if atestado.dias_afastamento == 0 and atestado.cid == 'N/A':
@@ -455,20 +457,17 @@ def visualizar_atendimento(request, atendimento_id):
     except AtestadoMedico.DoesNotExist:
         atestado = None
 
-
-    # Buscar a receita médica
-    try:
-        receita = ReceitaMedica.objects.get(agendamento=atendimento.agendamento)
-    except ReceitaMedica.DoesNotExist:
-        receita = None
+    # Buscar as receitas médicas
+    receita_simples = ReceitaMedica.objects.filter(agendamento=atendimento.agendamento, tipo='simples').first()
+    receita_controle_especial = ReceitaMedica.objects.filter(agendamento=atendimento.agendamento, tipo='controle_especial').first()
     
     return render(request, 'consultas/visualizar_atendimento.html', {
         'atendimento': atendimento,
         'paciente': paciente,
         'atestado': atestado,
-        'receita': receita
+        'receita_simples': receita_simples,
+        'receita_controle_especial': receita_controle_especial
     })
-
 def lista_atendimentos(request):
     atendimentos = Atendimento.objects.all()
     return render(request, 'consultas/lista_atendimentos.html', {'atendimentos': atendimentos})
@@ -999,14 +998,16 @@ def pdf_receita_medica(request, atendimento_id, tipo=None):
     # Verifica o tipo de receita para escolher o template correto
     if tipo == 'controle_especial' or receita.tipo == 'controle_especial':
         template_path = 'pdfs/pdf_receita_medica_controle.html'
+        css = CSS(string='@page { size: A4 landscape; }')
     else:
         template_path = 'pdfs/pdf_receita_medica.html'
+        css = None
 
     html = render_to_string(template_path, context)
     
     # Cria um arquivo temporário
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
-        HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(target=temp_pdf.name)
+        HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(target=temp_pdf.name, stylesheets=[css] if css else [])
         
         # Lê o conteúdo do arquivo temporário
         temp_pdf.seek(0)
