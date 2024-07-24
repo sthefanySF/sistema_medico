@@ -147,7 +147,7 @@
 
           <div id="form-atestado">
             <div class="form-group">
-              <label for="dias_afastamento">Atesto que o(a) paciente <span>{{ agendamento.paciente.nome }}</span> esteve em consulta no dia <span>{{ agendamento.data_agendamento|date:'d/m/Y' }}</span>, e necessita de <span><input class="input" name="dias_afastamento" type="text" placeholder="Dias" value="{{ atestado_medico_form.dias_afastamento.value|default_if_none:'' }}" /></span> dias de afastamento de suas atividades normais, para sua convalescença.</label>
+              <label for="dias_afastamento">Atesto que o(a) paciente <span>{{ agendamento.paciente.get_display_name }}</span> esteve em consulta no dia <span>{{ agendamento.data_agendamento|date:'d/m/Y' }}</span>, e necessita de <span><input class="input" name="dias_afastamento" type="text" placeholder="Dias" value="{{ atestado_medico_form.dias_afastamento.value|default_if_none:'' }}" /></span> dias de afastamento de suas atividades normais, para sua convalescença.</label>
             </div>
 
             <div class="form-group">
@@ -159,7 +159,7 @@
 
             <div class="form-group">
               <label>Profissional de Saúde:</label>
-              <p>{{ agendamento.profissional_saude.nome }}</p>
+              <p>{{ agendamento.profissional_saude.get_display_name }}</p>
             </div>
           </div>
         </div>
