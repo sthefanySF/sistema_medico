@@ -68,8 +68,6 @@ urlpatterns = [
     path('atendimento/<int:atendimento_id>/receita/', pdf_receita_medica, name='pdf_receita_medica'),
     path('pdf_receita_medica/<int:atendimento_id>/<str:tipo>/', pdf_receita_medica, name='pdf_receita_medica_controle'),
 
-
-
     
     # Listagens
     path('pacientes/', listar_pacientes, name= 'pacienteListagem' ),
@@ -77,17 +75,16 @@ urlpatterns = [
     path('administrativo/', listar_administrativo, name= 'administrativoListagem'),
 
     # Edição e Exclusão
-    path('paciente/<int:pk>/editar/', paciente_editar, name='pacienteEditar'),
     path('paciente/<int:pk>/excluir/', paciente_excluir, name='pacienteExcluir'),
-    path('administrativo/<int:pk>/editar/', administrativo_editar, name='administrativoEditar'),
-    path('administrativo/<int:pk>/excluir/', administrativo_excluir, name='administrativoExcluir'),
-    path('profissionaldasaude/<int:pk>/editar/', profissionaldasaude_editar, name='profissionaldasaudeEditar'),
-    path('profissionaldasaude/<int:pk>/excluir/', profissionaldasaude_excluir, name='profissionaldasaudeExcluir'),
-    
-    path('editar_administrativo/', views.editar_administrativo, name='editar_administrativo'),#modal editar
     path('editar_paciente/', views.editar_paciente, name='editar_paciente'),#modal editar
+    
+    path('administrativo/<int:pk>/excluir/', administrativo_excluir, name='administrativoExcluir'),
+    path('editar_administrativo/', views.editar_administrativo, name='editar_administrativo'),#modal editar
+    
+    path('profissionaldasaude/<int:pk>/excluir/', profissionaldasaude_excluir, name='profissionaldasaudeExcluir'),
     path('editar_profissionaldasaude/', views.editar_profissionaldasaude, name='editar_profissionaldasaude'),#modal editar
-
+    
+    
     # Home
     # path('', views.home, name='home'),
 
