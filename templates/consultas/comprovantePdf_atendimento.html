@@ -16,5 +16,20 @@
     <div class="info" style="font-size:x-large; padding-top: 10px;">
       <p>Declaro, para os devidos fins, que o Sr(a). <strong>{{ atendimento.paciente.get_display_name }}</strong>, inscrito no CPF sob o nº <strong>{{ atendimento.paciente.cpf }}</strong>, esteve presente em consulta médica no dia <strong>{{ atendimento.agendamento.data_agendamento}}</strong>, tendo sido atendido pelo profissional de saúde <strong>{{ atendimento.agendamento.profissional_saude }}</strong>.</p>
     </div>
+
+     <!-- Adicionando os nomes ao final do documento se existir nome social -->
+    {% if atendimento.paciente.nome_social or atendimento.profissional_saude.nome_social %}
+    <div style="position: absolute; bottom: 20px; width: 100%; text-align: center; font-size: large;">
+      {% if atendimento.paciente.nome_social %}
+      <p><strong>Nome de registro do paciente:</strong> {{ atendimento.paciente.nome }}</p>
+      <p><strong>Nome Social do paciente:</strong> {{ atendimento.paciente.nome_social }}</p>
+      {% endif %}
+
+      {% if atendimento.profissional_saude.nome_social %}
+      <p><strong>Nome de registro do profissional de saúde:</strong> {{ atendimento.profissional_saude.nome }}</p>
+      <p><strong>Nome Social do profissional de saúde:</strong> {{ atendimento.profissional_saude.nome_social }}</p>
+      {% endif %}
+    </div>
+    {% endif %}
   </body>
 </html>
