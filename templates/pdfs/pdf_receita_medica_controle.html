@@ -11,159 +11,188 @@
     <style>
       @page {
         size: A4 landscape; /* Configura a página para orientação paisagem */
-        margin: 20mm;
+        margin: 0;
       }
 
       body {
         font-family: 'Poppins', sans-serif;
-      }
-      
-      header {
-        display: flex;
-        align-items: center;
-        padding: 10px 20px;
-        border-bottom: 1px solid #afafaf;
-      }
-      
-      .infoufac {
-        font-weight: bold;
-        text-align: center;
-        flex: 1;
-        margin-right: 40px;
-      }
-      
-      #logoufac {
-        width: 50px;
-        height: auto;
-        transform: translate(530%, -160%);
+        font-size: 12px;
+        margin: 0 50px;
       }
       
       h3 {
         text-align: center;
-        margin-top: 50px;
-      }
-      
-      .content {
-        margin-top: 40px;
-      }
-      
-      .content p {
-        line-height: 1.6;
-      }
-      
-      .signature {
-        margin-top: 40px;
-        text-align: center;
       }
 
-      .info-paciente {
-        border-bottom: 1px solid #afafaf;
-      }
-
-      .info-paciente, .info-receita {
+      .page {
         display: flex;
+        flex-direction: row;
         justify-content: space-between;
       }
 
-      .info-prescricao, .info-administracao {
-        flex: 1;
-        text-align: justify;
+      .subt{
+        text-align: center;
+        width: 100%;
+        border-bottom: 1px solid #cacaca;
+      }
+      .ident{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-top: -12px;
+        margin-bottom: -12px;
       }
 
-      .info-paciente p, .info-receita p {
-        margin: 10px 0;
+      .mtb{
+        margin-top: -5px;
+        margin-bottom: -5px;
       }
 
-      .info-prescricao {
-        padding-right: 10px;
-        border-right: 1px solid #afafaf;
+      .vpaciente, .vfarmacia {
+        width: 400px;
       }
-
-      .info-administracao {
-        margin-left: 10px;
-      }
-
-      .info-administracao p {
-        margin-top: 40px;
-      }
-
     </style>
   </head>
   <body>
     <div class="page">
       <!-- Via do Paciente -->
       <div class="section">
-        <div class="header">
-          <p>UNIVERSIDADE FEDERAL DO ACRE</p>
-          <p>DIRETORIA DE SAÚDE E QUALIDADE DE VIDA</p>
-          <p>COORDENADORIA DE VIGILÂNCIA À SAÚDE DO SERVIDOR</p>
-          <p>SETOR MÉDICO PERICIAL</p>
-        </div>
-  
         <h3>RECEITA MÉDICA DE CONTROLE ESPECIAL</h3>
   
-        <div class="content">
-          <div class="info">
-            <p><strong>Paciente:</strong> {{ receita.paciente.nome }}</p>
-            <p><strong>Nome Social:</strong> {{ receita.paciente.nome_social }}</p>
-            <p><strong>Data da Consulta:</strong> {{ receita.data_consulta|date:'d/m/Y' }}</p>
-            <p><strong>Bairro:</strong> {{ receita.paciente.bairro }}</p>
-            <p><strong>Cidade:</strong> {{ receita.paciente.cidade }}</p>
-            <p><strong>CEP:</strong> {{ receita.paciente.cep }}</p>
-            <p><strong>Número:</strong> {{ receita.paciente.numero }}</p>
+        <div class="vpaciente">
+          <div class="subt">
+            <span>1° VIA DO PACIENTE</span>
           </div>
-  
-          <div class="info">
+
+          
+          <div class="info-prescricao">
+            <p><strong>Data da Consulta:</strong> {{ receita.data_consulta|date:'d/m/Y' }}</p>
             <p><strong>Prescrição:</strong> {{ receita.prescricao }}</p>
             <p><strong>Dosagem:</strong> {{ receita.dosagem }}</p>
             <p><strong>Via Administrativa:</strong> {{ receita.via_administrativa }}</p>
             <p><strong>Modo de Uso:</strong> {{ receita.modo_uso }}</p>
           </div>
+
+
+          <div class="info-paciente">
+            <div class="subt">
+              <span >INFORMAÇÕES DO COMPRADOR</span>
+            </div>
+            <p><strong>Paciente:</strong> {{ receita.paciente.nome }}</p>
+            <p><strong>Nome Social:</strong> {{ receita.paciente.nome_social }}</p>
+            <div class="ident">
+              <p><strong>CPF:</strong> {{ receita.paciente.cpf }}</p>
+              <p><strong>RG:</strong> {{ receita.paciente.rg }}</p>
+            </div>
+            <p><strong>Bairro:</strong> {{ receita.paciente.bairro }}</p>
+            <div class="ident">
+              <p><strong>Cidade:</strong> {{ receita.paciente.cidade }}</p>
+              <p><strong>CEP:</strong> {{ receita.paciente.cep }}</p>
+              <p><strong>Número:</strong> {{ receita.paciente.numero }}</p>
+            </div>
+          </div>
+
+          <div class="info-fornecedor">
+            <div class="subt">
+              <span >INFORMAÇÕES DO FORNECEDOR</span>
+            </div>
+            <p><strong>Nome:</strong>________________________________________</p>
+            <p><strong>Nome Social:</strong>____________________________________</p>
+            <div class="ident">
+              <p><strong>CPF:</strong>_________________________</p>
+              <p><strong>RG:</strong>_______________</p>
+            </div>
+            <p><strong>Bairro:</strong>_________________________________________</p>
+            <div class="ident">
+              <p><strong>Cidade:</strong>__________</p>
+              <p><strong>CEP:</strong>__________</p>
+              <p><strong>Número:</strong>__________</p>
+            </div>
+  
+          </div>
         </div>
   
-        <div class="signature">
-          <p>Profissional de Saúde:</p>
-          <p><strong>{{ receita.profissional.nome }}</strong></p>
+        <div class="signature" style="text-align: center; font-size: 12px; margin-top: 5px;">
+          <p class="mtb">Profissional de Saúde:</p>
+          <p class="mtb"><strong>{{ receita.profissional.nome }}</strong></p>
           <label>Conselho/CMR: {{ receita.profissional.conselho }}</label>
+          <p class="mtb">{{ receita.profissional.ddd_telefone }}</p>
+        </div>
+
+        <div class="rodape" style="text-align: center; font-style: italic; font-weight:300;">
+          <p>Campus Universitario UFAC, BR - 364, km 04 - Distrito Industrial <br> CEP 69915-900 Telefone: (68) 3229 4835 3901 2573</p>
         </div>
       </div>
   
       <!-- Via da Farmácia -->
       <div class="section">
-        <div class="header">
-          <p>UNIVERSIDADE FEDERAL DO ACRE</p>
-          <p>DIRETORIA DE SAÚDE E QUALIDADE DE VIDA</p>
-          <p>COORDENADORIA DE VIGILÂNCIA À SAÚDE DO SERVIDOR</p>
-          <p>SETOR MÉDICO PERICIAL</p>
-        </div>
-  
         <h3>RECEITA MÉDICA DE CONTROLE ESPECIAL</h3>
   
-        <div class="content">
-          <div class="info">
-            <p><strong>Paciente:</strong> {{ receita.paciente.nome }}</p>
-            <p><strong>Nome Social:</strong> {{ receita.paciente.nome_social }}</p>
-            <p><strong>Data da Consulta:</strong> {{ receita.data_consulta|date:'d/m/Y' }}</p>
-            <p><strong>Bairro:</strong> {{ receita.paciente.bairro }}</p>
-            <p><strong>Cidade:</strong> {{ receita.paciente.cidade }}</p>
-            <p><strong>CEP:</strong> {{ receita.paciente.cep }}</p>
-            <p><strong>Número:</strong> {{ receita.paciente.numero }}</p>
+        <div class="vpaciente">
+          <div class="subt">
+            <span>2° VIA DA FARMACIA</span>
           </div>
-  
-          <div class="info">
+
+          
+          <div class="info-prescricao">
+            <p><strong>Data da Consulta:</strong> {{ receita.data_consulta|date:'d/m/Y' }}</p>
             <p><strong>Prescrição:</strong> {{ receita.prescricao }}</p>
             <p><strong>Dosagem:</strong> {{ receita.dosagem }}</p>
             <p><strong>Via Administrativa:</strong> {{ receita.via_administrativa }}</p>
             <p><strong>Modo de Uso:</strong> {{ receita.modo_uso }}</p>
           </div>
+
+
+          <div class="info-paciente">
+            <div class="subt">
+              <span >INFORMAÇÕES DO COMPRADOR</span>
+            </div>
+            <p><strong>Paciente:</strong> {{ receita.paciente.nome }}</p>
+            <p><strong>Nome Social:</strong> {{ receita.paciente.nome_social }}</p>
+            <div class="ident">
+              <p><strong>CPF:</strong> {{ receita.paciente.cpf }}</p>
+              <p><strong>RG:</strong> {{ receita.paciente.rg }}</p>
+            </div>
+            <p><strong>Bairro:</strong> {{ receita.paciente.bairro }}</p>
+            <div class="ident">
+              <p><strong>Cidade:</strong> {{ receita.paciente.cidade }}</p>
+              <p><strong>CEP:</strong> {{ receita.paciente.cep }}</p>
+              <p><strong>Número:</strong> {{ receita.paciente.numero }}</p>
+            </div>
+  
+          </div>
+          <div class="info-fornecedor">
+            <div class="subt">
+              <span >INFORMAÇÕES DO FORNECEDOR</span>
+            </div>
+            <p><strong>Nome:</strong>________________________________________</p>
+            <p><strong>Nome Social:</strong>____________________________________</p>
+            <div class="ident">
+              <p><strong>CPF:</strong>_________________________</p>
+              <p><strong>RG:</strong>_______________</p>
+            </div>
+            <p><strong>Bairro:</strong>_________________________________________</p>
+            <div class="ident">
+              <p><strong>Cidade:</strong>__________</p>
+              <p><strong>CEP:</strong>__________</p>
+              <p><strong>Número:</strong>__________</p>
+            </div>
+  
+          </div>
         </div>
   
-        <div class="signature">
-          <p>Profissional de Saúde:</p>
-          <p><strong>{{ receita.profissional.nome }}</strong></p>
+        <div class="signature" style="text-align: center; font-size: 12px; margin-top: 5px;">
+          <p class="mtb">Profissional da Saúde:</p>
+          <p class="mtb"><strong>{{ receita.profissional.nome }}</strong></p>
           <label>Conselho/CMR: {{ receita.profissional.conselho }}</label>
+          <p class="mtb">{{ receita.profissional.ddd_telefone }}</p>
+        </div>
+
+        <div class="rodape" style="text-align: center; font-style: italic; font-weight:300;">
+          <p>Campus Universitario UFAC, BR - 364, km 04 - Distrito Industrial <br> CEP 69915-900 Telefone: (68) 3229 4835 3901 2573</p>
         </div>
       </div>
+
     </div>
   </body>
   
