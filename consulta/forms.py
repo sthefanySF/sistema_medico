@@ -185,7 +185,7 @@ class AtendimentoForm(forms.ModelForm):
 class AtestadoMedicoForm(forms.ModelForm):
     class Meta:
         model = AtestadoMedico
-        fields = ['dias_afastamento', 'cid', 'texto_padrao']
+        fields = ['dias_afastamento', 'cid']
 
     def __init__(self, *args, **kwargs):
         agendamento = kwargs.pop('agendamento', None)
