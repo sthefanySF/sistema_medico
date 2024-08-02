@@ -130,6 +130,21 @@ def listar_pacientes(request):
     form = PacienteForm()
     return render(request, 'consultas/listagem_pacientes.html', {'pacientes': pacientes, 'form': form})
 
+@login_required
+def paciente_editar(request, pk):
+        paciente = get_object_or_404(Paciente, pk=pk)
+
+        if request.method == 'POST':
+            form = PacienteForm(request.POST, instance=paciente)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Cadastrado atualizado!')
+               
+                return redirect('pacienteListagem')
+        else:
+            form = PacienteForm(instance=paciente)
+
+        return render(request, 'consultas/editar_paciente.html', {'form': form, 'paciente': paciente})
 
 @require_POST
 def paciente_excluir(request, pk):
@@ -210,6 +225,25 @@ def editar_administrativo(request):
         return render(request, 'consultas/editar_administrativo.html', context)
 
 
+
+
+@login_required
+def administrativo_editar(request, pk):
+        administrativo = get_object_or_404(Administrativo, pk=pk)
+
+        if request.method == 'POST':
+            form = AdministrativoForm(request.POST, instance=administrativo)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Cadastrado atualizado!')
+               
+                return redirect('administrativoListagem')
+        else:
+            form = AdministrativoForm(instance=administrativo)
+
+        return render(request, 'consultas/editar_administrativo.html', {'form': form, 'administrativo': administrativo})
+
+
 @require_POST
 def administrativo_excluir(request, pk):
     administrativo = get_object_or_404(Administrativo, pk=pk)
@@ -276,6 +310,21 @@ def editar_profissionaldasaude(request):
         }
         return render(request, 'consultas/editar_profissionaldasaude.html', context)
 
+
+@login_required
+def profissionaldasaude_editar(request, pk):
+    profissionaldasaude = get_object_or_404(Profissionaldasaude, pk=pk)
+
+    if request.method == 'POST':
+        form = ProfissionaldasaudeForm(request.POST, instance=profissionaldasaude)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Cadastro atualizado.')
+            return redirect('profissionaldasaudeListagem')
+    else:
+        form = ProfissionaldasaudeForm(instance=profissionaldasaude)
+
+    return render(request, 'consultas/editar_proSaude.html', {'form': form, 'profissionaldasaude': profissionaldasaude})
 
 @require_POST
 def profissionaldasaude_excluir(request, pk):
@@ -691,47 +740,35 @@ class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Atendimento
     form_class = AtendimentoForm
     template_name = 'consultas/atendimento.html'
-
+    
     def test_func(self):
         user = self.request.user
         return not is_administrativo(user)
-
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         agendamento_id = self.kwargs['agendamento_id']
         agendamento = get_object_or_404(Agendamento, id=agendamento_id)
-        texto_padrao = (
-            "Atesto para os devidos fins que o(a) Sr(a). {paciente_nome}, "
-            "foi atendido(a) por mim em {data_agendamento} e deverá "
-            "permanecer afastado(a) de suas atividades por {dias_afastamento} dias "
-            "a partir desta data, conforme CID {cid}."
-        ).format(
-            paciente_nome=agendamento.paciente.nome,
-            data_agendamento=agendamento.data_agendamento.strftime('%d/%m/%Y'),
-            dias_afastamento="___",
-            cid="___"
-        )
         context['agendamento'] = agendamento
         context['atestado_medico_form'] = AtestadoMedicoForm(agendamento=agendamento)
         context['receita_medica_form'] = ReceitaMedicaForm()
-        context['texto_padrao'] = texto_padrao
         return context
 
     def post(self, request, *args, **kwargs):
         self.object = None
         agendamento_id = self.kwargs['agendamento_id']
         agendamento = get_object_or_404(Agendamento, id=agendamento_id)
-
+        
         atendimento_form = AtendimentoForm(request.POST, request.FILES)
         atestado_medico_form = AtestadoMedicoForm(request.POST, agendamento=agendamento)
         receita_medica_form = ReceitaMedicaForm(request.POST, agendamento=agendamento)
-
+        
         if atendimento_form.is_valid():
-            return self.form_valid(atendimento_form, atestado_medico_form, receita_medica_form, agendamento, request)
+            return self.form_valid(atendimento_form, atestado_medico_form, receita_medica_form, agendamento)
         else:
             return self.form_invalid(atendimento_form, atestado_medico_form, receita_medica_form)
 
-    def form_valid(self, atendimento_form, atestado_medico_form, receita_medica_form, agendamento, request):
+    def form_valid(self, atendimento_form, atestado_medico_form, receita_medica_form, agendamento):
         atendimento = atendimento_form.save(commit=False)
         atendimento.agendamento = agendamento
         atendimento.save()
@@ -739,43 +776,17 @@ class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         agendamento.status_atendimento = 'atendido'
         agendamento.save()
 
-        atestado_valido = atestado_medico_form.is_valid()
-        receita_valida = receita_medica_form.is_valid()
-
-        # Verifica os campos do atestado principal
-        dias_afastamento = atestado_medico_form.cleaned_data.get('dias_afastamento') if atestado_valido else None
-        cid = atestado_medico_form.cleaned_data.get('cid') if atestado_valido else None
-
-        if dias_afastamento or cid:
-            # Salva o atestado principal
-            atestado_medico = atestado_medico_form.save(commit=False)
-            atestado_medico.agendamento = agendamento
-            atestado_medico.texto_padrao = (
-                "Atesto para os devidos fins que o(a) Sr(a). {paciente_nome}, "
-                "foi atendido(a) por mim em {data_agendamento} e deverá "
-                "permanecer afastado(a) de suas atividades por {dias_afastamento} dias "
-                "a partir desta data, conforme CID {cid}."
-            ).format(
-                paciente_nome=agendamento.paciente.nome,
-                data_agendamento=agendamento.data_agendamento.strftime('%d/%m/%Y'),
-                dias_afastamento=dias_afastamento,
-                cid=cid
-            )
-            atestado_medico.save()
-        else:
-            # Verifica se o atestado editável está preenchido
-            texto_padrao = request.POST.get('texto_padrao', '').strip()
-            if texto_padrao:
-                atestado_medico = AtestadoMedico(
-                    agendamento=agendamento,
-                    dias_afastamento=0,  # Valor padrão
-                    cid="N/A",  # Valor padrão
-                    texto_padrao=texto_padrao
-                )
+        # Verifica se os campos do atestado médico estão preenchidos antes de salvar
+        if atestado_medico_form.is_valid():
+            dias_afastamento = atestado_medico_form.cleaned_data.get('dias_afastamento')
+            cid = atestado_medico_form.cleaned_data.get('cid')
+            if dias_afastamento or cid:
+                atestado_medico = atestado_medico_form.save(commit=False)
+                atestado_medico.agendamento = agendamento
                 atestado_medico.save()
-
-        # Verifica os campos da receita médica antes de salvar
-        if receita_valida:
+        
+        # Verifica se os campos da receita médica estão preenchidos antes de salvar
+        if receita_medica_form.is_valid():
             prescricao = receita_medica_form.cleaned_data.get('prescricao')
             dosagem = receita_medica_form.cleaned_data.get('dosagem')
             via_administrativa = receita_medica_form.cleaned_data.get('via_administrativa')
@@ -793,24 +804,6 @@ class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         context['atestado_medico_form'] = atestado_medico_form
         context['receita_medica_form'] = receita_medica_form
         return self.render_to_response(context)
-
-    
-    
-class EditAtestadoMedicoView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
-    model = AtestadoMedico
-    form_class = AtestadoMedicoForm
-    template_name = 'consultas/editar_atestado.html'
-    
-    def test_func(self):
-        user = self.request.user
-        return not is_administrativo(user)
-    
-    def get_success_url(self):
-        return reverse('confirmar_atendimento', kwargs={'agendamento_id': self.object.agendamento.id})
-
-    def form_valid(self, form):
-        # Atualiza o texto padrão do atestado médico
-        return super().form_valid(form)
 
 
 
@@ -1026,3 +1019,4 @@ def pdf_receita_medica(request, atendimento_id, tipo=None):
     response = HttpResponse(pdf_content, content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename="receita_{paciente_nome}.pdf"'
     return response
+
