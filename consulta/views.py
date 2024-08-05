@@ -752,6 +752,11 @@ class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         context['agendamento'] = agendamento
         context['atestado_medico_form'] = AtestadoMedicoForm(agendamento=agendamento)
         context['receita_medica_form'] = ReceitaMedicaForm()
+        
+        # Adicionar texto editável
+        context['texto_atestado'] = ("Atesto que o(a) paciente {paciente} esteve em consulta no dia {data}, "
+                                     "e necessita de {dias} dias de afastamento de suas atividades normais, "
+                                     "para sua convalescença.")
         return context
 
     def post(self, request, *args, **kwargs):
@@ -772,6 +777,8 @@ class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         atendimento = atendimento_form.save(commit=False)
         atendimento.agendamento = agendamento
         atendimento.save()
+        if not atestado_medico_form.is_valid():
+            print('Atestado Médico Form Errors:', atestado_medico_form.errors)
 
         agendamento.status_atendimento = 'atendido'
         agendamento.save()
@@ -780,7 +787,8 @@ class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         if atestado_medico_form.is_valid():
             dias_afastamento = atestado_medico_form.cleaned_data.get('dias_afastamento')
             cid = atestado_medico_form.cleaned_data.get('cid')
-            if dias_afastamento or cid:
+            texto_padrao = atestado_medico_form.cleaned_data.get('texto_padrao')
+            if dias_afastamento or cid or texto_padrao:
                 atestado_medico = atestado_medico_form.save(commit=False)
                 atestado_medico.agendamento = agendamento
                 atestado_medico.save()
