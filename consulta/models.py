@@ -243,9 +243,10 @@ class Atendimento(models.Model):
 
 class AtestadoMedico(models.Model):
     agendamento = models.ForeignKey(Agendamento, on_delete=models.CASCADE, related_name='atestados')
-    dias_afastamento = models.IntegerField() 
-    cid = models.CharField(max_length=10) 
-    data_criacao = models.DateTimeField(auto_now_add=True)  
+    dias_afastamento = models.IntegerField()
+    cid = models.CharField(max_length=10)
+    texto_padrao = models.TextField()
+    data_criacao = models.DateTimeField(auto_now_add=True)
 
     @property
     def paciente(self):
@@ -263,9 +264,9 @@ class AtestadoMedico(models.Model):
         return f"Atestado Médico para {self.paciente.nome} em {self.data_consulta.date()}"
 
     class Meta:
-        ordering = ['-data_criacao']  
-        verbose_name = 'Atestado Médico'  
-        verbose_name_plural = 'Atestados Médicos'  
+        ordering = ['-data_criacao']
+        verbose_name = 'Atestado Médico'
+        verbose_name_plural = 'Atestados Médicos'
 
         
 class ReceitaMedica(models.Model):

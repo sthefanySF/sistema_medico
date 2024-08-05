@@ -185,7 +185,7 @@ class AtendimentoForm(forms.ModelForm):
 class AtestadoMedicoForm(forms.ModelForm):
     class Meta:
         model = AtestadoMedico
-        fields = ['dias_afastamento', 'cid']
+        fields = ['dias_afastamento', 'cid', 'texto_padrao']
 
     def __init__(self, *args, **kwargs):
         agendamento = kwargs.pop('agendamento', None)
@@ -200,7 +200,8 @@ class AtestadoMedicoForm(forms.ModelForm):
                 initial=agendamento.data_agendamento.strftime('%Y-%m-%d %H:%M'), label="Data do Agendamento", disabled=True, required=False)
             self.fields['data_criacao'] = forms.CharField(
                 initial=timezone.now().strftime('%Y-%m-%d %H:%M'), label="Data de Criação", disabled=True, required=False)
-            
+
+        self.fields['texto_padrao'].required = False
 
 class ReceitaMedicaForm(forms.ModelForm):
     class Meta:

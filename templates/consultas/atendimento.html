@@ -134,43 +134,75 @@
                   </div>
               </div>
           </div>
-      </div>
+        </div>
 
+        <!-- templates/consultas/atendimento.html -->
+        {% load i18n %}
         <h6 class="d-flex justify-content-center py-3">ATESTADO MÉDICO</h6>
 
         <div class="atestado">
-          <a href="" target="_blank" class="print-btn" style="border: none; float: right;">
-            <button class="print-btn">
-              Editar
-            </button>
-          </a>
-
+          <button type="button" class="print-btn" id="edit-btn" style="border: none; float: right;">
+            Editar
+          </button>
+        
           <div id="form-atestado">
             <div class="form-group">
-              <label for="dias_afastamento">Atesto que o(a) paciente <span>{{ agendamento.paciente.get_display_name }}</span> esteve em consulta no dia <span>{{ agendamento.data_agendamento|date:'d/m/Y' }}</span>, e necessita de <span><input class="input" name="dias_afastamento" type="text" placeholder="Dias" value="{{ atestado_medico_form.dias_afastamento.value|default_if_none:'' }}" /></span> dias de afastamento de suas atividades normais, para sua convalescença.</label>
+              <label for="dias_afastamento" style="width: 100%;">
+                <span id="texto-atestado">
+                  Atesto que o(a) paciente <span id="paciente">{{ agendamento.paciente.get_display_name }}</span> esteve em consulta no dia <span id="data">{{ agendamento.data_agendamento|date:'d/m/Y' }}</span>, e necessita de <span id="dias"><input class="input" name="dias_afastamento" type="text" placeholder="Dias" value="{{ atestado_medico_form.dias_afastamento.value|default_if_none:'' }}" /></span> dias de afastamento de suas atividades normais, para sua convalescença.
+                </span>
+                <textarea id="edit-textarea" name="texto_padrao" form="atestado-form" style="display: none;">Atesto que o(a) paciente {{ agendamento.paciente.get_display_name }} esteve em consulta no dia {{ agendamento.data_agendamento|date:'d/m/Y' }}, e necessita de [[DIAS]] dias de afastamento de suas atividades normais, para sua convalescença.</textarea>
+              </label>
             </div>
-
+        
             <div class="form-group">
               <label for="cid">CID:</label>
               <input class="input" type="text" name="cid" placeholder="CID" value="{{ atestado_medico_form.cid.value|default_if_none:'' }}" style="margin-top: 20px;" />
             </div>
-
+        
             <p style="text-align: center;">Rio Branco - Acre {{ agendamento.data_agendamento|date:'d/m/Y' }}</p>
-
+        
             <div class="form-group">
               <label>Profissional de Saúde:</label>
               <p>{{ agendamento.profissional_saude.get_display_name }}</p>
             </div>
           </div>
         </div>
-        
-
+      
         <div class="d-flex justify-content-center align-items-center mb-3">
           <button type="submit" class="btn btn-primary">Salvar Atendimento</button>
         </div>
       </form>
     </div>
   </div>
+
+  <script>
+    document.getElementById('edit-btn').addEventListener('click', function() {
+      var textoAtestado = document.getElementById('texto-atestado');
+      var editTextarea = document.getElementById('edit-textarea');
+      
+      if (editTextarea.style.display === 'none') {
+        // Enter edit mode
+        editTextarea.style.display = 'block';
+        textoAtestado.style.display = 'none';
+        this.textContent = 'Salvar';
+      } else {
+        // Save the edited text
+        var paciente = '{{ agendamento.paciente.get_display_name }}';
+        var data = '{{ agendamento.data_agendamento|date:"d/m/Y" }}';
+        var dias = '<input class="input" name="dias_afastamento" type="text" placeholder="Dias" value="{{ atestado_medico_form.dias_afastamento.value|default_if_none:"" }}" />';
+        
+        textoAtestado.innerHTML = editTextarea.value
+          .replace('{{ agendamento.paciente.get_display_name }}', paciente)
+          .replace('{{ agendamento.data_agendamento|date:"d/m/Y" }}', data)
+          .replace('[[DIAS]]', dias);
+        
+        editTextarea.style.display = 'none';
+        textoAtestado.style.display = 'block';
+        this.textContent = 'Editar';
+      }
+    });
+  </script>
 
   <script>
     function updateFileName() {
@@ -187,6 +219,12 @@
   </script>
 
 <style>
+
+  textarea#edit-textarea {
+    width: 100%;
+    height: 100px;
+  }
+
   div.tipo-receita {
     min-width: 100px;
     width: 30%;
