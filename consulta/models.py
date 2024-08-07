@@ -245,7 +245,7 @@ class AtestadoMedico(models.Model):
     agendamento = models.ForeignKey(Agendamento, on_delete=models.CASCADE, related_name='atestados')
     dias_afastamento = models.IntegerField()
     cid = models.CharField(max_length=10)
-    texto_padrao = models.TextField()
+    texto_padrao = models.TextField(default='Atesto que o(a) paciente esteve em consulta no dia {{ data_consulta }}, e necessita de [[DIAS]] dias de afastamento de suas atividades normais, para sua convalescença.')
     data_criacao = models.DateTimeField(auto_now_add=True)
 
     @property

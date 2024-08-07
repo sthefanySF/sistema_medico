@@ -752,11 +752,6 @@ class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         context['agendamento'] = agendamento
         context['atestado_medico_form'] = AtestadoMedicoForm(agendamento=agendamento)
         context['receita_medica_form'] = ReceitaMedicaForm()
-        
-        # Adicionar texto editável
-        context['texto_atestado'] = ("Atesto que o(a) paciente {paciente} esteve em consulta no dia {data}, "
-                                     "e necessita de {dias} dias de afastamento de suas atividades normais, "
-                                     "para sua convalescença.")
         return context
 
     def post(self, request, *args, **kwargs):
@@ -777,32 +772,21 @@ class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         atendimento = atendimento_form.save(commit=False)
         atendimento.agendamento = agendamento
         atendimento.save()
-        if not atestado_medico_form.is_valid():
-            print('Atestado Médico Form Errors:', atestado_medico_form.errors)
 
         agendamento.status_atendimento = 'atendido'
         agendamento.save()
 
-        # Verifica se os campos do atestado médico estão preenchidos antes de salvar
         if atestado_medico_form.is_valid():
+            atestado_medico = atestado_medico_form.save(commit=False)
             dias_afastamento = atestado_medico_form.cleaned_data.get('dias_afastamento')
-            cid = atestado_medico_form.cleaned_data.get('cid')
-            texto_padrao = atestado_medico_form.cleaned_data.get('texto_padrao')
-            if dias_afastamento or cid or texto_padrao:
-                atestado_medico = atestado_medico_form.save(commit=False)
-                atestado_medico.agendamento = agendamento
-                atestado_medico.save()
+            atestado_medico.texto_padrao = atestado_medico.texto_padrao.replace('[[DIAS]]', str(dias_afastamento))
+            atestado_medico.agendamento = agendamento
+            atestado_medico.save()
         
-        # Verifica se os campos da receita médica estão preenchidos antes de salvar
         if receita_medica_form.is_valid():
-            prescricao = receita_medica_form.cleaned_data.get('prescricao')
-            dosagem = receita_medica_form.cleaned_data.get('dosagem')
-            via_administrativa = receita_medica_form.cleaned_data.get('via_administrativa')
-            modo_uso = receita_medica_form.cleaned_data.get('modo_uso')
-            if prescricao or dosagem or via_administrativa or modo_uso:
-                receita_medica = receita_medica_form.save(commit=False)
-                receita_medica.agendamento = agendamento
-                receita_medica.save()
+            receita_medica = receita_medica_form.save(commit=False)
+            receita_medica.agendamento = agendamento
+            receita_medica.save()
 
         return redirect('confirmar_atendimento', agendamento_id=agendamento.id)
 
