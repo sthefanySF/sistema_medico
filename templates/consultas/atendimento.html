@@ -141,7 +141,7 @@
         <h6 class="d-flex justify-content-center py-3">ATESTADO MÉDICO</h6>
 
         <div class="atestado">
-          <button type="button" class="print-btn" id="edit-btn" style="border: none; float: right;">
+          <button type="button" class="edit-btn" id="edit-btn" style=" float: right;">
             Editar
           </button>
         
@@ -151,7 +151,7 @@
                 <span id="texto-atestado">
                   Atesto que o(a) paciente <span id="paciente">{{ agendamento.paciente.get_display_name }}</span> esteve em consulta no dia <span id="data">{{ agendamento.data_agendamento|date:'d/m/Y' }}</span>, e necessita de <span id="dias"><input class="input" name="dias_afastamento" type="text" placeholder="Dias" value="{{ atestado_medico_form.dias_afastamento.value|default_if_none:'' }}" /></span> dias de afastamento de suas atividades normais, para sua convalescença.
                 </span>
-                <textarea id="edit-textarea" name="texto_padrao" form="atestado-form" style="display: none;">Atesto que o(a) paciente {{ agendamento.paciente.get_display_name }} esteve em consulta no dia {{ agendamento.data_agendamento|date:'d/m/Y' }}, e necessita de [[DIAS]] dias de afastamento de suas atividades normais, para sua convalescença.</textarea>
+                <textarea id="edit-textarea" name="texto_padrao" style="display: none;">Atesto que o(a) paciente {{ agendamento.paciente.get_display_name }} esteve em consulta no dia {{ agendamento.data_agendamento|date:'d/m/Y' }}, e necessita de [[DIAS]] dias de afastamento de suas atividades normais, para sua convalescença.</textarea>
               </label>
             </div>
         
@@ -200,6 +200,16 @@
         editTextarea.style.display = 'none';
         textoAtestado.style.display = 'block';
         this.textContent = 'Editar';
+      }
+    });
+  
+    document.getElementById('atestado-form').addEventListener('submit', function() {
+      var textoAtestado = document.getElementById('texto-atestado');
+      var editTextarea = document.getElementById('edit-textarea');
+      
+      if (editTextarea.style.display !== 'none') {
+        editTextarea.value = textoAtestado.innerHTML
+          .replace(/<[^>]+>/g, ''); // Remove HTML tags before submitting
       }
     });
   </script>
