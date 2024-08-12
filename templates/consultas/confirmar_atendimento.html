@@ -17,6 +17,8 @@
                 <p><strong>Paciente:</strong> {{ atendimento.agendamento.paciente.get_display_name }}</p>
                 <p><strong>Profissional de Saúde:</strong> {{ atendimento.agendamento.profissional_saude.get_display_name }}</p>
                 <p><strong>Data do Atendimento:</strong> {{ atendimento.data_atendimento|date:'d/m/Y' }}</p>
+                <p>Início do Atendimento: {{ atendimento.inicio_atendimento }}</p>
+                <p>Fim do Atendimento: {{ atendimento.fim_atendimento }}</p>
                 {% comment %} <p><strong>Descrição:</strong> {{ atendimento.descricao }}</p> {% endcomment %}
             </div>
     

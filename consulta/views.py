@@ -741,6 +741,8 @@ def criar_atendimento(request, agendamento_id):
 
     return render(request, 'consultas/atendimento_form.html', {'form': form})
 
+from django.utils import timezone
+
 class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Atendimento
     form_class = AtendimentoForm
@@ -776,6 +778,9 @@ class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     def form_valid(self, atendimento_form, atestado_medico_form, receita_medica_form, agendamento):
         atendimento = atendimento_form.save(commit=False)
         atendimento.agendamento = agendamento
+
+        # Salvar o início do atendimento
+        atendimento.inicio_atendimento = timezone.now()
         atendimento.save()
 
         agendamento.status_atendimento = 'atendido'
@@ -802,19 +807,15 @@ class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         context['receita_medica_form'] = receita_medica_form
         return self.render_to_response(context)
 
-
-
-    # def test_func(self):
-    #     return is_profissionaldasaude(self.request.user)
-    
-    # permite todos acessarem
-    # def test_func(self):
-    #     return True
-
-
 def confirmar_atendimento(request, agendamento_id):
     agendamento = get_object_or_404(Agendamento, id=agendamento_id)
-    atendimento = agendamento.atendimento
+    atendimento = get_object_or_404(Atendimento, agendamento=agendamento)
+    
+    # Salvar o fim do atendimento, se ainda não estiver definido
+    if not atendimento.fim_atendimento:
+        atendimento.fim_atendimento = timezone.now()
+        atendimento.save()
+    
     return render(request, 'consultas/confirmar_atendimento.html', {'atendimento': atendimento})
 
 

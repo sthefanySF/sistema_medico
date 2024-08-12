@@ -217,6 +217,8 @@ class Atendimento(models.Model):
     pdf_exames = models.FileField(upload_to='exames_pdfs/', null=True, blank=True)
     diagnostico = models.TextField()
     conduta = models.TextField()
+    inicio_atendimento = models.DateTimeField(null=True, blank=True)
+    fim_atendimento = models.DateTimeField(null=True, blank=True)
 
     @property
     def profissional_saude(self):
@@ -233,8 +235,14 @@ class Atendimento(models.Model):
     def __str__(self):
         return f"Atendimento para {self.paciente.nome} em {self.data_atendimento}"
 
+    @property
+    def duracao_atendimento(self):
+        if self.inicio_atendimento and self.fim_atendimento:
+            return self.fim_atendimento - self.inicio_atendimento
+        return None
+
     class Meta:
-        ordering = ['agendamento', ]
+        ordering = ['agendamento']
 
 
 
