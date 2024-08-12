@@ -184,9 +184,9 @@ class Agendamento(models.Model):
         ('cancelado', 'Cancelado'),
         ('atendido', 'Atendido'),
     ], default='pendente')
-    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
-    profissional_saude = models.ForeignKey(Profissionaldasaude, on_delete=models.CASCADE)
-    data_agendamento = models.DateTimeField(u'Data Agendamento', blank=False, null=False)
+    paciente = models.ForeignKey('Paciente', on_delete=models.CASCADE)
+    profissional_saude = models.ForeignKey('Profissionaldasaude', on_delete=models.CASCADE)
+    data_agendamento = models.DateField('Data Agendamento', blank=False, null=False)
     turno = models.CharField(max_length=10, choices=TURNO_CHOICES)
     prioridade_atendimento = models.BooleanField(default=False)
     justificativa_cancelamento = models.TextField(blank=True, null=True)
@@ -195,14 +195,11 @@ class Agendamento(models.Model):
         return f"Agendamento para {self.paciente.nome}"
 
     def atualizar_status(self):
-        now = timezone.now().date()  # Obtém apenas a data atual
-        if self.data_agendamento.date() < now:
-            # Se a data do agendamento for anterior à data atual
+        now = timezone.now().date()
+        
+        # Garantir que data_agendamento não é None antes de comparar
+        if self.data_agendamento and self.data_agendamento < now:
             if self.status_atendimento not in ['atendido', 'confirmado']:
-                # Se o status não estiver em 'atendido' ou 'confirmado'
-                self.status_atendimento = 'ausente'
-            elif self.status_atendimento == 'confirmado' and not self.status_atendimento == 'atendido':
-                # Se o status estiver 'confirmado' mas não 'atendido'
                 self.status_atendimento = 'ausente'
             self.save()
 
