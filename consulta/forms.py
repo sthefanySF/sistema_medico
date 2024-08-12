@@ -114,14 +114,21 @@ class AgendamentoForm(forms.ModelForm):
     def clean_data_agendamento(self):
         data_agendamento = self.cleaned_data.get('data_agendamento')
 
-        if data_agendamento and data_agendamento.date() < timezone.now().date():
+        # Obtenha a data atual no fuso horário local
+        hoje = timezone.localtime().date()
+
+        # Imprime as datas para diagnóstico
+        print(f"Data do agendamento: {data_agendamento}, Data de hoje: {hoje}")
+
+        # Comparação de datas sem considerar hora
+        if data_agendamento and data_agendamento < hoje:
             raise forms.ValidationError("Data incorreta! Ajuste a data do agendamento e tente novamente.")
 
         return data_agendamento
 
     class Meta:
         model = Agendamento
-        exclude = ['id']  # Exclui o campo 'id' do formulário
+        exclude = ['id']
 
         labels = {
             'data_agendamento': 'Data do Agendamento',
@@ -131,14 +138,11 @@ class AgendamentoForm(forms.ModelForm):
         widgets = {
             'paciente': forms.Select(attrs={'class': 'form-control'}),
             'profissional_saude': forms.Select(attrs={'class': 'form-control'}),
-
-            'data_agendamento': forms.DateTimeInput(attrs={'type': 'date', 'class': 'form-control'}),
-
+            'data_agendamento': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'turno': forms.Select(attrs={'class': 'form-control'}), 
             'prioridade_atendimento': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'status_atendimento': forms.HiddenInput(attrs={'value': 'pendente'}), 
         }
-
 
 
 
