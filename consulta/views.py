@@ -387,12 +387,17 @@ def confirm_agendamento(request, pk):
 
 def agendamento_confirmar(request, pk):
     agendamento = get_object_or_404(Agendamento, pk=pk)
-    
+
+    # Verifica se data_agendamento não é None
+    if agendamento.data_agendamento is None:
+        messages.error(request, 'Data de agendamento não definida.')
+        return redirect('agendamentoListagem')
+
     # Verifica se a data do agendamento é igual à data atual
-    if agendamento.data_agendamento.date() != timezone.now().date():
+    if agendamento.data_agendamento != timezone.now().date():
         messages.error(request, 'O agendamento só pode ser confirmado na data prevista.')
         return redirect('agendamentoListagem')
-    
+
     agendamento.status_atendimento = 'confirmado'
     agendamento.save()
     messages.success(request, 'Agendamento confirmado!')

@@ -111,8 +111,13 @@ class ProfissionaldasaudeForm(forms.ModelForm):
 
 
 class AgendamentoForm(forms.ModelForm):
+
     def clean_data_agendamento(self):
         data_agendamento = self.cleaned_data.get('data_agendamento')
+
+        # Verifica se data_agendamento não é None
+        if data_agendamento is None:
+            raise forms.ValidationError("A data do agendamento é obrigatória.")
 
         # Obtenha a data atual no fuso horário local
         hoje = timezone.localtime().date()
@@ -121,7 +126,7 @@ class AgendamentoForm(forms.ModelForm):
         print(f"Data do agendamento: {data_agendamento}, Data de hoje: {hoje}")
 
         # Comparação de datas sem considerar hora
-        if data_agendamento and data_agendamento < hoje:
+        if data_agendamento < hoje:
             raise forms.ValidationError("Data incorreta! Ajuste a data do agendamento e tente novamente.")
 
         return data_agendamento
