@@ -106,7 +106,7 @@
 
                         <div class="col mb-3">
                           <label for="nome_social{{ paciente.id }}" class="col-sm-12 col-form-label"><b>Nome Social</b></label>  
-                          <input type="text" class="form-control" id="nome_social{{ paciente.id }}" name="nome_social" value="{{ paciente.nome_social }}" />
+                          <input type="text" class="form-control" id="nome_social{{ paciente.id }}" name="nome_social" value="{{ paciente.nome_social|default_if_none:'' }}" />
                         </div>
 
 
@@ -262,7 +262,7 @@
 
                       <div class="col mb-3">
                         <label for="nome_social{{ paciente.id }}" class="col-sm-12 col-form-label"><b>Nome Social</b></label>  
-                        <input type="text" class="form-control" id="nome_social{{ paciente.id }}" name="nome_social" value="{{ paciente.nome_social }}" />
+                        <input type="text" class="form-control" id="nome_social{{ paciente.id }}" name="nome_social" value="{{ paciente.nome_social|default_if_none:'' }}" />
                       </div>
 
                       <div class="col">

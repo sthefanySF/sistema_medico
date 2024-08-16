@@ -104,7 +104,7 @@
 
                         <div class="col mb-3">
                           <label for="nome_social{{ administrativo.id }}" class="col-sm-12 col-form-label"><b>Nome Social</b></label>  <!-- Novo campo -->
-                          <input type="text" class="form-control" id="nome_social{{ administrativo.id }}" name="nome_social" value="{{ administrativo.nome_social }}" />
+                          <input type="text" class="form-control" id="nome_social{{ administrativo.id }}" name="nome_social" value="{{ administrativo.nome_social|default_if_none:''}}" />
                         </div>
 
                         <div class="col mb-3">
