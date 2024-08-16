@@ -79,7 +79,7 @@
               <span >INFORMAÇÕES DO COMPRADOR</span>
             </div>
             <p><strong>Paciente:</strong> {{ receita.paciente.nome }}</p>
-            <p><strong>Nome Social:</strong> {{ receita.paciente.nome_social }}</p>
+            <p><strong>Nome Social:</strong> {{ receita.paciente.nome_social|default_if_none:'' }}</p>
             <div class="ident">
               <p><strong>CPF:</strong> {{ receita.paciente.cpf }}</p>
               <p><strong>RG:</strong> {{ receita.paciente.rg }}</p>
@@ -97,7 +97,6 @@
               <span >INFORMAÇÕES DO FORNECEDOR</span>
             </div>
             <p><strong>Nome:</strong>________________________________________</p>
-            <p><strong>Nome Social:</strong>____________________________________</p>
             <div class="ident">
               <p><strong>CPF:</strong>_________________________</p>
               <p><strong>RG:</strong>_______________</p>
@@ -148,7 +147,7 @@
               <span >INFORMAÇÕES DO COMPRADOR</span>
             </div>
             <p><strong>Paciente:</strong> {{ receita.paciente.nome }}</p>
-            <p><strong>Nome Social:</strong> {{ receita.paciente.nome_social }}</p>
+            <p><strong>Nome Social:</strong> {{ receita.paciente.nome_social|default_if_none:'' }}</p>
             <div class="ident">
               <p><strong>CPF:</strong> {{ receita.paciente.cpf }}</p>
               <p><strong>RG:</strong> {{ receita.paciente.rg }}</p>
@@ -166,7 +165,6 @@
               <span >INFORMAÇÕES DO FORNECEDOR</span>
             </div>
             <p><strong>Nome:</strong>________________________________________</p>
-            <p><strong>Nome Social:</strong>____________________________________</p>
             <div class="ident">
               <p><strong>CPF:</strong>_________________________</p>
               <p><strong>RG:</strong>_______________</p>
