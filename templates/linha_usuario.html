@@ -1,13 +1,9 @@
 <nav class="navbar" style=" color: white; padding: 0;">
   {% load static %}
-  {% comment %} <div class="wave-bg" style="">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-      <path fill="#0C4DA2" fill-opacity="1" d="M0,96L60,112C120,128,240,160,360,154.7C480,149,600,107,720,85.3C840,64,960,64,1080,80C1200,96,1320,128,1380,144L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
-    </svg>
-  </div> {% endcomment %}
 
   <div class="header-container" style="width: 100%;">
-    <div class="container-fluid metallic-header">
+
+    <div class="container-fluid">
       <div class="navbar" style="justify-content: normal;">
         <a class="navbar-brand text-white" href="#">
           <img src="{% static 'imagens/logo_ufac_2.png' %}"/>
@@ -16,336 +12,110 @@
           <h4>Sistema Médico Pericial<br>Universidade Federal do Acre</h4>
         </span>
       </div>
+
+      <div class="perfil">
+        <div class="card-user">
+          <div class="card_load">
+            <img src="{% static 'imagens/user.png' %}" alt="" />
+          </div>
+          {% if profissional_saude %}
+          <div class="d-flex align-items-center" id="card_title">
+            <span class="text-black" style="padding-left: 10px; font-size: 14px;">{{ profissional_saude.area }}</span>
+          </div>
+          {% elif administrativo %}
+          <div class="d-flex align-items-center" id="card_title">
+            <span class="text-black" style="padding-left: 10px; font-size: 14px;">{{ administrativo.cargo_funcao }}</span>
+          </div>
+          {% endif %}
+          {% if profissional_saude %}
+          <div class="d-flex align-items-center" id="card_descripion">
+            <span class="text-black" style="padding-left: 10px;">{{ profissional_saude.nome }}</span>
+          </div>
+          {% elif administrativo %}
+          <div class="d-flex align-items-center" id="card_descripion">
+            <span class="text-black" style="padding-left: 10px;">{{ administrativo.nome }}</span>
+          </div>
+          {% endif %}
+        </div>
+        <ul class="drop">
+          <li><a href="#">Meu perfil</a></li>
+          <li style="border-radius: 5px;"><a href="{% url 'sair' %}">Sair&nbsp;</a></li>
+        </ul>
+      </div>  
     </div>
-    <nav class="links" style="--items: 7;">
-      <a href="#">Meu Perfil</a>
+
+
+    
+    <nav class="links" style="--items: 5;">
       <a href="{% url 'agendamentoListagem' %}">Agendamentos</a>
       <a href="{% url 'listaAtendimentos' %}">Atendimentos</a>
       <a href="{% url 'administrativoListagem' %}">Administrativo</a>
       <a href="{% url 'pacienteListagem' %}">Pacientes</a>
       <a href="{% url 'profissionaldasaudeListagem' %}">Profissional de Saúde</a>
-      <a href="{% url 'sair' %}">Sair</a>
       <span class="line"></span>
     </nav>
   </div>
   
-  {% comment %} <div class="header-container">
-    <div class="container-fluid">
-      <div class="navbar">
-        <a class="navbar-brand text-white" href="#">
-            <img src="{% static 'imagens/logo_ufac_2.png' %}"/>
-        </a>
+  <!-- Novo menu oculto -->
+  <nav class="fixed-menu" style="--items: 5;">
+    <a href="{% url 'agendamentoListagem' %}">Agendamentos</a>
+    <a href="{% url 'listaAtendimentos' %}">Atendimentos</a>
+    <a href="{% url 'administrativoListagem' %}">Administrativo</a>
+    <a href="{% url 'pacienteListagem' %}">Pacientes</a>
+    <a href="{% url 'profissionaldasaudeListagem' %}">Profissional de Saúde</a>
+    <span class="line"></span>
+  </nav>
 
-        <span class="topo">
-
-          <h4>
-              Sistema Médico Pericial<br>
-              Universidade Federal do Acre
-          </h4>
-        </span>
+  <!-- templates/linha_usuario.html -->
+  {% comment %} <div class="perfil">
+    <div class="card-user">
+      <div class="card_load">
+        <img src="{% static 'imagens/user.png' %}" alt="" />
       </div>
-      <button class="navbar-toggler fixed-button" type="button" data-bs-toggle="offcanvas"
-              data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
-
-        <span class="navbar-toggler-icon" style=""></span>
-      </button>
+      {% if profissional_saude %}
+      <div class="d-flex align-items-center" id="card_title">
+        <span class="text-black" style="padding-left: 10px; font-size: 14px;">{{ profissional_saude.area }}</span>
+      </div>
+      {% elif administrativo %}
+      <div class="d-flex align-items-center" id="card_title">
+        <span class="text-black" style="padding-left: 10px; font-size: 14px;">{{ administrativo.cargo_funcao }}</span>
+      </div>
+      {% endif %}
+      {% if profissional_saude %}
+      <div class="d-flex align-items-center" id="card_descripion">
+        <span class="text-black" style="padding-left: 10px;">{{ profissional_saude.nome }}</span>
+      </div>
+      {% elif administrativo %}
+      <div class="d-flex align-items-center" id="card_descripion">
+        <span class="text-black" style="padding-left: 10px;">{{ administrativo.nome }}</span>
+      </div>
+      {% endif %}
     </div>
-  </div> {% endcomment %}
-
-<!-- templates/linha_usuario.html -->
-<div class="perfil">
-  <div class="card-user">
-    <div class="card_load">
-      <img src="{% static 'imagens/user.png' %}" alt="" />
-    </div>
-    {% if profissional_saude%}
-    <div class="d-flex align-items-center" id="card_title">
-      <span class="text-black" style="padding-left: 10px; font-size: 14px;">{{ profissional_saude.area }}</span>
-    </div>
-    {% elif administrativo%}
-    <div class="d-flex align-items-center" id="card_title">
-      <span class="text-black" style="padding-left: 10px; font-size: 14px;">{{ administrativo.cargo_funcao }}</span>
-    </div>
-    {% endif %}
-    {%if profissional_saude %}
-    <div class="d-flex align-items-center" id="card_descripion">
-      <span class="text-black" style="padding-left: 10px;">{{ profissional_saude.nome }}</span>
-    </div>
-    {% elif administrativo %}
-    <div class="d-flex align-items-center" id="card_descripion">
-      <span class="text-black" style="padding-left: 10px;">{{ administrativo.nome }}</span>
-    </div>
-    {% endif %}
-  </div>
-</div>
-
-  {% comment %} <div class="svg-container">
-    <!-- I crated SVG with: https://codepen.io/anthonydugois/pen/mewdyZ -->
-    <svg viewbox="0 0 800 400" class="svg">
-      <path id="curve" fill="#74afff" d="M 800 300 Q 400 350 0 300 L 0 0 L 800 0 L 800 300 Z"></path>
-    </svg>
-  </div> {% endcomment %}
-
-  
-
-  {% comment %}<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-    <div class="offcanvas-header">
-      <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-
-     <div class="offcanvas-body">
-      <ul class="navbar-nav flex-grow-1 pe-3">
-        {# USUÁRIO AUTENTICADO #}
-        {% if user.is_authenticated %}
-          <li class="nav-item border-bottom">
-            <a class="nav-link active" aria-current="page" href="#">
-              Meu Perfil&nbsp;
-              <i class="fa fa-user" aria-hidden="true"></i>
-            </a>
-          </li>
-
-          <li class="nav-item border-bottom">
-            <a class="nav-link active" aria-current="page" href="{% url 'agendamentoListagem' %}">Agendamentos</a>
-          </li>
-
-          <li class="nav-item border-bottom">
-            <a class="nav-link active" aria-current="page" href="{% url 'listaAtendimentos' %}">Atendimentos</a>
-          </li>
-
-          <li class="nav-item border-bottom">
-            <a class="nav-link active" aria-current="page" href="{% url 'administrativoListagem' %}">Administrativo</a>
-          </li>
-
-          <li class="nav-item border-bottom">
-            <a class="nav-link active" aria-current="page" href="{% url 'pacienteListagem' %}">Pacientes</a>
-          </li>
-
-          <li class="nav-item border-bottom">
-            <a class="nav-link active" aria-current="page" href="{% url 'profissionaldasaudeListagem' %}">Profissional de Saúde</a>
-          </li>
-
-          <li class="nav-item border-bottom">
-            <a class="nav-link active" aria-current="page" href="#">Relatórios</a>
-          </li>
-
-          <li class="nav-item border-bottom">
-            <a class="nav-link active" aria-current="page" href="{% url 'sair' %}">Sair&nbsp;<i class="fa fa-sign-out" aria-hidden="true"></i></a>
-          </li>
-        {% else %}
-          <li class="nav-item border-bottom">
-            <a class="nav-link active" aria-current="page" href="{% url 'login' %}">
-              Home&nbsp;
-              <i class="fa fa-home" aria-hidden="true"></i>
-            </a>
-          </li>
-
-          <li class="nav-item border-bottom">
-            <a class="nav-link active" aria-current="page" href="{% url 'login' %}">Acessar&nbsp;<i class="fa fa-sign-in" aria-hidden="true"></i></a>
-          </li>
-        {% endif %}
-
-        <br />
-
-        <li class="nav-item border-bottom">
-          <a class="nav-link active" aria-current="page" href="#">Dúvidas ou sugestões?</a>
-        </li>
-
-        <li class="nav-item border-bottom">
-          <a class="nav-link active" aria-current="page" href="#">Suporte</a>
-        </li>
-      </ul>
-       <form class="d-flex mt-3" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form> 
-    </div>
-  </div> {% endcomment %}
+    <ul class="drop">
+      <li><a href="#">Meu perfil</a></li>
+      <li style="border-radius: 5px;"><a href="{% url 'sair' %}">Sair&nbsp;</a></li>
+    </ul>
+  </div>   {% endcomment %}
   
 </nav>
 
-<style>
-  {% comment %} nav.navbar {
-      box-shadow: -2px -4px 20px 0px rgb(0 0 0);
-  } {% endcomment %}
-
-  .metallic-header {
-    background-color: #0C4DA2;
-    padding: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  }
-
-  /* Appearance */
-.links {
-  background-color: #123;
-  background-image: linear-gradient(to bottom, #0003, transparent);
-  border-bottom: 1px solid #0003;
-  box-shadow: 0 0 32px #0003;
-  font-weight: 300;
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const headerContainer = document.querySelector('.header-container');
+    const fixedMenu = document.querySelector('.fixed-menu');
+    const headerHeight = headerContainer.offsetHeight;
   
-}
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > headerHeight) {
+        fixedMenu.classList.add('visible'); // Adiciona a classe 'visible' para mostrar o menu
+      } else {
+        fixedMenu.classList.remove('visible'); // Remove a classe 'visible' para esconder o menu
+      }
+    });
+  });
+</script>
 
-.links > a {
-  color: #fff;
-  padding: .75em;
-  text-align: center;
-  text-decoration: none;
-  transition: all .5s;
-}
+<style>
 
-.links > a:hover {
-  background: #213e5a;
-  color: #adf;
-}
-
-.links > .line {
-  background: #fff;
-  height: 1px;
-  pointer-events: none;
-}
-
-/* The Magic */
-#header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-}
-
-.links {
-  display: grid;
-  grid-template-columns: repeat(var(--items), 1fr);
-  position: relative;
-}
-
-.links > .line {
-  opacity: 0;
-  transition: all .5s;
-  position: absolute;
-  bottom: 0;
-  left: var(--left, calc(100% / var(--items) * (var(--index) - 1)));
-  width: var(--width, calc(100% / var(--items)));
-  --index: 0;
-}
-
-.links > a:hover ~ .line {
-  opacity: 1;
-}
-
-.links > a:nth-of-type(1):hover ~ .line { --index: 1; }
-.links > a:nth-of-type(2):hover ~ .line { --index: 2; }
-.links > a:nth-of-type(3):hover ~ .line { --index: 3; }
-.links > a:nth-of-type(4):hover ~ .line { --index: 4; }
-.links > a:nth-of-type(5):hover ~ .line { --index: 5; }
-.links > a:nth-of-type(6):hover ~ .line { --index: 6; }
-.links > a:nth-of-type(7):hover ~ .line { --index: 7; }
-
-  ul li a:hover {
-      background-color: #e0e0e0 ;
-  }
-  .fixed-button {
-      position: fixed;
-      right: 20px; /
-      z-index: 999;
-      background-color: #fff;
-  }
-
-  div.container-fluid {
-      padding-left: 0;
-  }
-
-  .navbar {
-      border-radius: 0 0 10px 10px;
-  }
-
-  .wave-bg {
-      position: absolute;
-      top: -25px;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1; /* Coloca o SVG atrás do conteúdo */
-  }
-
-  .wave-bg svg {
-      width: 100%;
-      height: auto;
-      rotate: 180deg;
-  }
-
-  .svg-container svg{
-      position: absolute;
-      width: 100%;
-      left: 0;
-      top: -310px;
-      z-index: -10;
-    }
-
-    .perfil{
-      position: absolute;
-      right: 0;
-      top: 0;
-      margin-top: 1em;
-      display: flex;
-      color: #000;
-    }
-
-    .card-user {
-      width: 300px;
-      height: 90px;
-      border-radius: 20px;
-      padding: 12px 10px;
-    }
-
-    .card_load {
-      width: 70px;
-      height: 70px;
-      position: relative;
-      float: left;
-      background-color: #fff;
-      border-radius: 50%;
-      background-size: 200% 100%;
-      background-position: 100% 0;
-      animation: load89234 2s infinite;
-      box-shadow: 0 1px 25px rgba(0, 0, 0, 0.2);
-      overflow: hidden;
-    }
-
-    .card_load img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 50%;
-    }
-
-    #card_title {
-      width: 150px;
-      height: 22px;
-      position: relative;
-      float: left;
-      margin-left: 15px;
-      border-radius: 5px;
-      background-color: #fff;
-      background-size: 200% 100%;
-      background-position: 100% 0;
-      animation: load89234 2s infinite;
-      box-shadow: 0 1px 25px rgba(0,0,0,0.2);
-    }
-
-    #card_descripion {
-      width: 190px;
-      height: 35px;
-      position: relative;
-      float: left;
-      margin-left: 15px;
-      border-radius: 5px;
-      background-color: #fff;
-      margin-top: 10px;
-      background-size: 200% 100%;
-      background-position: 100% 0;
-      animation: load89234 2s infinite;
-      box-shadow: 0 1px 25px rgba(0,0,0,0.2);
-    }
-
+  
 </style>
-
