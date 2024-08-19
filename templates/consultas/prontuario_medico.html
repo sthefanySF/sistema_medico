@@ -7,7 +7,9 @@
 
 {% block content %}
     {% load static %}
-
+    
+    {% if messages %}{% include 'messages.html'%}{% endif %}
+    
     <h4 class="text-center mb-4 text-white">Prontuário Médico de {{ paciente.nome }} <span
             style="font-size: smaller; font-weight:lighter ;">({{ paciente.tipo_paciente }})</span></h4>
 
@@ -18,12 +20,15 @@
             <input type="hidden" name="paciente_id" value="{{ paciente.id }}"/>
             <div class="row align-items-end">
                 <div class="col-md-12" style="">
+                
                     <div class="dropdown">
                         <label class="dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown"
                                aria-haspopup="true" aria-expanded="false"
-                               style="display: flex; justify-content: center; align-items: center; background-color: #fff;">Selecione
-                            os médicos</label>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                               style="display: flex; justify-content: center; align-items: center; background-color: #fff;">
+                            Selecione os médicos
+                        </label>
+                    
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" onclick="event.stopPropagation();">
                             {% for profissional in profissionais_saude %}
                                 <div class="form-check" id="form-check-pront">
                                     <input class="form-check-input" type="checkbox" id="medico{{ profissional.id }}"
@@ -35,10 +40,12 @@
                             {% endfor %}
                         </div>
                     </div>
+                
                     <div class="buttons">
                         <button class="btn btn-primary">Filtrar</button>
                         <button id="exibir-todos-btn" class="btn btn-primary">Exibir todos</button>
                     </div>
+                
                 </div>
             </div>
         </form>
@@ -88,8 +95,15 @@
         {% endfor %}
     </dl>
 
-    <button id="print-selected" class="btn btn-primary">Imprimir Selecionados</button>
+    
+    {% if atendimentos %}
+        <div>
+            <button id="print-selected" class="btn btn-primary">Imprimir Selecionados</button>
 
+        </div>
+    {% endif %}
+
+    
     <script>
         var dropdown = document.querySelector('.dropdown')
         var dropdownMenu = document.querySelector('.dropdown-menu')
@@ -182,6 +196,16 @@
         document.getElementById('filtro-form').submit()
     })
     </script>
-
+    
+    
+    <script>
+        document.querySelector('.btn-primary').addEventListener('click', function (event) {
+            const checkboxes = document.querySelectorAll('input[name="medicos"]:checked');
+            if (checkboxes.length === 0) {
+                event.preventDefault();
+                alert('Por favor, selecione pelo menos um médico antes de filtrar.');
+            }
+        });
+    </script>
 
 {% endblock %}
