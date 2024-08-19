@@ -57,6 +57,10 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
+from django.shortcuts import render
+# from django.core.files.storage import FileSystemStorage
+
+
 def home(request):
     return render(request, 'home.html')
 
@@ -891,11 +895,45 @@ def visualizar_comprovante_atendimento(request, atendimento_id):
 #     data = serialize('json', atendimentos, use_natural_foreign_keys=True, fields=('profissional_saude', 'paciente', 'data_atendimento', 'anamnese', 'exame_fisico', 'exames_complementares', 'diagnostico', 'conduta'))
 #     return HttpResponse(data, content_type='application/json')
 
+
+# def prontuario_medico(request, paciente_id):
+#     paciente = Paciente.objects.get(pk=paciente_id)
+#     atendimentos = Atendimento.objects.filter(agendamento__paciente=paciente)
+#     profissionais_saude = Profissionaldasaude.objects.all()  # Obter todos os médicos
+#     return render(request, 'consultas/prontuario_medico.html', {'paciente': paciente,
+#                                                                 'atendimentos': atendimentos,
+#                                                                 'profissionais_saude': profissionais_saude})
+
+# COMENTEI O DE CIMA E ADICIONEI ESSE COM MODIFICAÇÕES
 def prontuario_medico(request, paciente_id):
     paciente = Paciente.objects.get(pk=paciente_id)
     atendimentos = Atendimento.objects.filter(agendamento__paciente=paciente)
-    profissionais_saude = Profissionaldasaude.objects.all()  # Obter todos os médicos
-    return render(request, 'consultas/prontuario_medico.html', {'paciente': paciente, 'atendimentos': atendimentos, 'profissionais_saude': profissionais_saude})
+    profissionais_saude = Profissionaldasaude.objects.all()
+
+    if request.method == 'POST' and 'file_field' in request.FILES:
+        form = MultipleFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            files = request.FILES.getlist('file_field')
+            # file_urls = []
+            for f in files:
+                ArquivoPaciente.objects.create(paciente=paciente, arquivo=f)
+
+
+            messages.success(request, 'Enviado com sucesso!')
+            return redirect('prontuario_medico', paciente_id=paciente_id)
+    else:
+        form = MultipleFileForm()
+
+    arquivos = ArquivoPaciente.objects.filter(paciente=paciente).order_by('-data_envio')
+
+    return render(request, 'consultas/prontuario_medico.html', {
+        'paciente': paciente,
+        'atendimentos': atendimentos,
+        'profissionais_saude': profissionais_saude,
+        'arquivos': arquivos,
+        'form': form
+    })
+
 
 
 def filtrar_prontuarios(request):

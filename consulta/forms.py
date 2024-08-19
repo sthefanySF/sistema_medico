@@ -10,6 +10,7 @@ from .models import Atendimento, Administrativo, AtestadoMedico, Laudo, Profissi
 from django.contrib.auth.models import User
 from .choices import UF_CHOICE
 
+from django import forms
 
 class PacienteForm(forms.ModelForm):
     class Meta:
@@ -258,3 +259,31 @@ class LaudoForm(forms.ModelForm):
         
         for field in self.fields:
             self.fields[field].required = False
+
+
+#  Envio de multiplos arquivos no prontuário do paciente
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+
+class MultipleFileField(forms.FileField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", MultipleFileInput())
+        super().__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        single_file_clean = super().clean
+        if isinstance(data, (list, tuple)):
+            result = [single_file_clean(d, initial) for d in data]
+        else:
+            result = [single_file_clean(data, initial)]
+        return result
+
+
+class MultipleFileForm(forms.Form):
+
+    file_field = MultipleFileField(label='Selecione um ou mais')
+
+    def __init__(self, *args, **kwargs):
+        super(MultipleFileForm, self).__init__(*args, **kwargs)
+        self.fields['file_field'].widget.attrs['class'] = 'form-control'

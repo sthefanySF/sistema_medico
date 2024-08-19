@@ -21,6 +21,21 @@ def data_nasc_valida(value):
         raise ValidationError('Informe uma data de nascimento válida.')
 
 
+def arquivos_upload(instance, filename, k):
+  import os
+  ext = filename.split('.')[-1]
+  i = 0
+  fn = '/'.join(['arquivos', str(instance.paciente.cpf.replace('.','').replace('-',''))+'_0'+str(k)+'_S'+str(i)+'.'+ext])
+  while os.path.exists(MEDIA_ROOT+fn):
+    i = i + 1
+    fn = '/'.join(['arquivos', str(instance.paciente.cpf.replace('.','').replace('-',''))+'_0'+str(k)+'_S'+str(i)+'.'+ext])
+  return fn
+
+
+def file_up(instance, filename):
+  return arquivos_upload(instance, filename, 'arquivo')
+
+
 class Paciente(models.Model):
 
     SEXO_CHOICES = [
@@ -244,6 +259,17 @@ class Atendimento(models.Model):
     class Meta:
         ordering = ['agendamento']
 
+
+class ArquivoPaciente(models.Model):
+    paciente = models.ForeignKey('Paciente', on_delete=models.CASCADE)
+    arquivo = models.FileField(upload_to=file_up)
+    data_envio = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Arquivo de {self.paciente.nome}"
+
+    class Meta:
+        ordering = ['paciente', 'data_envio']
 
 
 class AtestadoMedico(models.Model):
