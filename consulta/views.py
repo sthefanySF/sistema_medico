@@ -445,7 +445,7 @@ def cancelar_agendamento(request, agendamento_id):
         agendamento.status_atendimento = 'cancelado'
         agendamento.save()
 
-        return JsonResponse({'success': True, 'message': 'Agendamento cancelado com sucesso.'})
+        return JsonResponse({'success': True})
     else:
         return JsonResponse({'success': False, 'errors': form.errors})
         
