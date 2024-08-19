@@ -42,11 +42,13 @@
                 </a>
                 {% endif %}
 
+                {% if receita_simples or receita_controle_especial %}
                 <a href="{% url 'pdf_atestado_medico' atendimento.id %}" target="_blank" class="print-btn" style="border: none; text-decoration: none;">
                     <button class="print-btn">
                         Imprimir Atestado
                     </button>
                 </a>
+                {% endif %}
                 
                 <a style="justify-content: right; margin-bottom: 2px" class="btn btn-warning" href="{% url 'agendamentoListagem' %}">
                     <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>&nbsp;Voltar para agendamento
