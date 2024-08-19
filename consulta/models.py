@@ -266,7 +266,7 @@ class AtestadoMedico(models.Model):
         return self.agendamento.profissional_saude
 
     def __str__(self):
-        return f"Atestado Médico para {self.paciente.nome} em {self.data_consulta.date()}"
+        return f"Atestado Médico para {self.paciente.nome} em {self.data_consulta}"
 
     class Meta:
         ordering = ['-data_criacao']
@@ -300,7 +300,7 @@ class ReceitaMedica(models.Model):
         return self.agendamento.profissional_saude
 
     def __str__(self):
-        return f"Receita Médica para {self.paciente.nome} em {self.data_consulta.date()}"
+        return f"Receita Médica para {self.paciente.nome} em {self.data_consulta}"
 
     class Meta:
         ordering = ['-data_receita']
