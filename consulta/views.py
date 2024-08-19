@@ -759,6 +759,7 @@ class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         context['agendamento'] = agendamento
         context['atestado_medico_form'] = AtestadoMedicoForm(agendamento=agendamento)
         context['receita_medica_form'] = ReceitaMedicaForm()
+        context['laudo_form'] = LaudoForm()
         return context
 
     def post(self, request, *args, **kwargs):
@@ -769,13 +770,14 @@ class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         atendimento_form = AtendimentoForm(request.POST, request.FILES)
         atestado_medico_form = AtestadoMedicoForm(request.POST, agendamento=agendamento)
         receita_medica_form = ReceitaMedicaForm(request.POST, agendamento=agendamento)
+        laudo_form = LaudoForm(request.POST, agendamento=agendamento)
         
         if atendimento_form.is_valid():
-            return self.form_valid(atendimento_form, atestado_medico_form, receita_medica_form, agendamento)
+            return self.form_valid(atendimento_form, atestado_medico_form, receita_medica_form, laudo_form, agendamento)
         else:
-            return self.form_invalid(atendimento_form, atestado_medico_form, receita_medica_form)
+            return self.form_invalid(atendimento_form, atestado_medico_form, receita_medica_form, laudo_form)
 
-    def form_valid(self, atendimento_form, atestado_medico_form, receita_medica_form, agendamento):
+    def form_valid(self, atendimento_form, atestado_medico_form, receita_medica_form, laudo_form, agendamento):
         atendimento = atendimento_form.save(commit=False)
         atendimento.agendamento = agendamento
 
@@ -798,14 +800,21 @@ class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
             receita_medica.agendamento = agendamento
             receita_medica.save()
 
+        if laudo_form.is_valid():
+            laudo = laudo_form.save(commit=False)
+            laudo.agendamento = agendamento
+            laudo.save()
+
         return redirect('confirmar_atendimento', agendamento_id=agendamento.id)
 
-    def form_invalid(self, atendimento_form, atestado_medico_form, receita_medica_form):
+    def form_invalid(self, atendimento_form, atestado_medico_form, receita_medica_form, laudo_form):
         context = self.get_context_data()
         context['form'] = atendimento_form
         context['atestado_medico_form'] = atestado_medico_form
         context['receita_medica_form'] = receita_medica_form
+        context['laudo_form'] = laudo_form
         return self.render_to_response(context)
+
 
 def confirmar_atendimento(request, agendamento_id):
     agendamento = get_object_or_404(Agendamento, id=agendamento_id)

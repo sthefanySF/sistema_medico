@@ -168,6 +168,15 @@
             </div>
           </div>
         </div>
+
+        <!-- Formulário de Laudo -->
+        <h6 class="d-flex justify-content-center py-3">LAUDO</h6>
+        <div class="laudo">
+            <div class="form-group">
+                <label for="{{ laudo_form.descricao.id_for_label }}">Descrição</label>
+                {{ laudo_form.descricao }}
+            </div>
+        </div>
       
         <div class="d-flex justify-content-center align-items-center mb-3">
           <button type="submit" class="btn btn-primary">Salvar Atendimento</button>
