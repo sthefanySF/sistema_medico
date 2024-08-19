@@ -6,10 +6,11 @@ from django.utils.timezone import now
 from django.utils import timezone
 from django import forms
 import json
-from .models import Atendimento, Administrativo, AtestadoMedico, Profissionaldasaude, Agendamento, Paciente, ReceitaMedica
+from .models import Atendimento, Administrativo, AtestadoMedico, Laudo, Profissionaldasaude, Agendamento, Paciente, ReceitaMedica
 from django.contrib.auth.models import User
 from .choices import UF_CHOICE
 
+from django import forms
 
 class PacienteForm(forms.ModelForm):
     class Meta:
@@ -236,3 +237,53 @@ class ReceitaMedicaForm(forms.ModelForm):
             
         # for f in self.fields:
         #     self.fields[f].widget.attrs['class'] = 'input'
+
+class LaudoForm(forms.ModelForm):
+    class Meta:
+        model = Laudo
+        fields = ['descricao']
+
+    def __init__(self, *args, **kwargs):
+        agendamento = kwargs.pop('agendamento', None)
+        super().__init__(*args, **kwargs)
+        
+        if agendamento:
+            self.fields['paciente_nome'] = forms.CharField(
+                initial=agendamento.paciente.nome, label="Paciente", disabled=True, required=False)
+            self.fields['profissional'] = forms.CharField(
+                initial=agendamento.profissional_saude.nome, label="Profissional de Saúde", disabled=True, required=False)
+            self.fields['data_agendamento'] = forms.CharField(
+                initial=agendamento.data_agendamento.strftime('%Y-%m-%d %H:%M'), label="Data do Agendamento", disabled=True, required=False)
+            self.fields['data_criacao'] = forms.CharField(
+                initial=timezone.now().strftime('%Y-%m-%d %H:%M'), label="Data de Criação", disabled=True, required=False)
+        
+        for field in self.fields:
+            self.fields[field].required = False
+
+
+#  Envio de multiplos arquivos no prontuário do paciente
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+
+class MultipleFileField(forms.FileField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", MultipleFileInput())
+        super().__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        single_file_clean = super().clean
+        if isinstance(data, (list, tuple)):
+            result = [single_file_clean(d, initial) for d in data]
+        else:
+            result = [single_file_clean(data, initial)]
+        return result
+
+
+class MultipleFileForm(forms.Form):
+
+    file_field = MultipleFileField(label='Selecione um ou mais')
+
+    def __init__(self, *args, **kwargs):
+        super(MultipleFileForm, self).__init__(*args, **kwargs)
+        self.fields['file_field'].widget.attrs['class'] = 'form-control'
