@@ -116,9 +116,11 @@ class AgendamentoForm(forms.ModelForm):
     def clean_data_agendamento(self):
         data_agendamento = self.cleaned_data.get('data_agendamento')
 
+        # Verifica se data_agendamento não é None
         if data_agendamento is None:
             raise forms.ValidationError("A data do agendamento é obrigatória.")
 
+        # Obtenha a data atual no fuso horário local
         hoje = timezone.localtime().date()
 
         # Imprime as datas para diagnóstico
@@ -130,7 +132,6 @@ class AgendamentoForm(forms.ModelForm):
 
         return data_agendamento
 
-    
     class Meta:
         model = Agendamento
         exclude = ['id']
