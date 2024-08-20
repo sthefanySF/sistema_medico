@@ -9,8 +9,9 @@
   {# Verifica se há message na views e mostra caso true #}
   {% if messages %}{% include 'messages.html' %}{% endif %}
 
-  <h4 class="text-center mb-5 text-black">LISTA DE PACIENTES</h4>
-  <div class="mb-4" id="glass">
+  <h4 class="text-center mb-3 text-black">LISTA DE PACIENTES</h4>
+    
+  <div class="mt-2 mb-4" id="glass">
     <div class="d-flex justify-content-between pb-3">
       <a class="btn btn-primary" href="{% url 'agendamentoListagem' %}">Voltar</a>
       <a href="#" class="btn btn-primary btn-expand-all">Expandir todos</a>
