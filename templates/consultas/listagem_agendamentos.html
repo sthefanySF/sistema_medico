@@ -157,34 +157,44 @@
                         </div>
 
                         <!-- Modal para cancelar agendamento -->
-                        <div class="modal fade" id="cancelarModal{{ agendamento.id }}" tabindex="-1"
-                             aria-labelledby="cancelarModalLabel{{ agendamento.id }}" aria-hidden="true">
+                        <div class="modal fade" id="cancelarModal{{ agendamento.id }}" tabindex="-1" aria-labelledby="cancelarModalLabel{{ agendamento.id }}" aria-hidden="true">
+                            
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="cancelarModalLabel{{ agendamento.id }}">Cancelar
-                                            Agendamento</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
+                                        <h5 class="modal-title" id="cancelarModalLabel{{ agendamento.id }}">Cancelar Agendamento</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <p>Ao cancelar esse agendamento ele não poderá mais ser atendido. Informe a
-                                            justificativa para o cancelamento:</p>
-                                        <textarea id="justificativa_cancelamento_{{ agendamento.id }}"
-                                                  class="form-control" rows="4"
-                                                  placeholder="Digite a justificativa aqui"></textarea>
+                                        <p>Ao cancelar esse agendamento ele não poderá mais ser atendido. Informe a justificativa para o cancelamento:</p>
+                                        <textarea id="justificativa_cancelamento_{{ agendamento.id }}" class="form-control" rows="4" placeholder="Digite a justificativa aqui"></textarea>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar
-                                        </button>
-                                        <button type="button" class="btn btn-danger"
-                                                onclick="cancelarAgendamento({{ agendamento.id }})">Confirmar
-                                            Cancelamento
-                                        </button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                                        <button type="button" class="btn btn-danger" onclick="cancelarAgendamento({{ agendamento.id }})">Confirmar Cancelamento</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Área de Confirmação -->
+                            <div id="confirmationArea{{ agendamento.id }}" class="confirmation-area d-none mt-4">
+                                <div class="card mx-auto" style="width: 800px;">
+                                    <div class="card-body text-center">
+                                        <h4>Agendamento Cancelado com Sucesso</h4>
+                                        <div class="d-flex justify-content-between mt-2">
+                                            <a class="btn btn-primary btn-sm" href="#" target="_blank">
+                                                Baixar Comprovante &nbsp;<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                            </a>
+                                            <button class="btn btn-warning" id="voltarParaAgendamento{{ agendamento.id }}" data-bs-dismiss="modal">
+                                                <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
+                                                &nbsp;Voltar para agendamento
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+
 
                         <!-- Modal de Reagendamento -->
                         <div class="modal fade" id="reagendarModal{{ agendamento.id }}" tabindex="-1"
@@ -424,34 +434,60 @@
           function cancelarAgendamento(agendamentoId) {
             var button = document.querySelector('[data-bs-target="#cancelarModal' + agendamentoId + '"]');
             var status = button.getAttribute('data-status');
-
+        
             if (status !== 'pendente') {
-              alert('Não é possível cancelar um agendamento que não está pendente.');
-              return;
+                alert('Não é possível cancelar um agendamento que não está pendente.');
+                return;
             }
-
+        
             var justificativa = document.getElementById('justificativa_cancelamento_' + agendamentoId).value;
-
+        
             $.ajax({
-              type: 'POST',
-              url: '/cancelar_agendamento/' + agendamentoId + '/',
-              data: {
-                'justificativa': justificativa,
-                'csrfmiddlewaretoken': '{{ csrf_token }}'
-              },
-              success: function(response) {
-                if (response.success) {
-                  alert(response.message);
-                  location.reload();
-                } else {
-                  alert('Erro: ' + response.errors);
+                type: 'POST',
+                url: '/cancelar_agendamento/' + agendamentoId + '/',
+                data: {
+                    'justificativa': justificativa,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        // Esconder o modal de cancelamento
+                        //var modalElement = document.getElementById('cancelarModal' + agendamentoId);
+                        //var modal = bootstrap.Modal.getInstance(modalElement);
+                        //modal.hide(); // Apenas oculta o modal
+        
+                        // Exibir a área de confirmação
+                        var confirmationArea = document.getElementById('confirmationArea' + agendamentoId);
+                        confirmationArea.classList.remove('d-none');
+        
+                        // Adicionar o evento de recarregar a página quando o botão "Voltar para agendamento" for clicado
+                        document.getElementById('voltarParaAgendamento' + agendamentoId).addEventListener('click', function() {
+                            location.reload();
+                        });
+                    } else {
+                        alert('Erro: ' + response.errors);
+                    }
+                },
+                error: function(response) {
+                    alert('Ocorreu um erro ao cancelar o agendamento.');
                 }
-              },
-              error: function(response) {
-                alert('Ocorreu um erro ao cancelar o agendamento.');
-              }
             });
-          }
+        }
+        
+        
+        // Adicionar evento para recarregar a página quando o botão "Voltar para agendamento" for clicado
+        document.querySelectorAll('.btn-warning').forEach(function(button) {
+            button.addEventListener('click', function() {
+                location.reload();
+            });
+        });
+        
+        // Adicionar evento para recarregar a página quando o modal for fechado
+        document.querySelectorAll('.modal').forEach(function(modal) {
+            modal.addEventListener('hidden.bs.modal', function () {
+                location.reload();
+            });
+        });
 
           function reagendarAgendamento(agendamentoId) {
             console.log("Reagendando agendamento com ID:", agendamentoId);

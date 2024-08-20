@@ -477,6 +477,7 @@ def visualizar_atendimento(request, atendimento_id):
         'receita_simples': receita_simples,
         'receita_controle_especial': receita_controle_especial
     })
+    
 def lista_atendimentos(request):
     atendimentos = Atendimento.objects.all()
     return render(request, 'consultas/lista_atendimentos.html', {'atendimentos': atendimentos})
@@ -823,13 +824,25 @@ class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 def confirmar_atendimento(request, agendamento_id):
     agendamento = get_object_or_404(Agendamento, id=agendamento_id)
     atendimento = get_object_or_404(Atendimento, agendamento=agendamento)
-    
+
     # Salvar o fim do atendimento, se ainda não estiver definido
     if not atendimento.fim_atendimento:
         atendimento.fim_atendimento = timezone.now()
         atendimento.save()
-    
-    return render(request, 'consultas/confirmar_atendimento.html', {'atendimento': atendimento})
+
+    # Buscar as receitas médicas
+    receita_simples = ReceitaMedica.objects.filter(agendamento=agendamento, tipo='simples').first()
+    receita_controle_especial = ReceitaMedica.objects.filter(agendamento=agendamento, tipo='controle_especial').first()
+
+    # Verificar se os campos essenciais estão preenchidos
+    mostrar_receita_simples = receita_simples and (receita_simples.prescricao or receita_simples.dosagem or receita_simples.via_administrativa or receita_simples.modo_uso)
+    mostrar_receita_controle_especial = receita_controle_especial and (receita_controle_especial.prescricao or receita_controle_especial.dosagem or receita_controle_especial.via_administrativa or receita_controle_especial.modo_uso)
+
+    return render(request, 'consultas/confirmar_atendimento.html', {
+        'atendimento': atendimento,
+        'receita_simples': receita_simples if mostrar_receita_simples else None,
+        'receita_controle_especial': receita_controle_especial if mostrar_receita_controle_especial else None,
+    })
 
 
 def download_comprovante_atendimento(request, atendimento_id):
