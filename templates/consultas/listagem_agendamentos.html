@@ -540,18 +540,6 @@
                     const formData = new FormData(form);
                     const agendamentoId = form.id.replace('agendamentoForm', '');
 
-                    // Obter a data do campo data_agendamento do formulário
-                    const dataAgendamento = formData.get('data_agendamento');
-                    const hoje = new Date(); // Data de hoje
-
-                    // Verificar se a data selecionada é no passado
-                    if (new Date(dataAgendamento) < hoje) {
-                        const errorContainer = document.getElementById(`errorContainerAgendamento${agendamentoId}`);
-                        errorContainer.innerHTML = `<div class="alert alert-danger">Data incorreta!
-                                            Ajuste a data do agendamento e tente novamente.</div>`;
-                        return; // Impede o envio do formulário
-                    }
-
                     fetch(form.action, {
                         method: 'POST',
                         headers: {
