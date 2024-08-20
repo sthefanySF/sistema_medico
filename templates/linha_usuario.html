@@ -37,10 +37,17 @@
           </div>
           {% endif %}
         </div>
+      
         <ul class="drop">
-          <li><a href="#">Meu perfil</a></li>
-          <li style="border-radius: 5px;"><a href="{% url 'sair' %}">Sair&nbsp;</a></li>
+          <li><a href="#">Meu perfil&nbsp;&nbsp;<i class="fa fa-user"></i></a></li>
+            
+            <li style="border-radius: 5px;">
+                <a href="{% url 'sair' %}">
+                Sair&nbsp;&nbsp;<i class="fa fa-sign-out"></i>
+                </a>
+            </li>
         </ul>
+      
       </div>  
     </div>
 

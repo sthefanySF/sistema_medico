@@ -853,7 +853,7 @@ label.form-check-label-pront {
 }
 
 .card-user {
-  width: 300px;
+  width: 400px;
   height: 90px;
   border-radius: 5px 0 0 5px;
   padding: 12px 10px;
@@ -872,11 +872,17 @@ label.form-check-label-pront {
   overflow: hidden;
 }
 
+
+
 .card_load img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+
+
 }
+
+
 
 #card_title, #card_descripion {
   margin-left: 15px;
@@ -887,16 +893,25 @@ label.form-check-label-pront {
   animation: load89234 2s infinite;
 }
 
+
 #card_title {
-  width: 150px;
-  height: 22px;
+  /*width: 150px;*/
+  /*height: 22px;*/
+  /*align-items: stretch;*/
+
+
 }
 
+
 #card_descripion {
-  width: 190px;
-  height: 35px;
+  /*width: 190px;*/
+  /*height: 35px;*/
   margin-top: 10px;
+  /*align-items: stretch;*/
+
 }
+
+
 
 .drop {
   position: absolute;
@@ -914,7 +929,11 @@ label.form-check-label-pront {
   pointer-events: none; /* Desabilita eventos de mouse quando oculto */
   transition: transform 0.3s ease, opacity 0.3s ease;
   z-index: 999;
+
+
 }
+
+
 
 .drop li {
   display: block;

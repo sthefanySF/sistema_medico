@@ -5,19 +5,19 @@ from .models import *
 
 
 class CampoPaciente(admin.ModelAdmin):
-    search_fields = ['nome']
-    list_display = ('nome', 'data_nascimento', 'email')
+    search_fields = ['nome', 'cpf']
+    list_display = ('nome', 'cpf', 'data_nascimento', 'email')
 
 
 
 class CampoAdministrativo(admin.ModelAdmin):
-    search_fields = ['nome']
-    list_display = ('nome', 'data_nascimento','email')
+    search_fields = ['nome', 'cpf',]
+    list_display = ('nome', 'cpf', 'data_nascimento','email')
 
 
 class CampoProfissionaldasaude(admin.ModelAdmin):
     search_fields = ['nome', 'cpf']
-    list_display = ('nome', 'data_nascimento', 'email')
+    list_display = ('nome', 'cpf', 'data_nascimento', 'email')
 
 
 class CampoAgendamento(admin.ModelAdmin):
@@ -49,9 +49,21 @@ class CampoAtestadoMedico(admin.ModelAdmin):
         return obj.agendamento.data_agendamento
     data_consulta.short_description = 'Data da Consulta'
 
+
+class ArquivoPacienteAdmin(admin.ModelAdmin):
+    list_display = ('pacinete_nome', 'arquivo', 'data_envio')
+
+    search_fields = ['paciente__nome', 'paciente__cpf']
+
+    def pacinete_nome(selfself, obj):
+        return obj.paciente.nome
+
+    pacinete_nome.short_description = 'Paciente'
+
 admin.site.register(Paciente, CampoPaciente)
 admin.site.register(Administrativo, CampoAdministrativo)
 admin.site.register(Profissionaldasaude, CampoProfissionaldasaude)
 admin.site.register(Agendamento, CampoAgendamento)
 admin.site.register(Atendimento, CampoAtendimento)
 admin.site.register(AtestadoMedico, CampoAtestadoMedico)
+admin.site.register(ArquivoPaciente, ArquivoPacienteAdmin)
