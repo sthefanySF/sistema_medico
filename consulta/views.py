@@ -469,13 +469,33 @@ def visualizar_atendimento(request, atendimento_id):
     # Buscar as receitas médicas
     receita_simples = ReceitaMedica.objects.filter(agendamento=atendimento.agendamento, tipo='simples').first()
     receita_controle_especial = ReceitaMedica.objects.filter(agendamento=atendimento.agendamento, tipo='controle_especial').first()
-    
+
+
+    # Multiplos Arquivos
+    if request.method == 'POST' and 'file_field' in request.FILES:
+        form = MultipleFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            files = request.FILES.getlist('file_field')
+            # file_urls = []
+            for f in files:
+                ArquivoPaciente.objects.create(paciente=paciente, arquivo=f)
+
+            messages.success(request, 'Enviado com sucesso!')
+            return redirect('visualizarAtendimento', atendimento_id=atendimento_id)
+    else:
+        form = MultipleFileForm()
+
+    arquivos = ArquivoPaciente.objects.filter(paciente=paciente).order_by('-data_envio')
+    # Fim
+
     return render(request, 'consultas/visualizar_atendimento.html', {
         'atendimento': atendimento,
         'paciente': paciente,
         'atestado': atestado,
         'receita_simples': receita_simples,
-        'receita_controle_especial': receita_controle_especial
+        'receita_controle_especial': receita_controle_especial,
+        'arquivos': arquivos,
+        'form': form,
     })
     
 def lista_atendimentos(request):
