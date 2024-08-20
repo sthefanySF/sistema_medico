@@ -12,7 +12,7 @@ import json
 from django.http import JsonResponse
 from consulta.forms import *
 from django.views.decorators.http import require_POST
-from consulta.models import Atendimento, Paciente, Administrativo
+from consulta.models import ArquivoPaciente, Atendimento, Paciente, Administrativo
 from consulta.models import Agendamento, Paciente, Profissionaldasaude, AtestadoMedico, ReceitaMedica
 from datetime import date
 from django.shortcuts import render
@@ -932,10 +932,33 @@ def visualizar_comprovante_atendimento(request, atendimento_id):
 def prontuario_medico(request, paciente_id):
     paciente = Paciente.objects.get(pk=paciente_id)
     atendimentos = Atendimento.objects.filter(agendamento__paciente=paciente)
-    profissionais_saude = Profissionaldasaude.objects.all()  # Obter todos os médicos
-    return render(request, 'consultas/prontuario_medico.html', {'paciente': paciente,
-                                                                'atendimentos': atendimentos,
-                                                                'profissionais_saude': profissionais_saude})
+    profissionais_saude = Profissionaldasaude.objects.all()
+
+    # Verificar as receitas associadas aos atendimentos
+    prontuario_dados = []
+    for atendimento in atendimentos:
+        agendamento = atendimento.agendamento
+        receita_simples = ReceitaMedica.objects.filter(agendamento=agendamento, tipo='simples').first()
+        receita_controle_especial = ReceitaMedica.objects.filter(agendamento=agendamento, tipo='controle_especial').first()
+
+        mostrar_receita_simples = receita_simples and (
+            receita_simples.prescricao or receita_simples.dosagem or receita_simples.via_administrativa or receita_simples.modo_uso
+        )
+        mostrar_receita_controle_especial = receita_controle_especial and (
+            receita_controle_especial.prescricao or receita_controle_especial.dosagem or receita_controle_especial.via_administrativa or receita_controle_especial.modo_uso
+        )
+
+        prontuario_dados.append({
+            'atendimento': atendimento,
+            'receita_simples': receita_simples if mostrar_receita_simples else None,
+            'receita_controle_especial': receita_controle_especial if mostrar_receita_controle_especial else None,
+        })
+
+    return render(request, 'consultas/prontuario_medico.html', {
+        'paciente': paciente,
+        'prontuario_dados': prontuario_dados,
+        'profissionais_saude': profissionais_saude,
+    })
 
 
 def filtrar_prontuarios(request):
@@ -988,9 +1011,28 @@ def pdf_prontuario_medico(request, paciente_id):
         atendimentos_ids = [int(id) for id in atendimentos_ids.split(",")]
         atendimentos = atendimentos.filter(id__in=atendimentos_ids)
 
+    prontuario_dados = []
+    for atendimento in atendimentos:
+        agendamento = atendimento.agendamento
+        receita_simples = ReceitaMedica.objects.filter(agendamento=agendamento, tipo='simples').first()
+        receita_controle_especial = ReceitaMedica.objects.filter(agendamento=agendamento, tipo='controle_especial').first()
+
+        mostrar_receita_simples = receita_simples and (
+            receita_simples.prescricao or receita_simples.dosagem or receita_simples.via_administrativa or receita_simples.modo_uso
+        )
+        mostrar_receita_controle_especial = receita_controle_especial and (
+            receita_controle_especial.prescricao or receita_controle_especial.dosagem or receita_controle_especial.via_administrativa or receita_controle_especial.modo_uso
+        )
+
+        prontuario_dados.append({
+            'atendimento': atendimento,
+            'receita_simples': receita_simples if mostrar_receita_simples else None,
+            'receita_controle_especial': receita_controle_especial if mostrar_receita_controle_especial else None,
+        })
+
     context = {
         'paciente': paciente,
-        'atendimentos': atendimentos,
+        'prontuario_dados': prontuario_dados,
         'medicos_ids': medicos_ids,
     }
 
