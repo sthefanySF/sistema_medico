@@ -133,21 +133,29 @@
                     <!-- PDF Exames -->
                     <div class="col-12 d-flex border-bottom py-2">
                         <dt class="col-sm-2">PDF Exames:</dt>
-                        {#        <dd class="col-sm-10">{{ atendimento.pdf_exames }}</dd>#}
-                        {#    </div>#}
-                        <a href="{% url 'visualizar_pdf_exames' atendimento_id=atendimento.id %}"
-                           target="_blank">{{ atendimento.pdf_exames.name }}
-                        </a>
-                        {#                        Sem PDF anexado#}
+                        
+                        {% if atendimento.pdf_exames.name %}
 
-                        <form method="post" enctype="multipart/form-data" class="mb-3">
-                            <input class="mb-2" type="file" name="pdf_exames"/> <br>
-                            <button class="btn btn-primary btn-sm" type="submit">Upload</button>
-                        </form>
-                        </dd>
+                            <a href="{% url 'visualizar_pdf_exames' atendimento_id=atendimento.id %}"
+                               target="_blank" style="text-decoration: none">&nbsp;&nbsp;>
+                                {# {{ atendimento.pdf_exames.name }}#}
+                                <i class="fa fa-file-archive-o fa-2x" alt="Baixar PDF" data-toggle="tooltip" 
+                                   data-bs-placement="top" title="Clique para visualizar">
+                                </i>
+
+                            </a>
+
+                        {% else %}
+                            <b class="text-primary">Sem Anexo</b>
+                        {% endif %}
+
+                        {# <form method="post" enctype="multipart/form-data" class="mb-3">#}
+                        {#     <input class="mb-2" type="file" name="pdf_exames"/> <br>#}
+                        {#     <button class="btn btn-primary btn-sm" type="submit">Upload</button>#}
+                        {# </form>#}
                     </div>
 
-                    <dt class="col-sm-2 border-bottom" id="pdfs-name">PDF Extra:</dt>
+{#                    <dt class="col-sm-2 border-bottom" id="pdfs-name">PDF Extra:</dt>#}
 
                     <dd class="col-sm-10 border-bottom" id="pdfs">
                         {#                        <a href="" target="_blank">{{ atendimento.pdf_extra.name }}</a>#}
@@ -157,9 +165,12 @@
                         {#                            <button type="submit">Upload</button>#}
                         {#                        </form>#}
                         <div class="text-center py-3" style="cursor: pointer;" data-toggle="tooltip"
-                             data-popper-placement='top' title="Enviar outros arquivos"
+{#                             data-popper-placement='top' title="Clique para enviar"#}
                              id="scroll-to-bottom-icon">
-                            <span> Clique para enviar&nbsp;&nbsp;<i class="fa fa-file-archive-o"></i></span>
+                            <span>
+                                Adicionar Arquivos&nbsp;
+                                <i class="fa fa-plus"></i>
+                            </span>
                         </div>
                     </dd>
 

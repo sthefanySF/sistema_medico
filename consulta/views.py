@@ -725,6 +725,7 @@ class AgendamentoCreate(CreateView):
     def form_invalid(self, form):
         # Corrigindo a estrutura de retorno de erros para um objeto JSON adequado
         errors = form.errors.get_json_data()
+        print(f"Erros no form_invalid: {errors}")
         return JsonResponse({'success': False, 'errors': errors}, status=400)
 
     def get_context_data(self, **kwargs):
