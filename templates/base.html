@@ -126,14 +126,25 @@
         });
 
 
-        {# Tooltip #}
+        {# Inicializando Tooltip. #}
+        {# Forma 01 #}
         $(function () {
             $('[data-toggle="tooltip"]').tooltip()
         })
-
-         $(function () {
+        
+        {# Forma 02 #}
+        $(function () {
             $(".btn").tooltip();
         });
+    
+        {# Forma 03 - bootstrap5#}
+        document.addEventListener('DOMContentLoaded', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            })
+        });
+        
 
     </script>
 

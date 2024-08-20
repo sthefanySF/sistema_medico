@@ -102,45 +102,7 @@
 
         </div>
     {% endif %}
-    
-    
-    {#  Envio de Arquivos  #}
-    <div class="mt-5">
-    <hr>
-        <h6>Arquivos:</h6>
         
-
-        <!-- Formulário de Upload de Arquivos -->
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="col-md-5">
-                {{ form.as_p }}
-            </div>
-            <button type="submit" class="btn btn-secondary btn">Enviar</button>
-        </form>
-        
-    <br> <hr>
-    {% if arquivos %}
-        <h6>Enviados</h6>
-        <ul>
-            {% for arquivo in arquivos %}
-                <li>
-                    <a href="{{ arquivo.arquivo.url }}" target="_blank">{{ arquivo.arquivo.name }}</a> <br>
-                    <small>Enviado em: {{ arquivo.data_envio|date:"d/m/Y H:i" }}</small> 
-
-{#                    <a href="{% get_media_prefix %}{{ file_url }}" target="_blank"> #}
-{#                        <img src="{% static 'imagens/pdf.png' %}" #}
-{#                             alt="Documento" style="width: 28px"/>#}
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-    
-    </div>
-    
-    <hr> <br>
-    {#  Fim  #}
     
     <script>
         var dropdown = document.querySelector('.dropdown')
