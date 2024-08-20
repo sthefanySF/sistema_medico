@@ -136,16 +136,16 @@
                         
                         {% if atendimento.pdf_exames.name %}
 
-                            <a href="{% url 'visualizar_pdf_exames' atendimento_id=atendimento.id %}"
-                               target="_blank" style="text-decoration: none">&nbsp;&nbsp;>
-                                {# {{ atendimento.pdf_exames.name }}#}
-                                <i class="fa fa-file-archive-o fa-2x" alt="Baixar PDF" data-toggle="tooltip" 
+                            <a class="d-flex align-items-center justify-content-center" 
+                               href="{% url 'visualizar_pdf_exames' atendimento_id=atendimento.id %}"
+                               target="_blank" style="text-decoration: none; height: 100%;">
+                                <i class="fa fa-file-archive-o fa-2x " alt="Baixar PDF" data-toggle="tooltip" 
                                    data-bs-placement="top" title="Clique para visualizar">
                                 </i>
-
                             </a>
 
                         {% else %}
+                            
                             <b class="text-primary">Sem Anexo</b>
                         {% endif %}
 
@@ -154,22 +154,13 @@
                         {#     <button class="btn btn-primary btn-sm" type="submit">Upload</button>#}
                         {# </form>#}
                     </div>
-
-{#                    <dt class="col-sm-2 border-bottom" id="pdfs-name">PDF Extra:</dt>#}
-
+                
                     <dd class="col-sm-10 border-bottom" id="pdfs">
-                        {#                        <a href="" target="_blank">{{ atendimento.pdf_extra.name }}</a>#}
-                        {#                        Sem PDF anexado#}
-                        {#                        <form method="post" enctype="multipart/form-data">#}
-                        {#                            <input type="file" name="pdf_extra"/>#}
-                        {#                            <button type="submit">Upload</button>#}
-                        {#                        </form>#}
                         <div class="text-center py-3" style="cursor: pointer;" data-toggle="tooltip"
 {#                             data-popper-placement='top' title="Clique para enviar"#}
                              id="scroll-to-bottom-icon">
                             <span>
-                                Adicionar Arquivos&nbsp;
-                                <i class="fa fa-plus"></i>
+                                <i class="fa fa-plus"></i>&nbsp;Adicionar Arquivos
                             </span>
                         </div>
                     </dd>
