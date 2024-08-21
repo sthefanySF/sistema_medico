@@ -75,24 +75,46 @@
     </div>
 
     <dl id="patient-info" style="background-color: #f8f9fa;">
-        {% for atendimento in atendimentos %}
-            <div id="" class="flex d-flex justify-content-evenly">
-                <input type="checkbox" class="select-atendimento" value="{{ atendimento.id }}">
-                <p><strong>Atendido por Dr(a) </strong><span>{{ atendimento.profissional_saude.nome }}</span></p>
-                <p><strong>Area: </strong><span>{{ atendimento.profissional_saude.area }}</span></p>
-                <p><strong>Data do Atendimento: </strong><span>{{ atendimento.data_atendimento }}</span></p>
-            </div>
+        {% for dados in prontuario_dados %}
+        <div id="" class="flex d-flex justify-content-evenly">
+            <input type="checkbox" class="select-atendimento" value="{{ dados.atendimento.id }}">
+            <p><strong>Atendido por Dr(a) </strong><span>{{ dados.atendimento.profissional_saude.nome }}</span></p>
+            <p><strong>Área: </strong><span>{{ dados.atendimento.profissional_saude.area }}</span></p>
+            <p><strong>Data do Atendimento: </strong><span>{{ dados.atendimento.data_atendimento }}</span></p>
+        </div>
+    
+        <dd id="diag">
+            <p><strong>Anamnese:</strong> {{ dados.atendimento.anamnese }}<br/></p>
+            <p><strong>Exame Físico:</strong> {{ dados.atendimento.exame_fisico }}<br/></p>
+            <p><strong>Exames Complementares:</strong> {{ dados.atendimento.exames_complementares }}<br/></p>
+            <p><strong>Diagnóstico:</strong> {{ dados.atendimento.diagnostico }}<br/></p>
+            <p><strong>Conduta:</strong> {{ dados.atendimento.conduta }}<br/></p>
+    
+            {% if dados.receita_simples %}
+                <div class="receita-medica">
+                    <p><strong>Receita Simples</strong><br/></p>
+                    <p><strong>Prescrição:</strong> {{ dados.receita_simples.prescricao }}<br/></p>
+                    <p><strong>Dosagem:</strong> {{ dados.receita_simples.dosagem }}<br/></p>
+                    <p><strong>Via Administrativa:</strong> {{ dados.receita_simples.via_administrativa }}<br/></p>
+                    <p><strong>Modo de Uso:</strong> {{ dados.receita_simples.modo_uso }}<br/></p>
+                </div>
+            {% endif %}
+    
+            {% if dados.receita_controle_especial %}
+                <div class="receita-medica">
+                    <p><strong>Receita de Controle Especial</strong><br/></p>
+                    <p><strong>Prescrição:</strong> {{ dados.receita_controle_especial.prescricao }}<br/></p>
+                    <p><strong>Dosagem:</strong> {{ dados.receita_controle_especial.dosagem }}<br/></p>
+                    <p><strong>Via Administrativa:</strong> {{ dados.receita_controle_especial.via_administrativa }}<br/></p>
+                    <p><strong>Modo de Uso:</strong> {{ dados.receita_controle_especial.modo_uso }}<br/></p>
+                </div>
+            {% endif %}
+        </dd>
+    {% empty %}
+        <dt>Nenhum atendimento registrado para este paciente.</dt>
+    {% endfor %}
 
-            <dd id="diag">
-                <p><strong>Anamnese:</strong> {{ atendimento.anamnese }}<br/></p>
-                <p><strong>Exame Físico:</strong> {{ atendimento.exame_fisico }}<br/></p>
-                <p><strong>Exames Complementares:</strong> {{ atendimento.exames_complementares }}<br/></p>
-                <p><strong>Diagnóstico:</strong> {{ atendimento.diagnostico }}<br/></p>
-                <p><strong>Conduta:</strong> {{ atendimento.conduta }}<br/></p>
-            </dd>
-        {% empty %}
-            <dt>Nenhum atendimento registrado para este paciente.</dt>
-        {% endfor %}
+        
     </dl>
 
     

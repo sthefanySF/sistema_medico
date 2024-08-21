@@ -55,7 +55,7 @@
                 <th scope="col" class="text-center">Data do Agendamento</th>
 
                 <th scope="col" class="text-center" style="cursor: help;" data-toggle="tooltip"
-                    data-popper-placement='top' title="Clique para informações" id="scroll-to-bottom-icon">
+                    data-popper-placement='top' title="Informações" id="scroll-to-bottom-icon">
 
                     P.A&nbsp;<i class="fa fa-asterisk" style="font-size: 7px;  color: red;"></i>
                 </th>
@@ -91,7 +91,9 @@
                             {{ agendamento.turno }}
                         {% endif %}
                     </td>
-
+                
+                
+                    {# Status #}
                     <td>
                         {% if agendamento.status_atendimento == 'pendente' %}
                             <div class="btn-group" role="group" aria-label="Status">
@@ -116,7 +118,8 @@
                             </div>
                         {% endif %}
                     </td>
-
+                    
+                    {# Ações #}
                     <td>
                         <div class="btn-group" role="group" aria-label="Ações">
                             <button type="button"
@@ -186,7 +189,7 @@
                                             </a>
                                             <button class="btn btn-warning" id="voltarParaAgendamento{{ agendamento.id }}" data-bs-dismiss="modal">
                                                 <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
-                                                &nbsp;Voltar para agendamento
+                                                &nbsp;Retornar
                                             </button>
                                         </div>
                                     </div>
@@ -280,17 +283,17 @@
 
     <div>
         <div>
-            <i  class="fa fa-asterisk" style="font-size: 7px; color: red; display: flex;"></i>&nbsp;<i>Informações:</i>
+            <i  class="fa fa-asterisk" style="font-size: 7px; color: red;"></i>&nbsp;
         </div>
 
-        <p style="font-size: 16px" class="mt-2">
+        <div style="font-size: 16px" >
             <i class="fa fa-circle text-success text-center"></i>&nbsp;
             <i>Prioridade no atendimento.</i>
             <br>
             <i class="fa fa-circle text-danger text-center"></i>&nbsp;
             <i>Sem prioridade.</i>
 
-        </p>
+        </div>
     </div>
 
 
@@ -302,7 +305,7 @@
 
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="agendamentoModalLabel{{ agendamento.id }}">Agendamento de Pacientes</h5>
+                    <h5 class="modal-title" id="agendamentoModalLabel{{ agendamento.id }}">Agendamento de Consulta</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
@@ -323,7 +326,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="id_data_agendamento" class="form-label"><b>Data do Agendamento</b></label>
+                            <label for="id_data_agendamento" class="form-label"><b>Data da Consulta</b></label>
                             {{ form.data_agendamento }}
                         </div>
                         
@@ -539,18 +542,6 @@
 
                     const formData = new FormData(form);
                     const agendamentoId = form.id.replace('agendamentoForm', '');
-
-                    // Obter a data do campo data_agendamento do formulário
-                    const dataAgendamento = formData.get('data_agendamento');
-                    const hoje = new Date(); // Data de hoje
-
-                    // Verificar se a data selecionada é no passado
-                    if (new Date(dataAgendamento) < hoje) {
-                        const errorContainer = document.getElementById(`errorContainerAgendamento${agendamentoId}`);
-                        errorContainer.innerHTML = `<div class="alert alert-danger">Data incorreta!
-                                            Ajuste a data do agendamento e tente novamente.</div>`;
-                        return; // Impede o envio do formulário
-                    }
 
                     fetch(form.action, {
                         method: 'POST',
