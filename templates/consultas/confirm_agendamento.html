@@ -4,109 +4,64 @@
 {% block title %}Confirmação de Agendamento{% endblock %}
 
 {% block content %}
-{#    {% load static %}#}
+    {#    {% load static %}#}
 
-{#  Verifica se há message na views e mostra caso true  #}
-{#{% if messages %}{% include 'messages.html' %}{% endif %}#}
+    {#  Verifica se há message na views e mostra caso true  #}
+    {#{% if messages %}{% include 'messages.html' %}{% endif %}#}
+
+    
+    <div class="container">
+        <div class="col-md-8 offset-md-2">
+
+            <div class=" card border-primary card-body table-responsive">
+                <h2 class="text-center mb-3 text-bg-primary " style="padding: 10px 0">Confirmação de Agendamento</h2>
+                <hr>
+                <table class="table table-striped table-bordered table-responsive">
+                    <thead>
+                    <tr>
+                        <th style="vertical-align: top">Paciente:</th> <br>
+                        <th>Profissional de Saúde:</th>
+                        <th>Data da Consulta:</th>
+
+                        <th style="vertical-align: top">Turno:</th> <br>
+                        <th>Prioridade de Atendimento:</th>
+                        
+                        <br>
+                        
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <td><span>{{ agendamento.paciente.get_display_name }}</span>
+                        <td><span>{{ agendamento.profissional_saude.get_display_name }}</span></td>
 
 
-{#  Código da Raquel  #}
+                        <td><span>{{ agendamento.data_agendamento|date:"d/m/Y" }}</span></td>
+                        <td><span>{{ agendamento.get_turno_display }}</span></td>
+                        <td>
+                            {% if agendamento.prioridade_atendimento %}
+                                <span style="color: green">Sim&nbsp;<i class="fa fa-check-circle"></i></span>
+                            {% else %}
+                                <span style="color: red">Não&nbsp;<i class="fa fa-close"></i></span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
 
-   <div class="container">
-     <div class="col-md-8 offset-md-2">
-
-          <div class=" card border-primary card-body table-responsive">
-              <h2 class="text-center mb-3 text-bg-primary " style="padding: 10px 0">Confirmação de Agendamento</h2> <hr>
-               <table class="table table-striped table-bordered table-responsive">
-                   <thead>
-                   <tr>
-
-                       <th style="vertical-align: top">Paciente:</th>
-                       <br>
-                       <th>Profissional de Saúde:</th>
-
-                       <th>Data do Agendamento:</th>
-
-                       <th style="vertical-align: top">Turno:</th><br>
-                       <th>Prioridade de Atendimento:</th><br>
-                   </tr>
-                   </thead>
-
-                   <tbody>
-                   <tr>
-                       <td style="color: blue"><b>{{ agendamento.paciente.get_display_name }}</b>
-                       <td style="color: blue"><b>{{ agendamento.profissional_saude.get_display_name }}</b></td>
-
-
-                       <td style="color: blue"><b>{{ agendamento.data_agendamento|date:"d/m/Y" }}</b></td>
-                       <td style="color: blue"><b>{{ agendamento.get_turno_display }}</b></td>
-                       <td>
-                           {% if agendamento.prioridade_atendimento %}
-                               <b style="color: green">Sim</b>
-                           {% else %}
-                               <b style="color: red">Não</b>
-                           {% endif %}
-                       </td>
-                   </tr>
-                   </tbody>
-               </table>
-
-                    <div class="d-flex justify-content-between mt-2">
-                        <a type="submit" class="btn btn-primary btn-sm" style="margin-bottom: 2px"
-                           methods="POST" href="{% url 'downloadComprovante' pk=agendamento.pk %}">
-                            Baixar Comprovante &nbsp;<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-                        </a>
-                        <a style="justify-content: right; margin-bottom: 2px" class="btn btn-warning"
-                           href="{% url 'agendamentoListagem' %}">
-                            <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>&nbsp;Voltar para agendamento
-                        </a>
-                    </div>
-           </div>
+                <div class="d-flex justify-content-between mt-2">
+                    <a type="submit" class="btn btn-primary btn-sm" style="margin-bottom: 2px"
+                       methods="POST" href="{% url 'downloadComprovante' pk=agendamento.pk %}" target="_blank">
+                        Baixar Comprovante &nbsp;<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                    </a>
+                    <a style="justify-content: right; margin-bottom: 2px" class="btn btn-warning"
+                       href="{% url 'agendamentoListagem' %}">
+                        <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>&nbsp;Retornar
+                    </a>
+                </div>
+            </div>
         </div>
-   </div>
-
-
-{# FIM #}
-
-
-{#   CÓDIGO DA STHEFANY  #}
-
-
-{#    <div class="container mt-4">#}
-{#        <h2 class="text-center mb-4 custom-title">Confirmação de Agendamento</h2>#}
-{#        <div class="card p-4">#}
-{#            <p><strong>Paciente:</strong> {{ agendamento.paciente.nome }}</p>#}
-{#            <p><strong>Profissional de Saúde:</strong> {{ agendamento.profissional_saude.nome }}</p>#}
-{#            <p><strong>Data do Agendamento:</strong> {{ agendamento.data_agendamento|date:"d/m/Y" }}</p>#}
-{#            <p><strong>Turno:</strong> {{ agendamento.get_turno_display }}</p>#}
-{#            <p><strong>Prioridade de Atendimento:</strong>#}
-{#                {% if agendamento.prioridade_atendimento %}#}
-{#                    Sim#}
-{#                {% else %}#}
-{#                    Não#}
-{#                {% endif %}#}
-{#            </p>#}
-{##}
-{##}
-{#            <div class="d-flex justify-content-between mt-2">#}
-{#                <a type="submit" class="btn btn-primary btn-sm" style="margin-bottom: 2px"#}
-{#                   methods="POST" href="{% url 'downloadComprovante' pk=agendamento.pk %}">#}
-{##}
-{#                    Baixar Comprovante &nbsp;<i class="fa fa-file-pdf-o" aria-hidden="true"></i>#}
-{##}
-{#                </a>#}
-{##}
-{#                <a style="justify-content: right; margin-bottom: 2px" class="btn btn-warning" href="{% url 'agendamentoListagem' %}">#}
-{##}
-{#                    <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>&nbsp;Voltar para agendamento#}
-{##}
-{#                </a>#}
-{#            </div>#}
-{##}
-{#        </div>#}
-{##}
-{#    </div>#}
-
-{#    FIM  #} 
+    </div>
 
 {% endblock %}

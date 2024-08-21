@@ -55,7 +55,7 @@
                 <th scope="col" class="text-center">Data do Agendamento</th>
 
                 <th scope="col" class="text-center" style="cursor: help;" data-toggle="tooltip"
-                    data-popper-placement='top' title="Clique para informações" id="scroll-to-bottom-icon">
+                    data-popper-placement='top' title="Informações" id="scroll-to-bottom-icon">
 
                     P.A&nbsp;<i class="fa fa-asterisk" style="font-size: 7px;  color: red;"></i>
                 </th>
@@ -91,7 +91,9 @@
                             {{ agendamento.turno }}
                         {% endif %}
                     </td>
-
+                
+                
+                    {# Status #}
                     <td>
                         {% if agendamento.status_atendimento == 'pendente' %}
                             <div class="btn-group" role="group" aria-label="Status">
@@ -116,7 +118,8 @@
                             </div>
                         {% endif %}
                     </td>
-
+                    
+                    {# Ações #}
                     <td>
                         <div class="btn-group" role="group" aria-label="Ações">
                             <button type="button"
@@ -186,7 +189,7 @@
                                             </a>
                                             <button class="btn btn-warning" id="voltarParaAgendamento{{ agendamento.id }}" data-bs-dismiss="modal">
                                                 <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
-                                                &nbsp;Voltar para agendamento
+                                                &nbsp;Retornar
                                             </button>
                                         </div>
                                     </div>
@@ -280,17 +283,17 @@
 
     <div>
         <div>
-            <i  class="fa fa-asterisk" style="font-size: 7px; color: red; display: flex;"></i>&nbsp;<i>Informações:</i>
+            <i  class="fa fa-asterisk" style="font-size: 7px; color: red;"></i>&nbsp;
         </div>
 
-        <p style="font-size: 16px" class="mt-2">
+        <div style="font-size: 16px" >
             <i class="fa fa-circle text-success text-center"></i>&nbsp;
             <i>Prioridade no atendimento.</i>
             <br>
             <i class="fa fa-circle text-danger text-center"></i>&nbsp;
             <i>Sem prioridade.</i>
 
-        </p>
+        </div>
     </div>
 
 
