@@ -470,13 +470,14 @@ def visualizar_atendimento(request, atendimento_id):
     receita_simples = ReceitaMedica.objects.filter(agendamento=atendimento.agendamento, tipo='simples').first()
     receita_controle_especial = ReceitaMedica.objects.filter(agendamento=atendimento.agendamento, tipo='controle_especial').first()
 
+    # Buscar os laudos médicos
+    laudos = Laudo.objects.filter(agendamento=atendimento.agendamento).order_by('-data_laudo')
 
     # Multiplos Arquivos
     if request.method == 'POST' and 'file_field' in request.FILES:
         form = MultipleFileForm(request.POST, request.FILES)
         if form.is_valid():
             files = request.FILES.getlist('file_field')
-            # file_urls = []
             for f in files:
                 ArquivoPaciente.objects.create(paciente=paciente, arquivo=f)
 
@@ -494,6 +495,7 @@ def visualizar_atendimento(request, atendimento_id):
         'atestado': atestado,
         'receita_simples': receita_simples,
         'receita_controle_especial': receita_controle_especial,
+        'laudos': laudos,
         'arquivos': arquivos,
         'form': form,
     })
@@ -785,7 +787,7 @@ class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         context['agendamento'] = agendamento
         context['atestado_medico_form'] = AtestadoMedicoForm(agendamento=agendamento)
         context['receita_medica_form'] = ReceitaMedicaForm()
-        context['laudo_form'] = LaudoForm()
+        context['laudo_form'] = LaudoForm(agendamento=agendamento) 
         return context
 
     def post(self, request, *args, **kwargs):
@@ -855,6 +857,8 @@ def confirmar_atendimento(request, agendamento_id):
     receita_simples = ReceitaMedica.objects.filter(agendamento=agendamento, tipo='simples').first()
     receita_controle_especial = ReceitaMedica.objects.filter(agendamento=agendamento, tipo='controle_especial').first()
 
+    laudos = Laudo.objects.filter(agendamento=agendamento).order_by('-data_laudo')
+
     # Verificar se os campos essenciais estão preenchidos
     mostrar_receita_simples = receita_simples and (receita_simples.prescricao or receita_simples.dosagem or receita_simples.via_administrativa or receita_simples.modo_uso)
     mostrar_receita_controle_especial = receita_controle_especial and (receita_controle_especial.prescricao or receita_controle_especial.dosagem or receita_controle_especial.via_administrativa or receita_controle_especial.modo_uso)
@@ -863,6 +867,7 @@ def confirmar_atendimento(request, agendamento_id):
         'atendimento': atendimento,
         'receita_simples': receita_simples if mostrar_receita_simples else None,
         'receita_controle_especial': receita_controle_especial if mostrar_receita_controle_especial else None,
+        'laudos': laudos,
     })
 
 
