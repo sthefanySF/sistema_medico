@@ -12,7 +12,7 @@ import json
 from django.http import JsonResponse
 from consulta.forms import *
 from django.views.decorators.http import require_POST
-from consulta.models import Atendimento, Paciente, Administrativo
+from consulta.models import ArquivoPaciente, Atendimento, Paciente, Administrativo
 from consulta.models import Agendamento, Paciente, Profissionaldasaude, AtestadoMedico, ReceitaMedica
 from datetime import date
 from django.shortcuts import render
