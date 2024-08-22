@@ -1002,6 +1002,7 @@ def filtrar_prontuarios(request):
 
 def pdf_prontuario_medico(request, paciente_id):
     paciente = Paciente.objects.get(pk=paciente_id)
+    paciente_nome = paciente.nome.replace(' ', '_').lower()
     medicos_ids = request.GET.get('medicos')
     atendimentos_ids = request.GET.get('atendimentos')
 
@@ -1048,7 +1049,7 @@ def pdf_prontuario_medico(request, paciente_id):
     pdf = HTML(string=html, base_url=request.build_absolute_uri()).write_pdf()
 
     response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = 'inline; filename="prontuario_medico.pdf"'
+    response['Content-Disposition'] = f'inline; filename="prontuario_{paciente_nome}.pdf"'
     return response
 
 def pdf_atestado_medico(request, atendimento_id):
