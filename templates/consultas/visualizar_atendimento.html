@@ -190,7 +190,7 @@
                                     </tbody>
                                 </table>
                             {% else %}
-                                <p class="text-muted mt-3">Nenhum arquivo enviado.</p>
+                                <p class="text-muted mt-3" style="background-color: #fff; padding: 10px;">Nenhum arquivo enviado.</p>
                             {% endif %}
                         </div>
                     </div>
@@ -231,11 +231,11 @@
                     </button>
                 </a>
                 <div class="d-flex">
-                    <div class="col-md-6 d-flex flex-column">
+                    <div class="col-md-12 d-flex flex-column">
                         <span class="text-center">PRESCRIÇÃO</span>
                         <div class="campo">{{ receita_simples.prescricao }}</div>
                     </div>
-                    <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
+                    {% comment %} <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
                         <div class="form-group d-flex flex-column col-md-8">
                             <label>Dosagem</label>
                             <div class="campo">{{ receita_simples.dosagem }}</div>
@@ -248,7 +248,7 @@
                             <label>Modo de Uso</label>
                             <div class="campo">{{ receita_simples.modo_uso }}</div>
                         </div>
-                    </div>
+                    </div> {% endcomment %}
                 </div>
             {% endif %}
 
@@ -260,11 +260,11 @@
                     </button>
                 </a>
                 <div class="d-flex">
-                    <div class="col-md-6 d-flex flex-column">
-                        <span class="text-center">PRESCRIÇÃO</span>
+                    <div class="col-md-12 d-flex flex-column">
+                        <span class="text-center" style="min-width: 130%;">PRESCRIÇÃO</span>
                         <div class="campo">{{ receita_controle_especial.prescricao }}</div>
                     </div>
-                    <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
+                    {% comment %} <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
                         <div class="form-group d-flex flex-column col-md-8">
                             <label>Dosagem</label>
                             <div class="campo">{{ receita_controle_especial.dosagem }}</div>
@@ -277,7 +277,7 @@
                             <label>Modo de Uso</label>
                             <div class="campo">{{ receita_controle_especial.modo_uso }}</div>
                         </div>
-                    </div>
+                    </div> {% endcomment %}
                 </div>
             {% endif %}
         {% else %}
@@ -387,46 +387,7 @@
     {% else %}
         <p class="text-center">Não há laudo médico disponível para este agendamento.</p>
     {% endif %}
-    
-    {#  Enviar de Arquivos  #}
-    <div class="mt-5">
-        <hr>
-        <h5>Arquivos:</h5>
-        
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="col-md-5">
-                {{ form.as_p }}
-            </div>
-            <button type="submit" class="btn btn-primary btn-sm">Enviar</button>
-        </form>
 
-        <br><hr>
-    
-        {% if arquivos %}
-            <h5>Enviados</h5>
-            <ul>
-                {% for arquivo in arquivos %}
-                    <li class="mb-3">
-                        <a href="{{ arquivo.arquivo.url }}" target="_blank" style="text-decoration: none">
-                            Visualizar&nbsp;&nbsp;<i class="fa fa-file-archive-o"></i>
-                        </a> <br>
-                        <small>Enviado em: {{ arquivo.data_envio|date:"d/m/Y" }}
-                            às {{ arquivo.data_envio|date:'H:i' }} </small>
-
-
-                        {#                    <a href="{% get_media_prefix %}{{ file_url }}" target="_blank"> #}
-                        {#                        <img src="{% static 'imagens/pdf.png' %}" #}
-                        {#                             alt="Documento" style="width: 28px"/>#}
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-
-    </div>
-    {#  Fim  #}
-    <br>
 
     <button onclick="voltarTopo()" id="btnTopo">
         <i id="arrow" class="fa fa-arrow-up"></i>

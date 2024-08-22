@@ -63,15 +63,30 @@
       .info-prescricao, .info-administracao {
         flex: 1;
         text-align: justify;
-      }
+        word-wrap: break-word; /* Permite a quebra de palavras longas */
+        word-break: break-all; /* Garante que palavras muito longas sejam quebradas */
+        overflow-wrap: break-word; /* Alternativa para garantir a quebra de texto */
+    }
+
+    .info-prescricao, .info-administracao p {
+      margin: 10px 0;
+      text-align: justify; /* Justifica o texto para melhorar a aparência */
+      white-space: normal; /* Garante que o texto vai quebrar nas linhas */
+  }
 
       .info-paciente p, .info-receita p {
         margin: 10px 0;
       }
 
+      .info-receita {
+        display: flex;
+        flex-wrap: wrap; /* Permite que os elementos flexíveis sejam movidos para a próxima linha */
+        justify-content: space-between;
+    }
+
       .info-prescricao {
         padding-right: 10px;
-        border-right: 1px solid #afafaf;
+        /*border-right: 1px solid #afafaf;*/
       }
 
       .info-administracao {
@@ -97,19 +112,20 @@
 
     <h3>RECEITA MEDICA</h3>
     <div class="content">
+      <p><strong>Paciente:</strong> {{ receita.paciente.nome }}</p>
       <div class="info-paciente">
-        <p><strong>Paciente:</strong> {{ receita.paciente.nome }}</p>
+        <p><strong>Idade:</strong> {{ receita.paciente.idade }}</p>
         <p><strong>Data da Consulta:</strong> {{ receita.data_consulta|date:'d/m/Y' }}</p>
       </div>
       <div class="info-receita">
         <div class="info-prescricao">
           <p><strong>Prescrição:</strong> {{ receita.prescricao }}</p>
         </div>
-        <div class="info-administracao">
+        {% comment %} <div class="info-administracao">
           <p><strong>Dosagem:</strong> {{ receita.dosagem }}</p>
           <p><strong>Via Administrativa:</strong> {{ receita.via_administrativa }}</p>
           <p><strong>Modo de Uso:</strong> {{ receita.modo_uso }}</p>
-        </div>
+        </div> {% endcomment %}
       </div>
 
     </div>
