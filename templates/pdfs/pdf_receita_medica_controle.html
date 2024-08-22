@@ -16,7 +16,7 @@
 
       body {
         font-family: 'Poppins', sans-serif;
-        font-size: 12px;
+        font-size: 13px;
         margin: 0 50px;
       }
       
@@ -61,16 +61,16 @@
   
         <div class="vpaciente">
           <div class="subt">
-            <span>1° VIA DO PACIENTE</span>
+            <span>1° VIA DO PACIENTE / 2º VIA DA FARMACIA</span>
           </div>
 
           
           <div class="info-prescricao">
             <p><strong>Data da Consulta:</strong> {{ receita.data_consulta|date:'d/m/Y' }}</p>
             <p><strong>Prescrição:</strong> {{ receita.prescricao }}</p>
-            <p><strong>Dosagem:</strong> {{ receita.dosagem }}</p>
+            {% comment %} <p><strong>Dosagem:</strong> {{ receita.dosagem }}</p>
             <p><strong>Via Administrativa:</strong> {{ receita.via_administrativa }}</p>
-            <p><strong>Modo de Uso:</strong> {{ receita.modo_uso }}</p>
+            <p><strong>Modo de Uso:</strong> {{ receita.modo_uso }}</p> {% endcomment %}
           </div>
 
 
@@ -78,7 +78,10 @@
             <div class="subt">
               <span >INFORMAÇÕES DO COMPRADOR</span>
             </div>
-            <p><strong>Paciente:</strong> {{ receita.paciente.nome }}</p>
+            <div class="ident">
+              <p><strong>Paciente:</strong> {{ receita.paciente.nome }}</p>
+              <p><strong>Idade:</strong> {{ receita.paciente.idade }}</p>
+            </div>
             <p><strong>Nome Social:</strong> {{ receita.paciente.nome_social|default_if_none:'' }}</p>
             <div class="ident">
               <p><strong>CPF:</strong> {{ receita.paciente.cpf }}</p>
@@ -129,16 +132,16 @@
   
         <div class="vpaciente">
           <div class="subt">
-            <span>2° VIA DA FARMACIA</span>
+            <span>1° VIA DO PACIENTE / 2º VIA DA FARMACIA</span>
           </div>
 
           
           <div class="info-prescricao">
             <p><strong>Data da Consulta:</strong> {{ receita.data_consulta|date:'d/m/Y' }}</p>
             <p><strong>Prescrição:</strong> {{ receita.prescricao }}</p>
-            <p><strong>Dosagem:</strong> {{ receita.dosagem }}</p>
+            {% comment %} <p><strong>Dosagem:</strong> {{ receita.dosagem }}</p>
             <p><strong>Via Administrativa:</strong> {{ receita.via_administrativa }}</p>
-            <p><strong>Modo de Uso:</strong> {{ receita.modo_uso }}</p>
+            <p><strong>Modo de Uso:</strong> {{ receita.modo_uso }}</p> {% endcomment %}
           </div>
 
 
@@ -146,7 +149,10 @@
             <div class="subt">
               <span >INFORMAÇÕES DO COMPRADOR</span>
             </div>
-            <p><strong>Paciente:</strong> {{ receita.paciente.nome }}</p>
+            <div class="ident">
+              <p><strong>Paciente:</strong> {{ receita.paciente.nome }}</p>
+              <p><strong>Idade:</strong> {{ receita.paciente.idade }}</p>
+            </div>
             <p><strong>Nome Social:</strong> {{ receita.paciente.nome_social|default_if_none:'' }}</p>
             <div class="ident">
               <p><strong>CPF:</strong> {{ receita.paciente.cpf }}</p>

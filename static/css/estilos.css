@@ -398,6 +398,10 @@ input:focus {
   margin: 20px;
 }
 
+div.campo{
+  min-height: 150px;
+}
+
 .detalhes-atendimentos dl {
   background-color: #f8f9fa;
   border: 1px solid #dee2e6;
@@ -462,14 +466,14 @@ dl #pdfs-name {
 }
 
 /* atestado e receita para atendimento e visualizar atendimento (atendimento.html-visualizar_atendimento.html)*/
-#form-atestado {
+#form-atestado, #form-laudo {
   border: 1px solid #ccc;
   padding: 25px;
   border-radius: 5px;
 }
 
 .atestado,
-.receita {
+.receita, .laudos {
   background-color: #f8f9fa;
   border: 1px solid #dee2e6;
   padding: 20px;
@@ -478,7 +482,8 @@ dl #pdfs-name {
 }
 
 .atestado a,
-.receita a {
+.receita a, 
+.laudos a {
   text-decoration: none;
   position: relative;
   float: right;

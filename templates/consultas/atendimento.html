@@ -149,7 +149,7 @@
             <div class="form-group">
               <label for="dias_afastamento" style="width: 100%;">
                 <span id="texto-atestado">
-                  Atesto que o(a) paciente <span id="paciente">{{ agendamento.paciente.get_display_name }}</span> esteve em consulta no dia <span id="data">{{ agendamento.data_agendamento|date:'d/m/Y' }}</span>, e necessita de <span id="dias"><input class="input" name="dias_afastamento" type="text" placeholder="Dias" value="{{ atestado_medico_form.dias_afastamento.value|default_if_none:'' }}" /></span> dias de afastamento de suas atividades normais, para sua convalescença.
+                  Atesto que o(a) paciente <span id="paciente">{{ agendamento.paciente.get_display_name }}</span> esteve em consulta no dia <span id="data">{{ agendamento.data_agendamento|date:'d/m/Y' }}</span>, e necessita de <span id="dias"><input class="input" name="dias_afastamento" type="number" placeholder="Dias" value="{{ atestado_medico_form.dias_afastamento.value|default_if_none:'' }}" /></span> dias de afastamento de suas atividades normais, para sua convalescença.
                 </span>
                 <textarea id="edit-textarea" name="texto_padrao" style="display: none;">Atesto que o(a) paciente {{ agendamento.paciente.get_display_name }} esteve em consulta no dia {{ agendamento.data_agendamento|date:'d/m/Y' }}, e necessita de [[DIAS]] dias de afastamento de suas atividades normais, para sua convalescença.</textarea>
               </label>
@@ -199,7 +199,7 @@
         // Save the edited text
         var paciente = '{{ agendamento.paciente.get_display_name }}';
         var data = '{{ agendamento.data_agendamento|date:"d/m/Y" }}';
-        var dias = '<input class="input" name="dias_afastamento" type="text" placeholder="Dias" value="{{ atestado_medico_form.dias_afastamento.value|default_if_none:"" }}" />';
+        var dias = '<input class="input" name="dias_afastamento" type="number" placeholder="Dias" value="{{ atestado_medico_form.dias_afastamento.value|default_if_none:"" }}" />';
         
         textoAtestado.innerHTML = editTextarea.value
           .replace('{{ agendamento.paciente.get_display_name }}', paciente)
