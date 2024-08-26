@@ -6,7 +6,7 @@
 
 {% block content %}
   <div class="container">
-    <div class="text-center mb-4 text-white">
+    <div class="text-center mb-4 text-black">
       <h4>ATENDIMENTO</h4>
     </div>
 
@@ -47,7 +47,7 @@
       <form id="form-atend" class="ms-3" method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
-        <div class="row">
+        <div class="row" id="titles">
           <div class="col-md-4 mb-3">
             <h6>Anamnese</h6>
             <label for="{{ form.anamnese.id_for_label }}" class="form-label mb-3 label-title"></label>
@@ -67,7 +67,7 @@
           </div>
         </div>
 
-        <div class="row">
+        <div class="row" id="titles">
           <div class="col-md-4 mb-3">
             <h6>PDF Exames</h6>
             <label for="{{ form.pdf_exames.id_for_label }}" class="form-label mb-3 label-title custum-file-upload">
@@ -114,25 +114,26 @@
                 <input type="radio" name="tipo" id="simples" value="simples" />
             </div>
           </div>
+
           <div class="d-flex">
-              <div class="col-md-6 d-flex flex-column">
-                  <span class="text-center">PRESCRIÇÃO</span>
-                  <div class="form-group d-flex flex-column">{{ receita_medica_form.prescricao }}</div>
+            <div class="col-md-12 d-flex flex-column">
+              <span class="text-center">PRESCRIÇÃO</span>
+              <div class="form-group d-flex flex-column">{{ receita_medica_form.prescricao }}</div>
+            </div>
+            {% comment %} <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
+              <div class="form-group d-flex flex-column col-md-8">
+                <label for="dosagem">Dosagem</label>
+                {{ receita_medica_form.dosagem }}
               </div>
-              <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
-                  <div class="form-group d-flex flex-column col-md-8">
-                      <label for="dosagem">Dosagem</label>
-                      {{ receita_medica_form.dosagem }}
-                  </div>
-                  <div class="form-group d-flex flex-column col-md-8">
-                      <label for="via_administrativa">Via Administrativa</label>
-                      {{ receita_medica_form.via_administrativa }}
-                  </div>
-                  <div class="form-group d-flex flex-column col-md-8">
-                      <label for="modo_uso">Modo de Uso</label>
-                      {{ receita_medica_form.modo_uso }}
-                  </div>
+              <div class="form-group d-flex flex-column col-md-8">
+                <label for="via_administrativa">Via Administrativa</label>
+                {{ receita_medica_form.via_administrativa }}
               </div>
+              <div class="form-group d-flex flex-column col-md-8">
+                <label for="modo_uso">Modo de Uso</label>
+                {{ receita_medica_form.modo_uso }}
+              </div>
+            </div> {% endcomment %}
           </div>
         </div>
 
