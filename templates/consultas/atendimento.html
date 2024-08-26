@@ -177,12 +177,11 @@
           <div id="form-laudo">
             <div class="form-group">
               <label for="{{ laudo_form.descricao.id_for_label }}" style="width: 100%;">
-                <span id="texto-laudo">
-                  Laudo:
+
                   <span id="descricao">
-                    <textarea class="input form-control" name="descricao" placeholder="Descrição" rows="10" style="width: 100%;">{{ laudo_form.descricao.value|default_if_none:'' }}</textarea>
+                    <textarea class="form-control" name="descricao" placeholder="Descrição..." rows="5" style="width: 100%;">{{ laudo_form.descricao.value|default_if_none:'' }}</textarea>
                   </span>
-                </span>
+
               </label>
             </div>
             
