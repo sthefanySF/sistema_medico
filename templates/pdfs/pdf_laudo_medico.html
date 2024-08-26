@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laudo Médico</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=B612+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Fragment+Mono:ital@0;1&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        font-family: 'Poppins', sans-serif;
+      }
+      
+      header {
+        display: flex;
+        align-items: center;
+        padding: 10px 20px;
+        border-bottom: 1px solid #afafaf;
+      }
+      
+      .infoufac {
+        font-weight: bold;
+        text-align: center;
+        flex: 1;
+        margin-right: 40px;
+      }
+      
+      #logoufac {
+        width: 50px;
+        height: auto;
+        transform: translate(530%, -160%);
+      }
+      
+      h3 {
+        text-align: center;
+        margin-top: 50px;
+      }
+      
+      .content {
+        margin-top: 40px;
+      }
+      
+      .content p {
+        line-height: 1.6;
+      }
+      
+      .signature {
+        margin-top: 40px;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img id="logoufac" src="{% static 'imagens/logo_ufac_2.png' %}" alt="Logo UFAC" />
+      <div class="infoufac">
+        <p>UNIVERSIDADE FEDERAL DO ACRE</p>
+        <p>DIRETORIA DE SAÚDE E QUALIDADE DE VIDA</p>
+        <p>COORDENADORIA DE VIGILÂNCIA À SAÚDE DO SERVIDOR</p>
+        <p>SETOR MÉDICO PERICIAL</p>
+      </div>
+    </header>
+
+    <h3>LAUDO MÉDICO</h3>
+
+    <div class="content">
+     
+      <p>
+        <strong>{{ laudo.descricao }}</strong>
+      </p>
+      <p style="text-align: center;">Rio Branco - Acre, {{ laudo.data_laudo|date:'d/m/Y' }}</p>
+    </div>
+    <div class="signature">
+      <p>Profissional de Saúde:</p>
+      <p>
+        <strong>{{ laudo.profissional.nome }}</strong>
+      </p>
+      <label>Conselho/CMR: {{ laudo.profissional.conselho }}</label>
+    </div>
+  </body>
+</html>

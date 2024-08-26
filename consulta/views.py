@@ -1116,3 +1116,29 @@ def pdf_receita_medica(request, atendimento_id, tipo=None):
     response['Content-Disposition'] = f'inline; filename="receita_{paciente_nome}.pdf"'
     return response
 
+
+def pdf_laudo_medico(request, atendimento_id):
+    atendimento = get_object_or_404(Atendimento, id=atendimento_id)
+    agendamento = atendimento.agendamento
+    laudo = get_object_or_404(Laudo, agendamento=agendamento)
+    paciente_nome = laudo.paciente.nome.replace(' ', '_').lower()
+    
+    context = {
+        'atendimento': atendimento,
+        'laudo': laudo,
+    }
+
+    html = render_to_string('pdfs/pdf_laudo_medico.html', context)
+    
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
+        HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(target=temp_pdf.name)
+        
+        temp_pdf.seek(0)
+        pdf_content = temp_pdf.read()
+
+    os.remove(temp_pdf.name)
+    
+    response = HttpResponse(pdf_content, content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="laudo_{paciente_nome}.pdf"'
+    return response
+
