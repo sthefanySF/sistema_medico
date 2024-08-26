@@ -171,13 +171,28 @@
 
         <!-- Formulário de Laudo -->
         <h6 class="d-flex justify-content-center py-3">LAUDO</h6>
+
         <div class="laudo">
+          <div id="form-laudo">
             <div class="form-group">
-                <label for="{{ laudo_form.descricao.id_for_label }}">Descrição</label>
-                {{ laudo_form.descricao }}
+              <label for="{{ laudo_form.descricao.id_for_label }}" style="width: 100%;">
+                <span id="texto-laudo">
+                  Laudo:
+                  <span id="descricao">
+                    <textarea class="input form-control" name="descricao" placeholder="Descrição" rows="10" style="width: 100%;">{{ laudo_form.descricao.value|default_if_none:'' }}</textarea>
+                  </span>
+                </span>
+              </label>
             </div>
+            
+            <p style="text-align: center;">Rio Branco - Acre {{ agendamento.data_agendamento|date:'d/m/Y' }}</p>
+            
+            <div class="form-group">
+              <label>Profissional de Saúde:</label>
+              <p>{{ agendamento.profissional_saude.get_display_name }}</p>
+            </div>
+          </div>
         </div>
-      
         <div class="d-flex justify-content-center align-items-center mb-3">
           <button type="submit" class="btn btn-primary">Salvar Atendimento</button>
         </div>

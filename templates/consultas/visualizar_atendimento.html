@@ -339,7 +339,7 @@
 
     {% if laudos %}
         <div class="laudos">
-            <a href="#" target="_blank" class="print-btn" style="border: none; float: right;">
+            <a href="{% url 'pdf_laudo_medico' atendimento.id %}" target="_blank" class="print-btn" style="border: none; float: right;">
                 <button class="print-btn">
                     <span class="printer-wrapper">
                         <span class="printer-container">

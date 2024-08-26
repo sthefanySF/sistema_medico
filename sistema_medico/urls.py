@@ -67,7 +67,7 @@ urlpatterns = [
     path('atendimento/<int:atendimento_id>/atestado/', pdf_atestado_medico, name='pdf_atestado_medico'),
     path('atendimento/<int:atendimento_id>/receita/', pdf_receita_medica, name='pdf_receita_medica'),
     path('pdf_receita_medica/<int:atendimento_id>/<str:tipo>/', pdf_receita_medica, name='pdf_receita_medica_controle'),
-
+    path('pdf_laudo/<int:atendimento_id>/', pdf_laudo_medico, name='pdf_laudo_medico'),
 
 
     
