@@ -10,8 +10,9 @@
     
     {% if messages %}{% include 'messages.html'%}{% endif %}
     
-    <h4 class="text-center mb-4 text-white">Prontuário Médico de {{ paciente.nome }} <span
-            style="font-size: smaller; font-weight:lighter ;">({{ paciente.tipo_paciente }})</span></h4>
+    <h4 class="text-center mb-4 text-black">Prontuário Médico de {{ paciente.nome }} 
+        <span style="font-size: smaller; font-weight:lighter ;">({{ paciente.tipo_paciente }})</span>
+    </h4>
 
     <div class="d-flex justify-content-between pb-3 mb-4 pt-" id="glass">
         <a class="btn btn-primary" href="{% url 'pacienteListagem' %}" style="height: fit-content;">Voltar</a>
@@ -53,22 +54,6 @@
         <a href="{% url 'pdf_prontuario_medico' paciente.id %}?medicos={{ medicos_ids|join:',' }}" target="_blank"
            class="print-btn" style="border: none;">
             <button class="print-btn">
-        <span class="printer-wrapper">
-          <span class="printer-container">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 92 75">
-              <path stroke-width="5" stroke="black"
-                    d="M12 37.5H80C85.2467 37.5 89.5 41.7533 89.5 47V69C89.5 70.933 87.933 72.5 86 72.5H6C4.067 72.5 2.5 70.933 2.5 69V47C2.5 41.7533 6.75329 37.5 12 37.5Z"></path>
-              <mask fill="white" id="path-2-inside-1_30_7">
-                <path d="M12 12C12 5.37258 17.3726 0 24 0H57C70.2548 0 81 10.7452 81 24V29H12V12Z"></path>
-              </mask>
-              <path mask="url(#path-2-inside-1_30_7)" fill="black"
-                    d="M7 12C7 2.61116 14.6112 -5 24 -5H57C73.0163 -5 86 7.98374 86 24H76C76 13.5066 67.4934 5 57 5H24C20.134 5 17 8.13401 17 12H7ZM81 29H12H81ZM7 29V12C7 2.61116 14.6112 -5 24 -5V5C20.134 5 17 8.13401 17 12V29H7ZM57 -5C73.0163 -5 86 7.98374 86 24V29H76V24C76 13.5066 67.4934 5 57 5V-5Z"></path>
-              <circle fill="black" r="3" cy="49" cx="78"></circle>
-            </svg>
-          </span>
-
-          <span class="printer-page-wrapper"><span class="printer-page"></span></span>
-        </span>
                 Print
             </button>
         </a>
@@ -118,12 +103,12 @@
     </dl>
 
     
-    {% if atendimentos %}
+
         <div>
             <button id="print-selected" class="btn btn-primary">Imprimir Selecionados</button>
 
         </div>
-    {% endif %}
+
         
     
     <script>
@@ -147,6 +132,40 @@
 
     <script>
         //captura o prontuario selecionado
+        document.getElementById('print-selected').addEventListener('click', function (e) {
+            e.preventDefault();
+            var selectedAtendimentos = Array.from(document.querySelectorAll('.select-atendimento:checked')).map(function (input) {
+                return input.value;
+            });
+            var url = "{% url 'pdf_prontuario_medico' paciente.id %}?medicos={{ medicos_ids|join:',' }}&atendimentos=" + selectedAtendimentos.join(',');
+            window.open(url, '_blank');
+        });
+
+        // capturara id do medico
+        document.getElementById('filtro-form').addEventListener('submit', function (e) {
+            e.preventDefault()
+            var medicos = Array.from(document.querySelectorAll('input[name="medicos"]:checked')).map(function (input) {
+                return input.value
+            })
+            var url = "{% url 'pdf_prontuario_medico' paciente.id %}?medicos=" + medicos.join(',')
+            document.querySelector('.print-btn').href = url
+        })
+    </script>
+
+    <script>
+        document.querySelectorAll('.select-atendimento').forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
+                var selectedAtendimentos = document.querySelectorAll('.select-atendimento:checked');
+                var printButton = document.getElementById('print-selected');
+    
+                if (selectedAtendimentos.length > 0) {
+                    printButton.style.display = 'block'; // Exibe o botão
+                } else {
+                    printButton.style.display = 'none'; // Oculta o botão
+                }
+            });
+        });
+    
         document.getElementById('print-selected').addEventListener('click', function (e) {
             e.preventDefault();
             var selectedAtendimentos = Array.from(document.querySelectorAll('.select-atendimento:checked')).map(function (input) {
@@ -195,17 +214,6 @@
         })
     </script>
 
-    <script>// capturara id do medico
-    document.getElementById('filtro-form').addEventListener('submit', function (e) {
-        e.preventDefault()
-        var medicos = Array.from(document.querySelectorAll('input[name="medicos"]:checked')).map(function (input) {
-            return input.value
-        })
-        var url = "{% url 'pdf_prontuario_medico' paciente.id %}?medicos=" + medicos.join(',')
-        document.querySelector('.print-btn').href = url
-    })
-    </script>
-
     <script>// botão exibir todos 
     document.getElementById('exibir-todos-btn').addEventListener('click', function (e) {
         e.preventDefault()
@@ -232,5 +240,15 @@
             });
         });
     </script>
+
+    <style>
+        #print-selected {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: none; /* Inicialmente oculto */
+            z-index: 1000; /* Para garantir que fique acima de outros elementos */
+        }
+    </style>
 
 {% endblock %}
