@@ -88,7 +88,11 @@ urlpatterns = [
     path('editar_paciente/', views.editar_paciente, name='editar_paciente'),#modal editar
     path('editar_profissionaldasaude/', views.editar_profissionaldasaude, name='editar_profissionaldasaude'),#modal editar
 
-    # Home
+
+    # Excluir arquivos de pacientes enviados em 'Atendimentos'
+    path('arquivo/excluir/<int:arquivo_id>/<int:atendimento_id>/', excluir_arquivo, name='excluir_arquivo'),
+
+                  # Home
     # path('', views.home, name='home'),
 
 

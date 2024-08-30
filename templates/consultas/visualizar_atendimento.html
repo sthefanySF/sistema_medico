@@ -130,6 +130,7 @@
                         <dd class="col-sm-9">{{ atendimento.agendamento.data_agendamento|date:'d/m/Y' }}</dd>
                     </div>
 
+                
                     <!-- PDF Exames -->
                     <div class="col-12 d-flex border-bottom py-2">
                         <dt class="col-sm-2">PDF Exames:</dt>&nbsp;&nbsp;
@@ -150,53 +151,92 @@
                         {% endif %}
                     </div>          
                     
+                
                     <!-- Enviar de Arquivos -->
-                    <div class="col-12">
-                        <h5>Arquivos:</h5>
-                        
-                        <form method="post" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <div class="col-md-5" style="width: 100%;">
-                                {{ form.as_p }}
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-sm">Enviar</button>
-                        </form>
-                    </div>
+                    <div style="background-color: #ffffff; padding: 15px; border-radius: 5px; 
+                            border: 1px solid #dee2e6" class="mt-5">
+                    
+                        <div class="col-6 mb-5">
+                            <h5>Arquivos:</h5>
 
-                    <div class="col-12 mt-3">
-                        <!-- Div que ativa o collapse -->
-                        <div data-bs-toggle="collapse" data-bs-target="#collapseArquivos" aria-expanded="false" aria-controls="collapseArquivos" style="cursor: pointer; background-color: #fff; padding: 10px; border-radius: 5px; display: flex; align-items: center; justify-content: space-between; box-shadow: 4px 4px 10px -8px;">
-                            <h5 style="margin: 0;">Arquivos Enviados</h5>
-                            <i class="fa fa-chevron-down" id="collapseIcon"></i>
+                            <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="col-md-5" style="width: 100%;">
+                                    {{ form.as_p }}
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-sm">Enviar</button>
+                            </form>
                         </div>
-                        <div id="collapseArquivos" class="collapse" style="box-shadow: 4px 4px 10px -8px;">
-                            {% if arquivos %}
-                                <table class="table table-hover mt-3">
-                                    <thead>
+
+                    
+                        <!-- Div que ativa o collapse -->
+                        <div class="col-12 mt-3">
+                            <div data-bs-toggle="tooltip" data-bs-placement="bottom"
+                                 title="Clique para visualizar">
+
+                                <div class="mb-2" data-bs-toggle="collapse" data-bs-target="#collapseArquivos" aria-expanded="false"
+                                     aria-controls="collapseArquivos" style="cursor: pointer; background-color: #fff; 
+                                     padding: 10px; border-radius: 5px; display: flex; align-items: center; 
+                                     justify-content: space-between; box-shadow: 4px 4px 10px -8px;">
+
+                                    <h5 style="margin: 0;">
+                                        Arquivos Enviados
+                                    </h5>
+
+                                    <i class="fa fa-chevron-down" id="collapseIcon"></i>
+                                </div>
+                            </div>
+
+                            <div id="collapseArquivos" class="collapse" style="box-shadow: 4px 4px 10px -8px;">
+                                {% if arquivos %}
+                                    <table class="table table-hover mt-3">
+                                        <thead>
                                         <tr>
                                             <th>Nome do Arquivo</th>
                                             <th>Data de Envio</th>
+                                            <th></th>
                                         </tr>
-                                    </thead>
-                                    <tbody>
+                                        </thead>
+                                        <tbody>
                                         {% for arquivo in arquivos %}
                                             <tr>
                                                 <td>
-                                                    <a href="{{ arquivo.arquivo.url }}" target="_blank"><i class="fa fa-file-archive-o"></i>&nbsp;&nbsp;{{ forloop.counter }}. {{ arquivo.arquivo.url }}</a>
+                                                    <a href="{{ arquivo.arquivo.url }}" target="_blank">
+                                                        <i class="fa fa-file-archive-o"></i>&nbsp;&nbsp;
+                                                        {{ forloop.counter }}. {{ arquivo.arquivo.url }}</a>
                                                 </td>
                                                 <td>{{ arquivo.data_envio|date:"d/m/Y H:i" }}</td>
+
+                                                {# Excluir arquivos. Modificar para poder selecionar vários e excluir #}
+                                                <td>
+                                                    <form action="{% url 'excluir_arquivo' arquivo_id=arquivo.id atendimento_id=atendimento.id %}"
+                                                          method="post" style="display: inline;">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-danger btn-sm"
+                                                                onclick="return confirm('Deseja excluir este arquivo?');">
+                                                            Excluir&nbsp;&nbsp;<i class="fa fa-trash-o"></i>
+
+                                                        </button>
+                                                    </form>
+                                                </td>
+
+
                                             </tr>
                                         {% endfor %}
-                                    </tbody>
-                                </table>
-                            {% else %}
-                                <p class="text-muted mt-3" style="background-color: #fff; padding: 10px;">Nenhum arquivo enviado.</p>
-                            {% endif %}
+                                        </tbody>
+                                    </table>
+                                {% else %}
+                                    <p class="text-muted mt-3" style="background-color: #fff; padding: 10px;">
+                                        Nenhum arquivo enviado.
+                                    </p>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                     <!-- Fim do Envio de Arquivos -->
 
-                    <h6 class="d-flex justify-content-center py-3">RESULTADOS</h6>
+                
+                    <h6 class="d-flex justify-content-center py-3" style="margin-top: 55px;">RESULTADOS</h6>
 
                     <dl class="p-3">
                         <dt class="border-bottom">Anamnese:</dt>
