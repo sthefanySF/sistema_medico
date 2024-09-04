@@ -52,9 +52,13 @@ urlpatterns = [
     path('atendimento/criar/<int:agendamento_id>', AtendimentoCreate.as_view(), name='criar_atendimento'),
     path('atendimentos/', lista_atendimentos, name='listaAtendimentos'),
     path('atendimentos/<int:atendimento_id>/', visualizar_atendimento, name='visualizarAtendimento'),
-    path('confirmar-atendimento/<int:agendamento_id>/', confirmar_atendimento, name='confirmar_atendimento'),
-    path('download-comprovante-atendimento/<int:atendimento_id>/', download_comprovante_atendimento, name='download_comprovante_atendimento'),
-    path('visualizar-comprovante-atendimento/<int:atendimento_id>/', views.visualizar_comprovante_atendimento, name='visualizar_comprovante_atendimento'),
+    path('confirmar_atendimento/<int:agendamento_id>/', confirmar_atendimento, name='confirmar_atendimento'),
+
+    path('download_comprovante_atendimento/<int:atendimento_id>/', download_comprovante_atendimento,
+         name='download_comprovante_atendimento'),
+
+    path('visualizar_comprovante_atendimento/<int:atendimento_id>/', views.visualizar_comprovante_atendimento,
+         name='visualizar_comprovante_atendimento'),
     
     # Prontuario
     path('prontuario_medico/<int:paciente_id>/', views.prontuario_medico, name='prontuario_medico'),
