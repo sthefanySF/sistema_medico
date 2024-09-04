@@ -54,18 +54,18 @@
               <div class="card card-body" id="card-body">
                   
                 <div class="info-block">
-                  <p>Data de Nascimento: {{ paciente.data_nascimento|date:'d/m/Y' }}</p>
-                  <p>E-mail: {{ paciente.email }}</p>
+                    <p><b>Data de Nascimento:</b> {{ paciente.data_nascimento|date:'d/m/Y' }}</p>
+                    <p><b>E-mail:</b> {{ paciente.email|default:'-----' }}</p>
                 </div>
                   
                 <div class="info-block">
-                  <p>RG: {{ paciente.rg }}</p>
-                  <p>CPF: {{ paciente.cpf }}</p>
+                    <p><b>RG:</b> {{ paciente.rg|default:'-----' }}</p>
+                    <p><b>CPF:</b> {{ paciente.cpf }}</p>
                 </div>
                   
                 <div class="info-block">
-                  <p>Tipo de paciente: {{ paciente.tipo_paciente }}</p>
-                  <p>Matrícula: {{ paciente.matricula }}</p>
+                    <p><b>Tipo de paciente:</b> {{ paciente.tipo_paciente }}</p>
+                    <p><b>Matrícula:</b> {{ paciente.matricula }}</p>
                 </div>
                   
                 <div class="btn-group" role="group" aria-label="Ações">
@@ -108,6 +108,7 @@
             </div>
           </div>
         </div>
+        <!-- Fim -->
 
           
         <!-- Modal de Edição -->
@@ -319,8 +320,11 @@
             </div>
           </div>
         </div>
+        <!-- Fim -->
+          
       {% endfor %}
 
+      
       <!-- Modal cadastrar -->
       <div class="modal fade" id="cadastroModal" tabindex="-1" aria-labelledby="cadastroModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" id="glass">
@@ -450,6 +454,8 @@
           </div>
         </div>
       </div>
+      <!-- Fim -->
+    
     </tbody>
   </table>
 
@@ -524,7 +530,9 @@
       })
     }
   </script>
-
+    
+    
+{# Pesquisar Paciente #}
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     $(document).ready(function () {
