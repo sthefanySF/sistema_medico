@@ -6,7 +6,7 @@ from .models import *
 
 class CampoPaciente(admin.ModelAdmin):
     search_fields = ['nome', 'cpf']
-    list_display = ('nome', 'cpf', 'data_nascimento', 'email')
+    list_display = ('nome', 'nome_social', 'cpf', 'data_nascimento', 'email')
 
 
 

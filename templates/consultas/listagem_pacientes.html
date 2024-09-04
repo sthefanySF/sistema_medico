@@ -12,6 +12,7 @@
   <h4 class="text-center mb-3 text-black">LISTA DE PACIENTES</h4>
     
   <div class="mt-2 mb-4" id="glass">
+  
     <div class="d-flex justify-content-between pb-3">
       <a class="btn btn-primary" href="{% url 'agendamentoListagem' %}">Voltar</a>
       <a href="#" class="btn btn-primary btn-expand-all">Expandir todos</a>
@@ -29,109 +30,160 @@
         <th colspan="7" style="text-align: center;">Nome</th>
       </tr>
     </thead>
+  
     <tbody class="collapse-table">
       {% for paciente in pacientes %}
-        <tr data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
+        <tr data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" 
+            aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
           
           <td class="paciente-nome" colspan="3">
             {{ paciente.get_display_name }}
             <span style="color: #bbbbbb">- {{ paciente.get_sexo_display }}</span>
             <span style="display: none;">{{ paciente.data_nascimento|date:'d/m/Y' }}-{{ paciente.email }}-{{ paciente.rg }}-{{ paciente.cpf }}-{{ paciente.tipo_paciente }}-{{ paciente.matricula }}</span>
             <a href="#" aria-expanded="false" class="accordion-toggle"></a>
-            <a href="{% url 'prontuario_medico' paciente.id %}" class="btn btn-primary btn-prontuario" style="display: block; float: right; margin-right: 20px;">Prontuário</a>
+            
+              <a href="{% url 'prontuario_medico' paciente.id %}" class="btn btn-primary btn-prontuario" style="display: block; float: right; margin-right: 20px;">
+                Prontuário
+            </a>
           </td>
         </tr>
+          
         <tr>
           <td colspan="3" style="border: transparent;">
             <div class="collapse" id="collapse{{ forloop.counter }}">
               <div class="card card-body" id="card-body">
+                  
                 <div class="info-block">
                   <p>Data de Nascimento: {{ paciente.data_nascimento|date:'d/m/Y' }}</p>
                   <p>E-mail: {{ paciente.email }}</p>
                 </div>
+                  
                 <div class="info-block">
                   <p>RG: {{ paciente.rg }}</p>
                   <p>CPF: {{ paciente.cpf }}</p>
                 </div>
+                  
                 <div class="info-block">
                   <p>Tipo de paciente: {{ paciente.tipo_paciente }}</p>
                   <p>Matrícula: {{ paciente.matricula }}</p>
                 </div>
+                  
                 <div class="btn-group" role="group" aria-label="Ações">
                   {% comment %} <a href="{% url 'pacienteEditar' paciente.id %}" class="btn btn-primary">Editar</a> {% endcomment %}
                   <button class="btn btn-primary ms-1" data-bs-toggle="modal" data-bs-target="#editarModal{{ paciente.id }}">Editar</button>
                   <button type="button" class="btn btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#excluirModal{{ paciente.id }}">Excluir</button>
                 </div>
+                  
               </div>
             </div>
           </td>
         </tr>
+          
+          
         <!-- Modal de Exclusão -->
-        <div class="modal fade" id="excluirModal{{ paciente.id }}" tabindex="-1" aria-labelledby="excluirModalLabel{{ paciente.id }}" aria-hidden="true">
+        <div class="modal fade" id="excluirModal{{ paciente.id }}" tabindex="-1" 
+             aria-labelledby="excluirModalLabel{{ paciente.id }}" aria-hidden="true">
           <div class="modal-dialog" id="glass">
             <div class="modal-content">
+                
               <div class="modal-header">
                 <h5 class="modal-title" id="excluirModalLabel{{ paciente.id }}">Confirmar Exclusão</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
+                
               <div class="modal-body">
                 <p>Você tem certeza de que deseja excluir este paciente?</p>
               </div>
+                
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger" onclick="excluirPaciente({{ paciente.id }})">Confirmar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancelar
+                </button>
+                  
+                <button type="button" class="btn btn-danger" onclick="excluirPaciente({{ paciente.id }})">
+                    Confirmar
+                </button>
               </div>
+                
             </div>
           </div>
         </div>
 
+          
         <!-- Modal de Edição -->
-        <div class="modal fade" id="editarModal{{ paciente.id }}" tabindex="-1" aria-labelledby="editarModalLabel{{ paciente.id }}" aria-hidden="true">
+        <div class="modal fade" id="editarModal{{ paciente.id }}" tabindex="-1" 
+             aria-labelledby="editarModalLabel{{ paciente.id }}" aria-hidden="true">
           <div class="modal-dialog modal-lg" id="glass">
             <div class="modal-content">
+            
               <div class="modal-header">
                 <h5 class="modal-title" id="editarModalLabel{{ paciente.id }}">Editar Usuário</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
+            
               <div class="modal-body">
                 <form id="editarForm{{ paciente.id }}" method="post" action="{% url 'editar_paciente' %}">
                   {% csrf_token %}
+                
                   <input type="hidden" name="id" value="{{ paciente.id }}" />
                   <div class="m-4">
                     <div class="m-2">
                       <div class="col-sm-12" id="pessoais">
+                      
                         <div class="col mb-3">
-                          <label for="nome{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Nome</b></label>
-                          <input type="text" class="form-control" id="nome{{ paciente.id }}" name="nome" value="{{ paciente.nome }}" />
+                          <label for="nome{{ paciente.id }}" class="col-sm-2 col-form-label">
+                              <b>Nome</b>
+                          </label>
+                          <input type="text" class="form-control" id="nome{{ paciente.id }}" name="nome" 
+                                 value="{{ paciente.nome }}" />
                         </div>
+                      
+                      
+                        {% if paciente.nome_social %}
+                            <div class="col mb-3">
+                                <label for="nome_social{{ paciente.id }}" class="col-sm-12 col-form-label">
+                                    <b>Nome Social</b>
+                                </label>
+                                <input type="text" class="form-control" id="nome_social{{ paciente.id }}"
+                                       name="nome_social" value="{{ paciente.nome_social }}"/>
+                            </div>
+                        {% endif %}
+
 
                         <div class="col mb-3">
-                          <label for="nome_social{{ paciente.id }}" class="col-sm-12 col-form-label"><b>Nome Social</b></label>  
-                          <input type="text" class="form-control" id="nome_social{{ paciente.id }}" name="nome_social" value="{{ paciente.nome_social|default_if_none:'' }}" />
-                        </div>
-
-
-                        <div class="col mb-3">
-                          <label for="email{{ paciente.id }}" class="col-sm-2 col-form-label"><b>E-mail</b></label>
-                          <input type="email" class="form-control" id="email{{ paciente.id }}" name="email" value="{{ paciente.email }}" />
+                          <label for="email{{ paciente.id }}" class="col-sm-2 col-form-label">
+                              <b>E-mail</b>
+                          </label>
+                            
+                          <input type="email" class="form-control" id="email{{ paciente.id }}" name="email"
+                                 value="{{ paciente.email }}" />
                         </div>
 
                         <div class="row mb-3">
                           <div class="col-sm-6">
-                            <label for="cpf{{ paciente.id }}" class="col-sm-2 col-form-label"><b>CPF</b></label>
-                            <input type="text" class="form-control" id="cpf{{ paciente.id }}" name="cpf" value="{{ paciente.cpf }}" />
+                            <label for="cpf{{ paciente.id }}" class="col-sm-2 col-form-label">
+                                <b>CPF</b>
+                            </label>
+                            <input type="text" class="form-control" id="cpf{{ paciente.id }}" 
+                                   name="cpf" value="{{ paciente.cpf }}" />
                           </div>
 
                           <div class="col-sm-6">
-                            <label for="rg{{ paciente.id }}" class="col-sm-2 col-form-label"><b>RG</b></label>
-                            <input type="text" class="form-control" id="rg{{ paciente.id }}" name="rg" value="{{ paciente.rg }}" />
+                            <label for="rg{{ paciente.id }}" class="col-sm-2 col-form-label">
+                                <b>RG</b>
+                            </label>
+                            <input type="text" class="form-control" id="rg{{ paciente.id }}" name="rg" 
+                                   value="{{ paciente.rg|default:'-----' }}" />
                           </div>
                         </div>
 
                         <div class="row mb-3">
                           <div class="col-sm-6">
-                            <label for="data_nascimento{{ paciente.id }}" class="col-sm-6 col-form-label"><b>Data Nascimento</b></label>
-                            <input type="date" class="form-control" id="data_nascimento{{ paciente.id }}" name="data_nascimento" value="{{ paciente.data_nascimento|date:'Y-m-d' }}" />
+                            <label for="data_nascimento{{ paciente.id }}" class="col-sm-6 col-form-label">
+                                <b>Data Nascimento</b>
+                            </label>
+                            <input type="date" class="form-control" id="data_nascimento{{ paciente.id }}" 
+                                   name="data_nascimento" value="{{ paciente.data_nascimento|date:'Y-m-d' }}" />
                           </div>
 
                           <div class="col-sm-6">
@@ -142,23 +194,28 @@
                               <option value="F" {% if paciente.sexo == 'O' %} selected {% endif %}>Outro</option>
                             </select>
                           </div>
+                        
                         </div>
                       </div>
 
                       <div class="col-sm-12" id="endereco">
                         <div class="col mb-3">
                           <label for="bairro{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Bairro</b></label>
-                          <input type="text" class="form-control" id="bairro{{ paciente.id }}" name="bairro" value="{{ paciente.bairro }}" />
+                          <input type="text" class="form-control" id="bairro{{ paciente.id }}" 
+                                 name="bairro" value="{{ paciente.bairro|default:'-----' }}" />
                         </div>
 
                         <div class="row bm-3">
                           <div class="col-sm-6">
                             <label for="numero{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Número</b></label>
-                            <input type="text" class="form-control" id="numero{{ paciente.id }}" name="numero" value="{{ paciente.numero }}" />
+                            <input type="text" class="form-control" id="numero{{ paciente.id }}" name="numero" 
+                                   value="{{ paciente.numero|default:'-----' }}" />
                           </div>
+                            
                           <div class="col-sm-6">
                             <label for="cidade{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Cidade</b></label>
-                            <input type="text" class="form-control" id="cidade{{ paciente.id }}" name="cidade" value="{{ paciente.cidade }}" />
+                            <input type="text" class="form-control" id="cidade{{ paciente.id }}" name="cidade" 
+                                   value="{{ paciente.cidade }}" />
                           </div>
                         </div>
 
@@ -195,47 +252,69 @@
                               <option value="TO" {% if paciente.uf == 'TO' %} selected {% endif %}>Tocantins</option>
                             </select>
                           </div>
+                        
                           <div class="col-sm-6">
-                            <label for="cep{{ paciente.id }}" class="col-sm-2 col-form-label"><b>CEP</b></label>
-                            <input type="text" class="form-control" id="cep{{ paciente.id }}" name="cep" value="{{ paciente.cep }}" />
+                            <label for="cep{{ paciente.id }}" class="col-sm-2 col-form-label">
+                                <b>CEP</b>
+                            </label>
+                            <input type="text" class="form-control" id="cep{{ paciente.id }}" name="cep" 
+                                   value="{{ paciente.cep }}" />
                           </div>
                         </div>
 
                         <div class="col mb-3">
                           <label for="telefone{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Telefone</b></label>
-                          <input type="text" class="form-control" id="telefone{{ paciente.id }}" name="ddd_telefone" value="{{ paciente.ddd_telefone }}" />
+                          <input type="text" class="form-control" id="telefone{{ paciente.id }}" name="ddd_telefone" 
+                                 value="{{ paciente.ddd_telefone|default:'-----' }}" />
                         </div>
 
                         <div class="col mb-3">
-                          <label for="complemento{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Complemento</b></label>
-                          <input type="text" class="form-control" id="complemento{{ paciente.id }}" name="complemento" value="{{ paciente.complemento }}" />
+                          <label for="complemento{{ paciente.id }}" class="col-sm-2 col-form-label">
+                              <b>Complemento</b>
+                          </label>
+                          <input type="text" class="form-control" id="complemento{{ paciente.id }}" name="complemento" 
+                                 value="{{ paciente.complemento|default:'-----' }}" />
                         </div>
                       </div>
 
                       <div class="col-sm-12" id="cargo">
                         <div class="col mb-3">
-                          <label for="matricula{{ paciente.id }}" class="col-sm-6 col-form-label"><b>Matricula Siape</b></label>
-                          <input type="text" class="form-control" id="matricula{{ paciente.id }}" name="matricula" value="{{ paciente.matricula }}" />
+                          <label for="matricula{{ paciente.id }}" class="col-sm-6 col-form-label">
+                              <b>Matricula Siape</b>
+                          </label>
+                          <input type="text" class="form-control" id="matricula{{ paciente.id }}" name="matricula" 
+                                 value="{{ paciente.matricula }}" />
                         </div>
 
                         <div class="row bm-3">
                           <div class="col-sm-6">
-                            <label for="tipo_paciente{{ paciente.id }}" class="col-sm-6 col-form-label"><b>Tipo de Paciente</b></label>
-                            <input type="text" class="form-control" id="tipo_paciente{{ paciente.id }}" name="tipo_paciente" value="{{ paciente.tipo_paciente }}" />
+                            <label for="tipo_paciente{{ paciente.id }}" class="col-sm-6 col-form-label">
+                                <b>Tipo de Paciente</b>
+                            </label>
+                            <input type="text" class="form-control" id="tipo_paciente{{ paciente.id }}" 
+                                   name="tipo_paciente" value="{{ paciente.tipo_paciente }}" />
                           </div>
                           <div class="col-sm-6">
-                            <label for="cargo_funcao{{ paciente.id }}" class="col-sm-2 col-form-label"><b>Cargo/Função</b></label>
-                            <input type="text" class="form-control" id="cargo_funcao{{ paciente.id }}" name="cargo_funcao" value="{{ paciente.cargo_funcao }}" />
+                            <label for="cargo_funcao{{ paciente.id }}" class="col-sm-2 col-form-label">
+                                <b>Cargo/Função</b>
+                            </label>
+                            <input type="text" class="form-control" id="cargo_funcao{{ paciente.id }}" 
+                                   name="cargo_funcao" value="{{ paciente.cargo_funcao }}" />
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
+                
                   <div class="modal-footer d-flex justify-content-center align-items-center">
-                    <button type="button" class="btn btn-primary" onclick="editarPaciente({{ paciente.id }})">Salvar Alterações</button>
+                    <button type="button" class="btn btn-primary" onclick="editarPaciente({{ paciente.id }})">
+                        Salvar Alterações
+                    </button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                   </div>
+                
                 </form>
+              
               </div>
             </div>
           </div>
