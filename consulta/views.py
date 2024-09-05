@@ -802,6 +802,13 @@ class AtendimentoCreate(CreateView):
         self.object = None
         agendamento_id = self.kwargs['agendamento_id']
         agendamento = get_object_or_404(Agendamento, id=agendamento_id)
+
+        # Verifica se já existe um atendimento para este agendamento
+        atendimento_existente = Atendimento.objects.filter(agendamento=agendamento).first()
+
+        if atendimento_existente:
+            messages.error(self.request, 'Já existe um atendimento para este agendamento.')
+            return redirect('confirmar_atendimento', agendamento_id=agendamento.id)
         
         atendimento_form = AtendimentoForm(request.POST, request.FILES)
         atestado_medico_form = AtestadoMedicoForm(request.POST, agendamento=agendamento)
@@ -1150,5 +1157,21 @@ def pdf_laudo_medico(request, atendimento_id):
     response['Content-Disposition'] = f'inline; filename="laudo_{paciente_nome}.pdf"'
     return response
 
+
 def restricao_de_acesso(request):
     return render(request, 'consultas/restricao.html')
+
+
+def excluir_arquivo(request, arquivo_id, atendimento_id):
+    arquivo = get_object_or_404(ArquivoPaciente, id=arquivo_id)
+
+    if request.method == 'POST':
+        arquivo.delete()
+        messages.success(request, 'Arquivo excluído!')
+        return redirect('visualizarAtendimento', atendimento_id=atendimento_id)
+    else:
+        messages.error(request, 'Falha ao excluir o arquivo! Tente novamente.')
+
+    return redirect('visualizarAtendimento', atendimento_id=atendimento_id)
+
+

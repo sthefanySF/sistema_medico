@@ -52,9 +52,13 @@ urlpatterns = [
     path('atendimento/criar/<int:agendamento_id>', AtendimentoCreate.as_view(), name='criar_atendimento'),
     path('atendimentos/', lista_atendimentos, name='listaAtendimentos'),
     path('atendimentos/<int:atendimento_id>/', visualizar_atendimento, name='visualizarAtendimento'),
-    path('confirmar-atendimento/<int:agendamento_id>/', confirmar_atendimento, name='confirmar_atendimento'),
-    path('download-comprovante-atendimento/<int:atendimento_id>/', download_comprovante_atendimento, name='download_comprovante_atendimento'),
-    path('visualizar-comprovante-atendimento/<int:atendimento_id>/', views.visualizar_comprovante_atendimento, name='visualizar_comprovante_atendimento'),
+    path('confirmar_atendimento/<int:agendamento_id>/', confirmar_atendimento, name='confirmar_atendimento'),
+
+    path('download_comprovante_atendimento/<int:atendimento_id>/', download_comprovante_atendimento,
+         name='download_comprovante_atendimento'),
+
+    path('visualizar_comprovante_atendimento/<int:atendimento_id>/', views.visualizar_comprovante_atendimento,
+         name='visualizar_comprovante_atendimento'),
     
     # Prontuario
     path('prontuario_medico/<int:paciente_id>/', views.prontuario_medico, name='prontuario_medico'),
@@ -88,10 +92,13 @@ urlpatterns = [
     path('editar_paciente/', views.editar_paciente, name='editar_paciente'),#modal editar
     path('editar_profissionaldasaude/', views.editar_profissionaldasaude, name='editar_profissionaldasaude'),#modal editar
 
+
     # Restrição de acesso
     path('restricao/', restricao_de_acesso, name='restricao_de_acesso'),
     
-    
+    # Excluir arquivos de pacientes enviados em 'Atendimentos'
+    path('arquivo/excluir/<int:arquivo_id>/<int:atendimento_id>/', excluir_arquivo, name='excluir_arquivo'),
+
     # Home
     # path('', views.home, name='home'),
 
