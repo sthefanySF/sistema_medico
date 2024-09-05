@@ -771,14 +771,22 @@ def criar_atendimento(request, agendamento_id):
 
 from django.utils import timezone
 
-class AtendimentoCreate(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+class AtendimentoCreate(CreateView):
     model = Atendimento
     form_class = AtendimentoForm
     template_name = 'consultas/atendimento.html'
     
-    def test_func(self):
-        user = self.request.user
-        return not is_administrativo(user)
+    def dispatch(self, request, *args, **kwargs):
+        # Verifica se o usuário pertence ao grupo 'administrativo'
+        if request.user.groups.filter(name='administrativo').exists():
+            # Se a solicitação for AJAX, retorna uma resposta JSON para exibir o modal
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'error': 'access_denied'}, status=403)
+            else:
+                # Se não for uma solicitação AJAX, redireciona para a página de restrição
+                return redirect('restricao_de_acesso')
+        
+        return super().dispatch(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -1142,3 +1150,5 @@ def pdf_laudo_medico(request, atendimento_id):
     response['Content-Disposition'] = f'inline; filename="laudo_{paciente_nome}.pdf"'
     return response
 
+def restricao_de_acesso(request):
+    return render(request, 'consultas/restricao.html')

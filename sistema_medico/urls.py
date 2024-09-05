@@ -88,6 +88,10 @@ urlpatterns = [
     path('editar_paciente/', views.editar_paciente, name='editar_paciente'),#modal editar
     path('editar_profissionaldasaude/', views.editar_profissionaldasaude, name='editar_profissionaldasaude'),#modal editar
 
+    # Restrição de acesso
+    path('restricao/', restricao_de_acesso, name='restricao_de_acesso'),
+    
+    
     # Home
     # path('', views.home, name='home'),
 
