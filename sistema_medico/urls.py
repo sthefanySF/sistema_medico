@@ -93,10 +93,13 @@ urlpatterns = [
     path('editar_profissionaldasaude/', views.editar_profissionaldasaude, name='editar_profissionaldasaude'),#modal editar
 
 
+    # Restrição de acesso
+    path('restricao/', restricao_de_acesso, name='restricao_de_acesso'),
+    
     # Excluir arquivos de pacientes enviados em 'Atendimentos'
     path('arquivo/excluir/<int:arquivo_id>/<int:atendimento_id>/', excluir_arquivo, name='excluir_arquivo'),
 
-                  # Home
+    # Home
     # path('', views.home, name='home'),
 
 

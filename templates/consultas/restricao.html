@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Restrição de acesso
+{% endblock %}
+
+{% block content %}
+
+
+
+<div class="content">
+    <!-- Ícone de Cadeado, substitua por um ícone apropriado ou uma imagem de cadeado -->
+    <img src="lock-icon.png" alt="Cadeado" class="icon">
+    
+    <h1 class="title">Acesso Restrito</h1>
+    <p class="description">
+        Desculpe, mas você não tem permissão para acessar esta página. Por favor, entre em contato com o administrador
+        do sistema para obter mais informações.
+    </p>
+    <div class="button-container">
+        <a href="#" class="back-button">Voltar</a>
+    </div>
+</div>
+
+
+<style>
+    .content {
+        max-width: 400px;
+        text-align: center; /* Centraliza o texto */
+        background-color: #ffffff; /* Cor de fundo do conteúdo */
+        padding: 30px; /* Espaçamento interno */
+        border-radius: 8px; /* Borda arredondada */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    }
+    
+    .icon {
+        height: 48px; /* Tamanho do ícone */
+        width: 48px;
+        margin: 0 auto; /* Centraliza o ícone */
+        display: block;
+        color: #0d6efd; /* Cor do ícone */
+    }
+    
+    .title {
+        margin-top: 16px; /* Espaçamento superior */
+        font-size: 2em; /* Tamanho da fonte */
+        font-weight: bold; /* Negrito */
+        color: #333333; /* Cor do texto */
+    }
+    
+    .description {
+        margin-top: 16px; /* Espaçamento superior */
+        color: #6c757d; /* Cor do texto */
+    }
+    
+    .button-container {
+        margin-top: 24px; /* Espaçamento superior */
+    }
+    
+    .back-button {
+        display: inline-block;
+        background-color: #0d6efd; /* Cor de fundo do botão */
+        color: #ffffff; /* Cor do texto do botão */
+        padding: 10px 20px; /* Espaçamento interno do botão */
+        font-size: 0.875em; /* Tamanho da fonte */
+        font-weight: 500; /* Peso da fonte */
+        border-radius: 4px; /* Borda arredondada */
+        text-decoration: none; /* Remove a sublinhado */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra suave */
+        transition: background-color 0.3s; /* Transição suave ao passar o mouse */
+    }
+    
+    .back-button:hover {
+        background-color: #0b5ed7; /* Cor de fundo ao passar o mouse */
+    }
+    
+    .back-button:focus {
+        outline: none; /* Remove contorno padrão */
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.4); /* Adiciona sombra de foco */
+    }
+</style>
+{% endblock %}
