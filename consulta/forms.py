@@ -156,11 +156,11 @@ class AgendamentoReagendarForm(forms.ModelForm):
     def clean_data_agendamento(self):
         data_agendamento = self.cleaned_data.get('data_agendamento')
 
-        if data_agendamento.date() < datetime.now().date():
+        # Comparação direta sem o uso de .date()
+        if data_agendamento < datetime.now().date():
             raise forms.ValidationError("A data do reagendamento não pode ser no passado.")
 
         return data_agendamento
-
 
     class Meta:
         model = Agendamento
@@ -178,8 +178,6 @@ class AgendamentoReagendarForm(forms.ModelForm):
             'turno': forms.Select(attrs={'class': 'form-control'}),
             'prioridade_atendimento': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
-
-    
 
 
 
