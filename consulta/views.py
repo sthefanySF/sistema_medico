@@ -1175,3 +1175,14 @@ def excluir_arquivo(request, arquivo_id, atendimento_id):
     return redirect('visualizarAtendimento', atendimento_id=atendimento_id)
 
 
+def search_paciente(request):
+    query = request.GET.get('q', '')
+    pacientes = Paciente.objects.filter(nome__icontains=query)[:10]  # Limitar a 10 resultados
+    results = [{'id': paciente.id, 'nome': paciente.get_display_name()} for paciente in pacientes]
+    return JsonResponse(results, safe=False)
+
+def search_profissional(request):
+    query = request.GET.get('q', '')
+    profissionais = Profissionaldasaude.objects.filter(nome__icontains=query)[:10]  # Limitar a 10 resultados
+    results = [{'id': profissional.id, 'nome': profissional.get_display_name()} for profissional in profissionais]
+    return JsonResponse(results, safe=False)

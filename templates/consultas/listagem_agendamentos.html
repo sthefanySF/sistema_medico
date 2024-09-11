@@ -197,27 +197,27 @@
                             </div>
                         </div>
 
-<!-- Modal de Restrição de Acesso -->
-<div class="modal fade" id="restricaoModal" tabindex="-1" aria-labelledby="restricaoModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="restricaoModalLabel" style="margin-left: 34.5%;">Acesso Restrito</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" style="text-align: center;">
-                <div style="display: flex; justify-content: center;">
-                    <img id="cadeado" src="{% static 'imagens/cadeado.png' %}" alt="" style="width: 50px; height: auto;">
-                </div>
-                
-                <p>Desculpe, mas você não tem permissão para acessar esta funcionalidade. Por favor, entre em contato com o administrador do sistema para obter mais informações.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-            </div>
-        </div>
-    </div>
-</div>
+                        <!-- Modal de Restrição de Acesso -->
+                        <div class="modal fade" id="restricaoModal" tabindex="-1" aria-labelledby="restricaoModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="restricaoModalLabel" style="margin-left: 34.5%;">Acesso Restrito</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body" style="text-align: center;">
+                                        <div style="display: flex; justify-content: center;">
+                                            <img id="cadeado" src="{% static 'imagens/cadeado.png' %}" alt="" style="width: 50px; height: auto;">
+                                        </div>
+                                        
+                                        <p>Desculpe, mas você não tem permissão para acessar esta funcionalidade. Por favor, entre em contato com o administrador do sistema para obter mais informações.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
 
 
@@ -337,15 +337,29 @@
                     <form id="agendamentoForm{{ agendamento.id }}" method="POST" action="{% url 'agendamentoCreate' %}">
                         {% csrf_token %}
                         <input type="hidden" name="status_atendimento" value="pendente"/>
+                        <input type="hidden" id="id_paciente" name="paciente">
+                        <input type="hidden" id="id_profissional_saude" name="profissional_saude">
 
                         <div class="mb-3">
                             <label for="id_paciente" class="form-label"><b>Paciente</b></label>
-                            {{ form.paciente }}
+                            <div class="d-flex">
+                                <input type="text" id="paciente-search" class="form-control" placeholder="Buscar paciente"  style="border-radius: 4px 0 0 4px; border-right: none;">
+                                <button type="button" id="paciente-dropdown-btn" class="btn btn-secondary" style="border-radius: 0 4px 4px 0;">Selecionar</button>
+                            </div>
+                            <div id="paciente-dropdown" class="dropdown-menu" style="display: none; max-height: 200px; overflow-y: auto;">
+                                <!-- lista de pacientes -->
+                            </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="id_profissional_saude" class="form-label"><b>Profissional de Saúde</b></label>
-                            {{ form.profissional_saude }}
+                            <div class="d-flex">
+                                <input type="text" id="profissional-search" class="form-control" placeholder="Buscar profissional de saúde" style="border-radius: 4px 0 0 4px; border-right: none;">
+                                <button type="button" id="profissional-dropdown-btn" class="btn btn-secondary" style="border-radius: 0 4px 4px 0;">Selecionar</button>
+                            </div>
+                            <div id="profissional-dropdown" class="dropdown-menu" style="display: none; max-height: 200px; overflow-y: auto;">
+                                <!-- lista de profissionais -->
+                            </div>
                         </div>
 
                         <div class="mb-3">
@@ -667,7 +681,186 @@
             .catch(error => console.error('Erro ao verificar permissão:', error));
         }
         
+        
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const dropdownBtn = document.getElementById('paciente-dropdown-btn');
+            const dropdownMenu = document.getElementById('paciente-dropdown');
+            const pacienteInput = document.getElementById('paciente-search');
+            const pacienteHiddenInput = document.getElementById('id_paciente'); // Campo oculto para o ID do paciente
+        
+            // Função para exibir o dropdown
+            function showDropdown() {
+                dropdownMenu.style.display = 'block'; // Mostrar o dropdown
+            }
+        
+            // Função para ocultar o dropdown
+            function hideDropdown() {
+                dropdownMenu.style.display = 'none'; // Esconder o dropdown
+            }
+        
+    // Função para buscar pacientes
+    function fetchPacientes(query = '') {
+        fetch(`/search_paciente/?q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                dropdownMenu.innerHTML = ''; // Limpar o dropdown antes de exibir os novos resultados
+                
+                if (data.length === 0) {
+                    const noResult = document.createElement('div');
+                    noResult.classList.add('dropdown-item');
+                    noResult.textContent = 'Nenhum paciente encontrado';
+                    dropdownMenu.appendChild(noResult);
+                } else {
+                    data.forEach(paciente => {
+                        const option = document.createElement('div');
+                        option.classList.add('dropdown-item');
+                        option.textContent = paciente.nome;
+                        option.dataset.id = paciente.id; // Adicionar o ID ao dataset
+
+                        // Adiciona evento de clique para selecionar o paciente
+                        option.addEventListener('click', function () {
+                            pacienteInput.value = paciente.nome; // Atualizar o campo de busca com o nome do paciente
+                            pacienteHiddenInput.value = paciente.id; // Definir o ID do paciente no campo oculto
+                            dropdownMenu.style.display = 'none'; // Esconder o dropdown
+                        });
+
+                        dropdownMenu.appendChild(option);
+                    });
+                }
+                dropdownMenu.style.display = 'block'; // Mostrar o dropdown com os resultados
+            })
+            .catch(error => {
+                console.error('Erro ao buscar pacientes:', error);
+            });
+    }
+
+
+        
+            // Evento de clique no input de busca para exibir o dropdown
+            pacienteInput.addEventListener('click', function () {
+                fetchPacientes(pacienteInput.value); // Fazer a busca com o valor atual (mesmo vazio)
+            });
+
+            // Abrir e fechar o dropdown ao clicar no botão
+            dropdownBtn.addEventListener('click', function () {
+                if (dropdownMenu.style.display === 'none' || dropdownMenu.style.display === '') {
+                    dropdownMenu.style.display = 'block'; // Exibir dropdown
+                    fetchPacientes(); // Carregar pacientes
+                } else {
+                    dropdownMenu.style.display = 'none'; // Fechar dropdown
+                }
+            });
+        
+            // Evento de input para exibir o dropdown enquanto o usuário digita
+            pacienteInput.addEventListener('input', function () {
+                const query = pacienteInput.value;
+                if (query.length > 0) {
+                    fetchPacientes(query); // Fazer a busca enquanto o usuário digita
+                } else {
+                    hideDropdown(); // Esconder o dropdown se o campo estiver vazio
+                }
+            });
+        
+            // Evento para ocultar o dropdown se o usuário clicar fora dele
+            document.addEventListener('click', function (event) {
+                if (!dropdownMenu.contains(event.target) && !pacienteInput.contains(event.target)) {
+                    hideDropdown(); // Esconder o dropdown se clicar fora do campo ou dropdown
+                }
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Variáveis para o profissional de saúde
+            const dropdownBtnProfissional = document.getElementById('profissional-dropdown-btn');
+            const dropdownMenuProfissional = document.getElementById('profissional-dropdown');
+            const profissionalInput = document.getElementById('profissional-search');
+            const profissionalHiddenInput = document.getElementById('id_profissional_saude'); // Campo oculto para o ID do profissional
+    
+            // Função para exibir o dropdown de profissionais
+            function showDropdownProfissional() {
+                dropdownMenuProfissional.style.display = 'block'; // Mostrar o dropdown
+            }
+    
+            // Função para ocultar o dropdown de profissionais
+            function hideDropdownProfissional() {
+                dropdownMenuProfissional.style.display = 'none'; // Esconder o dropdown
+            }
+    
+            // Função para buscar profissionais de saúde
+            function fetchProfissionais(query = '') {
+                fetch(`/search_profissional/?q=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        dropdownMenuProfissional.innerHTML = ''; // Limpar o dropdown antes de exibir os novos resultados
+                        
+                        if (data.length === 0) {
+                            const noResult = document.createElement('div');
+                            noResult.classList.add('dropdown-item');
+                            noResult.textContent = 'Nenhum profissional encontrado';
+                            dropdownMenuProfissional.appendChild(noResult);
+                        } else {
+                            data.forEach(profissional => {
+                                const option = document.createElement('div');
+                                option.classList.add('dropdown-item');
+                                option.textContent = profissional.nome;
+                                option.dataset.id = profissional.id; // Adicionar o ID ao dataset
+    
+                                // Adiciona evento de clique para selecionar o profissional
+                                option.addEventListener('click', function () {
+                                    profissionalInput.value = profissional.nome; // Atualizar o campo de busca com o nome do profissional
+                                    profissionalHiddenInput.value = profissional.id; // Definir o ID do profissional no campo oculto
+                                    dropdownMenuProfissional.style.display = 'none'; // Esconder o dropdown
+                                });
+    
+                                dropdownMenuProfissional.appendChild(option);
+                            });
+                        }
+                        dropdownMenuProfissional.style.display = 'block'; // Mostrar o dropdown com os resultados
+                    })
+                    .catch(error => {
+                        console.error('Erro ao buscar profissionais:', error);
+                    });
+            }
+    
+            // Evento de clique no input de busca para exibir o dropdown de profissionais
+            profissionalInput.addEventListener('click', function () {
+                fetchProfissionais(profissionalInput.value); // Fazer a busca com o valor atual (mesmo vazio)
+            });
+    
+            // Abrir e fechar o dropdown ao clicar no botão
+            dropdownBtnProfissional.addEventListener('click', function () {
+                if (dropdownMenuProfissional.style.display === 'none' || dropdownMenuProfissional.style.display === '') {
+                    dropdownMenuProfissional.style.display = 'block'; // Exibir dropdown
+                    fetchProfissionais(); // Carregar profissionais
+                } else {
+                    dropdownMenuProfissional.style.display = 'none'; // Fechar dropdown
+                }
+            });
+    
+            // Evento de input para exibir o dropdown enquanto o usuário digita
+            profissionalInput.addEventListener('input', function () {
+                const query = profissionalInput.value;
+                if (query.length > 0) {
+                    fetchProfissionais(query); // Fazer a busca enquanto o usuário digita
+                } else {
+                    hideDropdownProfissional(); // Esconder o dropdown se o campo estiver vazio
+                }
+            });
+    
+            // Evento para ocultar o dropdown se o usuário clicar fora dele
+            document.addEventListener('click', function (event) {
+                if (!dropdownMenuProfissional.contains(event.target) && !profissionalInput.contains(event.target)) {
+                    hideDropdownProfissional(); // Esconder o dropdown se clicar fora do campo ou dropdown
+                }
+            });
+        });
+    </script>
+    
 
     <style>
         .dataTables_filter {
@@ -679,18 +872,15 @@
             opacity: 0; /* para o bug datepicker*/
         }
 
-        .modal-content {
-            border-radius: 8px; /* Bordas arredondadas */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+
+        #paciente-dropdown {
+            border: 1px solid #ced4da;
+            border-top: none;
+            background-color: #fff;
         }
         
-        .modal-title {
-            font-weight: bold; /* Título em negrito */
-        }
-        
-        .modal-body p {
-            margin: 0; /* Remove margens padrão */
-            color: #6c757d; /* Cor do texto */
+        #paciente-dropdown.show {
+            display: block;
         }
 
     </style>

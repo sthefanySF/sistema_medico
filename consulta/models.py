@@ -81,8 +81,6 @@ class Paciente(models.Model):
     
     def get_display_name(self):
         return self.nome_social if self.nome_social else self.nome
-
-    
     
     def idade(self):
         today = date.today()
