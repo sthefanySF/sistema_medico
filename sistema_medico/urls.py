@@ -98,6 +98,10 @@ urlpatterns = [
     
     # Excluir arquivos de pacientes enviados em 'Atendimentos'
     path('arquivo/excluir/<int:arquivo_id>/<int:atendimento_id>/', excluir_arquivo, name='excluir_arquivo'),
+    
+    
+    path('search_paciente/', views.search_paciente, name='search_paciente'),
+    path('search_profissional/', views.search_profissional, name='search_profissional'),
 
     # Home
     # path('', views.home, name='home'),
