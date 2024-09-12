@@ -44,7 +44,7 @@ from django.conf import settings
 # para weasyprint e visualizar pdf
 from django.http import FileResponse
 from django.template.loader import get_template
-from weasyprint import HTML, CSS
+from playwright.sync_api import sync_playwright
 
 
 #filtrar pacientes
@@ -1015,6 +1015,58 @@ def filtrar_prontuarios(request):
 
     return HttpResponse(data, content_type='application/json')
 
+# def pdf_prontuario_medico(request, paciente_id):
+#     paciente = Paciente.objects.get(pk=paciente_id)
+#     paciente_nome = paciente.nome.replace(' ', '_').lower()
+#     medicos_ids = request.GET.get('medicos')
+#     atendimentos_ids = request.GET.get('atendimentos')
+
+#     if medicos_ids:
+#         medicos_ids = [int(id) for id in medicos_ids.split(",")]
+
+#         ids_agendamentos = paciente.agendamento_set.filter(profissional_saude__id__in=medicos_ids).values_list('id', flat=True)
+#         atendimentos = Atendimento.objects.filter(agendamento__id__in=ids_agendamentos)
+#     else:
+#         atendimentos = Atendimento.objects.filter(agendamento__paciente=paciente)
+
+#     if atendimentos_ids:
+#         atendimentos_ids = [int(id) for id in atendimentos_ids.split(",")]
+#         atendimentos = atendimentos.filter(id__in=atendimentos_ids)
+
+#     prontuario_dados = []
+#     for atendimento in atendimentos:
+#         agendamento = atendimento.agendamento
+#         receita_simples = ReceitaMedica.objects.filter(agendamento=agendamento, tipo='simples').first()
+#         receita_controle_especial = ReceitaMedica.objects.filter(agendamento=agendamento, tipo='controle_especial').first()
+
+#         mostrar_receita_simples = receita_simples and (
+#             receita_simples.prescricao or receita_simples.dosagem or receita_simples.via_administrativa or receita_simples.modo_uso
+#         )
+#         mostrar_receita_controle_especial = receita_controle_especial and (
+#             receita_controle_especial.prescricao or receita_controle_especial.dosagem or receita_controle_especial.via_administrativa or receita_controle_especial.modo_uso
+#         )
+
+#         prontuario_dados.append({
+#             'atendimento': atendimento,
+#             'receita_simples': receita_simples if mostrar_receita_simples else None,
+#             'receita_controle_especial': receita_controle_especial if mostrar_receita_controle_especial else None,
+#         })
+
+#     context = {
+#         'paciente': paciente,
+#         'prontuario_dados': prontuario_dados,
+#         'medicos_ids': medicos_ids,
+#     }
+
+#     html = render_to_string('pdfs/pdf_prontuario_medico.html', context)
+
+#     # WeasyPrint para transformar o HTML em PDF.
+#     pdf = HTML(string=html, base_url=request.build_absolute_uri()).write_pdf()
+
+#     response = HttpResponse(pdf, content_type='application/pdf')
+#     response['Content-Disposition'] = f'inline; filename="prontuario_{paciente_nome}.pdf"'
+#     return response
+
 def pdf_prontuario_medico(request, paciente_id):
     paciente = Paciente.objects.get(pk=paciente_id)
     paciente_nome = paciente.nome.replace(' ', '_').lower()
@@ -1023,7 +1075,6 @@ def pdf_prontuario_medico(request, paciente_id):
 
     if medicos_ids:
         medicos_ids = [int(id) for id in medicos_ids.split(",")]
-
         ids_agendamentos = paciente.agendamento_set.filter(profissional_saude__id__in=medicos_ids).values_list('id', flat=True)
         atendimentos = Atendimento.objects.filter(agendamento__id__in=ids_agendamentos)
     else:
@@ -1060,12 +1111,19 @@ def pdf_prontuario_medico(request, paciente_id):
 
     html = render_to_string('pdfs/pdf_prontuario_medico.html', context)
 
-    # WeasyPrint para transformar o HTML em PDF.
-    pdf = HTML(string=html, base_url=request.build_absolute_uri()).write_pdf()
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
+        page.set_content(html)
+        page.wait_for_load_state('networkidle')  # Espera o carregamento completo da página
+        pdf_content = page.pdf(format='A4', print_background=True)
 
-    response = HttpResponse(pdf, content_type='application/pdf')
+        browser.close()
+
+    response = HttpResponse(pdf_content, content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename="prontuario_{paciente_nome}.pdf"'
     return response
+
 
 def pdf_atestado_medico(request, atendimento_id):
     atendimento = get_object_or_404(Atendimento, id=atendimento_id)
@@ -1080,17 +1138,15 @@ def pdf_atestado_medico(request, atendimento_id):
 
     html = render_to_string('pdfs/pdf_atestado_medico.html', context)
     
-    # Cria um arquivo temporário
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
-        HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(target=temp_pdf.name)
-        
-        # Lê o conteúdo do arquivo temporário
-        temp_pdf.seek(0)
-        pdf_content = temp_pdf.read()
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
+        page.set_content(html)
+        page.wait_for_load_state('networkidle')  # Espera o carregamento completo da página
+        pdf_content = page.pdf(format='A4', print_background=True)
 
-    # Remove o arquivo temporário
-    os.remove(temp_pdf.name)
-    
+        browser.close()
+
     response = HttpResponse(pdf_content, content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename="atestado_{paciente_nome}.pdf"'
     return response
@@ -1109,53 +1165,139 @@ def pdf_receita_medica(request, atendimento_id, tipo=None):
     # Verifica o tipo de receita para escolher o template correto
     if tipo == 'controle_especial' or receita.tipo == 'controle_especial':
         template_path = 'pdfs/pdf_receita_medica_controle.html'
-        css = CSS(string='@page { size: A4 landscape; }')
     else:
         template_path = 'pdfs/pdf_receita_medica.html'
-        css = None
 
     html = render_to_string(template_path, context)
-    
-    # Cria um arquivo temporário
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
-        HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(target=temp_pdf.name, stylesheets=[css] if css else [])
-        
-        # Lê o conteúdo do arquivo temporário
-        temp_pdf.seek(0)
-        pdf_content = temp_pdf.read()
 
-    # Remove o arquivo temporário
-    os.remove(temp_pdf.name)
-    
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
+        page.set_content(html)
+        page.wait_for_load_state('networkidle')  # Espera o carregamento completo da página
+        pdf_content = page.pdf(format='A4', print_background=True)
+
+        browser.close()
+
     response = HttpResponse(pdf_content, content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename="receita_{paciente_nome}.pdf"'
     return response
-
 
 def pdf_laudo_medico(request, atendimento_id):
     atendimento = get_object_or_404(Atendimento, id=atendimento_id)
     agendamento = atendimento.agendamento
     laudo = get_object_or_404(Laudo, agendamento=agendamento)
     paciente_nome = laudo.paciente.nome.replace(' ', '_').lower()
-    
+
     context = {
         'atendimento': atendimento,
         'laudo': laudo,
     }
 
     html = render_to_string('pdfs/pdf_laudo_medico.html', context)
-    
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
-        HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(target=temp_pdf.name)
-        
-        temp_pdf.seek(0)
-        pdf_content = temp_pdf.read()
 
-    os.remove(temp_pdf.name)
-    
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
+        page.set_content(html)
+        page.wait_for_load_state('networkidle')  # Espera o carregamento completo da página
+        pdf_content = page.pdf(format='A4', print_background=True)
+
+        browser.close()
+
     response = HttpResponse(pdf_content, content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename="laudo_{paciente_nome}.pdf"'
     return response
+
+# def pdf_atestado_medico(request, atendimento_id):
+#     atendimento = get_object_or_404(Atendimento, id=atendimento_id)
+#     agendamento = atendimento.agendamento
+#     atestado = get_object_or_404(AtestadoMedico, agendamento=agendamento)
+#     paciente_nome = atestado.paciente.nome.replace(' ', '_').lower()
+    
+#     context = {
+#         'atendimento': atendimento,
+#         'atestado': atestado,
+#     }
+
+#     html = render_to_string('pdfs/pdf_atestado_medico.html', context)
+    
+#     # Cria um arquivo temporário
+#     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
+#         HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(target=temp_pdf.name)
+        
+#         # Lê o conteúdo do arquivo temporário
+#         temp_pdf.seek(0)
+#         pdf_content = temp_pdf.read()
+
+#     # Remove o arquivo temporário
+#     os.remove(temp_pdf.name)
+    
+#     response = HttpResponse(pdf_content, content_type='application/pdf')
+#     response['Content-Disposition'] = f'inline; filename="atestado_{paciente_nome}.pdf"'
+#     return response
+
+# def pdf_receita_medica(request, atendimento_id, tipo=None):
+#     atendimento = get_object_or_404(Atendimento, id=atendimento_id)
+#     agendamento = atendimento.agendamento
+#     receita = get_object_or_404(ReceitaMedica, agendamento=agendamento)
+#     paciente_nome = receita.paciente.nome.replace(' ', '_').lower()
+
+#     context = {
+#         'atendimento': atendimento,
+#         'receita': receita,
+#     }
+
+#     # Verifica o tipo de receita para escolher o template correto
+#     if tipo == 'controle_especial' or receita.tipo == 'controle_especial':
+#         template_path = 'pdfs/pdf_receita_medica_controle.html'
+#         css = CSS(string='@page { size: A4 landscape; }')
+#     else:
+#         template_path = 'pdfs/pdf_receita_medica.html'
+#         css = None
+
+#     html = render_to_string(template_path, context)
+    
+#     # Cria um arquivo temporário
+#     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
+#         HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(target=temp_pdf.name, stylesheets=[css] if css else [])
+        
+#         # Lê o conteúdo do arquivo temporário
+#         temp_pdf.seek(0)
+#         pdf_content = temp_pdf.read()
+
+#     # Remove o arquivo temporário
+#     os.remove(temp_pdf.name)
+    
+#     response = HttpResponse(pdf_content, content_type='application/pdf')
+#     response['Content-Disposition'] = f'inline; filename="receita_{paciente_nome}.pdf"'
+#     return response
+
+
+# def pdf_laudo_medico(request, atendimento_id):
+#     atendimento = get_object_or_404(Atendimento, id=atendimento_id)
+#     agendamento = atendimento.agendamento
+#     laudo = get_object_or_404(Laudo, agendamento=agendamento)
+#     paciente_nome = laudo.paciente.nome.replace(' ', '_').lower()
+    
+#     context = {
+#         'atendimento': atendimento,
+#         'laudo': laudo,
+#     }
+
+#     html = render_to_string('pdfs/pdf_laudo_medico.html', context)
+    
+#     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
+#         HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(target=temp_pdf.name)
+        
+#         temp_pdf.seek(0)
+#         pdf_content = temp_pdf.read()
+
+#     os.remove(temp_pdf.name)
+    
+#     response = HttpResponse(pdf_content, content_type='application/pdf')
+#     response['Content-Disposition'] = f'inline; filename="laudo_{paciente_nome}.pdf"'
+#     return response
 
 
 def restricao_de_acesso(request):

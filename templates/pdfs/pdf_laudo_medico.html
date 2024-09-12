@@ -11,26 +11,26 @@
     <style>
       body {
         font-family: 'Poppins', sans-serif;
+        padding: 20px;
       }
       
       header {
         display: flex;
         align-items: center;
-        padding: 10px 20px;
+        padding: 10px;
         border-bottom: 1px solid #afafaf;
+        flex-direction: column;
       }
       
       .infoufac {
         font-weight: bold;
         text-align: center;
         flex: 1;
-        margin-right: 40px;
       }
       
       #logoufac {
         width: 50px;
         height: auto;
-        transform: translate(530%, -160%);
       }
       
       h3 {
@@ -54,7 +54,7 @@
   </head>
   <body>
     <header>
-      <img id="logoufac" src="{% static 'imagens/logo_ufac_2.png' %}" alt="Logo UFAC" />
+      <img id="logoufac" src="http://localhost:8000/static/imagens/logo_ufac_2.png" alt="Logo UFAC" />
       <div class="infoufac">
         <p>UNIVERSIDADE FEDERAL DO ACRE</p>
         <p>DIRETORIA DE SAÚDE E QUALIDADE DE VIDA</p>
