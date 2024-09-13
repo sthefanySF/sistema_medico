@@ -30,7 +30,6 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth.hashers import make_password
 
 from django.template.loader import render_to_string
-from xhtml2pdf import pisa
 import io
 
 from django.template.response import TemplateResponse
@@ -741,16 +740,23 @@ class AgendamentoCreate(CreateView):
 def download_comprovante(request, pk):
     agendamento = get_object_or_404(Agendamento, pk=pk)
 
-    html_content = render_to_string('consultas/comprovantePdf_agendamento.html', {'agendamento': agendamento})
+    # Renderiza o template para HTML
+    html_content = render_to_string('pdfs/comprovantePdf_agendamento.html', {'agendamento': agendamento})
 
-    pdf_file = io.BytesIO()
-    pisa.CreatePDF(html_content, dest=pdf_file)
+    # Gera o PDF usando Playwright
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
+        page.set_content(html_content)
+        page.wait_for_load_state('networkidle')  # Espera o carregamento completo da página
+        pdf_content = page.pdf(format='A4', print_background=True)
 
-    pdf_file.seek(0)
+        browser.close()
 
-    response = HttpResponse(pdf_file.read(), content_type='application/pdf')
+    # Configura o PDF para download
+    response = HttpResponse(pdf_content, content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename=Comprovante_Agendamento_{agendamento.id}.pdf'
-
+    
     return response
 
 
@@ -890,18 +896,24 @@ def download_comprovante_atendimento(request, atendimento_id):
     atendimento = get_object_or_404(Atendimento, id=atendimento_id)
 
     # Renderiza o template para HTML
-    html_content = render_to_string('consultas/comprovantePdf_atendimento.html', {'atendimento': atendimento})
-    
-    # Converte HTML para PDF
-    pdf_file = io.BytesIO()
-    pisa.CreatePDF(html_content, dest=pdf_file)
-    
-    # Configura o conteúdo do PDF para download
-    pdf_file.seek(0)
-    response = HttpResponse(pdf_file, content_type='application/pdf')
+    html_content = render_to_string('pdfs/comprovantePdf_atendimento.html', {'atendimento': atendimento})
+
+    # Gera o PDF usando Playwright
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
+        page.set_content(html_content)
+        page.wait_for_load_state('networkidle')  # Espera o carregamento completo da página
+        pdf_content = page.pdf(format='A4', print_background=True)
+
+        browser.close()
+
+    # Configura o PDF para download
+    response = HttpResponse(pdf_content, content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename=comprovante_atendimento_{atendimento_id}.pdf'
     
     return response
+
 
 
 def visualizar_pdf_exames(request, atendimento_id):
@@ -923,18 +935,24 @@ def visualizar_comprovante_atendimento(request, atendimento_id):
     atendimento = get_object_or_404(Atendimento, id=atendimento_id)
 
     # Renderiza o template para HTML
-    html_content = render_to_string('consultas/comprovantePdf_atendimento.html', {'atendimento': atendimento})
-    
-    # Converte HTML para PDF
-    pdf_file = io.BytesIO()
-    pisa.CreatePDF(html_content, dest=pdf_file)
-    
-    # Configura o conteúdo do PDF para visualização
-    pdf_file.seek(0)
-    response = HttpResponse(pdf_file.read(), content_type='application/pdf')
+    html_content = render_to_string('pdfs/comprovantePdf_atendimento.html', {'atendimento': atendimento})
+
+    # Gera o PDF usando Playwright
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
+        page.set_content(html_content)
+        page.wait_for_load_state('networkidle')  # Espera o carregamento completo da página
+        pdf_content = page.pdf(format='A4', print_background=True)
+
+        browser.close()
+
+    # Configura o PDF para visualização
+    response = HttpResponse(pdf_content, content_type='application/pdf')
     response['Content-Disposition'] = f'filename=comprovante_atendimento_{atendimento_id}.pdf'
     
     return response
+
 
 # def filtrar_prontuarios(request):
 #     paciente_id = request.GET.get('paciente_id')
