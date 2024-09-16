@@ -6,11 +6,13 @@
 
 {% block content %}
 
+{% load static %}
+
 
 
 <div class="content">
     <!-- Ícone de Cadeado, substitua por um ícone apropriado ou uma imagem de cadeado -->
-    <img src="lock-icon.png" alt="Cadeado" class="icon">
+    <img src="{% static 'imagens/cadeado.png' %}" alt="Cadeado" class="icon">
     
     <h1 class="title">Acesso Restrito</h1>
     <p class="description">
@@ -18,10 +20,9 @@
         do sistema para obter mais informações.
     </p>
     <div class="button-container">
-        <a href="#" class="back-button">Voltar</a>
+        <a href="{% url 'agendamentoListagem' %}" class="back-button">Voltar</a>
     </div>
 </div>
-
 
 <style>
     .content {

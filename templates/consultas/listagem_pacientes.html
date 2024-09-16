@@ -1,6 +1,7 @@
 <!-- listar_pacientes.html -->
 {% extends 'base.html' %}
 
+{% load static %}
 {% block title %}
   Lista de Pacientes
 {% endblock %}
@@ -42,9 +43,10 @@
             <span style="display: none;">{{ paciente.data_nascimento|date:'d/m/Y' }}-{{ paciente.email }}-{{ paciente.rg }}-{{ paciente.cpf }}-{{ paciente.tipo_paciente }}-{{ paciente.matricula }}</span>
             <a href="#" aria-expanded="false" class="accordion-toggle"></a>
             
-              <a href="{% url 'prontuario_medico' paciente.id %}" class="btn btn-primary btn-prontuario" style="display: block; float: right; margin-right: 20px;">
-                Prontuário
-            </a>
+            <a href="javascript:void(0);" onclick="verificarPermissao('{% url 'prontuario_medico' paciente.id %}')" 
+            class="btn btn-primary btn-prontuario" style="display: block; float: right; margin-right: 20px;">
+            Prontuário
+         </a>
           </td>
         </tr>
           
@@ -459,6 +461,28 @@
     </tbody>
   </table>
 
+            <!-- Modal de Restrição de Acesso -->
+            <div class="modal fade" id="restricaoModal" tabindex="-1" aria-labelledby="restricaoModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="restricaoModalLabel" style="margin-left: 34.5%;">Acesso Restrito</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body" style="text-align: center;">
+                          <div style="display: flex; justify-content: center;">
+                              <img id="cadeado" src="{% static 'imagens/cadeado.png' %}" alt="" style="width: 50px; height: auto;">
+                          </div>
+                          
+                          <p>Desculpe, mas você não tem permissão para acessar esta funcionalidade. Por favor, entre em contato com o administrador do sistema para obter mais informações.</p>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
   <script>
     $(document).ready(function () {
       $('#cadastroForm').on('submit', function (event) {
@@ -601,6 +625,29 @@
       })
     })
   </script>
+
+  <script>
+    function verificarPermissao(url) {
+        // Faz uma solicitação AJAX para verificar a permissão
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'  // Cabeçalho necessário para a verificação AJAX
+            }
+        })
+        .then(response => {
+            if (response.status === 403) {
+                // Se a resposta é 403 (proibido), exibe o modal de restrição
+                var restricaoModal = new bootstrap.Modal(document.getElementById('restricaoModal'));
+                restricaoModal.show();
+            } else {
+                // Se o usuário tem permissão, redireciona para a URL
+                window.location.href = url;
+            }
+        })
+        .catch(error => console.error('Erro ao verificar permissão:', error));
+    }
+</script>
 
   <style>
     .tm-section-down-arrow {
