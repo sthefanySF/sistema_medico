@@ -5,6 +5,7 @@ from imaplib import _Authenticator
 from multiprocessing import AuthenticationError
 from django.http import HttpResponse, JsonResponse
 from django.views.generic.edit import CreateView
+from django.views.generic import DetailView
 
 # from consulta.forms import AdministrativoForm, AgendamentoForm, AgendamentoReagendarForm, AtendimentoForm,
 # JustificativaCancelamentoForm, PacienteForm, PesquisaAgendamentoForm, ProfissionaldasaudeForm
@@ -63,8 +64,7 @@ from django.shortcuts import render
 def home(request):
     return render(request, 'home.html')
 
-def prontuario_medico(request):
-    return render(request, 'consultas/prontuario_medico.html')
+
 
 @login_required
 def linha_usuario(request): #mostrar o usuario logado
@@ -453,51 +453,64 @@ def cancelar_agendamento(request, agendamento_id):
         return JsonResponse({'success': False, 'errors': form.errors})
         
 
-def visualizar_atendimento(request, atendimento_id):
-    atendimento = get_object_or_404(Atendimento, id=atendimento_id)
-    paciente = atendimento.agendamento.paciente
-    
-    # Buscar o atestado médico
-    try:
-        atestado = AtestadoMedico.objects.get(agendamento=atendimento.agendamento)
-        if atestado.dias_afastamento == 0 and atestado.cid == 'N/A':
+class VisualizarAtendimentoView(DetailView):
+    model = Atendimento
+    template_name = 'consultas/visualizar_atendimento.html'
+    context_object_name = 'atendimento'
+
+    def dispatch(self, request, *args, **kwargs):
+        # Verifica se o usuário pertence ao grupo 'administrativo'
+        if request.user.groups.filter(name='administrativo').exists():
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'error': 'access_denied'}, status=403)
+            else:
+                return redirect('restricao_de_acesso')
+        
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        atendimento = self.get_object()
+        paciente = atendimento.agendamento.paciente
+
+        # Buscar o atestado médico
+        try:
+            atestado = AtestadoMedico.objects.get(agendamento=atendimento.agendamento)
+            if atestado.dias_afastamento == 0 and atestado.cid == 'N/A':
+                atestado = None
+        except AtestadoMedico.DoesNotExist:
             atestado = None
-    except AtestadoMedico.DoesNotExist:
-        atestado = None
 
-    # Buscar as receitas médicas
-    receita_simples = ReceitaMedica.objects.filter(agendamento=atendimento.agendamento, tipo='simples').first()
-    receita_controle_especial = ReceitaMedica.objects.filter(agendamento=atendimento.agendamento, tipo='controle_especial').first()
+        # Buscar as receitas médicas
+        receita_simples = ReceitaMedica.objects.filter(agendamento=atendimento.agendamento, tipo='simples').first()
+        receita_controle_especial = ReceitaMedica.objects.filter(agendamento=atendimento.agendamento, tipo='controle_especial').first()
 
-    # Buscar os laudos médicos
-    laudos = Laudo.objects.filter(agendamento=atendimento.agendamento).order_by('-data_laudo')
+        # Buscar os laudos médicos
+        laudos = Laudo.objects.filter(agendamento=atendimento.agendamento).order_by('-data_laudo')
 
-    # Multiplos Arquivos
-    if request.method == 'POST' and 'file_field' in request.FILES:
-        form = MultipleFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            files = request.FILES.getlist('file_field')
+        # Multiplos Arquivos
+        form = MultipleFileForm(self.request.POST or None, self.request.FILES or None)
+        if self.request.method == 'POST' and form.is_valid():
+            files = self.request.FILES.getlist('file_field')
             for f in files:
                 ArquivoPaciente.objects.create(paciente=paciente, arquivo=f)
 
-            messages.success(request, 'Enviado com sucesso!')
-            return redirect('visualizarAtendimento', atendimento_id=atendimento_id)
-    else:
-        form = MultipleFileForm()
+            messages.success(self.request, 'Enviado com sucesso!')
+            return redirect('visualizarAtendimento', atendimento_id=atendimento.id)
 
-    arquivos = ArquivoPaciente.objects.filter(paciente=paciente).order_by('-data_envio')
-    # Fim
+        arquivos = ArquivoPaciente.objects.filter(paciente=paciente).order_by('-data_envio')
 
-    return render(request, 'consultas/visualizar_atendimento.html', {
-        'atendimento': atendimento,
-        'paciente': paciente,
-        'atestado': atestado,
-        'receita_simples': receita_simples,
-        'receita_controle_especial': receita_controle_especial,
-        'laudos': laudos,
-        'arquivos': arquivos,
-        'form': form,
-    })
+        # Adicionar dados ao contexto
+        context.update({
+            'paciente': paciente,
+            'atestado': atestado,
+            'receita_simples': receita_simples,
+            'receita_controle_especial': receita_controle_especial,
+            'laudos': laudos,
+            'arquivos': arquivos,
+            'form': form,
+        })
+        return context
     
 def lista_atendimentos(request):
     atendimentos = Atendimento.objects.all()
@@ -969,6 +982,14 @@ def visualizar_comprovante_atendimento(request, atendimento_id):
 
 
 def prontuario_medico(request, paciente_id):
+    # Verifica se o usuário pertence ao grupo 'administrativo'
+    if request.user.groups.filter(name='administrativo').exists():
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'error': 'access_denied'}, status=403)
+        else:
+            return redirect('restricao_de_acesso')  # Página ou modal de restrição de acesso
+
+    
     paciente = Paciente.objects.get(pk=paciente_id)
     atendimentos = Atendimento.objects.filter(agendamento__paciente=paciente)
     profissionais_saude = Profissionaldasaude.objects.all()
