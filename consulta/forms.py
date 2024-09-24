@@ -188,7 +188,22 @@ class JustificativaCancelamentoForm(forms.Form):
 class AtendimentoForm(forms.ModelForm):
     class Meta:
         model = Atendimento
-        fields = ['anamnese', 'exame_fisico', 'exames_complementares', 'pdf_exames', 'diagnostico', 'conduta']
+        fields = ['anamnese', 'exame_fisico', 'exames_complementares', 'pdf_exames', 'diagnostico', 'conduta', 'privado']
+        
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        atendimento = super().save(commit=False)
+        # Certifique-se de que o valor de 'privado' seja atribuído corretamente
+        atendimento.privado = self.cleaned_data.get('privado', False)
+        # Atribua o médico responsável ao atendimento
+        if self.user:
+            atendimento.medico_responsavel = self.user
+        if commit:
+            atendimento.save()
+        return atendimento
 
 class AtestadoMedicoForm(forms.ModelForm):
     class Meta:

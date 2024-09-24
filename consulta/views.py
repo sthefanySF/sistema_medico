@@ -19,6 +19,7 @@ from datetime import date
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import get_object_or_404, redirect
+from django.db.models import Q
 
 
 from django.contrib import messages
@@ -459,6 +460,12 @@ class VisualizarAtendimentoView(DetailView):
     context_object_name = 'atendimento'
 
     def dispatch(self, request, *args, **kwargs):
+        atendimento = self.get_object()
+        
+        # Verifica se o usuário pertence ao grupo 'administradores' (acesso total)
+        if request.user.groups.filter(name='administradores').exists():
+            return super().dispatch(request, *args, **kwargs)
+
         # Verifica se o usuário pertence ao grupo 'administrativo'
         if request.user.groups.filter(name='administrativo').exists():
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -466,6 +473,13 @@ class VisualizarAtendimentoView(DetailView):
             else:
                 return redirect('restricao_de_acesso')
         
+        # Verifica se o atendimento é privado e se o usuário é o médico responsável
+        if atendimento.privado and atendimento.medico_responsavel != request.user:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'error': 'access_denied'}, status=403)
+            else:
+                return redirect('restricao_de_acesso')
+
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -515,6 +529,8 @@ class VisualizarAtendimentoView(DetailView):
 def lista_atendimentos(request):
     atendimentos = Atendimento.objects.all()
     return render(request, 'consultas/lista_atendimentos.html', {'atendimentos': atendimentos})
+
+
 
 # def user_login(request):
 #     if request.method == 'POST':
@@ -843,13 +859,18 @@ class AtendimentoCreate(CreateView):
         atendimento = atendimento_form.save(commit=False)
         atendimento.agendamento = agendamento
 
+        # Adiciona o médico responsável pelo atendimento (usuário atual)
+        atendimento.medico_responsavel = self.request.user
+
         # Salvar o início do atendimento
         atendimento.inicio_atendimento = timezone.now()
         atendimento.save()
 
+        # Atualiza o status do agendamento
         agendamento.status_atendimento = 'atendido'
         agendamento.save()
 
+        # Salva os formulários adicionais
         if atestado_medico_form.is_valid():
             atestado_medico = atestado_medico_form.save(commit=False)
             dias_afastamento = atestado_medico_form.cleaned_data.get('dias_afastamento')
@@ -866,6 +887,10 @@ class AtendimentoCreate(CreateView):
             laudo = laudo_form.save(commit=False)
             laudo.agendamento = agendamento
             laudo.save()
+
+        # Define se o atendimento é privado ou não
+        atendimento.privado = 'privado' in self.request.POST
+        atendimento.save()
 
         return redirect('confirmar_atendimento', agendamento_id=agendamento.id)
 

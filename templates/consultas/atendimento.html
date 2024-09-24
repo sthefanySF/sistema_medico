@@ -120,24 +120,9 @@
               <span class="text-center">PRESCRIÇÃO</span>
               <div class="form-group d-flex flex-column">{{ receita_medica_form.prescricao }}</div>
             </div>
-            {% comment %} <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
-              <div class="form-group d-flex flex-column col-md-8">
-                <label for="dosagem">Dosagem</label>
-                {{ receita_medica_form.dosagem }}
-              </div>
-              <div class="form-group d-flex flex-column col-md-8">
-                <label for="via_administrativa">Via Administrativa</label>
-                {{ receita_medica_form.via_administrativa }}
-              </div>
-              <div class="form-group d-flex flex-column col-md-8">
-                <label for="modo_uso">Modo de Uso</label>
-                {{ receita_medica_form.modo_uso }}
-              </div>
-            </div> {% endcomment %}
           </div>
         </div>
 
-        <!-- templates/consultas/atendimento.html -->
         {% load i18n %}
         <h6 class="d-flex justify-content-center py-3">ATESTADO MÉDICO</h6>
 
@@ -193,6 +178,10 @@
             </div>
           </div>
         </div>
+        <div class="form-group">
+          <input type="checkbox" name="privado" id="privado" {% if laudo_form.privado.value %}checked{% endif %}>
+          <label for="privado">Consulta Privada</label>
+        </div>
         <div class="d-flex justify-content-center align-items-center mb-3">
           <button type="submit" class="btn btn-primary">Salvar Atendimento</button>
         </div>
@@ -200,57 +189,7 @@
     </div>
   </div>
 
-  <script>
-    document.getElementById('edit-btn').addEventListener('click', function() {
-      var textoAtestado = document.getElementById('texto-atestado');
-      var editTextarea = document.getElementById('edit-textarea');
-      
-      if (editTextarea.style.display === 'none') {
-        // Enter edit mode
-        editTextarea.style.display = 'block';
-        textoAtestado.style.display = 'none';
-        this.textContent = 'Salvar';
-      } else {
-        // Save the edited text
-        var paciente = '{{ agendamento.paciente.get_display_name }}';
-        var data = '{{ agendamento.data_agendamento|date:"d/m/Y" }}';
-        var dias = '<input class="input" name="dias_afastamento" type="number" placeholder="Dias" value="{{ atestado_medico_form.dias_afastamento.value|default_if_none:"" }}" />';
-        
-        textoAtestado.innerHTML = editTextarea.value
-          .replace('{{ agendamento.paciente.get_display_name }}', paciente)
-          .replace('{{ agendamento.data_agendamento|date:"d/m/Y" }}', data)
-          .replace('[[DIAS]]', dias);
-        
-        editTextarea.style.display = 'none';
-        textoAtestado.style.display = 'block';
-        this.textContent = 'Editar';
-      }
-    });
-  
-    document.getElementById('atestado-form').addEventListener('submit', function() {
-      var textoAtestado = document.getElementById('texto-atestado');
-      var editTextarea = document.getElementById('edit-textarea');
-      
-      if (editTextarea.style.display !== 'none') {
-        editTextarea.value = textoAtestado.innerHTML
-          .replace(/<[^>]+>/g, ''); // Remove HTML tags before submitting
-      }
-    });
-  </script>
 
-  <script>
-    function updateFileName() {
-      var inputFile = document.getElementById('id_pdf_exames')
-      var fileNameSpan = document.getElementById('file-name')
-      if (inputFile.files.length > 0) {
-        fileNameSpan.textContent = inputFile.files[0].name
-      } else {
-        fileNameSpan.textContent = 'Clique para escolher o arquivo'
-      }
-    }
-    
-    document.getElementById('id_pdf_exames').addEventListener('change', updateFileName)
-  </script>
 
 <style>
 
