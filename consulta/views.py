@@ -1007,19 +1007,23 @@ def visualizar_comprovante_atendimento(request, atendimento_id):
 
 
 def prontuario_medico(request, paciente_id):
-    # Verifica se o usuário pertence ao grupo 'administrativo'
+    
     if request.user.groups.filter(name='administrativo').exists():
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             return JsonResponse({'error': 'access_denied'}, status=403)
         else:
             return redirect('restricao_de_acesso')  # Página ou modal de restrição de acesso
+        
+    # Verifica se o usuário pertence ao grupo 'administradores' (acesso total)
+    if request.user.groups.filter(name='administradores').exists():
+        tem_acesso_total = True
+    else:
+        tem_acesso_total = False
 
-    
     paciente = Paciente.objects.get(pk=paciente_id)
     atendimentos = Atendimento.objects.filter(agendamento__paciente=paciente)
     profissionais_saude = Profissionaldasaude.objects.all()
 
-    # Verificar as receitas associadas aos atendimentos
     prontuario_dados = []
     for atendimento in atendimentos:
         agendamento = atendimento.agendamento
@@ -1033,11 +1037,20 @@ def prontuario_medico(request, paciente_id):
             receita_controle_especial.prescricao or receita_controle_especial.dosagem or receita_controle_especial.via_administrativa or receita_controle_especial.modo_uso
         )
 
-        prontuario_dados.append({
-            'atendimento': atendimento,
-            'receita_simples': receita_simples if mostrar_receita_simples else None,
-            'receita_controle_especial': receita_controle_especial if mostrar_receita_controle_especial else None,
-        })
+        # Verifica se o atendimento é privado e se o usuário tem acesso
+        if atendimento.privado and not tem_acesso_total and atendimento.medico_responsavel != request.user:
+            # Usuário não tem acesso a este atendimento privado
+            prontuario_dados.append({
+                'privado': True,  # Marcar como privado para exibir a mensagem de restrição
+                'atendimento': atendimento,
+            })
+        else:
+            prontuario_dados.append({
+                'privado': False,
+                'atendimento': atendimento,
+                'receita_simples': receita_simples if mostrar_receita_simples else None,
+                'receita_controle_especial': receita_controle_especial if mostrar_receita_controle_especial else None,
+            })
 
     return render(request, 'consultas/prontuario_medico.html', {
         'paciente': paciente,

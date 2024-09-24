@@ -178,10 +178,17 @@
             </div>
           </div>
         </div>
-        <div class="form-group">
-          <input type="checkbox" name="privado" id="privado" {% if laudo_form.privado.value %}checked{% endif %}>
-          <label for="privado">Consulta Privada</label>
+        <div class="form-group" id="private-check">
+          <div class="checkbox-wrapper">
+            <div style="display: flex; align-items: center; gap: 5px;">
+              <input type="checkbox" name="privado" id="privado" {% if laudo_form.privado.value %}checked{% endif %}>
+              <label for="privado">Consulta Privada</label>
+            </div>
+            <span class="info-icon">?</span> <!-- Ícone de "?" -->
+            <div class="tooltip">Esses dados são visíveis apenas para o médico que realizou a consulta</div>
+          </div>
         </div>
+        
         <div class="d-flex justify-content-center align-items-center mb-3">
           <button type="submit" class="btn btn-primary">Salvar Atendimento</button>
         </div>
@@ -192,6 +199,77 @@
 
 
 <style>
+
+  #private-check {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .info-icon {
+    display: inline-block;
+    margin-left: 28px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    text-align: center;
+    line-height: 18px;
+    font-size: 12px;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .checkbox-wrapper {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    justify-content: space-around;
+  }
+  
+  .checkbox-wrapper .tooltip {
+    position: absolute;
+    bottom: -30px; /* Exibe o tooltip abaixo do ícone */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #000;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 5px;
+    opacity: 0;
+    visibility: hidden;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+  
+  .info-icon:hover ~ .tooltip {
+    opacity: 1;
+    visibility: visible;
+    bottom: -50px; /* Ajusta para que o tooltip deslize para baixo */
+  }
+  
+  
+  
+  
+
+#private-check {
+  width: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: aliceblue;
+  border: 1px solid #a3c8ed;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+#private-check input {
+  width: 20px;
+  height: 20px;
+}
 
   textarea#edit-textarea {
     width: 100%;
