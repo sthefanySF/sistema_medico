@@ -233,6 +233,8 @@ class Atendimento(models.Model):
     conduta = models.TextField()
     inicio_atendimento = models.DateTimeField(null=True, blank=True)
     fim_atendimento = models.DateTimeField(null=True, blank=True)
+    medico_responsavel = models.ForeignKey(User, on_delete=models.CASCADE, related_name='atendimentos', null=True, blank=True)
+    privado = models.BooleanField(default=False)  # Campo para marcar se a consulta é privada
 
     @property
     def profissional_saude(self):
