@@ -1,0 +1,3 @@
+Requirement already satisfied: pydyf in c:\users\ufac - csi\documents\github\sistema_medico\venv\lib\site-packages (0.9.0)
+Requirement already satisfied: tinycss2 in c:\users\ufac - csi\documents\github\sistema_medico\venv\lib\site-packages (1.2.1)
+Requirement already satisfied: webencodings>=0.4 in c:\users\ufac - csi\documents\github\sistema_medico\venv\lib\site-packages (from tinycss2) (0.5.1)
