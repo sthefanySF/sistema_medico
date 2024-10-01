@@ -20,7 +20,9 @@ from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import get_object_or_404, redirect
 from django.db.models import Q
-
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
 
 from django.contrib import messages
 
@@ -606,10 +608,16 @@ class AdministrativoCreate(CreateView):
         grupo_administrativo = Group.objects.get(name='administrativo')
         usuario.groups.add(grupo_administrativo)
 
+        # Gerando o link de redefinição de senha
+        uid = urlsafe_base64_encode(force_bytes(usuario.pk))
+        token = default_token_generator.make_token(usuario)
+        reset_url = self.request.build_absolute_uri(reverse('redefinir_senha_confirmacao', kwargs={'uidb64': uid, 'token': token}))
+
+        # Enviar e-mail com o link de redefinição de senha
         assunto = 'Sistema Médico Pericial - UFAC - Confirmação de Cadastro'
         message = f'Olá {administrativo.nome}! Seu cadastro foi confirmado com sucesso! ' \
                   f'Seu login é o seu CPF. \n Por favor, clique no link abaixo para ' \
-                  f'redefinir sua senha: \n www.google.com.br'
+                  f'definir sua senha: \n {reset_url}'
         try:
             send_mail(assunto, message, EMAIL_HOST_USER, [email])
             msg = 'Cadastrado com sucesso! Enviamos um e-mail de recuperação de senha.'
@@ -631,9 +639,8 @@ class AdministrativoCreate(CreateView):
 class ProfissionaldasaudeCreate(CreateView):
     model = Profissionaldasaude
     form_class = ProfissionaldasaudeForm
-    # template_name = 'consultas/cadastro_profissionaldasaude.html'
     success_url = reverse_lazy('profissionaldasaudeListagem')
-    
+
     def is_ajax(self):
         return self.request.headers.get('x-requested-with') == 'XMLHttpRequest'
 
@@ -659,10 +666,16 @@ class ProfissionaldasaudeCreate(CreateView):
         grupo_profissional = Group.objects.get(name='profissionais de saude')
         usuario.groups.add(grupo_profissional)
 
+        # Gerando o link de redefinição de senha
+        uid = urlsafe_base64_encode(force_bytes(usuario.pk))
+        token = default_token_generator.make_token(usuario)
+        reset_url = self.request.build_absolute_uri(reverse('redefinir_senha_confirmacao', kwargs={'uidb64': uid, 'token': token}))
+
+        # Enviar e-mail com o link de redefinição de senha
         assunto = 'Sistema Médico Pericial - UFAC - Confirmação de Cadastro'
         message = f'Olá {profissional.nome}! Seu cadastro foi confirmado com sucesso! ' \
                   f'Seu login é o seu CPF. \n Por favor, clique no link abaixo para ' \
-                  f'redefinir sua senha: \n www.google.com.br'
+                  f'definir sua senha: \n {reset_url}'
         try:
             send_mail(assunto, message, EMAIL_HOST_USER, [email])
             msg = 'Cadastrado com sucesso! Enviamos um e-mail de recuperação de senha.'
@@ -680,7 +693,6 @@ class ProfissionaldasaudeCreate(CreateView):
             return JsonResponse({'success': False, 'errors': form.errors})
         messages.error(self.request, 'Erro! Verifique os campos preenchidos e tente novamente.')
         return super().form_invalid(form)
-
 
 
 # class AgendamentoCreate(CreateView):
