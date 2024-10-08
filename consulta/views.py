@@ -1420,11 +1420,12 @@ def excluir_arquivo(request, arquivo_id, atendimento_id):
     if request.method == 'POST':
         arquivo.delete()
         messages.success(request, 'Arquivo excluído!')
-        return redirect('visualizarAtendimento', atendimento_id=atendimento_id)
+        return redirect('visualizarAtendimento', pk=atendimento_id)
+
     else:
         messages.error(request, 'Falha ao excluir o arquivo! Tente novamente.')
 
-    return redirect('visualizarAtendimento', atendimento_id=atendimento_id)
+    return redirect('visualizarAtendimento', pk=atendimento_id)
 
 
 def search_paciente(request):
