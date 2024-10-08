@@ -36,8 +36,14 @@
 
                     <!-- Nome do Paciente -->
                     <div class="col-12 d-flex border-bottom py-2">
-                        <dt class="col-sm-2">Nome do paciente:</dt>
+                        {% if atendimento.agendamento.paciente.nome_social %}
+                            <dt class="col-sm-2">Nome Social:</dt>
+                            <dd class="col-sm-4">{{ atendimento.agendamento.paciente.nome_social }}
+                        {% endif %}
+                    
+                        <dt class="col-sm-2">Nome do Paciente:</dt>
                         <dd class="col-sm-4">{{ atendimento.agendamento.paciente.nome }}</dd>
+                    
                     </div>
                 
                 
@@ -49,7 +55,7 @@
 
                     <!-- Tipo de Paciente -->
                     <div class="col-12 d-flex border-bottom py-2">
-                        <dt class="col-sm-2">Tipo de paciente:</dt>
+                        <dt class="col-sm-2">Tipo de Paciente:</dt>
                         <dd class="col-sm-4">{{ atendimento.agendamento.paciente.tipo_paciente }}</dd>
                     </div>
 
@@ -90,10 +96,12 @@
 
                             <form method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
-                                <div class="col-md-5" style="width: 100%;">
+                                <div class="col-md-5">
                                     {{ form.as_p }}
                                 </div>
-                                <button type="submit" class="btn btn-primary btn-sm">Enviar</button>
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    Enviar&nbsp;&nbsp;<i class="fa fa-send"></i>
+                                </button>
                             </form>
                         </div>
 
@@ -306,17 +314,17 @@
                     <div class="form-group">
                         <label for="descricao">{{ laudo.descricao|linebreaksbr }}</label>
                     </div>
-                    <br>
+                    <br> <hr> <br>
                     <div class="form-group">
-                        <label>Paciente: {{ laudo.paciente.nome }}</label>
+                        <label><b>Paciente:</b> {{ laudo.paciente.nome }}</label>
                     </div>
                     <br>
                     <div class="form-group">
-                        <label>Data da Consulta: {{ laudo.data_consulta|date:'d/m/Y' }}</label>
+                        <label><b>Data da Consulta:</b> {{ laudo.data_consulta|date:'d/m/Y' }}</label>
                     </div>
                     <br>
                     <div class="form-group">
-                        <label>Profissional de Saúde: {{ laudo.profissional.nome }}</label>
+                        <label><b>Profissional de Saúde:</b> {{ laudo.profissional.nome }}</label>
                     </div>
                     <br>
                     <p style="text-align: center;">Rio Branco - Acre {{ laudo.data_laudo|date:'d/m/Y' }}</p>
@@ -347,7 +355,8 @@
                         <img id="cadeado" src="{% static 'imagens/cadeado.png' %}" alt="" style="width: 50px; height: auto;">
                     </div>
                     
-                    <p>Desculpe, mas você não tem permissão para acessar esta funcionalidade. Por favor, entre em contato com o administrador do sistema para obter mais informações.</p>
+                    <p>Desculpe, mas você não tem permissão para acessar esta funcionalidade. Por favor, entre em 
+                        contato com o administrador do sistema para obter mais informações.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
