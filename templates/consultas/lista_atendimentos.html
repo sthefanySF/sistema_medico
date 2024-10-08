@@ -10,7 +10,7 @@
     <div class="container">
 
         <div class="d-flex mt-4" style="justify-content: left">
-            <a href="{% url 'agendamentoListagem' %}" class="btn btn-primary">
+            <a href="{% url 'agendamentoListagem' %}" class="btn btn-primary btn-sm">
                 Ir para Agendamentos&nbsp;&nbsp;<i class="fa fa-external-link"></i>
             </a>
         </div>
@@ -33,6 +33,7 @@
                                class="atendimento-link">
 
                                 {{ atendimento.agendamento.paciente.get_display_name }}
+                            
                                 {% if atendimento.profissional_saude %}
                                     <span class="profissional-text">- Dr(a): 
                                         {{ atendimento.profissional_saude.get_display_name }}
