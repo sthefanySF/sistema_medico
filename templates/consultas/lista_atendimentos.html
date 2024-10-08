@@ -7,38 +7,49 @@
 {% endblock %}
 
 {% block content %}
-  <div class="container">
-  
-   <div class="d-flex mt-4" style="justify-content: left">
-      <a href="{% url 'agendamentoListagem' %}" class="btn btn-primary">
-          Ir para Agendamentos&nbsp;&nbsp;<i class="fa fa-external-link"></i>
-      </a>
-    </div>
-  
-    <div class="text-center mb-4 text-black">
-      <h4>LISTA DE ATENDIMENTOS</h4>
-    </div>
+    <div class="container">
 
-    <div id="glass">
-      <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Pesquisar atendimento..." id="searchInput" />
-      </div>
-
-      <ul class="list-group custom-list">
-        {% for atendimento in atendimentos %}
-          <li class="list-group-item">
-            <a href="javascript:void(0);" onclick="verificarPermissao('{% url 'visualizarAtendimento' atendimento.id %}')" class="atendimento-link">
-              {{ atendimento.agendamento.paciente.get_display_name}}
-              {% if atendimento.profissional_saude %}
-                <span class="profissional-text">- Dr(a): {{ atendimento.profissional_saude.get_display_name }}</span>
-                <span class="atend-data">{{ atendimento.agendamento.data_agendamento|date:'d/m/Y ' }}</span>
-              {% endif %}
+        <div class="d-flex mt-4" style="justify-content: left">
+            <a href="{% url 'agendamentoListagem' %}" class="btn btn-primary">
+                Ir para Agendamentos&nbsp;&nbsp;<i class="fa fa-external-link"></i>
             </a>
-          </li>
-        {% endfor %}
-      </ul>
+        </div>
+
+        <div class="text-center mb-4 text-black">
+            <h4>LISTA DE ATENDIMENTOS</h4>
+        </div>
+
+        <div class="row justify-content-center">
+            <div id="glass" class="col-md-9">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Pesquisar atendimento..." id="searchInput"/>
+                </div>
+
+                <ul class="list-group custom-list">
+                    {% for atendimento in atendimentos %}
+                        <li class="list-group-item">
+                            <a href="javascript:void(0);"
+                               onclick="verificarPermissao('{% url 'visualizarAtendimento' atendimento.id %}')"
+                               class="atendimento-link">
+
+                                {{ atendimento.agendamento.paciente.get_display_name }}
+                                {% if atendimento.profissional_saude %}
+                                    <span class="profissional-text">- Dr(a): 
+                                        {{ atendimento.profissional_saude.get_display_name }}
+                                    </span>
+                                    
+                                    <span class="atend-data">Data de Atendimento - 
+                                        {{ atendimento.agendamento.data_agendamento|date:'d/m/Y ' }}
+                                    </span>
+                                {% endif %}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+        </div>
     </div>
-  </div>
 
   <!-- Modal de Restrição de Acesso -->
   <div class="modal fade" id="restricaoModal" tabindex="-1" aria-labelledby="restricaoModalLabel" aria-hidden="true">
