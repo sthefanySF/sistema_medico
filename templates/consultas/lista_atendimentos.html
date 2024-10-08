@@ -8,6 +8,13 @@
 
 {% block content %}
   <div class="container">
+  
+   <div class="d-flex mt-4" style="justify-content: left">
+      <a href="{% url 'agendamentoListagem' %}" class="btn btn-primary">
+          Ir para Agendamentos&nbsp;&nbsp;<i class="fa fa-external-link"></i>
+      </a>
+    </div>
+  
     <div class="text-center mb-4 text-black">
       <h4>LISTA DE ATENDIMENTOS</h4>
     </div>
@@ -30,10 +37,6 @@
           </li>
         {% endfor %}
       </ul>
-    </div>
-    <div class="text-center mt-4">
-      
-      <a href="{% url 'agendamentoListagem' %}" class="btn btn-primary">Voltar</a>
     </div>
   </div>
 

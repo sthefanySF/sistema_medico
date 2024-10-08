@@ -234,8 +234,10 @@
         {% endif %}
     </div>
 
+    
     <h6 class="d-flex justify-content-center py-3">ATESTADO MÉDICO</h6>
 
+    
     {% if atestado %}
         <div class="atestado">
             <a href="{% url 'pdf_atestado_medico' atendimento.id %}" target="_blank" class="print-btn"
@@ -260,16 +262,21 @@
                 </button>
             </a>
 
+            
             <div id="form-atestado">
                 <div class="form-group">
                     <!-- Exibe o texto salvo no campo texto_padrao -->
                     <label for="texto_padrao">{{ atestado.texto_padrao|linebreaksbr }}</label>
                 </div>
+                
                 <br>
+                
                 <div class="form-group">
                     <label for="cid">CID: <span>{{ atestado.cid }}</span></label>
                 </div>
+                
                 <br>
+                
                 <div class="form-group">
                     <label>Profissional de Saúde: {{ atestado.profissional }}</label>
                     <br>
@@ -280,9 +287,12 @@
 
             </div>
         </div>
+        
     {% else %}
         <p class="text-center">Não há atestado médico disponível para este atendimento.</p>
     {% endif %}
+    
+    <br> <hr> <br>
 
     <h6 class="d-flex justify-content-center py-3">LAUDO MÉDICO</h6>
 
@@ -314,20 +324,28 @@
                     <div class="form-group">
                         <label for="descricao">{{ laudo.descricao|linebreaksbr }}</label>
                     </div>
+                    
                     <br> <hr> <br>
+                    
                     <div class="form-group">
                         <label><b>Paciente:</b> {{ laudo.paciente.nome }}</label>
                     </div>
+                    
                     <br>
+                    
                     <div class="form-group">
                         <label><b>Data da Consulta:</b> {{ laudo.data_consulta|date:'d/m/Y' }}</label>
                     </div>
+                    
                     <br>
+                    
                     <div class="form-group">
                         <label><b>Profissional de Saúde:</b> {{ laudo.profissional.nome }}</label>
                     </div>
+                    
                     <br>
-                    <p style="text-align: center;">Rio Branco - Acre {{ laudo.data_laudo|date:'d/m/Y' }}</p>
+                    
+                    <p style="text-align: center; font-weight: bold">Rio Branco - Acre {{ laudo.data_laudo|date:'d/m/Y' }}</p>
                 </div>
             {% empty %}
                 <p class="text-center">Não há laudo médico disponível para este agendamento.</p>
