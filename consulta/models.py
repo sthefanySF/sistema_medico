@@ -133,7 +133,7 @@ class Administrativo(models.Model):
         return age 
 
     class Meta:
-        ordering = ['nome']
+        ordering = ['-nome']
         verbose_name = 'Administrativo'
         verbose_name_plural = 'Administrativo'
 
