@@ -5,6 +5,7 @@ from imaplib import _Authenticator
 from multiprocessing import AuthenticationError
 from django.http import HttpResponse, JsonResponse
 from django.views.generic.edit import CreateView
+from django.views.generic import DetailView
 
 # from consulta.forms import AdministrativoForm, AgendamentoForm, AgendamentoReagendarForm, AtendimentoForm,
 # JustificativaCancelamentoForm, PacienteForm, PesquisaAgendamentoForm, ProfissionaldasaudeForm
@@ -18,7 +19,10 @@ from datetime import date
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import get_object_or_404, redirect
-
+from django.db.models import Q
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
 
 from django.contrib import messages
 
@@ -30,7 +34,6 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth.hashers import make_password
 
 from django.template.loader import render_to_string
-from xhtml2pdf import pisa
 import io
 
 from django.template.response import TemplateResponse
@@ -44,7 +47,7 @@ from django.conf import settings
 # para weasyprint e visualizar pdf
 from django.http import FileResponse
 from django.template.loader import get_template
-from weasyprint import HTML, CSS
+from playwright.sync_api import sync_playwright
 
 
 #filtrar pacientes
@@ -64,8 +67,7 @@ from django.shortcuts import render
 def home(request):
     return render(request, 'home.html')
 
-def prontuario_medico(request):
-    return render(request, 'consultas/prontuario_medico.html')
+
 
 @login_required
 def linha_usuario(request): #mostrar o usuario logado
@@ -454,55 +456,83 @@ def cancelar_agendamento(request, agendamento_id):
         return JsonResponse({'success': False, 'errors': form.errors})
         
 
-def visualizar_atendimento(request, atendimento_id):
-    atendimento = get_object_or_404(Atendimento, id=atendimento_id)
-    paciente = atendimento.agendamento.paciente
-    
-    # Buscar o atestado médico
-    try:
-        atestado = AtestadoMedico.objects.get(agendamento=atendimento.agendamento)
-        if atestado.dias_afastamento == 0 and atestado.cid == 'N/A':
+class VisualizarAtendimentoView(DetailView):
+    model = Atendimento
+    template_name = 'consultas/visualizar_atendimento.html'
+    context_object_name = 'atendimento'
+
+    def dispatch(self, request, *args, **kwargs):
+        atendimento = self.get_object()
+        
+        # Verifica se o usuário pertence ao grupo 'administradores' (acesso total)
+        if request.user.groups.filter(name='administradores').exists():
+            return super().dispatch(request, *args, **kwargs)
+
+        # Verifica se o usuário pertence ao grupo 'administrativo'
+        if request.user.groups.filter(name='administrativo').exists():
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'error': 'access_denied'}, status=403)
+            else:
+                return redirect('restricao_de_acesso')
+        
+        # Verifica se o atendimento é privado e se o usuário é o médico responsável
+        if atendimento.privado and atendimento.medico_responsavel != request.user:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'error': 'access_denied'}, status=403)
+            else:
+                return redirect('restricao_de_acesso')
+
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        atendimento = self.get_object()
+        paciente = atendimento.agendamento.paciente
+
+        # Buscar o atestado médico
+        try:
+            atestado = AtestadoMedico.objects.get(agendamento=atendimento.agendamento)
+            if atestado.dias_afastamento == 0 and atestado.cid == 'N/A':
+                atestado = None
+        except AtestadoMedico.DoesNotExist:
             atestado = None
-    except AtestadoMedico.DoesNotExist:
-        atestado = None
 
-    # Buscar as receitas médicas
-    receita_simples = ReceitaMedica.objects.filter(agendamento=atendimento.agendamento, tipo='simples').first()
-    receita_controle_especial = ReceitaMedica.objects.filter(agendamento=atendimento.agendamento, tipo='controle_especial').first()
+        # Buscar as receitas médicas
+        receita_simples = ReceitaMedica.objects.filter(agendamento=atendimento.agendamento, tipo='simples').first()
+        receita_controle_especial = ReceitaMedica.objects.filter(agendamento=atendimento.agendamento, tipo='controle_especial').first()
 
-    # Buscar os laudos médicos
-    laudos = Laudo.objects.filter(agendamento=atendimento.agendamento).order_by('-data_laudo')
+        # Buscar os laudos médicos
+        laudos = Laudo.objects.filter(agendamento=atendimento.agendamento).order_by('-data_laudo')
 
-    # Multiplos Arquivos
-    if request.method == 'POST' and 'file_field' in request.FILES:
-        form = MultipleFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            files = request.FILES.getlist('file_field')
+        # Multiplos Arquivos
+        form = MultipleFileForm(self.request.POST or None, self.request.FILES or None)
+        if self.request.method == 'POST' and form.is_valid():
+            files = self.request.FILES.getlist('file_field')
             for f in files:
                 ArquivoPaciente.objects.create(paciente=paciente, arquivo=f)
 
-            messages.success(request, 'Enviado com sucesso!')
-            return redirect('visualizarAtendimento', atendimento_id=atendimento_id)
-    else:
-        form = MultipleFileForm()
+            messages.success(self.request, 'Enviado com sucesso!')
+            return redirect('visualizarAtendimento', atendimento_id=atendimento.id)
 
-    arquivos = ArquivoPaciente.objects.filter(paciente=paciente).order_by('-data_envio')
-    # Fim
+        arquivos = ArquivoPaciente.objects.filter(paciente=paciente).order_by('-data_envio')
 
-    return render(request, 'consultas/visualizar_atendimento.html', {
-        'atendimento': atendimento,
-        'paciente': paciente,
-        'atestado': atestado,
-        'receita_simples': receita_simples,
-        'receita_controle_especial': receita_controle_especial,
-        'laudos': laudos,
-        'arquivos': arquivos,
-        'form': form,
-    })
+        # Adicionar dados ao contexto
+        context.update({
+            'paciente': paciente,
+            'atestado': atestado,
+            'receita_simples': receita_simples,
+            'receita_controle_especial': receita_controle_especial,
+            'laudos': laudos,
+            'arquivos': arquivos,
+            'form': form,
+        })
+        return context
     
 def lista_atendimentos(request):
     atendimentos = Atendimento.objects.all()
     return render(request, 'consultas/lista_atendimentos.html', {'atendimentos': atendimentos})
+
+
 
 # def user_login(request):
 #     if request.method == 'POST':
@@ -578,10 +608,16 @@ class AdministrativoCreate(CreateView):
         grupo_administrativo = Group.objects.get(name='administrativo')
         usuario.groups.add(grupo_administrativo)
 
+        # Gerando o link de redefinição de senha
+        uid = urlsafe_base64_encode(force_bytes(usuario.pk))
+        token = default_token_generator.make_token(usuario)
+        reset_url = self.request.build_absolute_uri(reverse('redefinir_senha_confirmacao', kwargs={'uidb64': uid, 'token': token}))
+
+        # Enviar e-mail com o link de redefinição de senha
         assunto = 'Sistema Médico Pericial - UFAC - Confirmação de Cadastro'
         message = f'Olá {administrativo.nome}! Seu cadastro foi confirmado com sucesso! ' \
                   f'Seu login é o seu CPF. \n Por favor, clique no link abaixo para ' \
-                  f'redefinir sua senha: \n www.google.com.br'
+                  f'definir sua senha: \n {reset_url}'
         try:
             send_mail(assunto, message, EMAIL_HOST_USER, [email])
             msg = 'Cadastrado com sucesso! Enviamos um e-mail de recuperação de senha.'
@@ -603,9 +639,8 @@ class AdministrativoCreate(CreateView):
 class ProfissionaldasaudeCreate(CreateView):
     model = Profissionaldasaude
     form_class = ProfissionaldasaudeForm
-    # template_name = 'consultas/cadastro_profissionaldasaude.html'
     success_url = reverse_lazy('profissionaldasaudeListagem')
-    
+
     def is_ajax(self):
         return self.request.headers.get('x-requested-with') == 'XMLHttpRequest'
 
@@ -631,10 +666,16 @@ class ProfissionaldasaudeCreate(CreateView):
         grupo_profissional = Group.objects.get(name='profissionais de saude')
         usuario.groups.add(grupo_profissional)
 
+        # Gerando o link de redefinição de senha
+        uid = urlsafe_base64_encode(force_bytes(usuario.pk))
+        token = default_token_generator.make_token(usuario)
+        reset_url = self.request.build_absolute_uri(reverse('redefinir_senha_confirmacao', kwargs={'uidb64': uid, 'token': token}))
+
+        # Enviar e-mail com o link de redefinição de senha
         assunto = 'Sistema Médico Pericial - UFAC - Confirmação de Cadastro'
         message = f'Olá {profissional.nome}! Seu cadastro foi confirmado com sucesso! ' \
                   f'Seu login é o seu CPF. \n Por favor, clique no link abaixo para ' \
-                  f'redefinir sua senha: \n www.google.com.br'
+                  f'definir sua senha: \n {reset_url}'
         try:
             send_mail(assunto, message, EMAIL_HOST_USER, [email])
             msg = 'Cadastrado com sucesso! Enviamos um e-mail de recuperação de senha.'
@@ -652,7 +693,6 @@ class ProfissionaldasaudeCreate(CreateView):
             return JsonResponse({'success': False, 'errors': form.errors})
         messages.error(self.request, 'Erro! Verifique os campos preenchidos e tente novamente.')
         return super().form_invalid(form)
-
 
 
 # class AgendamentoCreate(CreateView):
@@ -741,16 +781,23 @@ class AgendamentoCreate(CreateView):
 def download_comprovante(request, pk):
     agendamento = get_object_or_404(Agendamento, pk=pk)
 
-    html_content = render_to_string('consultas/comprovantePdf_agendamento.html', {'agendamento': agendamento})
+    # Renderiza o template para HTML
+    html_content = render_to_string('pdfs/comprovantePdf_agendamento.html', {'agendamento': agendamento})
 
-    pdf_file = io.BytesIO()
-    pisa.CreatePDF(html_content, dest=pdf_file)
+    # Gera o PDF usando Playwright
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
+        page.set_content(html_content)
+        page.wait_for_load_state('networkidle')  # Espera o carregamento completo da página
+        pdf_content = page.pdf(format='A4', print_background=True)
 
-    pdf_file.seek(0)
+        browser.close()
 
-    response = HttpResponse(pdf_file.read(), content_type='application/pdf')
+    # Configura o PDF para download
+    response = HttpResponse(pdf_content, content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename=Comprovante_Agendamento_{agendamento.id}.pdf'
-
+    
     return response
 
 
@@ -824,13 +871,18 @@ class AtendimentoCreate(CreateView):
         atendimento = atendimento_form.save(commit=False)
         atendimento.agendamento = agendamento
 
+        # Adiciona o médico responsável pelo atendimento (usuário atual)
+        atendimento.medico_responsavel = self.request.user
+
         # Salvar o início do atendimento
         atendimento.inicio_atendimento = timezone.now()
         atendimento.save()
 
+        # Atualiza o status do agendamento
         agendamento.status_atendimento = 'atendido'
         agendamento.save()
 
+        # Salva os formulários adicionais
         if atestado_medico_form.is_valid():
             atestado_medico = atestado_medico_form.save(commit=False)
             dias_afastamento = atestado_medico_form.cleaned_data.get('dias_afastamento')
@@ -847,6 +899,10 @@ class AtendimentoCreate(CreateView):
             laudo = laudo_form.save(commit=False)
             laudo.agendamento = agendamento
             laudo.save()
+
+        # Define se o atendimento é privado ou não
+        atendimento.privado = 'privado' in self.request.POST
+        atendimento.save()
 
         return redirect('confirmar_atendimento', agendamento_id=agendamento.id)
 
@@ -890,18 +946,24 @@ def download_comprovante_atendimento(request, atendimento_id):
     atendimento = get_object_or_404(Atendimento, id=atendimento_id)
 
     # Renderiza o template para HTML
-    html_content = render_to_string('consultas/comprovantePdf_atendimento.html', {'atendimento': atendimento})
-    
-    # Converte HTML para PDF
-    pdf_file = io.BytesIO()
-    pisa.CreatePDF(html_content, dest=pdf_file)
-    
-    # Configura o conteúdo do PDF para download
-    pdf_file.seek(0)
-    response = HttpResponse(pdf_file, content_type='application/pdf')
+    html_content = render_to_string('pdfs/comprovantePdf_atendimento.html', {'atendimento': atendimento})
+
+    # Gera o PDF usando Playwright
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
+        page.set_content(html_content)
+        page.wait_for_load_state('networkidle')  # Espera o carregamento completo da página
+        pdf_content = page.pdf(format='A4', print_background=True)
+
+        browser.close()
+
+    # Configura o PDF para download
+    response = HttpResponse(pdf_content, content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename=comprovante_atendimento_{atendimento_id}.pdf'
     
     return response
+
 
 
 def visualizar_pdf_exames(request, atendimento_id):
@@ -923,18 +985,24 @@ def visualizar_comprovante_atendimento(request, atendimento_id):
     atendimento = get_object_or_404(Atendimento, id=atendimento_id)
 
     # Renderiza o template para HTML
-    html_content = render_to_string('consultas/comprovantePdf_atendimento.html', {'atendimento': atendimento})
-    
-    # Converte HTML para PDF
-    pdf_file = io.BytesIO()
-    pisa.CreatePDF(html_content, dest=pdf_file)
-    
-    # Configura o conteúdo do PDF para visualização
-    pdf_file.seek(0)
-    response = HttpResponse(pdf_file.read(), content_type='application/pdf')
+    html_content = render_to_string('pdfs/comprovantePdf_atendimento.html', {'atendimento': atendimento})
+
+    # Gera o PDF usando Playwright
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
+        page.set_content(html_content)
+        page.wait_for_load_state('networkidle')  # Espera o carregamento completo da página
+        pdf_content = page.pdf(format='A4', print_background=True)
+
+        browser.close()
+
+    # Configura o PDF para visualização
+    response = HttpResponse(pdf_content, content_type='application/pdf')
     response['Content-Disposition'] = f'filename=comprovante_atendimento_{atendimento_id}.pdf'
     
     return response
+
 
 # def filtrar_prontuarios(request):
 #     paciente_id = request.GET.get('paciente_id')
@@ -951,11 +1019,23 @@ def visualizar_comprovante_atendimento(request, atendimento_id):
 
 
 def prontuario_medico(request, paciente_id):
+    
+    if request.user.groups.filter(name='administrativo').exists():
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            return JsonResponse({'error': 'access_denied'}, status=403)
+        else:
+            return redirect('restricao_de_acesso')  # Página ou modal de restrição de acesso
+        
+    # Verifica se o usuário pertence ao grupo 'administradores' (acesso total)
+    if request.user.groups.filter(name='administradores').exists():
+        tem_acesso_total = True
+    else:
+        tem_acesso_total = False
+
     paciente = Paciente.objects.get(pk=paciente_id)
     atendimentos = Atendimento.objects.filter(agendamento__paciente=paciente)
     profissionais_saude = Profissionaldasaude.objects.all()
 
-    # Verificar as receitas associadas aos atendimentos
     prontuario_dados = []
     for atendimento in atendimentos:
         agendamento = atendimento.agendamento
@@ -969,11 +1049,20 @@ def prontuario_medico(request, paciente_id):
             receita_controle_especial.prescricao or receita_controle_especial.dosagem or receita_controle_especial.via_administrativa or receita_controle_especial.modo_uso
         )
 
-        prontuario_dados.append({
-            'atendimento': atendimento,
-            'receita_simples': receita_simples if mostrar_receita_simples else None,
-            'receita_controle_especial': receita_controle_especial if mostrar_receita_controle_especial else None,
-        })
+        # Verifica se o atendimento é privado e se o usuário tem acesso
+        if atendimento.privado and not tem_acesso_total and atendimento.medico_responsavel != request.user:
+            # Usuário não tem acesso a este atendimento privado
+            prontuario_dados.append({
+                'privado': True,  # Marcar como privado para exibir a mensagem de restrição
+                'atendimento': atendimento,
+            })
+        else:
+            prontuario_dados.append({
+                'privado': False,
+                'atendimento': atendimento,
+                'receita_simples': receita_simples if mostrar_receita_simples else None,
+                'receita_controle_especial': receita_controle_especial if mostrar_receita_controle_especial else None,
+            })
 
     return render(request, 'consultas/prontuario_medico.html', {
         'paciente': paciente,
@@ -1015,6 +1104,58 @@ def filtrar_prontuarios(request):
 
     return HttpResponse(data, content_type='application/json')
 
+# def pdf_prontuario_medico(request, paciente_id):
+#     paciente = Paciente.objects.get(pk=paciente_id)
+#     paciente_nome = paciente.nome.replace(' ', '_').lower()
+#     medicos_ids = request.GET.get('medicos')
+#     atendimentos_ids = request.GET.get('atendimentos')
+
+#     if medicos_ids:
+#         medicos_ids = [int(id) for id in medicos_ids.split(",")]
+
+#         ids_agendamentos = paciente.agendamento_set.filter(profissional_saude__id__in=medicos_ids).values_list('id', flat=True)
+#         atendimentos = Atendimento.objects.filter(agendamento__id__in=ids_agendamentos)
+#     else:
+#         atendimentos = Atendimento.objects.filter(agendamento__paciente=paciente)
+
+#     if atendimentos_ids:
+#         atendimentos_ids = [int(id) for id in atendimentos_ids.split(",")]
+#         atendimentos = atendimentos.filter(id__in=atendimentos_ids)
+
+#     prontuario_dados = []
+#     for atendimento in atendimentos:
+#         agendamento = atendimento.agendamento
+#         receita_simples = ReceitaMedica.objects.filter(agendamento=agendamento, tipo='simples').first()
+#         receita_controle_especial = ReceitaMedica.objects.filter(agendamento=agendamento, tipo='controle_especial').first()
+
+#         mostrar_receita_simples = receita_simples and (
+#             receita_simples.prescricao or receita_simples.dosagem or receita_simples.via_administrativa or receita_simples.modo_uso
+#         )
+#         mostrar_receita_controle_especial = receita_controle_especial and (
+#             receita_controle_especial.prescricao or receita_controle_especial.dosagem or receita_controle_especial.via_administrativa or receita_controle_especial.modo_uso
+#         )
+
+#         prontuario_dados.append({
+#             'atendimento': atendimento,
+#             'receita_simples': receita_simples if mostrar_receita_simples else None,
+#             'receita_controle_especial': receita_controle_especial if mostrar_receita_controle_especial else None,
+#         })
+
+#     context = {
+#         'paciente': paciente,
+#         'prontuario_dados': prontuario_dados,
+#         'medicos_ids': medicos_ids,
+#     }
+
+#     html = render_to_string('pdfs/pdf_prontuario_medico.html', context)
+
+#     # WeasyPrint para transformar o HTML em PDF.
+#     pdf = HTML(string=html, base_url=request.build_absolute_uri()).write_pdf()
+
+#     response = HttpResponse(pdf, content_type='application/pdf')
+#     response['Content-Disposition'] = f'inline; filename="prontuario_{paciente_nome}.pdf"'
+#     return response
+
 def pdf_prontuario_medico(request, paciente_id):
     paciente = Paciente.objects.get(pk=paciente_id)
     paciente_nome = paciente.nome.replace(' ', '_').lower()
@@ -1023,7 +1164,6 @@ def pdf_prontuario_medico(request, paciente_id):
 
     if medicos_ids:
         medicos_ids = [int(id) for id in medicos_ids.split(",")]
-
         ids_agendamentos = paciente.agendamento_set.filter(profissional_saude__id__in=medicos_ids).values_list('id', flat=True)
         atendimentos = Atendimento.objects.filter(agendamento__id__in=ids_agendamentos)
     else:
@@ -1060,12 +1200,19 @@ def pdf_prontuario_medico(request, paciente_id):
 
     html = render_to_string('pdfs/pdf_prontuario_medico.html', context)
 
-    # WeasyPrint para transformar o HTML em PDF.
-    pdf = HTML(string=html, base_url=request.build_absolute_uri()).write_pdf()
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
+        page.set_content(html)
+        page.wait_for_load_state('networkidle')  # Espera o carregamento completo da página
+        pdf_content = page.pdf(format='A4', print_background=True)
 
-    response = HttpResponse(pdf, content_type='application/pdf')
+        browser.close()
+
+    response = HttpResponse(pdf_content, content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename="prontuario_{paciente_nome}.pdf"'
     return response
+
 
 def pdf_atestado_medico(request, atendimento_id):
     atendimento = get_object_or_404(Atendimento, id=atendimento_id)
@@ -1080,17 +1227,15 @@ def pdf_atestado_medico(request, atendimento_id):
 
     html = render_to_string('pdfs/pdf_atestado_medico.html', context)
     
-    # Cria um arquivo temporário
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
-        HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(target=temp_pdf.name)
-        
-        # Lê o conteúdo do arquivo temporário
-        temp_pdf.seek(0)
-        pdf_content = temp_pdf.read()
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
+        page.set_content(html)
+        page.wait_for_load_state('networkidle')  # Espera o carregamento completo da página
+        pdf_content = page.pdf(format='A4', print_background=True)
 
-    # Remove o arquivo temporário
-    os.remove(temp_pdf.name)
-    
+        browser.close()
+
     response = HttpResponse(pdf_content, content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename="atestado_{paciente_nome}.pdf"'
     return response
@@ -1109,53 +1254,139 @@ def pdf_receita_medica(request, atendimento_id, tipo=None):
     # Verifica o tipo de receita para escolher o template correto
     if tipo == 'controle_especial' or receita.tipo == 'controle_especial':
         template_path = 'pdfs/pdf_receita_medica_controle.html'
-        css = CSS(string='@page { size: A4 landscape; }')
     else:
         template_path = 'pdfs/pdf_receita_medica.html'
-        css = None
 
     html = render_to_string(template_path, context)
-    
-    # Cria um arquivo temporário
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
-        HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(target=temp_pdf.name, stylesheets=[css] if css else [])
-        
-        # Lê o conteúdo do arquivo temporário
-        temp_pdf.seek(0)
-        pdf_content = temp_pdf.read()
 
-    # Remove o arquivo temporário
-    os.remove(temp_pdf.name)
-    
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
+        page.set_content(html)
+        page.wait_for_load_state('networkidle')  # Espera o carregamento completo da página
+        pdf_content = page.pdf(format='A4', print_background=True)
+
+        browser.close()
+
     response = HttpResponse(pdf_content, content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename="receita_{paciente_nome}.pdf"'
     return response
-
 
 def pdf_laudo_medico(request, atendimento_id):
     atendimento = get_object_or_404(Atendimento, id=atendimento_id)
     agendamento = atendimento.agendamento
     laudo = get_object_or_404(Laudo, agendamento=agendamento)
     paciente_nome = laudo.paciente.nome.replace(' ', '_').lower()
-    
+
     context = {
         'atendimento': atendimento,
         'laudo': laudo,
     }
 
     html = render_to_string('pdfs/pdf_laudo_medico.html', context)
-    
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
-        HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(target=temp_pdf.name)
-        
-        temp_pdf.seek(0)
-        pdf_content = temp_pdf.read()
 
-    os.remove(temp_pdf.name)
-    
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
+        page.set_content(html)
+        page.wait_for_load_state('networkidle')  # Espera o carregamento completo da página
+        pdf_content = page.pdf(format='A4', print_background=True)
+
+        browser.close()
+
     response = HttpResponse(pdf_content, content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename="laudo_{paciente_nome}.pdf"'
     return response
+
+# def pdf_atestado_medico(request, atendimento_id):
+#     atendimento = get_object_or_404(Atendimento, id=atendimento_id)
+#     agendamento = atendimento.agendamento
+#     atestado = get_object_or_404(AtestadoMedico, agendamento=agendamento)
+#     paciente_nome = atestado.paciente.nome.replace(' ', '_').lower()
+    
+#     context = {
+#         'atendimento': atendimento,
+#         'atestado': atestado,
+#     }
+
+#     html = render_to_string('pdfs/pdf_atestado_medico.html', context)
+    
+#     # Cria um arquivo temporário
+#     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
+#         HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(target=temp_pdf.name)
+        
+#         # Lê o conteúdo do arquivo temporário
+#         temp_pdf.seek(0)
+#         pdf_content = temp_pdf.read()
+
+#     # Remove o arquivo temporário
+#     os.remove(temp_pdf.name)
+    
+#     response = HttpResponse(pdf_content, content_type='application/pdf')
+#     response['Content-Disposition'] = f'inline; filename="atestado_{paciente_nome}.pdf"'
+#     return response
+
+# def pdf_receita_medica(request, atendimento_id, tipo=None):
+#     atendimento = get_object_or_404(Atendimento, id=atendimento_id)
+#     agendamento = atendimento.agendamento
+#     receita = get_object_or_404(ReceitaMedica, agendamento=agendamento)
+#     paciente_nome = receita.paciente.nome.replace(' ', '_').lower()
+
+#     context = {
+#         'atendimento': atendimento,
+#         'receita': receita,
+#     }
+
+#     # Verifica o tipo de receita para escolher o template correto
+#     if tipo == 'controle_especial' or receita.tipo == 'controle_especial':
+#         template_path = 'pdfs/pdf_receita_medica_controle.html'
+#         css = CSS(string='@page { size: A4 landscape; }')
+#     else:
+#         template_path = 'pdfs/pdf_receita_medica.html'
+#         css = None
+
+#     html = render_to_string(template_path, context)
+    
+#     # Cria um arquivo temporário
+#     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
+#         HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(target=temp_pdf.name, stylesheets=[css] if css else [])
+        
+#         # Lê o conteúdo do arquivo temporário
+#         temp_pdf.seek(0)
+#         pdf_content = temp_pdf.read()
+
+#     # Remove o arquivo temporário
+#     os.remove(temp_pdf.name)
+    
+#     response = HttpResponse(pdf_content, content_type='application/pdf')
+#     response['Content-Disposition'] = f'inline; filename="receita_{paciente_nome}.pdf"'
+#     return response
+
+
+# def pdf_laudo_medico(request, atendimento_id):
+#     atendimento = get_object_or_404(Atendimento, id=atendimento_id)
+#     agendamento = atendimento.agendamento
+#     laudo = get_object_or_404(Laudo, agendamento=agendamento)
+#     paciente_nome = laudo.paciente.nome.replace(' ', '_').lower()
+    
+#     context = {
+#         'atendimento': atendimento,
+#         'laudo': laudo,
+#     }
+
+#     html = render_to_string('pdfs/pdf_laudo_medico.html', context)
+    
+#     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp_pdf:
+#         HTML(string=html, base_url=request.build_absolute_uri()).write_pdf(target=temp_pdf.name)
+        
+#         temp_pdf.seek(0)
+#         pdf_content = temp_pdf.read()
+
+#     os.remove(temp_pdf.name)
+    
+#     response = HttpResponse(pdf_content, content_type='application/pdf')
+#     response['Content-Disposition'] = f'inline; filename="laudo_{paciente_nome}.pdf"'
+#     return response
 
 
 def restricao_de_acesso(request):

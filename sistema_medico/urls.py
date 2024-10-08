@@ -51,7 +51,7 @@ urlpatterns = [
     # Atendimento
     path('atendimento/criar/<int:agendamento_id>', AtendimentoCreate.as_view(), name='criar_atendimento'),
     path('atendimentos/', lista_atendimentos, name='listaAtendimentos'),
-    path('atendimentos/<int:atendimento_id>/', visualizar_atendimento, name='visualizarAtendimento'),
+    path('atendimento/<int:pk>/', VisualizarAtendimentoView.as_view(), name='visualizarAtendimento'),
     path('confirmar_atendimento/<int:agendamento_id>/', confirmar_atendimento, name='confirmar_atendimento'),
 
     path('download_comprovante_atendimento/<int:atendimento_id>/', download_comprovante_atendimento,

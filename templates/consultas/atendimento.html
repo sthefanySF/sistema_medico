@@ -120,24 +120,9 @@
               <span class="text-center">PRESCRIÇÃO</span>
               <div class="form-group d-flex flex-column">{{ receita_medica_form.prescricao }}</div>
             </div>
-            {% comment %} <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
-              <div class="form-group d-flex flex-column col-md-8">
-                <label for="dosagem">Dosagem</label>
-                {{ receita_medica_form.dosagem }}
-              </div>
-              <div class="form-group d-flex flex-column col-md-8">
-                <label for="via_administrativa">Via Administrativa</label>
-                {{ receita_medica_form.via_administrativa }}
-              </div>
-              <div class="form-group d-flex flex-column col-md-8">
-                <label for="modo_uso">Modo de Uso</label>
-                {{ receita_medica_form.modo_uso }}
-              </div>
-            </div> {% endcomment %}
           </div>
         </div>
 
-        <!-- templates/consultas/atendimento.html -->
         {% load i18n %}
         <h6 class="d-flex justify-content-center py-3">ATESTADO MÉDICO</h6>
 
@@ -193,6 +178,17 @@
             </div>
           </div>
         </div>
+        <div class="form-group" id="private-check">
+          <div class="checkbox-wrapper">
+            <div style="display: flex; align-items: center; gap: 5px;">
+              <input type="checkbox" name="privado" id="privado" {% if laudo_form.privado.value %}checked{% endif %}>
+              <label for="privado">Consulta Privada</label>
+            </div>
+            <span class="info-icon">?</span> <!-- Ícone de "?" -->
+            <div class="tooltip">Esses dados são visíveis apenas para o médico que realizou a consulta</div>
+          </div>
+        </div>
+        
         <div class="d-flex justify-content-center align-items-center mb-3">
           <button type="submit" class="btn btn-primary">Salvar Atendimento</button>
         </div>
@@ -200,59 +196,80 @@
     </div>
   </div>
 
-  <script>
-    document.getElementById('edit-btn').addEventListener('click', function() {
-      var textoAtestado = document.getElementById('texto-atestado');
-      var editTextarea = document.getElementById('edit-textarea');
-      
-      if (editTextarea.style.display === 'none') {
-        // Enter edit mode
-        editTextarea.style.display = 'block';
-        textoAtestado.style.display = 'none';
-        this.textContent = 'Salvar';
-      } else {
-        // Save the edited text
-        var paciente = '{{ agendamento.paciente.get_display_name }}';
-        var data = '{{ agendamento.data_agendamento|date:"d/m/Y" }}';
-        var dias = '<input class="input" name="dias_afastamento" type="number" placeholder="Dias" value="{{ atestado_medico_form.dias_afastamento.value|default_if_none:"" }}" />';
-        
-        textoAtestado.innerHTML = editTextarea.value
-          .replace('{{ agendamento.paciente.get_display_name }}', paciente)
-          .replace('{{ agendamento.data_agendamento|date:"d/m/Y" }}', data)
-          .replace('[[DIAS]]', dias);
-        
-        editTextarea.style.display = 'none';
-        textoAtestado.style.display = 'block';
-        this.textContent = 'Editar';
-      }
-    });
-  
-    document.getElementById('atestado-form').addEventListener('submit', function() {
-      var textoAtestado = document.getElementById('texto-atestado');
-      var editTextarea = document.getElementById('edit-textarea');
-      
-      if (editTextarea.style.display !== 'none') {
-        editTextarea.value = textoAtestado.innerHTML
-          .replace(/<[^>]+>/g, ''); // Remove HTML tags before submitting
-      }
-    });
-  </script>
 
-  <script>
-    function updateFileName() {
-      var inputFile = document.getElementById('id_pdf_exames')
-      var fileNameSpan = document.getElementById('file-name')
-      if (inputFile.files.length > 0) {
-        fileNameSpan.textContent = inputFile.files[0].name
-      } else {
-        fileNameSpan.textContent = 'Clique para escolher o arquivo'
-      }
-    }
-    
-    document.getElementById('id_pdf_exames').addEventListener('change', updateFileName)
-  </script>
 
 <style>
+
+  #private-check {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .info-icon {
+    display: inline-block;
+    margin-left: 28px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    text-align: center;
+    line-height: 18px;
+    font-size: 12px;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .checkbox-wrapper {
+    display: inline-flex;
+    align-items: center;
+    position: relative;
+    justify-content: space-around;
+  }
+  
+  .checkbox-wrapper .tooltip {
+    position: absolute;
+    bottom: -30px; /* Exibe o tooltip abaixo do ícone */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #000;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 5px;
+    opacity: 0;
+    visibility: hidden;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+  
+  .info-icon:hover ~ .tooltip {
+    opacity: 1;
+    visibility: visible;
+    bottom: -50px; /* Ajusta para que o tooltip deslize para baixo */
+  }
+  
+  
+  
+  
+
+#private-check {
+  width: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: aliceblue;
+  border: 1px solid #a3c8ed;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+#private-check input {
+  width: 20px;
+  height: 20px;
+}
 
   textarea#edit-textarea {
     width: 100%;

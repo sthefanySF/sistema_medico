@@ -1,10 +1,8 @@
-{% load static %}
-<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Comprovante de Agendamento</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=B612+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Fragment+Mono:ital@0;1&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
@@ -21,7 +19,7 @@
         border-bottom: 1px solid #afafaf;
         flex-direction: column;
       }
-      
+
       .infoufac {
         font-weight: bold;
         text-align: center;
@@ -31,24 +29,6 @@
       #logoufac {
         width: 50px;
         height: auto;
-      }
-      
-      h3 {
-        text-align: center;
-        margin-top: 50px;
-      }
-      
-      .content {
-        margin-top: 40px;
-      }
-      
-      .content p {
-        line-height: 1.6;
-      }
-      
-      .signature {
-        margin-top: 40px;
-        text-align: center;
       }
     </style>
   </head>
@@ -63,23 +43,35 @@
       </div>
     </header>
 
-    <h3>ATESTADO MÉDICO</h3>
+    <h2 style="text-align: center; padding-bottom: 20px;">COMPROVANTE DE AGENDAMENTO</h2>
+    <div class="info">
+      <p>
+        <strong>Nome do Paciente:</strong> {{ agendamento.paciente.nome }}
+      </p>
 
-    <div class="content">
+      {% if agendamento.paciente.nome_social %}
       <p>
-        Atesto que o(a) paciente <strong>{{ atestado.paciente }}</strong> esteve em consulta no dia <strong>{{ atestado.data_consulta|date:'d/m/Y' }}</strong>, e necessita de <strong>{{ atestado.dias_afastamento }}</strong> dias de afastamento de suas atividades normais, para sua convalescença.
+        <strong>Nome social do Paciente:</strong> {{ agendamento.paciente.nome_social }}
+      </p>
+      {% endif %}
+
+      <p>
+        <strong>Profissional de Saúde:</strong> {{ agendamento.profissional_saude.nome }}
       </p>
       <p>
-        CID: <strong>{{ atestado.cid }}</strong>
+        <strong>Data do Agendamento:</strong> {{ agendamento.data_agendamento|date:'d/m/Y ' }}
       </p>
-      <p style="text-align: center;">Rio Branco - Acre, {{ atestado.data_criacao|date:'d/m/Y' }}</p>
-    </div>
-    <div class="signature">
-      <p>Profissional de Saúde:</p>
       <p>
-        <strong>{{ atestado.profissional.nome }}</strong>
+        <strong>Turno:</strong> {{ agendamento.get_turno_display }}
       </p>
-      <label>Conselho/CMR: {{ atestado.profissional.conselho }}</label>
+      <p>
+        <strong>Prioridade de Atendimento:</strong>
+        {% if agendamento.prioridade_atendimento %}
+          Sim
+        {% else %}
+          Não
+        {% endif %}
+      </p>
     </div>
   </body>
 </html>

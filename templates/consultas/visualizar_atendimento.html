@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}
     Visualizar Atendimento
 {% endblock %}
@@ -23,84 +23,6 @@
         </a>
     </div>
     <br>
-
-    {% comment %} <div class="d-flex justify-content-between pb-3">
-    <a href="{% url 'atestado_medico' paciente.id %}" class="btn btn-primary">Atestado Medico</a>
-
-    <a class="btn btn-primary btn-expand-all" href="#">Receita Medica</a>
-    <a class="btn btn-primary" href="">Laudo Medico</a>
-  </div> {% endcomment %}
-
-{#    <div class="detalhes-atendimentos">#}
-{#        <div class="">#}
-{#            <div class="">#}
-{#                <dl class="row border p-3 align-items-start">#}
-{#                    <dt class="col-sm-2 border-bottom">Profissional de Saúde:</dt>#}
-{#                    <dd class="col-sm-10 border-bottom">{{ atendimento.agendamento.profissional_saude.get_display_name }}</dd>#}
-{##}
-{#                    <dt class="col-sm-2 border-bottom">Nome do paciente:</dt>#}
-{#                    <dd class="col-sm-4 border-bottom">{{ atendimento.agendamento.paciente.get_display_name }}</dd>#}
-{##}
-{#                    <dt class="col-sm-2 border-bottom">Tipo de paciente:</dt>#}
-{#                    <dd class="col-sm-4 border-bottom">{{ atendimento.agendamento.paciente.tipo_paciente }}</dd>#}
-{##}
-{#                    <dt class="col-sm-3 border-bottom">Data do Agendamento:</dt>#}
-{#                    <dd class="col-sm-9 border-bottom">{{ atendimento.agendamento.data_agendamento|date:'d/m/Y' }}</dd>#}
-{##}
-{#                    <dt class="col-sm-2 border-bottom" id="pdfs-name">PDF Exames:</dt>#}
-{#                    <dd class="col-sm-10 border-bottom" id="pdfs">#}
-{#                    {% comment %} #}
-{#                        {% if atendimento.pdf_exames %}#}
-{#                    {% endcomment %}#}
-{#                        <a href="{% url 'visualizar_pdf_exames' atendimento_id=atendimento.id %}"#}
-{#                           target="_blank">{{ atendimento.pdf_exames.name }}</a>#}
-{#                        {% comment %}#}
-{#                    {% else %}#}
-{#                    {% endcomment %}Sem PDF anexado{% comment %}#}
-{#                    {% endif %} {% endcomment %}#}
-{#                        <form method="post" enctype="multipart/form-data">#}
-{#                            <input type="file" name="pdf_exames"/>#}
-{#                            <button type="submit">Upload</button>#}
-{#                        </form>#}
-{#                    </dd>#}
-{##}
-{#                    <dt class="col-sm-2 border-bottom" id="pdfs-name">pdf extra:</dt>#}
-{#                    <dd class="col-sm-10 border-bottom" id="pdfs">#}
-{#                        {% comment %} {% if atendimento.pdf_extra %}#}
-{#              {% endcomment %}#}
-{#                        <a href="" target="_blank">{{ atendimento.pdf_extra.name }}</a>#}
-{#                        {% comment %}#}
-{#            {% else %}#}
-{#              {% endcomment %}Sem PDF anexado{% comment %}#}
-{#            {% endif %} {% endcomment %}#}
-{#                        <form method="post" enctype="multipart/form-data">#}
-{#                            <input type="file" name="pdf_extra"/>#}
-{#                            <button type="submit">Upload</button>#}
-{#                        </form>#}
-{#                    </dd>#}
-{##}
-{#                    <h6 class="d-flex justify-content-center py-3">RESULTADOS</h6>#}
-{##}
-{#                    <dl class="p-3">#}
-{#                        <dt class="border-bottom">Anamnese:</dt>#}
-{#                        <dd class="border-bottom">{{ atendimento.anamnese }}</dd>#}
-{##}
-{#                        <dt class="border-bottom">Exames Físicos:</dt>#}
-{#                        <dd class="border-bottom">{{ atendimento.exame_fisico }}</dd>#}
-{##}
-{#                        <dt class="border-bottom">Exames Complementares:</dt>#}
-{#                        <dd class="border-bottom">{{ atendimento.exames_complementares }}</dd>#}
-{##}
-{#                        <dt class="border-bottom">Diagnóstico:</dt>#}
-{#                        <dd class="border-bottom">{{ atendimento.diagnostico }}</dd>#}
-{##}
-{#                        <dt class="border-bottom">Conduta:</dt>#}
-{#                        <dd>{{ atendimento.conduta }}</dd>#}
-{#                    </dl>#}
-{#                </dl>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
     
     <div class="detalhes-atendimentos">
         <div class="">
@@ -163,7 +85,7 @@
                     <div style="background-color: #ffffff; padding: 15px; border-radius: 5px; 
                             border: 1px solid #dee2e6" class="mt-5">
                     
-                        <div class="col-6 mb-5">
+                        <div class="col-6 mb-5" style="width: 100%;">
                             <h5>Arquivos:</h5>
 
                             <form method="post" enctype="multipart/form-data">
@@ -182,7 +104,7 @@
                                  title="Clique para visualizar">
 
                                 <div class="mb-2" data-bs-toggle="collapse" data-bs-target="#collapseArquivos" aria-expanded="false"
-                                     aria-controls="collapseArquivos" style="cursor: pointer; background-color: #fff; 
+                                     aria-controls="collapseArquivos" style="cursor: pointer; background-color: #f8f9fa; 
                                      padding: 10px; border-radius: 5px; display: flex; align-items: center; 
                                      justify-content: space-between; box-shadow: 4px 4px 10px -8px;">
 
@@ -233,7 +155,7 @@
                                         </tbody>
                                     </table>
                                 {% else %}
-                                    <p class="text-muted mt-3" style="background-color: #fff; padding: 10px;">
+                                    <p class="text-muted mt-3" style="background-color: #f8f9fa; padding: 10px;">
                                         Nenhum arquivo enviado.
                                     </p>
                                 {% endif %}
@@ -277,25 +199,11 @@
                         Imprimir Receita Simples
                     </button>
                 </a>
-                <div class="d-flex">
+                <div class="">
                     <div class="col-md-12 d-flex flex-column">
-                        <span class="text-center">PRESCRIÇÃO</span>
+                        <span class="text-center" style="margin-top: -50px;">PRESCRIÇÃO</span>
                         <div class="campo">{{ receita_simples.prescricao }}</div>
                     </div>
-                    {% comment %} <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
-                        <div class="form-group d-flex flex-column col-md-8">
-                            <label>Dosagem</label>
-                            <div class="campo">{{ receita_simples.dosagem }}</div>
-                        </div>
-                        <div class="form-group d-flex flex-column col-md-8">
-                            <label>Via Administrativa</label>
-                            <div class="campo">{{ receita_simples.via_administrativa }}</div>
-                        </div>
-                        <div class="form-group d-flex flex-column col-md-8">
-                            <label>Modo de Uso</label>
-                            <div class="campo">{{ receita_simples.modo_uso }}</div>
-                        </div>
-                    </div> {% endcomment %}
                 </div>
             {% endif %}
 
@@ -306,25 +214,11 @@
                         Imprimir Receita de Controle Especial
                     </button>
                 </a>
-                <div class="d-flex">
+                <div class="">
                     <div class="col-md-12 d-flex flex-column">
-                        <span class="text-center" style="min-width: 130%;">PRESCRIÇÃO</span>
+                        <span class="text-center" style="margin-top: -50px;">PRESCRIÇÃO</span>
                         <div class="campo">{{ receita_controle_especial.prescricao }}</div>
                     </div>
-                    {% comment %} <div class="col-md-6 d-flex flex-column justify-content-center align-items-center">
-                        <div class="form-group d-flex flex-column col-md-8">
-                            <label>Dosagem</label>
-                            <div class="campo">{{ receita_controle_especial.dosagem }}</div>
-                        </div>
-                        <div class="form-group d-flex flex-column col-md-8">
-                            <label>Via Administrativa</label>
-                            <div class="campo">{{ receita_controle_especial.via_administrativa }}</div>
-                        </div>
-                        <div class="form-group d-flex flex-column col-md-8">
-                            <label>Modo de Uso</label>
-                            <div class="campo">{{ receita_controle_especial.modo_uso }}</div>
-                        </div>
-                    </div> {% endcomment %}
                 </div>
             {% endif %}
         {% else %}
@@ -439,6 +333,28 @@
     <button onclick="voltarTopo()" id="btnTopo">
         <i id="arrow" class="fa fa-arrow-up"></i>
     </button>
+
+    <!-- Modal de Restrição de Acesso -->
+    <div class="modal fade" id="restricaoModal" tabindex="-1" aria-labelledby="restricaoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="restricaoModalLabel" style="margin-left: 34.5%;">Acesso Restrito</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="text-align: center;">
+                    <div style="display: flex; justify-content: center;">
+                        <img id="cadeado" src="{% static 'imagens/cadeado.png' %}" alt="" style="width: 50px; height: auto;">
+                    </div>
+                    
+                    <p>Desculpe, mas você não tem permissão para acessar esta funcionalidade. Por favor, entre em contato com o administrador do sistema para obter mais informações.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
     
 
     <script>
@@ -465,6 +381,29 @@
                 collapseIcon.className = 'fa fa-chevron-down';
             });
         });
+    </script>
+
+    <script>
+        function verificarPermissao(url) {
+            // Faz uma solicitação AJAX para verificar a permissão
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'  // Cabeçalho necessário para a verificação AJAX
+                }
+            })
+            .then(response => {
+                if (response.status === 403) {
+                    // Se a resposta é 403 (proibido), exibe o modal de restrição
+                    var restricaoModal = new bootstrap.Modal(document.getElementById('restricaoModal'));
+                    restricaoModal.show();
+                } else {
+                    // Se o usuário tem permissão, redireciona para a URL
+                    window.location.href = url;
+                }
+            })
+            .catch(error => console.error('Erro ao verificar permissão:', error));
+        }
     </script>
 
     <style>

@@ -51,8 +51,6 @@
       
       </div>  
     </div>
-
-
     
     <nav class="links" style="--items: 5;">
       <a href="{% url 'agendamentoListagem' %}">Agendamentos</a>
@@ -64,7 +62,7 @@
     </nav>
   </div>
   
-  <!-- Novo menu oculto -->
+
   <nav class="fixed-menu" style="--items: 5;">
     <a href="{% url 'agendamentoListagem' %}">Agendamentos</a>
     <a href="{% url 'listaAtendimentos' %}">Atendimentos</a>
@@ -73,37 +71,6 @@
     <a href="{% url 'profissionaldasaudeListagem' %}">Profissional de Saúde</a>
     <span class="line"></span>
   </nav>
-
-  <!-- templates/linha_usuario.html -->
-  {% comment %} <div class="perfil">
-    <div class="card-user">
-      <div class="card_load">
-        <img src="{% static 'imagens/user.png' %}" alt="" />
-      </div>
-      {% if profissional_saude %}
-      <div class="d-flex align-items-center" id="card_title">
-        <span class="text-black" style="padding-left: 10px; font-size: 14px;">{{ profissional_saude.area }}</span>
-      </div>
-      {% elif administrativo %}
-      <div class="d-flex align-items-center" id="card_title">
-        <span class="text-black" style="padding-left: 10px; font-size: 14px;">{{ administrativo.cargo_funcao }}</span>
-      </div>
-      {% endif %}
-      {% if profissional_saude %}
-      <div class="d-flex align-items-center" id="card_descripion">
-        <span class="text-black" style="padding-left: 10px;">{{ profissional_saude.nome }}</span>
-      </div>
-      {% elif administrativo %}
-      <div class="d-flex align-items-center" id="card_descripion">
-        <span class="text-black" style="padding-left: 10px;">{{ administrativo.nome }}</span>
-      </div>
-      {% endif %}
-    </div>
-    <ul class="drop">
-      <li><a href="#">Meu perfil</a></li>
-      <li style="border-radius: 5px;"><a href="{% url 'sair' %}">Sair&nbsp;</a></li>
-    </ul>
-  </div>   {% endcomment %}
   
 </nav>
 
