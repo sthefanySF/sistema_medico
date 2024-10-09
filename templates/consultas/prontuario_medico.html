@@ -6,16 +6,18 @@
 {% endblock %}
 
 {% block content %}
+    
     {% load static %}
     
     {% if messages %}{% include 'messages.html'%}{% endif %}
     
-    <h4 class="text-center mb-4 text-black">Prontuário Médico de {{ paciente.nome }} 
+    <h3 class="text-center text-black">Prontuário Médico</h3> 
+    <h4 class="text-center mb-4 text-black"> {{ paciente.nome }} 
         <span style="font-size: smaller; font-weight:lighter ;">({{ paciente.tipo_paciente }})</span>
     </h4>
 
     <div class="d-flex justify-content-between pb-3 mb-4 pt-" id="glass">
-        <a class="btn btn-primary" href="{% url 'pacienteListagem' %}" style="height: fit-content;">Voltar</a>
+        <a class="btn btn-primary" href="{% url 'pacienteListagem' %}" style="height: fit-content;">Lista de Pacientes</a>
 
         <form id="filtro-form" class="col-md-6">
             <input type="hidden" name="paciente_id" value="{{ paciente.id }}"/>
@@ -26,7 +28,7 @@
                         <label class="dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown"
                                aria-haspopup="true" aria-expanded="false"
                                style="display: flex; justify-content: center; align-items: center; background-color: #fff;">
-                            Selecione os médicos
+                            Selecionar médicos
                         </label>
                     
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" onclick="event.stopPropagation();">
@@ -44,7 +46,9 @@
                 
                     <div class="buttons">
                         <button id="exibir-todos-btn" class="btn btn-primary">Exibir todos</button>
-                        <button id="filtrar-btn" class="btn btn-primary">Filtrar</button>
+                        <button id="filtrar-btn" class="btn btn-primary">
+                            Filtrar&nbsp;&nbsp;<i class="fa fa-filter" aria-hidden="true"></i>
+                        </button>
                     </div>
                 
                 </div>
@@ -52,9 +56,9 @@
         </form>
 
         <a href="{% url 'pdf_prontuario_medico' paciente.id %}?medicos={{ medicos_ids|join:',' }}" target="_blank"
-           class="print-btn" style="border: none;">
+           class="print-btn" style="border: none; text-decoration: none">
             <button class="print-btn">
-                Print
+                Print&nbsp;<i class="fa fa-print" aria-hidden="true"></i>
             </button>
         </a>
     </div>

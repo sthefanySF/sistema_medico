@@ -15,9 +15,11 @@
 
     <div class="mb-4" id="glass">
       <div class="d-flex justify-content-between pb-3">
-        <a class="btn btn-primary" href="{% url 'agendamentoListagem' %}">Voltar</a>
+        <a class="btn btn-primary" href="{% url 'agendamentoListagem' %}">Lista de Agendamentos</a>
         <a href="#" class="btn btn-primary btn-expand-all">Expandir todos</a>
-        <button class="btn btn-primary" href="#" data-bs-toggle="modal" data-bs-target="#cadastroModal">Cadastrar</button>
+        <button class="btn btn-primary" href="#" data-bs-toggle="modal" data-bs-target="#cadastroModal">
+            Cadastrar&nbsp;&nbsp;<i class="fa fa-plus-circle"></i>
+        </button>
       </div>
 
       <div class="input-group mb-3">
@@ -25,7 +27,7 @@
       </div>
     </div>
 
-    <table class="table table-bordered table-sm" id="border-none">
+    <table class="table table-bordered table-sm table-hover" id="border-none">
       <thead>
         <tr>
           <th colspan="3" style="text-align: center;">Nome</th>
@@ -38,7 +40,10 @@
             <td class="profissionaldasaude-nome" colspan="3">
                 {{  profissionaldasaude.get_display_name }}
               <span style="color: #bbbbbb">- {{ profissionaldasaude.area }}</span>
-              <span style="display: none;">{{ profissionaldasaude.data_nascimento|date:'d/m/Y' }}-{{ profissionaldasaude.email }}-{{ profissionaldasaude.rg }}-{{ profissionaldasaude.cpf }}-{{ profissionaldasaude.identificacao_unica }}-{{ profissionaldasaude.area }}-{{ profissionaldasaude.unidade_siass }}-{{ profissionaldasaude.conselho }}</span>
+              <span style="display: none;">{{ profissionaldasaude.data_nascimento|date:'d/m/Y' }}-{{ profissionaldasaude.email }}-
+                  {{ profissionaldasaude.rg }}-{{ profissionaldasaude.cpf }}-
+                  {{ profissionaldasaude.identificacao_unica }}-{{ profissionaldasaude.area }}-
+                  {{ profissionaldasaude.unidade_siass }}-{{ profissionaldasaude.conselho }}</span>
               <a href="#" aria-expanded="false" class="accordion-toggle"></a>
             </td>
           </tr>
@@ -47,20 +52,20 @@
               <div class="collapse" id="collapse{{ forloop.counter }}">
                 <div class="card card-body" id="card-body">
                   <div class="info-block">
-                    <p>Data de Nascimento: {{ profissionaldasaude.data_nascimento|date:'d/m/Y' }}</p>
-                    <p>E-mail: {{ profissionaldasaude.email }}</p>
+                      <p><b>Data de Nascimento:</b> {{ profissionaldasaude.data_nascimento|date:'d/m/Y' }}</p>
+                      <p><b>E-mail:</b> {{ profissionaldasaude.email }}</p>
                   </div>
                   <div class="info-block">
-                    <p>RG: {{ profissionaldasaude.rg }}</p>
-                    <p>CPF: {{ profissionaldasaude.cpf }}</p>
+                      <p><b>RG:</b> {{ profissionaldasaude.rg }}</p>
+                      <p><b>CPF:</b> {{ profissionaldasaude.cpf }}</p>
                   </div>
                   <div class="info-block">
-                    <p>Identificação Única: {{ profissionaldasaude.identificacao_unica }}</p>
-                    <p>Área/Rqe: {{ profissionaldasaude.area }}</p>
+                      <p><b>Identificação Única:</b> {{ profissionaldasaude.identificacao_unica }}</p>
+                      <p><b>Área/Rqe:</b> {{ profissionaldasaude.area }}</p>
                   </div>
                   <div class="info-block">
-                    <p>Unidade SIASS: {{ profissionaldasaude.unidade_siass }}</p>
-                    <p>Conselho: {{ profissionaldasaude.conselho }}</p>
+                      <p><b>Unidade SIASS:</b> {{ profissionaldasaude.unidade_siass }}</p>
+                      <p><b>Conselho:</b> {{ profissionaldasaude.conselho }}</p>
                   </div>
                   <div class="btn-group" role="group" aria-label="Ações">
                     {% comment %} <a href="{% url 'profissionaldasaudeEditar' profissionaldasaude.id %}" class="btn btn-warning">Editar</a> {% endcomment %}
@@ -81,7 +86,7 @@
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                  <p>Você tem certeza de que deseja excluir {{ profissionaldasaude.nome }}?</p>
+                    <p>Você tem certeza de que deseja excluir <b>{{ profissionaldasaude.nome }}</b> ?</p>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
