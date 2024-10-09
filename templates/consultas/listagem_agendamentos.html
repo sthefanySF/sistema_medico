@@ -27,7 +27,9 @@
                                 <option value="todos" class="destacado">Listar Todos</option>
                                 {% for profissional in profissionais_saude %}
                                     <option value="{{ profissional.id }}"
-                                            {% if request.GET.profissional_saude == profissional.id|stringformat:"s" %}selected{% endif %}>{{ profissional.nome }}</option>
+                                            {% if request.GET.profissional_saude == profissional.id|stringformat:"s" %}
+                                            selected{% endif %}>{{ profissional.nome }}
+                                    </option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -161,7 +163,8 @@
                         </div>
 
                         <!-- Modal para cancelar agendamento -->
-                        <div class="modal fade" id="cancelarModal{{ agendamento.id }}" tabindex="-1" aria-labelledby="cancelarModalLabel{{ agendamento.id }}" aria-hidden="true">
+                        <div class="modal fade" id="cancelarModal{{ agendamento.id }}" tabindex="-1" 
+                             aria-labelledby="cancelarModalLabel{{ agendamento.id }}" aria-hidden="true">
                             
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -169,16 +172,23 @@
                                         <h5 class="modal-title" id="cancelarModalLabel{{ agendamento.id }}">Cancelar Agendamento</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
+                                    
                                     <div class="modal-body">
                                         <p>Ao cancelar esse agendamento ele não poderá mais ser atendido. Informe a justificativa para o cancelamento:</p>
                                         <textarea id="justificativa_cancelamento_{{ agendamento.id }}" class="form-control" rows="4" placeholder="Digite a justificativa aqui"></textarea>
                                     </div>
+                                    
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                                        <button type="button" class="btn btn-danger" onclick="cancelarAgendamento({{ agendamento.id }})">Confirmar Cancelamento</button>
+                                        <button type="button" class="btn btn-danger" 
+                                                onclick="cancelarAgendamento({{ agendamento.id }})">
+                                            Confirmar Cancelamento
+                                        </button>
                                     </div>
                                 </div>
                             </div>
+                            
+                            
                             <!-- Área de Confirmação -->
                             <div id="confirmationArea{{ agendamento.id }}" class="confirmation-area d-none mt-4">
                                 <div class="card mx-auto" style="width: 800px;">
@@ -188,7 +198,8 @@
                                             <a class="btn btn-primary btn-sm" href="#" target="_blank">
                                                 Baixar Comprovante &nbsp;<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                                             </a>
-                                            <button class="btn btn-warning" id="voltarParaAgendamento{{ agendamento.id }}" data-bs-dismiss="modal">
+                                            <button class="btn btn-warning" id="voltarParaAgendamento{{ agendamento.id }}" 
+                                                    data-bs-dismiss="modal">
                                                 <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>
                                                 &nbsp;Retornar
                                             </button>
@@ -199,20 +210,24 @@
                         </div>
 
                         <!-- Modal de Restrição de Acesso -->
-                        <div class="modal fade" id="restricaoModal" tabindex="-1" aria-labelledby="restricaoModalLabel" aria-hidden="true">
+                        <div class="modal fade" id="restricaoModal" tabindex="-1" 
+                             aria-labelledby="restricaoModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="restricaoModalLabel" style="margin-left: 34.5%;">Acesso Restrito</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
+                                    
                                     <div class="modal-body" style="text-align: center;">
                                         <div style="display: flex; justify-content: center;">
                                             <img id="cadeado" src="{% static 'imagens/cadeado.png' %}" alt="" style="width: 50px; height: auto;">
                                         </div>
                                         
-                                        <p>Desculpe, mas você não tem permissão para acessar esta funcionalidade. Por favor, entre em contato com o administrador do sistema para obter mais informações.</p>
+                                        <p>Desculpe, mas você não tem permissão para acessar esta funcionalidade. 
+                                            Por favor, entre em contato com o administrador do sistema para obter mais informações.</p>
                                     </div>
+                                    
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                                     </div>
@@ -234,6 +249,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close"></button>
                                     </div>
+                                
                                     <div class="modal-body">
                                         <div id="errorContainer{{ agendamento.id }}"></div>
                                         <form id="reagendarForm{{ agendamento.id }}" method="POST">
