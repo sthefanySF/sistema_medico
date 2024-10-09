@@ -44,7 +44,8 @@
 
     <div class="table-responsive">
         {#  <table id="example" class="table table-striped nowrap table-bordered"#}
-        <table id="example" class="table table-striped nowrap table-bordered" style="vertical-align: middle; width: 100%">
+        <table id="example" class="table table-striped nowrap table-bordered mb-5" 
+               style="vertical-align: middle; width: 100%">
         {% comment %} <table class="table table-striped nowrap table-bordered" style="vertical-align: middle; width: 100%"> {% endcomment %}
             <thead>
             {#    <thead data-toggle="tooltip" data-popper-placement="top" title="Clique para ordenar">#}
@@ -343,9 +344,13 @@
                         <div class="mb-3">
                             <label for="id_paciente" class="form-label"><b>Paciente</b></label>
                             <div class="d-flex">
-                                <input type="text" id="paciente-search" class="form-control" placeholder="Buscar paciente"  style="border-radius: 4px 0 0 4px; border-right: none;">
-                                <button type="button" id="paciente-dropdown-btn" class="btn btn-secondary" style="border-radius: 0 4px 4px 0;">Selecionar</button>
+                                <input type="text" id="paciente-search" class="form-control" placeholder="Buscar paciente"
+                                       style="border-radius: 4px 0 0 4px; border-right: none;">
+                                <button type="button" id="paciente-dropdown-btn" class="btn btn-secondary" style="border-radius: 0 4px 4px 0;">
+                                    Selecionar
+                                </button>
                             </div>
+                            
                             <div id="paciente-dropdown" class="dropdown-menu" style="display: none; max-height: 200px; overflow-y: auto;">
                                 <!-- lista de pacientes -->
                             </div>
@@ -354,9 +359,14 @@
                         <div class="mb-3">
                             <label for="id_profissional_saude" class="form-label"><b>Profissional de Saúde</b></label>
                             <div class="d-flex">
-                                <input type="text" id="profissional-search" class="form-control" placeholder="Buscar profissional de saúde" style="border-radius: 4px 0 0 4px; border-right: none;">
-                                <button type="button" id="profissional-dropdown-btn" class="btn btn-secondary" style="border-radius: 0 4px 4px 0;">Selecionar</button>
+                                <input type="text" id="profissional-search" class="form-control" 
+                                       placeholder="Buscar profissional de saúde" style="border-radius: 4px 0 0 4px; border-right: none;">
+                                <button type="button" id="profissional-dropdown-btn" class="btn btn-secondary" 
+                                        style="border-radius: 0 4px 4px 0;">
+                                    Selecionar
+                                </button>
                             </div>
+                            
                             <div id="profissional-dropdown" class="dropdown-menu" style="display: none; max-height: 200px; overflow-y: auto;">
                                 <!-- lista de profissionais -->
                             </div>
@@ -373,6 +383,7 @@
                         </div>
 
                         <div class="mb-3 form-check">
+                            
                             {{ form.prioridade_atendimento }}
                             <label class="form-check-label" for="id_prioridade_atendimento"><b>Prioridade de
                                 Atendimento</b></label>
