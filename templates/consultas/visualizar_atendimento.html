@@ -34,6 +34,18 @@
                         <dd class="col-sm-10">{{ atendimento.agendamento.profissional_saude.nome }}</dd>
                     </div>
 
+                    <!-- Médico Logado -->
+                    <div class="col-12 d-flex border-bottom py-2">
+                        <dt class="col-sm-2">Atendimento Realizado por:</dt>
+                        <dd class="col-sm-10">
+                        {% if atendimento.medico_logado %}
+                            {{ atendimento.medico_logado.nome }}
+                        {% else %}
+                            Não informado
+                        {% endif %}
+                        </dd>
+                    </div>
+
                     <!-- Nome do Paciente -->
                     <div class="col-12 d-flex border-bottom py-2">
                         <dt class="col-sm-2">Nome do paciente:</dt>
