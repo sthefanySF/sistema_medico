@@ -15,17 +15,20 @@
   <div class="mt-2 mb-4" id="glass">
   
     <div class="d-flex justify-content-between pb-3">
-      <a class="btn btn-primary" href="{% url 'agendamentoListagem' %}">Voltar</a>
+      <a class="btn btn-primary" href="{% url 'agendamentoListagem' %}">Agendamentos</a>
       <a href="#" class="btn btn-primary btn-expand-all">Expandir todos</a>
-      <button class="btn btn-primary" href="#" data-bs-toggle="modal" data-bs-target="#cadastroModal">Cadastrar</button>
+      <button class="btn btn-primary" href="#" data-bs-toggle="modal" data-bs-target="#cadastroModal">
+          Cadastrar&nbsp;&nbsp;<i class="fa fa-plus-circle"></i>
+      </button>
     </div>
 
     <div class="input-group mb-3">
       <input type="text" class="form-control" placeholder="Pesquisar paciente..." id="searchInput" />
     </div>
+  
   </div>
 
-  <table class="table table-bordered table-sm" id="border-none">
+  <table class="table table-bordered table-sm table-hover" id="border-none">
     <thead>
       <tr>
         <th colspan="7" style="text-align: center;">Nome</th>
@@ -38,9 +41,10 @@
             aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
           
           <td class="paciente-nome" colspan="3">
-            {{ paciente.get_display_name }}
+            {{ paciente.get_display_name|upper }}
             <span style="color: #bbbbbb">- {{ paciente.get_sexo_display }}</span>
-            <span style="display: none;">{{ paciente.data_nascimento|date:'d/m/Y' }}-{{ paciente.email }}-{{ paciente.rg }}-{{ paciente.cpf }}-{{ paciente.tipo_paciente }}-{{ paciente.matricula }}</span>
+            <span style="display: none;">{{ paciente.data_nascimento|date:'d/m/Y' }}-{{ paciente.email }}-{{ paciente.rg }}-
+                {{ paciente.cpf }}-{{ paciente.tipo_paciente }}-{{ paciente.matricula }}</span>
             <a href="#" aria-expanded="false" class="accordion-toggle"></a>
             
             <a href="javascript:void(0);" onclick="verificarPermissao('{% url 'prontuario_medico' paciente.id %}')" 

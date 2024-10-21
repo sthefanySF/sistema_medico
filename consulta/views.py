@@ -526,15 +526,15 @@ class VisualizarAtendimentoView(DetailView):
         # Buscar os laudos médicos
         laudos = Laudo.objects.filter(agendamento=atendimento.agendamento).order_by('-data_laudo')
 
-        # Multiplos Arquivos
-        form = MultipleFileForm(self.request.POST or None, self.request.FILES or None)
-        if self.request.method == 'POST' and form.is_valid():
-            files = self.request.FILES.getlist('file_field')
-            for f in files:
-                ArquivoPaciente.objects.create(paciente=paciente, arquivo=f)
-
-            messages.success(self.request, 'Enviado com sucesso!')
-            return redirect('visualizarAtendimento', atendimento_id=atendimento.id)
+        # # Multiplos Arquivos. Coloquei em uma função lá em baixo
+        # form = MultipleFileForm(self.request.POST or None, self.request.FILES or None)
+        # if self.request.method == 'POST' and form.is_valid():
+        #     files = self.request.FILES.getlist('file_field')
+        #     for f in files:
+        #         ArquivoPaciente.objects.create(paciente=paciente, arquivo=f)
+        #
+        #     messages.success(self.request, 'Enviado com sucesso!')
+        #     return redirect('visualizarAtendimento', atendimento_id=atendimento.id)
 
         arquivos = ArquivoPaciente.objects.filter(paciente=paciente).order_by('-data_envio')
 
@@ -546,9 +546,30 @@ class VisualizarAtendimentoView(DetailView):
             'receita_controle_especial': receita_controle_especial,
             'laudos': laudos,
             'arquivos': arquivos,
-            'form': form,
+            # 'form': form,
+            'form': MultipleFileForm(),
         })
         return context
+
+
+    # Multiplos Arquivos
+    def post(self, request, *args, **kwargs):
+        atendimento = self.get_object()
+        paciente = atendimento.agendamento.paciente
+
+        if request.method == 'POST' and 'file_field' in request.FILES:
+            form = MultipleFileForm(request.POST, request.FILES)
+            if form.is_valid():
+                files = request.FILES.getlist('file_field')
+                for f in files:
+                    ArquivoPaciente.objects.create(paciente=paciente, arquivo=f)
+
+                messages.success(request, 'Enviado com sucesso!')
+                return redirect('visualizarAtendimento', pk=atendimento.pk)
+        # else:
+        #     form = MultipleFileForm()
+        return self.get(request, *args, **kwargs)
+
 
 
 def lista_atendimentos(request):
@@ -1423,11 +1444,12 @@ def excluir_arquivo(request, arquivo_id, atendimento_id):
     if request.method == 'POST':
         arquivo.delete()
         messages.success(request, 'Arquivo excluído!')
-        return redirect('visualizarAtendimento', atendimento_id=atendimento_id)
+        return redirect('visualizarAtendimento', pk=atendimento_id)
+
     else:
         messages.error(request, 'Falha ao excluir o arquivo! Tente novamente.')
 
-    return redirect('visualizarAtendimento', atendimento_id=atendimento_id)
+    return redirect('visualizarAtendimento', pk=atendimento_id)
 
 
 def search_paciente(request):

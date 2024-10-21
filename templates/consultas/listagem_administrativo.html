@@ -11,53 +11,79 @@
   <h4 class="text-center mb-4 text-black">LISTA DE ADMINISTRATIVOS</h4>
 
   <div class="mb-4" id="glass">
+
     <div class="d-flex justify-content-between pb-3">
-      <a class="btn btn-primary" href="{% url 'agendamentoListagem' %}">Voltar</a>
+      <a class="btn btn-primary" href="{% url 'agendamentoListagem' %}">Agendamentos</a>
       <a href="#" class="btn btn-primary btn-expand-all">Expandir todos</a>
-      <button class="btn btn-primary" href="#" data-bs-toggle="modal" data-bs-target="#cadastroModal">Cadastrar</button>
+
+      <button class="btn btn-primary" href="#" data-bs-toggle="modal" data-bs-target="#cadastroModal">
+          Cadastrar&nbsp;&nbsp;<i class="fa fa-plus-circle"></i>
+      </button>
     </div>
 
     <div class="input-group mb-3">
       <input type="text" class="form-control" placeholder="Pesquisar administrativo..." id="searchInput" />
     </div>
+
   </div>
-  <table class="table table-bordered table-sm" id="border-none">
+
+  <table class="table table-bordered table-sm table-hover" id="border-none">
     <thead>
       <tr>
         <th colspan="3" style="text-align: center;">Nome</th>
       </tr>
     </thead>
+
     <tbody>
       {% for administrativo in administrativo %}
-        <tr data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
+        <tr data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false"
+            aria-controls="collapse{{ forloop.counter }}">
+
           <td class="administrativo-nome" colspan="3">
-              {{  administrativo.get_display_name}}
-            <span style="color: #bbbbbb">- {{ administrativo.cargo_funcao }}</span>
-            <span style="display: none;">{{ administrativo.data_nascimento|date:'d/m/Y' }}-{{ administrativo.email }}-{{ administrativo.rg }}-{{ administrativo.cpf }}{{ administrativo.setor }}-{{ administrativo.cargo }}</span>
+              <b>{{  administrativo.get_display_name}}</b>
+            <span style="color: #bbbbbb">- {{ administrativo.cargo_funcao|upper }}</span>
+            <span style="display: none;">
+                {{ administrativo.data_nascimento|date:'d/m/Y' }}-{{ administrativo.email }}-{{ administrativo.rg }}-
+                {{ administrativo.cpf }}{{ administrativo.setor }}-{{ administrativo.cargo }}
+            </span>
+
             <a href="#" aria-expanded="false" class="accordion-toggle"></a>
           </td>
         </tr>
+
         <tr>
           <td colspan="3" style="border: transparent;">
             <div class="collapse" id="collapse{{ forloop.counter }}">
               <div class="card card-body" id="card-body">
                 <div class="info-block">
-                  <p>Data de Nascimento: {{ administrativo.data_nascimento|date:'d/m/Y' }}</p>
-                  <p>E-mail: {{ administrativo.email }}</p>
+                    <p><b>Data de Nascimento:</b> {{ administrativo.data_nascimento|date:'d/m/Y' }}</p>
+                    <p><b>E-mail:</b> {{ administrativo.email }}</p>
                 </div>
                 <div class="info-block">
-                  <p>RG: {{ administrativo.rg }}</p>
-                  <p>CPF: {{ administrativo.cpf }}</p>
+                    <p><b>RG:</b> {{ administrativo.rg }}</p>
+                    <p><b>CPF:</b> {{ administrativo.cpf }}</p>
                 </div>
+
                 <div class="info-block">
-                  <p>Setor: {{ administrativo.lotacao_de_exercicio }}</p>
-                  <p>Cargo: {{ administrativo.cargo_funcao }}</p>
+                    <p><b>Setor:</b> {{ administrativo.lotacao_de_exercicio }}</p>
+                    <p><b>Cargo:</b> {{ administrativo.cargo_funcao }}</p>
                 </div>
+
                 <div class="btn-group" role="group" aria-label="Ações">
-                  {% comment %} <a href="{% url 'administrativoEditar' administrativo.id %}" class="btn btn-primary">Editar</a> {% endcomment %}
-                  <button class="btn btn-primary ms-1" data-bs-toggle="modal" data-bs-target="#editarModal{{ administrativo.id }}">Editar</button>
-                  <button class="btn btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#excluirModal{{ administrativo.id }}">Excluir</button>
+                  {% comment %}
+                    <a href="{% url 'administrativoEditar' administrativo.id %}"
+                    class="btn btn-primary">Editar</a>
+                  {% endcomment %}
+                  <button class="btn btn-primary ms-1" data-bs-toggle="modal"
+                          data-bs-target="#editarModal{{ administrativo.id }}">
+                      Editar
+                  </button>
+                  <button class="btn btn-danger ms-1" data-bs-toggle="modal"
+                          data-bs-target="#excluirModal{{ administrativo.id }}">
+                      Excluir
+                  </button>
                 </div>
+
               </div>
             </div>
           </td>
@@ -67,68 +93,100 @@
         <div class="modal fade" id="excluirModal{{ administrativo.id }}" tabindex="-1" aria-labelledby="excluirModalLabel{{ administrativo.id }}" aria-hidden="true">
           <div class="modal-dialog" id="glass">
             <div class="modal-content">
+
               <div class="modal-header">
                 <h5 class="modal-title" id="excluirModalLabel{{ administrativo.id }}">Confirmar Exclusão</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
+
               <div class="modal-body">
-                <p>Você tem certeza de que deseja excluir {{ administrativo.nome }}?</p>
+                <p>
+                    Você tem certeza de que deseja excluir
+
+                    {% if administrativo.nome_social %}
+                        <b>{{ administrativo.nome_social }}</b>
+                    {% else %}
+                        <b>{{ administrativo.nome }}</b>
+                    {% endif %}
+                    ?
+                </p>
               </div>
+
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger" onclick="excluirAdministrativo({{ administrativo.id }})">Confirmar</button>
+                <button type="button" class="btn btn-danger" onclick="excluirAdministrativo({{ administrativo.id }})">
+                    Confirmar
+                </button>
               </div>
+
             </div>
           </div>
         </div>
 
         <!-- Modal de Edição -->
-        <div class="modal fade" id="editarModal{{ administrativo.id }}" tabindex="-1" aria-labelledby="editarModalLabel{{ administrativo.id }}" aria-hidden="true">
+        <div class="modal fade" id="editarModal{{ administrativo.id }}" tabindex="-1"
+             aria-labelledby="editarModalLabel{{ administrativo.id }}" aria-hidden="true">
           <div class="modal-dialog modal-lg" id="glass">
             <div class="modal-content">
+
               <div class="modal-header">
                 <h5 class="modal-title" id="editarModalLabel{{ administrativo.id }}">Editar Usuário</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
+
               <div class="modal-body">
                 <form id="editarForm{{ administrativo.id }}" method="post" action="{% url 'editar_administrativo' %}">
                   {% csrf_token %}
+
                   <input type="hidden" name="id" value="{{ administrativo.id }}" />
+
                   <div class="m-4">
                     <div class="m-2">
                       <div class="col-sm-12" id="pessoais">
                         <div class="col mb-3">
-                          <label for="nome{{ administrativo.id }}" class="col-sm-12 col-form-label"><b>Nome Completo</b></label>
-                          <input type="text" class="form-control" id="nome{{ administrativo.id }}" name="nome" value="{{ administrativo.nome }}" />
+                          <label for="nome{{ administrativo.id }}" class="col-sm-12 col-form-label">
+                              <b>Nome Completo</b>
+                          </label>
+                          <input type="text" class="form-control" id="nome{{ administrativo.id }}" name="nome"
+                                 value="{{ administrativo.nome }}" />
                         </div>
 
                         <div class="col mb-3">
-                          <label for="nome_social{{ administrativo.id }}" class="col-sm-12 col-form-label"><b>Nome Social</b></label>  <!-- Novo campo -->
-                          <input type="text" class="form-control" id="nome_social{{ administrativo.id }}" name="nome_social" value="{{ administrativo.nome_social|default_if_none:''}}" />
+                          <label for="nome_social{{ administrativo.id }}" class="col-sm-12 col-form-label">
+                              <b>Nome Social</b></label>
+                          <input type="text" class="form-control" id="nome_social{{ administrativo.id }}"
+                                 name="nome_social" value="{{ administrativo.nome_social|default_if_none:''}}" />
                         </div>
 
                         <div class="col mb-3">
                           <label for="email{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>E-mail</b></label>
-                          <input type="email" class="form-control" id="email{{ administrativo.id }}" name="email" value="{{ administrativo.email }}" />
+                          <input type="email" class="form-control" id="email{{ administrativo.id }}" name="email"
+                                 value="{{ administrativo.email }}" />
                         </div>
 
                         <div class="row mb-3">
                           <div class="col-sm-6">
                             <label for="cpf{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>CPF</b></label>
-                            <input type="text" class="form-control" id="cpf{{ administrativo.id }}" name="cpf" value="{{ administrativo.cpf }}" />
+                            <input type="text" class="form-control" id="cpf{{ administrativo.id }}" name="cpf"
+                                   value="{{ administrativo.cpf }}" />
                           </div>
 
                           <div class="col-sm-6">
                             <label for="rg{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>RG</b></label>
-                            <input type="text" class="form-control" id="rg{{ administrativo.id }}" name="rg" value="{{ administrativo.rg }}" />
+                            <input type="text" class="form-control" id="rg{{ administrativo.id }}" name="rg"
+                                   value="{{ administrativo.rg }}" />
                           </div>
                         </div>
 
                         <div class="row mb-3">
                           <div class="col-sm-6">
-                            <label for="data_nascimento{{ administrativo.id }}" class="col-sm-6 col-form-label"><b>Data Nascimento</b></label>
-                            <input type="date" class="form-control" id="data_nascimento{{ administrativo.id }}" name="data_nascimento" value="{{ administrativo.data_nascimento|date:'Y-m-d' }}" />
+                            <label for="data_nascimento{{ administrativo.id }}" class="col-sm-6 col-form-label">
+                                <b>Data Nascimento</b>
+                            </label>
+                            <input type="date" class="form-control" id="data_nascimento{{ administrativo.id }}"
+                                   name="data_nascimento" value="{{ administrativo.data_nascimento|date:'Y-m-d' }}" />
                           </div>
+
                           <div class="col mb-3">
                             <label for="sexo{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Sexo</b></label>
                             <select class="form-control" id="sexo{{ administrativo.id }}" name="sexo">
@@ -137,23 +195,33 @@
                                 <option value="O" {% if administrativo.sexo == 'O' %}selected{% endif %}>Outro</option>  
                             </select>
                         </div>
+
                         </div>
                       </div>
 
                       <div class="col-sm-12" id="endereco">
                         <div class="col mb-3">
                           <label for="bairro{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Bairro</b></label>
-                          <input type="text" class="form-control" id="bairro{{ administrativo.id }}" name="bairro" value="{{ administrativo.bairro }}" />
+                          <input type="text" class="form-control" id="bairro{{ administrativo.id }}" name="bairro"
+                                 value="{{ administrativo.bairro }}" />
                         </div>
 
                         <div class="row bm-3">
                           <div class="col-sm-6">
-                            <label for="numero{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Número</b></label>
-                            <input type="text" class="form-control" id="numero{{ administrativo.id }}" name="numero" value="{{ administrativo.numero }}" />
+                            <label for="numero{{ administrativo.id }}" class="col-sm-2 col-form-label">
+                                <b>Número</b>
+                            </label>
+
+                            <input type="text" class="form-control" id="numero{{ administrativo.id }}" name="numero"
+                                   value="{{ administrativo.numero }}" />
                           </div>
+
                           <div class="col-sm-6">
-                            <label for="cidade{{ administrativo.id }}" class="col-sm-2 col-form-label"><b>Cidade</b></label>
-                            <input type="text" class="form-control" id="cidade{{ administrativo.id }}" name="cidade" value="{{ administrativo.cidade }}" />
+                            <label for="cidade{{ administrativo.id }}" class="col-sm-2 col-form-label">
+                                <b>Cidade</b>
+                            </label>
+                            <input type="text" class="form-control" id="cidade{{ administrativo.id }}" name="cidade"
+                                   value="{{ administrativo.cidade }}" />
                           </div>
                         </div>
 
@@ -228,7 +296,9 @@
                     </div>
                   </div>
                   <div class="modal-footer d-flex justify-content-center align-items-center">
-                    <button type="button" class="btn btn-primary" onclick="editarAdministrativo({{ administrativo.id }})">Salvar Alterações</button>
+                    <button type="button" class="btn btn-primary" onclick="editarAdministrativo({{ administrativo.id }})">
+                        Salvar Alterações
+                    </button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                   </div>
                 </form>

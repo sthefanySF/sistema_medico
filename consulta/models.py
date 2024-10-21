@@ -1,3 +1,4 @@
+
 from django.conf.global_settings import MEDIA_ROOT
 from django.db import models
 from datetime import date, datetime
@@ -133,7 +134,7 @@ class Administrativo(models.Model):
         return age 
 
     class Meta:
-        ordering = ['nome']
+        ordering = ['-nome']
         verbose_name = 'Administrativo'
         verbose_name_plural = 'Administrativo'
 
@@ -233,8 +234,8 @@ class Atendimento(models.Model):
     conduta = models.TextField()
     inicio_atendimento = models.DateTimeField(null=True, blank=True)
     fim_atendimento = models.DateTimeField(null=True, blank=True)
-    privado = models.BooleanField(default=False)  # Campo para marcar se a consulta é privada
     medico_responsavel = models.ForeignKey(User, on_delete=models.CASCADE, related_name='atendimentos', null=True, blank=True)
+    privado = models.BooleanField(default=False)  # Campo para marcar se a consulta é privada
     medico_logado = models.ForeignKey(Profissionaldasaude, related_name='atendimentos_realizados', on_delete=models.SET_NULL, null=True)
 
     @property

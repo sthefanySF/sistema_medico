@@ -15,11 +15,11 @@
     
     <div class="d-flex justify-content-around mt-3">
         <a href="{% url 'listaAtendimentos' %}" class="btn btn-primary">
-            Voltar para Lista de Atendimentos
+            <i class="fa fa-arrow-circle-left"></i>&nbsp;&nbsp;Voltar para Lista de Atendimentos
         </a>
         <a href="{% url 'visualizar_comprovante_atendimento' atendimento_id=atendimento.id %}" class="btn btn-primary"
            target="_blank">
-            Visualizar comprovante de atendimento
+            Comprovante de Atendimento&nbsp;&nbsp;<i class="fa fa-file-pdf-o"></i>
         </a>
     </div>
     <br>
@@ -48,8 +48,14 @@
 
                     <!-- Nome do Paciente -->
                     <div class="col-12 d-flex border-bottom py-2">
-                        <dt class="col-sm-2">Nome do paciente:</dt>
+                        {% if atendimento.agendamento.paciente.nome_social %}
+                            <dt class="col-sm-2">Nome Social:</dt>
+                            <dd class="col-sm-4">{{ atendimento.agendamento.paciente.nome_social }}
+                        {% endif %}
+                    
+                        <dt class="col-sm-2">Nome do Paciente:</dt>
                         <dd class="col-sm-4">{{ atendimento.agendamento.paciente.nome }}</dd>
+                    
                     </div>
                 
                 
@@ -61,7 +67,7 @@
 
                     <!-- Tipo de Paciente -->
                     <div class="col-12 d-flex border-bottom py-2">
-                        <dt class="col-sm-2">Tipo de paciente:</dt>
+                        <dt class="col-sm-2">Tipo de Paciente:</dt>
                         <dd class="col-sm-4">{{ atendimento.agendamento.paciente.tipo_paciente }}</dd>
                     </div>
 
@@ -102,10 +108,12 @@
 
                             <form method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
-                                <div class="col-md-5" style="width: 100%;">
+                                <div class="col-md-5">
                                     {{ form.as_p }}
                                 </div>
-                                <button type="submit" class="btn btn-primary btn-sm">Enviar</button>
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    Enviar&nbsp;&nbsp;<i class="fa fa-send"></i>
+                                </button>
                             </form>
                         </div>
 
@@ -238,8 +246,10 @@
         {% endif %}
     </div>
 
+    
     <h6 class="d-flex justify-content-center py-3">ATESTADO MÉDICO</h6>
 
+    
     {% if atestado %}
         <div class="atestado">
             <a href="{% url 'pdf_atestado_medico' atendimento.id %}" target="_blank" class="print-btn"
@@ -264,16 +274,21 @@
                 </button>
             </a>
 
+            
             <div id="form-atestado">
                 <div class="form-group">
                     <!-- Exibe o texto salvo no campo texto_padrao -->
                     <label for="texto_padrao">{{ atestado.texto_padrao|linebreaksbr }}</label>
                 </div>
+                
                 <br>
+                
                 <div class="form-group">
                     <label for="cid">CID: <span>{{ atestado.cid }}</span></label>
                 </div>
+                
                 <br>
+                
                 <div class="form-group">
                     <label>Profissional de Saúde: {{ atestado.profissional }}</label>
                     <br>
@@ -284,9 +299,12 @@
 
             </div>
         </div>
+        
     {% else %}
         <p class="text-center">Não há atestado médico disponível para este atendimento.</p>
     {% endif %}
+    
+    <br> <hr> <br>
 
     <h6 class="d-flex justify-content-center py-3">LAUDO MÉDICO</h6>
 
@@ -318,20 +336,28 @@
                     <div class="form-group">
                         <label for="descricao">{{ laudo.descricao|linebreaksbr }}</label>
                     </div>
-                    <br>
+                    
+                    <br> <hr> <br>
+                    
                     <div class="form-group">
-                        <label>Paciente: {{ laudo.paciente.nome }}</label>
+                        <label><b>Paciente:</b> {{ laudo.paciente.nome }}</label>
                     </div>
+                    
                     <br>
+                    
                     <div class="form-group">
-                        <label>Data da Consulta: {{ laudo.data_consulta|date:'d/m/Y' }}</label>
+                        <label><b>Data da Consulta:</b> {{ laudo.data_consulta|date:'d/m/Y' }}</label>
                     </div>
+                    
                     <br>
+                    
                     <div class="form-group">
-                        <label>Profissional de Saúde: {{ laudo.profissional.nome }}</label>
+                        <label><b>Profissional de Saúde:</b> {{ laudo.profissional.nome }}</label>
                     </div>
+                    
                     <br>
-                    <p style="text-align: center;">Rio Branco - Acre {{ laudo.data_laudo|date:'d/m/Y' }}</p>
+                    
+                    <p style="text-align: center; font-weight: bold">Rio Branco - Acre {{ laudo.data_laudo|date:'d/m/Y' }}</p>
                 </div>
             {% empty %}
                 <p class="text-center">Não há laudo médico disponível para este agendamento.</p>
@@ -359,7 +385,8 @@
                         <img id="cadeado" src="{% static 'imagens/cadeado.png' %}" alt="" style="width: 50px; height: auto;">
                     </div>
                     
-                    <p>Desculpe, mas você não tem permissão para acessar esta funcionalidade. Por favor, entre em contato com o administrador do sistema para obter mais informações.</p>
+                    <p>Desculpe, mas você não tem permissão para acessar esta funcionalidade. Por favor, entre em 
+                        contato com o administrador do sistema para obter mais informações.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
