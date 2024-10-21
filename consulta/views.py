@@ -6,6 +6,7 @@ from multiprocessing import AuthenticationError
 from django.http import HttpResponse, JsonResponse
 from django.views.generic.edit import CreateView
 from django.views.generic import DetailView
+from django.utils import timezone
 
 # from consulta.forms import AdministrativoForm, AgendamentoForm, AgendamentoReagendarForm, AtendimentoForm,
 # JustificativaCancelamentoForm, PacienteForm, PesquisaAgendamentoForm, ProfissionaldasaudeForm
@@ -463,26 +464,47 @@ class VisualizarAtendimentoView(DetailView):
 
     def dispatch(self, request, *args, **kwargs):
         atendimento = self.get_object()
-        
+
+        # Exibe no terminal o usuário logado
+        print(f"Usuário logado: {request.user.username} (ID: {request.user.id})")
+
         # Verifica se o usuário pertence ao grupo 'administradores' (acesso total)
         if request.user.groups.filter(name='administradores').exists():
+            print("Usuário é administrador. Acesso concedido.")
             return super().dispatch(request, *args, **kwargs)
 
         # Verifica se o usuário pertence ao grupo 'administrativo'
         if request.user.groups.filter(name='administrativo').exists():
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({'error': 'access_denied'}, status=403)
-            else:
-                return redirect('restricao_de_acesso')
-        
-        # Verifica se o atendimento é privado e se o usuário é o médico responsável
-        if atendimento.privado and atendimento.medico_responsavel != request.user:
+            print("Usuário pertence ao grupo 'administrativo'. Acesso negado.")
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'error': 'access_denied'}, status=403)
             else:
                 return redirect('restricao_de_acesso')
 
+        # Verifica se a consulta é privada
+        if atendimento.privado:
+            # Obtendo os médicos
+            medico_responsavel = atendimento.medico_responsavel
+            medico_logado = atendimento.medico_logado.usuario if atendimento.medico_logado else None
+
+            print(f"Médico responsável: {medico_responsavel.username} (ID: {medico_responsavel.id})")
+            if medico_logado:
+                print(f"Médico logado: {medico_logado.username} (ID: {medico_logado.id})")
+            else:
+                print("Médico logado não disponível (None)")
+
+            # Verificação de permissão
+            if request.user != medico_responsavel and request.user != medico_logado:
+                print("Acesso negado - Usuário não é o médico responsável nem o médico logado.")
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({'error': 'access_denied'}, status=403)
+                else:
+                    return redirect('restricao_de_acesso')
+            else:
+                print("Acesso concedido - Usuário é o médico responsável ou o médico logado.")
+
         return super().dispatch(request, *args, **kwargs)
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -547,6 +569,7 @@ class VisualizarAtendimentoView(DetailView):
         # else:
         #     form = MultipleFileForm()
         return self.get(request, *args, **kwargs)
+
 
 
 def lista_atendimentos(request):
@@ -837,25 +860,22 @@ def criar_atendimento(request, agendamento_id):
 
     return render(request, 'consultas/atendimento_form.html', {'form': form})
 
-from django.utils import timezone
+
 
 class AtendimentoCreate(CreateView):
     model = Atendimento
     form_class = AtendimentoForm
     template_name = 'consultas/atendimento.html'
-    
+
     def dispatch(self, request, *args, **kwargs):
         # Verifica se o usuário pertence ao grupo 'administrativo'
         if request.user.groups.filter(name='administrativo').exists():
-            # Se a solicitação for AJAX, retorna uma resposta JSON para exibir o modal
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'error': 'access_denied'}, status=403)
             else:
-                # Se não for uma solicitação AJAX, redireciona para a página de restrição
                 return redirect('restricao_de_acesso')
-        
         return super().dispatch(request, *args, **kwargs)
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         agendamento_id = self.kwargs['agendamento_id']
@@ -863,7 +883,7 @@ class AtendimentoCreate(CreateView):
         context['agendamento'] = agendamento
         context['atestado_medico_form'] = AtestadoMedicoForm(agendamento=agendamento)
         context['receita_medica_form'] = ReceitaMedicaForm()
-        context['laudo_form'] = LaudoForm(agendamento=agendamento) 
+        context['laudo_form'] = LaudoForm(agendamento=agendamento)
         return context
 
     def post(self, request, *args, **kwargs):
@@ -871,7 +891,6 @@ class AtendimentoCreate(CreateView):
         agendamento_id = self.kwargs['agendamento_id']
         agendamento = get_object_or_404(Agendamento, id=agendamento_id)
 
-        # Verifica se já existe um atendimento para este agendamento
         atendimento_existente = Atendimento.objects.filter(agendamento=agendamento).first()
 
         if atendimento_existente:
@@ -892,8 +911,12 @@ class AtendimentoCreate(CreateView):
         atendimento = atendimento_form.save(commit=False)
         atendimento.agendamento = agendamento
 
-        # Adiciona o médico responsável pelo atendimento (usuário atual)
-        atendimento.medico_responsavel = self.request.user
+        # Corrigindo o médico responsável para ser o médico originalmente agendado
+        atendimento.medico_responsavel = agendamento.profissional_saude.usuario  # O médico agendado
+
+        # O médico logado é o usuário atual (quem está realizando o atendimento)
+        profissional_logado = Profissionaldasaude.objects.get(usuario=self.request.user)
+        atendimento.medico_logado = profissional_logado
 
         # Salvar o início do atendimento
         atendimento.inicio_atendimento = timezone.now()
@@ -910,7 +933,7 @@ class AtendimentoCreate(CreateView):
             atestado_medico.texto_padrao = atestado_medico.texto_padrao.replace('[[DIAS]]', str(dias_afastamento))
             atestado_medico.agendamento = agendamento
             atestado_medico.save()
-        
+
         if receita_medica_form.is_valid():
             receita_medica = receita_medica_form.save(commit=False)
             receita_medica.agendamento = agendamento
@@ -934,6 +957,7 @@ class AtendimentoCreate(CreateView):
         context['receita_medica_form'] = receita_medica_form
         context['laudo_form'] = laudo_form
         return self.render_to_response(context)
+
 
 
 def confirmar_atendimento(request, agendamento_id):

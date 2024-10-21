@@ -1,3 +1,4 @@
+
 from django.conf.global_settings import MEDIA_ROOT
 from django.db import models
 from datetime import date, datetime
@@ -235,6 +236,7 @@ class Atendimento(models.Model):
     fim_atendimento = models.DateTimeField(null=True, blank=True)
     medico_responsavel = models.ForeignKey(User, on_delete=models.CASCADE, related_name='atendimentos', null=True, blank=True)
     privado = models.BooleanField(default=False)  # Campo para marcar se a consulta é privada
+    medico_logado = models.ForeignKey(Profissionaldasaude, related_name='atendimentos_realizados', on_delete=models.SET_NULL, null=True)
 
     @property
     def profissional_saude(self):

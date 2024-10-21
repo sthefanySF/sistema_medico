@@ -75,26 +75,29 @@
   </div>
 
   <script>
-      function verificarPermissao(url) {
-          // Faz uma solicitação AJAX para verificar a permissão
-          fetch(url, {
-              method: 'GET',
-              headers: {
-                  'X-Requested-With': 'XMLHttpRequest'  // Cabeçalho necessário para a verificação AJAX
-              }
-          })
-          .then(response => {
-              if (response.status === 403) {
-                  // Se a resposta é 403 (proibido), exibe o modal de restrição
-                  var restricaoModal = new bootstrap.Modal(document.getElementById('restricaoModal'));
-                  restricaoModal.show();
-              } else {
-                  // Se o usuário tem permissão, redireciona para a URL
-                  window.location.href = url;
-              }
-          })
-          .catch(error => console.error('Erro ao verificar permissão:', error));
-      }
+    function verificarPermissao(url) {
+      // Faz uma solicitação AJAX para verificar a permissão
+      fetch(url, {
+        method: 'GET',
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'  // Cabeçalho necessário para a verificação AJAX
+        }
+      })
+      .then(response => {
+        if (response.status === 403) {
+          // Se a resposta for 403 (proibido), exibe o modal de restrição
+          var restricaoModal = new bootstrap.Modal(document.getElementById('restricaoModal'));
+          restricaoModal.show();
+        } else if (response.ok) {
+          // Se o usuário tem permissão, redireciona para a URL
+          window.location.href = url;
+        } else {
+          // Exibe erro no console se for outro tipo de erro
+          console.error('Erro ao verificar permissão:', response.status);
+        }
+      })
+      .catch(error => console.error('Erro ao verificar permissão:', error));
+    }
   </script>
   
 
