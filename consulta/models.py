@@ -238,6 +238,13 @@ class Atendimento(models.Model):
     privado = models.BooleanField(default=False)  # Campo para marcar se a consulta é privada
     medico_logado = models.ForeignKey(Profissionaldasaude, related_name='atendimentos_realizados', on_delete=models.SET_NULL, null=True)
 
+    def is_private_for_user(self, user):
+        if not self.privado:
+            return False
+        if self.profissional_saude.usuario == user or (self.medico_logado and self.medico_logado.usuario == user):
+            return False
+        return True
+
     @property
     def profissional_saude(self):
         return self.agendamento.profissional_saude

@@ -466,7 +466,7 @@ class VisualizarAtendimentoView(DetailView):
         atendimento = self.get_object()
 
         # Exibe no terminal o usuário logado
-        print(f"Usuário logado: {request.user.username} (ID: {request.user.id})")
+        # print(f"Usuário logado: {request.user.username} (ID: {request.user.id})")
 
         # Verifica se o usuário pertence ao grupo 'administradores' (acesso total)
         if request.user.groups.filter(name='administradores').exists():
@@ -487,11 +487,12 @@ class VisualizarAtendimentoView(DetailView):
             medico_responsavel = atendimento.medico_responsavel
             medico_logado = atendimento.medico_logado.usuario if atendimento.medico_logado else None
 
-            print(f"Médico responsável: {medico_responsavel.username} (ID: {medico_responsavel.id})")
-            if medico_logado:
-                print(f"Médico logado: {medico_logado.username} (ID: {medico_logado.id})")
-            else:
-                print("Médico logado não disponível (None)")
+            # Exibe no terminal os médicos responsáveis
+            # print(f"Médico responsável: {medico_responsavel.username} (ID: {medico_responsavel.id})")
+            # if medico_logado:
+            #     print(f"Médico logado: {medico_logado.username} (ID: {medico_logado.id})")
+            # else:
+            #     print("Médico logado não disponível (None)")
 
             # Verificação de permissão
             if request.user != medico_responsavel and request.user != medico_logado:
@@ -500,8 +501,8 @@ class VisualizarAtendimentoView(DetailView):
                     return JsonResponse({'error': 'access_denied'}, status=403)
                 else:
                     return redirect('restricao_de_acesso')
-            else:
-                print("Acesso concedido - Usuário é o médico responsável ou o médico logado.")
+            # else:
+            #     print("Acesso concedido - Usuário é o médico responsável ou o médico logado.")
 
         return super().dispatch(request, *args, **kwargs)
 
@@ -572,10 +573,20 @@ class VisualizarAtendimentoView(DetailView):
 
 
 
+# views.py
+
+@login_required
 def lista_atendimentos(request):
     atendimentos = Atendimento.objects.all()
-    return render(request, 'consultas/lista_atendimentos.html', {'atendimentos': atendimentos})
-
+    usuario_logado = request.user
+    atendimentos_com_privacidade = [
+        {
+            'atendimento': atendimento,
+            'is_private': atendimento.is_private_for_user(usuario_logado)
+        }
+        for atendimento in atendimentos
+    ]
+    return render(request, 'consultas/lista_atendimentos.html', {'atendimentos_com_privacidade': atendimentos_com_privacidade, 'usuario_logado': usuario_logado})
 
 
 # def user_login(request):
