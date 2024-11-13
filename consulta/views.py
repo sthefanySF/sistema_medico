@@ -921,16 +921,14 @@ class AtendimentoCreate(CreateView):
     def form_valid(self, atendimento_form, atestado_medico_form, receita_medica_form, laudo_form, agendamento):
         atendimento = atendimento_form.save(commit=False)
         atendimento.agendamento = agendamento
+        atendimento.inicio_atendimento = agendamento.inicio_atendimento  # Usa o horário de início registrado
 
-        # Corrigindo o médico responsável para ser o médico originalmente agendado
-        atendimento.medico_responsavel = agendamento.profissional_saude.usuario  # O médico agendado
-
-        # O médico logado é o usuário atual (quem está realizando o atendimento)
-        profissional_logado = Profissionaldasaude.objects.get(usuario=self.request.user)
-        atendimento.medico_logado = profissional_logado
-
-        # Salvar o início do atendimento
-        atendimento.inicio_atendimento = timezone.now()
+        # Configura o médico responsável
+        atendimento.medico_responsavel = agendamento.profissional_saude.usuario  # Médico originalmente agendado
+        atendimento.medico_logado = Profissionaldasaude.objects.get(usuario=self.request.user)
+        
+        atendimento.fim_atendimento = timezone.now()  # Define o fim do atendimento
+        atendimento.privado = 'privado' in self.request.POST  # Define se o atendimento é privado
         atendimento.save()
 
         # Atualiza o status do agendamento
@@ -955,10 +953,6 @@ class AtendimentoCreate(CreateView):
             laudo.agendamento = agendamento
             laudo.save()
 
-        # Define se o atendimento é privado ou não
-        atendimento.privado = 'privado' in self.request.POST
-        atendimento.save()
-
         return redirect('confirmar_atendimento', agendamento_id=agendamento.id)
 
     def form_invalid(self, atendimento_form, atestado_medico_form, receita_medica_form, laudo_form):
@@ -969,7 +963,17 @@ class AtendimentoCreate(CreateView):
         context['laudo_form'] = laudo_form
         return self.render_to_response(context)
 
-
+def registrar_inicio_atendimento(request, agendamento_id):
+    if request.method == 'POST':
+        try:
+            agendamento = Agendamento.objects.get(id=agendamento_id)
+            agendamento.inicio_atendimento = timezone.now()
+            agendamento.status_atendimento = 'em_andamento'  # Atualiza o status do agendamento
+            agendamento.save()
+            return JsonResponse({'status': 'success'})
+        except Agendamento.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Agendamento não encontrado.'}, status=404)
+    return JsonResponse({'status': 'error', 'message': 'Método inválido.'}, status=400)
 
 def confirmar_atendimento(request, agendamento_id):
     agendamento = get_object_or_404(Agendamento, id=agendamento_id)

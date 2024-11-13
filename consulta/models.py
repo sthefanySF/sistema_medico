@@ -205,6 +205,7 @@ class Agendamento(models.Model):
     turno = models.CharField(max_length=10, choices=TURNO_CHOICES)
     prioridade_atendimento = models.BooleanField(default=False)
     justificativa_cancelamento = models.TextField(blank=True, null=True)
+    inicio_atendimento = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"Agendamento para {self.paciente.nome}"

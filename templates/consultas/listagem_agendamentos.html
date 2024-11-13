@@ -887,6 +887,36 @@
             });
         });
     </script>
+
+    <script>
+        function verificarPermissao(atendimentoUrl) {
+            // URL para registrar o início do atendimento
+            const inicioAtendimentoUrl = `/registrar_inicio_atendimento/${atendimentoUrl.split('/').pop()}/`;
+        
+            // Faz a requisição AJAX para registrar o início do atendimento
+            fetch(inicioAtendimentoUrl, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Redireciona para a URL de criação de atendimento
+                    window.location.href = atendimentoUrl;
+                } else {
+                    alert('Erro ao registrar o início do atendimento.');
+                }
+            })
+            .catch(error => {
+                console.error('Erro na requisição AJAX:', error);
+                alert('Erro ao registrar o início do atendimento.');
+            });
+        }
+        </script>
+        
     
 
     <style>
