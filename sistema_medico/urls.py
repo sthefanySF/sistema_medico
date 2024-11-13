@@ -59,6 +59,7 @@ urlpatterns = [
 
     path('visualizar_comprovante_atendimento/<int:atendimento_id>/', views.visualizar_comprovante_atendimento,
          name='visualizar_comprovante_atendimento'),
+    path('registrar_inicio_atendimento/<int:agendamento_id>/', registrar_inicio_atendimento, name='registrar_inicio_atendimento'),
     
     # Prontuario
     path('prontuario_medico/<int:paciente_id>/', views.prontuario_medico, name='prontuario_medico'),

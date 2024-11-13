@@ -205,6 +205,7 @@ class Agendamento(models.Model):
     turno = models.CharField(max_length=10, choices=TURNO_CHOICES)
     prioridade_atendimento = models.BooleanField(default=False)
     justificativa_cancelamento = models.TextField(blank=True, null=True)
+    inicio_atendimento = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"Agendamento para {self.paciente.nome}"
@@ -237,6 +238,13 @@ class Atendimento(models.Model):
     medico_responsavel = models.ForeignKey(User, on_delete=models.CASCADE, related_name='atendimentos', null=True, blank=True)
     privado = models.BooleanField(default=False)  # Campo para marcar se a consulta é privada
     medico_logado = models.ForeignKey(Profissionaldasaude, related_name='atendimentos_realizados', on_delete=models.SET_NULL, null=True)
+
+    def is_private_for_user(self, user):
+        if not self.privado:
+            return False
+        if self.profissional_saude.usuario == user or (self.medico_logado and self.medico_logado.usuario == user):
+            return False
+        return True
 
     @property
     def profissional_saude(self):

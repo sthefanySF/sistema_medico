@@ -466,7 +466,7 @@ class VisualizarAtendimentoView(DetailView):
         atendimento = self.get_object()
 
         # Exibe no terminal o usuário logado
-        print(f"Usuário logado: {request.user.username} (ID: {request.user.id})")
+        # print(f"Usuário logado: {request.user.username} (ID: {request.user.id})")
 
         # Verifica se o usuário pertence ao grupo 'administradores' (acesso total)
         if request.user.groups.filter(name='administradores').exists():
@@ -487,11 +487,12 @@ class VisualizarAtendimentoView(DetailView):
             medico_responsavel = atendimento.medico_responsavel
             medico_logado = atendimento.medico_logado.usuario if atendimento.medico_logado else None
 
-            print(f"Médico responsável: {medico_responsavel.username} (ID: {medico_responsavel.id})")
-            if medico_logado:
-                print(f"Médico logado: {medico_logado.username} (ID: {medico_logado.id})")
-            else:
-                print("Médico logado não disponível (None)")
+            # Exibe no terminal os médicos responsáveis
+            # print(f"Médico responsável: {medico_responsavel.username} (ID: {medico_responsavel.id})")
+            # if medico_logado:
+            #     print(f"Médico logado: {medico_logado.username} (ID: {medico_logado.id})")
+            # else:
+            #     print("Médico logado não disponível (None)")
 
             # Verificação de permissão
             if request.user != medico_responsavel and request.user != medico_logado:
@@ -500,8 +501,8 @@ class VisualizarAtendimentoView(DetailView):
                     return JsonResponse({'error': 'access_denied'}, status=403)
                 else:
                     return redirect('restricao_de_acesso')
-            else:
-                print("Acesso concedido - Usuário é o médico responsável ou o médico logado.")
+            # else:
+            #     print("Acesso concedido - Usuário é o médico responsável ou o médico logado.")
 
         return super().dispatch(request, *args, **kwargs)
 
@@ -572,10 +573,20 @@ class VisualizarAtendimentoView(DetailView):
 
 
 
+# views.py
+
+@login_required
 def lista_atendimentos(request):
     atendimentos = Atendimento.objects.all()
-    return render(request, 'consultas/lista_atendimentos.html', {'atendimentos': atendimentos})
-
+    usuario_logado = request.user
+    atendimentos_com_privacidade = [
+        {
+            'atendimento': atendimento,
+            'is_private': atendimento.is_private_for_user(usuario_logado)
+        }
+        for atendimento in atendimentos
+    ]
+    return render(request, 'consultas/lista_atendimentos.html', {'atendimentos_com_privacidade': atendimentos_com_privacidade, 'usuario_logado': usuario_logado})
 
 
 # def user_login(request):
@@ -910,16 +921,14 @@ class AtendimentoCreate(CreateView):
     def form_valid(self, atendimento_form, atestado_medico_form, receita_medica_form, laudo_form, agendamento):
         atendimento = atendimento_form.save(commit=False)
         atendimento.agendamento = agendamento
+        atendimento.inicio_atendimento = agendamento.inicio_atendimento  # Usa o horário de início registrado
 
-        # Corrigindo o médico responsável para ser o médico originalmente agendado
-        atendimento.medico_responsavel = agendamento.profissional_saude.usuario  # O médico agendado
-
-        # O médico logado é o usuário atual (quem está realizando o atendimento)
-        profissional_logado = Profissionaldasaude.objects.get(usuario=self.request.user)
-        atendimento.medico_logado = profissional_logado
-
-        # Salvar o início do atendimento
-        atendimento.inicio_atendimento = timezone.now()
+        # Configura o médico responsável
+        atendimento.medico_responsavel = agendamento.profissional_saude.usuario  # Médico originalmente agendado
+        atendimento.medico_logado = Profissionaldasaude.objects.get(usuario=self.request.user)
+        
+        atendimento.fim_atendimento = timezone.now()  # Define o fim do atendimento
+        atendimento.privado = 'privado' in self.request.POST  # Define se o atendimento é privado
         atendimento.save()
 
         # Atualiza o status do agendamento
@@ -944,10 +953,6 @@ class AtendimentoCreate(CreateView):
             laudo.agendamento = agendamento
             laudo.save()
 
-        # Define se o atendimento é privado ou não
-        atendimento.privado = 'privado' in self.request.POST
-        atendimento.save()
-
         return redirect('confirmar_atendimento', agendamento_id=agendamento.id)
 
     def form_invalid(self, atendimento_form, atestado_medico_form, receita_medica_form, laudo_form):
@@ -958,7 +963,17 @@ class AtendimentoCreate(CreateView):
         context['laudo_form'] = laudo_form
         return self.render_to_response(context)
 
-
+def registrar_inicio_atendimento(request, agendamento_id):
+    if request.method == 'POST':
+        try:
+            agendamento = Agendamento.objects.get(id=agendamento_id)
+            agendamento.inicio_atendimento = timezone.now()
+            agendamento.status_atendimento = 'em_andamento'  # Atualiza o status do agendamento
+            agendamento.save()
+            return JsonResponse({'status': 'success'})
+        except Agendamento.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Agendamento não encontrado.'}, status=404)
+    return JsonResponse({'status': 'error', 'message': 'Método inválido.'}, status=400)
 
 def confirmar_atendimento(request, agendamento_id):
     agendamento = get_object_or_404(Agendamento, id=agendamento_id)

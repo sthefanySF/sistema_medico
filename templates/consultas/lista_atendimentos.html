@@ -7,50 +7,48 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
-
-        <div class="d-flex mt-4" style="justify-content: left">
-            <a href="{% url 'agendamentoListagem' %}" class="btn btn-primary btn-sm">
-                Ir para Agendamentos&nbsp;&nbsp;<i class="fa fa-external-link"></i>
-            </a>
-        </div>
-
-        <div class="text-center mb-4 text-black">
-            <h4>LISTA DE ATENDIMENTOS</h4>
-        </div>
-
-        <div class="row justify-content-center">
-            <div id="glass" class="col-md-9">
-                <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Pesquisar atendimento..." id="searchInput"/>
-                </div>
-
-                <ul class="list-group custom-list">
-                    {% for atendimento in atendimentos %}
-                        <li class="list-group-item">
-                            <a href="javascript:void(0);"
-                               onclick="verificarPermissao('{% url 'visualizarAtendimento' atendimento.id %}')"
-                               class="atendimento-link">
-
-                                {{ atendimento.agendamento.paciente.get_display_name }}
-                            
-                                {% if atendimento.profissional_saude %}
-                                    <span class="profissional-text">- Dr(a): 
-                                        {{ atendimento.profissional_saude.get_display_name }}
-                                    </span>
-                                    
-                                    <span class="atend-data">Data de Atendimento - 
-                                        {{ atendimento.agendamento.data_agendamento|date:'d/m/Y ' }}
-                                    </span>
-                                {% endif %}
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-
-            </div>
-        </div>
+  <div class="container">
+    <div class="text-center mb-4 text-black">
+      <h4>LISTA DE ATENDIMENTOS</h4>
     </div>
+    
+    <div class="row justify-content-center">
+      <div id="glass" class="col-md-9">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="Pesquisar atendimento..." id="searchInput" />
+        </div>
+    
+        <ul class="list-group custom-list">
+          {% for item in atendimentos_com_privacidade %}
+            <li class="list-group-item">
+              <a href="javascript:void(0);" onclick="verificarPermissao('{% url 'visualizarAtendimento' item.atendimento.id %}')" class="atendimento-link">
+                {{ item.atendimento.agendamento.paciente.get_display_name }}
+    
+                {% if item.atendimento.profissional_saude %}
+                  <span class="profissional-text">
+                    - Dr(a):
+                    {{ item.atendimento.profissional_saude.get_display_name }}
+                  </span>
+    
+                  <span class="atend-data">
+                    Data de Atendimento -
+                    {{ item.atendimento.agendamento.data_agendamento|date:'d/m/Y ' }}
+                  </span>
+                {% endif %}
+    
+                {% if item.is_private %}
+                  <img src="{% static 'imagens/cadeado.png' %}" alt="Privado" style="width: 20px; height: auto; margin-left: 10px;" />
+                {% endif %}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <div class="d-flex mt-4" style="justify-content: center">
+      <a href="{% url 'agendamentoListagem' %}" class="btn btn-primary btn-sm">Ir para Agendamentos&nbsp;&nbsp;<i class="fa fa-external-link"></i></a>
+    </div>
+  </div>
 
   <!-- Modal de Restrição de Acesso -->
   <div class="modal fade" id="restricaoModal" tabindex="-1" aria-labelledby="restricaoModalLabel" aria-hidden="true">
@@ -80,26 +78,25 @@
       fetch(url, {
         method: 'GET',
         headers: {
-          'X-Requested-With': 'XMLHttpRequest'  // Cabeçalho necessário para a verificação AJAX
+          'X-Requested-With': 'XMLHttpRequest' // Cabeçalho necessário para a verificação AJAX
         }
       })
-      .then(response => {
-        if (response.status === 403) {
-          // Se a resposta for 403 (proibido), exibe o modal de restrição
-          var restricaoModal = new bootstrap.Modal(document.getElementById('restricaoModal'));
-          restricaoModal.show();
-        } else if (response.ok) {
-          // Se o usuário tem permissão, redireciona para a URL
-          window.location.href = url;
-        } else {
-          // Exibe erro no console se for outro tipo de erro
-          console.error('Erro ao verificar permissão:', response.status);
-        }
-      })
-      .catch(error => console.error('Erro ao verificar permissão:', error));
+        .then((response) => {
+          if (response.status === 403) {
+            // Se a resposta for 403 (proibido), exibe o modal de restrição
+            var restricaoModal = new bootstrap.Modal(document.getElementById('restricaoModal'))
+            restricaoModal.show()
+          } else if (response.ok) {
+            // Se o usuário tem permissão, redireciona para a URL
+            window.location.href = url
+          } else {
+            // Exibe erro no console se for outro tipo de erro
+            console.error('Erro ao verificar permissão:', response.status)
+          }
+        })
+        .catch((error) => console.error('Erro ao verificar permissão:', error))
     }
   </script>
-  
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
