@@ -13,7 +13,7 @@
     <dl class="row p-3 border align-items-start" id="info-atendimento">
       <dt class="col-sm-3 border-bottom label-title">Nome do paciente:</dt>
       <dd class="col-sm-9 border-bottom">{{ agendamento.paciente.nome }}</dd>
-      
+
       <dt class="col-sm-3 border-bottom label-title">Atendimento Realizado por:</dt>
       <dd class="col-sm-9 border-bottom">{{ profissional_saude.nome }}</dd>
 
@@ -109,12 +109,12 @@
         <div class="receita">
           <div class="tipo-receita">
             <div class="controle">
-                <label for="controle">Controle Especial</label>
-                <input type="radio" name="tipo" id="controle" value="controle_especial" />
+              <label for="controle">Controle Especial</label>
+              <input type="radio" name="tipo" id="controle" value="controle_especial" />
             </div>
             <div class="simples">
-                <label for="simples">Simples</label>
-                <input type="radio" name="tipo" id="simples" value="simples" />
+              <label for="simples">Simples</label>
+              <input type="radio" name="tipo" id="simples" value="simples" />
             </div>
           </div>
 
@@ -130,27 +130,23 @@
         <h6 class="d-flex justify-content-center py-3">ATESTADO MÉDICO</h6>
 
         <div class="atestado">
-          <button type="button" class="edit-btn" id="edit-btn" style=" float: right;">
-            Editar
-          </button>
-        
+          <button type="button" class="edit-btn" id="edit-btn" style=" float: right;">Editar</button>
+
           <div id="form-atestado">
             <div class="form-group">
               <label for="dias_afastamento" style="width: 100%;">
-                <span id="texto-atestado">
-                  Atesto que o(a) paciente <span id="paciente">{{ agendamento.paciente.get_display_name }}</span> esteve em consulta no dia <span id="data">{{ agendamento.data_agendamento|date:'d/m/Y' }}</span>, e necessita de <span id="dias"><input class="input" name="dias_afastamento" type="number" placeholder="Dias" value="{{ atestado_medico_form.dias_afastamento.value|default_if_none:'' }}" /></span> dias de afastamento de suas atividades normais, para sua convalescença.
-                </span>
+                <span id="texto-atestado">Atesto que o(a) paciente <span id="paciente">{{ agendamento.paciente.get_display_name }}</span> esteve em consulta no dia <span id="data">{{ agendamento.data_agendamento|date:'d/m/Y' }}</span>, e necessita de <span id="dias"><input class="input" name="dias_afastamento" type="number" placeholder="Dias" value="{{ atestado_medico_form.dias_afastamento.value|default_if_none:'' }}" /></span> dias de afastamento de suas atividades normais, para sua convalescença.</span>
                 <textarea id="edit-textarea" name="texto_padrao" style="display: none;">Atesto que o(a) paciente {{ agendamento.paciente.get_display_name }} esteve em consulta no dia {{ agendamento.data_agendamento|date:'d/m/Y' }}, e necessita de [[DIAS]] dias de afastamento de suas atividades normais, para sua convalescença.</textarea>
               </label>
             </div>
-        
+
             <div class="form-group">
               <label for="cid">CID:</label>
               <input class="input" type="text" name="cid" placeholder="CID" value="{{ atestado_medico_form.cid.value|default_if_none:'' }}" style="margin-top: 20px;" />
             </div>
-        
+
             <p style="text-align: center;">Rio Branco - Acre {{ agendamento.data_agendamento|date:'d/m/Y' }}</p>
-        
+
             <div class="form-group">
               <label>Profissional de Saúde:</label>
               <p>{{ agendamento.profissional_saude.get_display_name }}</p>
@@ -164,24 +160,18 @@
         <div class="laudos">
           <div id="form-laudo">
             <div class="form-group">
-              <label for="{{ laudo_form.descricao.id_for_label }}" style="width: 100%;">
-
-                  <span id="descricao">
-                    <textarea class="form-control" name="descricao" placeholder="Descrição..." rows="5" style="width: 100%;">{{ laudo_form.descricao.value|default_if_none:'' }}</textarea>
-                  </span>
-
-              </label>
+              <label for="{{ laudo_form.descricao.id_for_label }}" style="width: 100%;"><span id="descricao"><textarea class="form-control" name="descricao" placeholder="Descrição..." rows="5" style="width: 100%;">{{ laudo_form.descricao.value|default_if_none:'' }}</textarea></span></label>
             </div>
-            
+
             <p style="text-align: center;">Rio Branco - Acre {{ agendamento.data_agendamento|date:'d/m/Y' }}</p>
-            
+
             <div class="form-group">
               <label>Profissional de Saúde:</label>
               <p>{{ agendamento.profissional_saude.get_display_name }}</p>
             </div>
           </div>
         </div>
-        
+
         <div class="form-group" id="private-check">
           <div class="checkbox-wrapper">
             <div style="display: flex; align-items: center; gap: 5px;">
@@ -192,123 +182,170 @@
             <div class="tooltip">Esses dados são visíveis apenas para o médico que realizou a consulta</div>
           </div>
         </div>
-        
+
         <div class="d-flex justify-content-center align-items-center mb-3">
+          <button type="button" class="btn btn-danger mx-2" data-bs-toggle="modal" data-bs-target="#cancelarAtendimentoModal">Cancelar Atendimento</button>
           <button type="submit" class="btn btn-primary">Salvar Atendimento</button>
         </div>
       </form>
     </div>
+
+    <!-- Modal de Confirmação de Cancelamento -->
+    <div class="modal fade" id="cancelarAtendimentoModal" tabindex="-1" aria-labelledby="cancelarAtendimentoModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cancelarAtendimentoModalLabel">Confirmar Cancelamento</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">Tem certeza de que deseja cancelar este atendimento?</div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+            <form method="POST" action="{% url 'cancelar_atendimento' agendamento.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">Sim, Cancelar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
+  <script>
+    let statusInterval
+    
+    // Função para enviar requisição Ajax e manter o status "Em Atendimento"
+    function manterStatusEmAtendimento() {
+      const agendamentoId = '{{ agendamento.id }}'
+      fetch(`/consultas/manter_em_atendimento/${agendamentoId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}',
+          'Content-Type': 'application/json'
+        }
+      })
+        .then((response) => {
+          if (!response.ok) {
+            console.error("Erro ao atualizar status para 'Em Atendimento'")
+          }
+        })
+        .catch((error) => console.error('Erro na conexão:', error))
+    }
+    
+    // Inicia o intervalo quando a página é carregada
+    document.addEventListener('DOMContentLoaded', function () {
+      // Envia requisições a cada 30 segundos para manter o status
+      statusInterval = setInterval(manterStatusEmAtendimento, 30000)
+    })
+    
+    // Limpa o intervalo quando o usuário sai da página ou fecha a aba
+    window.addEventListener('beforeunload', function () {
+      clearInterval(statusInterval)
+    })
+  </script>
 
-
-<style>
-
-  #private-check {
-    position: relative;
-    display: inline-block;
-  }
-  
-  .info-icon {
-    display: inline-block;
-    margin-left: 28px;
-    background-color: #007bff;
-    color: #fff;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    text-align: center;
-    line-height: 18px;
-    font-size: 12px;
-    cursor: pointer;
-    position: relative;
-  }
-  
-  .checkbox-wrapper {
-    display: inline-flex;
-    align-items: center;
-    position: relative;
-    justify-content: space-around;
-  }
-  
-  .checkbox-wrapper .tooltip {
-    position: absolute;
-    bottom: -30px; /* Exibe o tooltip abaixo do ícone */
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #000;
-    color: #fff;
-    padding: 6px 10px;
-    border-radius: 5px;
-    opacity: 0;
-    visibility: hidden;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-  }
-  
-  .info-icon:hover ~ .tooltip {
-    opacity: 1;
-    visibility: visible;
-    bottom: -50px; /* Ajusta para que o tooltip deslize para baixo */
-  }
-  
-  
-  
-  
-
-#private-check {
-  width: 20%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  background-color: aliceblue;
-  border: 1px solid #a3c8ed;
-  border-radius: 5px;
-  padding: 10px;
-  margin-bottom: 20px;
-}
-
-#private-check input {
-  width: 20px;
-  height: 20px;
-}
-
-  textarea#edit-textarea {
-    width: 100%;
-    height: 100px;
-  }
-
-  div.tipo-receita {
-    min-width: 100px;
-    width: 30%;
-    height: 45px;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    background-color: white;
-    border: 1px solid rgb(213, 213, 213);
-    border-radius: 10px;
-    gap: 10px;
-    font-size: 16px;
-    overflow: hidden;
-    font-weight: 500;
-    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.065);
-    text-decoration: none;
-    position: relative;
-    padding: 20px 20px;
-    right: -833px;
-    bottom: 50px;
-  }
-
-  .controle, .simples {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px ;
-    cursor: pointer;
-  }
-</style>
-
+  <style>
+    #private-check {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .info-icon {
+      display: inline-block;
+      margin-left: 28px;
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      text-align: center;
+      line-height: 18px;
+      font-size: 12px;
+      cursor: pointer;
+      position: relative;
+    }
+    
+    .checkbox-wrapper {
+      display: inline-flex;
+      align-items: center;
+      position: relative;
+      justify-content: space-around;
+    }
+    
+    .checkbox-wrapper .tooltip {
+      position: absolute;
+      bottom: -30px; /* Exibe o tooltip abaixo do ícone */
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #000;
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 5px;
+      opacity: 0;
+      visibility: hidden;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+    
+    .info-icon:hover ~ .tooltip {
+      opacity: 1;
+      visibility: visible;
+      bottom: -50px; /* Ajusta para que o tooltip deslize para baixo */
+    }
+    
+    #private-check {
+      width: 20%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background-color: aliceblue;
+      border: 1px solid #a3c8ed;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+    
+    #private-check input {
+      width: 20px;
+      height: 20px;
+    }
+    
+    textarea#edit-textarea {
+      width: 100%;
+      height: 100px;
+    }
+    
+    div.tipo-receita {
+      min-width: 100px;
+      width: 30%;
+      height: 45px;
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      background-color: white;
+      border: 1px solid rgb(213, 213, 213);
+      border-radius: 10px;
+      gap: 10px;
+      font-size: 16px;
+      overflow: hidden;
+      font-weight: 500;
+      box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.065);
+      text-decoration: none;
+      position: relative;
+      padding: 20px 20px;
+      right: -833px;
+      bottom: 50px;
+    }
+    
+    .controle,
+    .simples {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+  </style>
 {% endblock %}
