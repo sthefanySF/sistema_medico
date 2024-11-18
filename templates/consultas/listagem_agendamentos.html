@@ -106,6 +106,10 @@
                             <div class="rounded-1 bg-success text-center text-white">
                                 Confirmado
                             </div>
+                        {% elif agendamento.status_atendimento == 'em_andamento' %}
+                            <div class="rounded-1 bg-info text-center text-white">
+                                Em Atendimento
+                            </div>
                         {% elif agendamento.status_atendimento == 'ausente' %}
                             <div class="rounded-1 bg-warning text-center">
                                 Ausente
@@ -114,7 +118,6 @@
                             <div class="rounded-1 bg-primary text-center text-white">
                                 Atendido
                             </div>
-
                         {% else %}
                             <div class="rounded-1 bg-danger text-center text-white">
                                 Cancelado

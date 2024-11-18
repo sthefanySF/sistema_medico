@@ -7,6 +7,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.generic.edit import CreateView
 from django.views.generic import DetailView
 from django.utils import timezone
+from datetime import timedelta
 
 # from consulta.forms import AdministrativoForm, AgendamentoForm, AgendamentoReagendarForm, AtendimentoForm,
 # JustificativaCancelamentoForm, PacienteForm, PesquisaAgendamentoForm, ProfissionaldasaudeForm
@@ -365,6 +366,7 @@ def profissionaldasaude_excluir(request, pk):
 #     return render(request, 'consultas/excluir_proSaude.html', {'profissionaldasaude': profissionaldasaude})
 
 
+
 def listar_agendamentos(request):
     profissional_id = request.GET.get('profissional_saude')
     form = AgendamentoForm()
@@ -375,10 +377,18 @@ def listar_agendamentos(request):
     else:
         agendamentos = Agendamento.objects.all()
 
-    for agendamento in agendamentos:
-        if agendamento.status_atendimento != 'atendido':
-            agendamento.atualizar_status()
+    tolerancia = timedelta(seconds=30)
+    now = timezone.now()
 
+    for agendamento in agendamentos:
+        if agendamento.status_atendimento == 'em_andamento' and not Atendimento.objects.filter(agendamento=agendamento).exists():
+            print(f"Verificando agendamento {agendamento.id} para redefinição")
+            if agendamento.inicio_atendimento and now - agendamento.inicio_atendimento > tolerancia:
+                print(f"Redefinindo status do agendamento {agendamento.id} para 'confirmado'")
+                agendamento.status_atendimento = 'confirmado'
+                agendamento.inicio_atendimento = None
+                agendamento.save(update_fields=['status_atendimento', 'inicio_atendimento'])
+            
     agendamentos = agendamentos.order_by('-data_agendamento')
 
     return render(request, 'consultas/listagem_agendamentos.html', {
@@ -968,7 +978,19 @@ def registrar_inicio_atendimento(request, agendamento_id):
         try:
             agendamento = Agendamento.objects.get(id=agendamento_id)
             agendamento.inicio_atendimento = timezone.now()
-            agendamento.status_atendimento = 'em_andamento'  # Atualiza o status do agendamento
+            agendamento.status_atendimento = 'em_andamento'
+            agendamento.save(update_fields=['inicio_atendimento', 'status_atendimento'])  # Força a atualização
+            print(f"Início do atendimento registrado para {agendamento.id}")
+            return JsonResponse({'status': 'success'})
+        except Agendamento.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Agendamento não encontrado.'}, status=404)
+    return JsonResponse({'status': 'error', 'message': 'Método inválido.'}, status=400)
+
+def manter_em_atendimento(request, agendamento_id):
+    if request.method == 'POST':
+        try:
+            agendamento = Agendamento.objects.get(id=agendamento_id)
+            agendamento.status_atendimento = 'em_andamento'
             agendamento.save()
             return JsonResponse({'status': 'success'})
         except Agendamento.DoesNotExist:
@@ -1000,6 +1022,15 @@ def confirmar_atendimento(request, agendamento_id):
         'receita_controle_especial': receita_controle_especial if mostrar_receita_controle_especial else None,
         'laudos': laudos,
     })
+    
+def cancelar_atendimento(request, agendamento_id):
+    if request.method == "POST":
+        agendamento = get_object_or_404(Agendamento, id=agendamento_id)
+        agendamento.status_atendimento = 'cancelado'
+        agendamento.save()
+        messages.success(request, 'O atendimento foi cancelado com sucesso.')
+        return redirect('agendamentoListagem')  # Substitua pela URL correta para listar agendamentos
+    return redirect('atendimento', agendamento_id=agendamento_id)  # Volta ao atendimento se não for POST
 
 
 def download_comprovante_atendimento(request, atendimento_id):
