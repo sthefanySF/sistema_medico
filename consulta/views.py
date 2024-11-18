@@ -8,6 +8,7 @@ from django.views.generic.edit import CreateView
 from django.views.generic import DetailView
 from django.utils import timezone
 from datetime import timedelta
+from django.views.decorators.csrf import csrf_exempt
 
 # from consulta.forms import AdministrativoForm, AgendamentoForm, AgendamentoReagendarForm, AtendimentoForm,
 # JustificativaCancelamentoForm, PacienteForm, PesquisaAgendamentoForm, ProfissionaldasaudeForm
@@ -537,17 +538,16 @@ class VisualizarAtendimentoView(DetailView):
         # Buscar os laudos médicos
         laudos = Laudo.objects.filter(agendamento=atendimento.agendamento).order_by('-data_laudo')
 
-        # # Multiplos Arquivos. Coloquei em uma função lá em baixo
-        # form = MultipleFileForm(self.request.POST or None, self.request.FILES or None)
-        # if self.request.method == 'POST' and form.is_valid():
-        #     files = self.request.FILES.getlist('file_field')
-        #     for f in files:
-        #         ArquivoPaciente.objects.create(paciente=paciente, arquivo=f)
-        #
-        #     messages.success(self.request, 'Enviado com sucesso!')
-        #     return redirect('visualizarAtendimento', atendimento_id=atendimento.id)
-
+        # Buscar os arquivos
         arquivos = ArquivoPaciente.objects.filter(paciente=paciente).order_by('-data_envio')
+
+        # Verificar permissões
+        user = self.request.user
+        is_admin = user.groups.filter(name='administradores').exists()
+        is_responsavel = user == atendimento.medico_responsavel
+        is_logado = user == atendimento.medico_logado.usuario if atendimento.medico_logado else False
+
+        user_has_permission = is_admin or is_responsavel or is_logado
 
         # Adicionar dados ao contexto
         context.update({
@@ -557,11 +557,10 @@ class VisualizarAtendimentoView(DetailView):
             'receita_controle_especial': receita_controle_especial,
             'laudos': laudos,
             'arquivos': arquivos,
-            # 'form': form,
             'form': MultipleFileForm(),
+            'user_has_permission': user_has_permission,  # Adicionar a permissão ao contexto
         })
         return context
-
 
     # Multiplos Arquivos
     def post(self, request, *args, **kwargs):
@@ -582,6 +581,29 @@ class VisualizarAtendimentoView(DetailView):
         return self.get(request, *args, **kwargs)
 
 
+@csrf_exempt
+def atualizar_privado(request, atendimento_id):
+    if request.method == 'POST':
+        atendimento = get_object_or_404(Atendimento, id=atendimento_id)
+        user = request.user
+
+        # Verificar permissões
+        is_admin = user.groups.filter(name='administradores').exists()
+        is_responsavel = user == atendimento.medico_responsavel
+        is_logado = user == atendimento.medico_logado.usuario if atendimento.medico_logado else False
+
+        if not (is_admin or is_responsavel or is_logado):
+            return JsonResponse({'error': 'Permissão negada.'}, status=403)
+
+        try:
+            data = json.loads(request.body)
+            atendimento.privado = data.get('privado', False)
+            atendimento.save()
+            return JsonResponse({'message': 'Privacidade atualizada com sucesso.'})
+        except Exception as e:
+            return JsonResponse({'error': 'Erro ao atualizar: ' + str(e)}, status=500)
+    else:
+        return JsonResponse({'error': 'Método não permitido.'}, status=405)
 
 # views.py
 

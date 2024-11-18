@@ -391,6 +391,24 @@
         <p class="text-center">Não há laudo médico disponível para este agendamento.</p>
     {% endif %}
 
+    <div class="form-group" id="private-check">
+        <div class="checkbox-wrapper">
+          <div style="display: flex; align-items: center; gap: 5px;">
+            <input 
+                type="checkbox" 
+                name="privado" 
+                id="privado" 
+                data-atendimento-id="{{ atendimento.id }}" 
+                {% if atendimento.privado %}checked{% endif %} 
+                {% if not user_has_permission %}disabled{% endif %}
+            >
+            <label for="privado">Consulta Privada</label>
+          </div>
+          <span class="info-icon">?</span>
+          <div class="tooltip">Esses dados são visíveis apenas para o médico que realizou a consulta</div>
+        </div>
+      </div>
+
 
     <button onclick="voltarTopo()" id="btnTopo">
         <i id="arrow" class="fa fa-arrow-up"></i>
@@ -469,13 +487,108 @@
         }
     </script>
 
-    <style>
+    <script> // Tornar atendimento privado
+        document.getElementById('privado').addEventListener('change', function() {
+          const atendimentoId = this.dataset.atendimentoId;
+          const isPrivate = this.checked;
+      
+          fetch(`/atendimento/${atendimentoId}/atualizar_privado/`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ privado: isPrivate })
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Erro ao atualizar a privacidade.');
+            }
+            return response.json();
+          })
+          .then(data => {
+            alert(data.message);
+          })
+          .catch(error => {
+            console.error('Erro:', error);
+            alert('Ocorreu um erro ao tentar atualizar a privacidade.');
+          });
+        });
+      </script>
 
+    <style>
         div.campo {
             background-color: #fff;
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+
+        #private-check {
+            position: relative;
+            display: inline-block;
+          }
+          
+          .info-icon {
+            display: inline-block;
+            margin-left: 28px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            text-align: center;
+            line-height: 18px;
+            font-size: 12px;
+            cursor: pointer;
+            position: relative;
+          }
+          
+          .checkbox-wrapper {
+            display: inline-flex;
+            align-items: center;
+            position: relative;
+            justify-content: space-around;
+          }
+          
+          .checkbox-wrapper .tooltip {
+            position: absolute;
+            bottom: -30px; /* Exibe o tooltip abaixo do ícone */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #000;
+            color: #fff;
+            padding: 6px 10px;
+            border-radius: 5px;
+            opacity: 0;
+            visibility: hidden;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+          }
+          
+          .info-icon:hover ~ .tooltip {
+            opacity: 1;
+            visibility: visible;
+            bottom: -50px; /* Ajusta para que o tooltip deslize para baixo */
+          }
+          
+          #private-check {
+            width: 20%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: aliceblue;
+            border: 1px solid #a3c8ed;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 20px;
+          }
+          
+          #private-check input {
+            width: 20px;
+            height: 20px;
+          }
     </style>
 {% endblock %}
