@@ -98,6 +98,7 @@ urlpatterns = [
 
     # Restrição de acesso
     path('restricao/', restricao_de_acesso, name='restricao_de_acesso'),
+    path('atendimento/<int:atendimento_id>/atualizar_privado/', atualizar_privado, name='atualizar_privado'),
     
     # Excluir arquivos de pacientes enviados em 'Atendimentos'
     path('arquivo/excluir/<int:arquivo_id>/<int:atendimento_id>/', excluir_arquivo, name='excluir_arquivo'),
