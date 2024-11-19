@@ -2,301 +2,304 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Prontuário Médico
+  Prontuário Médico
 {% endblock %}
 
 {% block content %}
-    
-    {% load static %}
-    
-    {% if messages %}{% include 'messages.html'%}{% endif %}
-    
-    <h3 class="text-center text-black">Prontuário Médico</h3> 
-    
-    <h4 class="text-center mb-4 text-black"> {{ paciente.nome }} 
-        <span style="font-size: smaller; font-weight:lighter ;">({{ paciente.tipo_paciente }})</span>
-    </h4>
+  {% load static %}
 
-    <div class="d-flex justify-content-between pb-3 mb-4 pt-" id="glass">
-        <a class="btn btn-primary" href="{% url 'pacienteListagem' %}" style="height: fit-content;">Lista de Pacientes</a>
+  {% if messages %}{% include 'messages.html' %}{% endif %}
 
-        <form id="filtro-form" class="col-md-6">
-            <input type="hidden" name="paciente_id" value="{{ paciente.id }}"/>
-            <div class="row align-items-end">
-                <div class="col-md-12" style="">
-                
-                    <div class="dropdown">
-                        <label class="dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown"
-                               aria-haspopup="true" aria-expanded="false"
-                               style="display: flex; justify-content: center; align-items: center; background-color: #fff;">
-                            Selecionar médicos
-                        </label>
-                    
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" onclick="event.stopPropagation();">
-                            {% for profissional in profissionais_saude %}
-                                <div class="form-check" id="form-check-pront">
-                                    <input class="form-check-input" type="checkbox" id="medico{{ profissional.id }}"
-                                           name="medicos" value="{{ profissional.id }}"/>
-                                    <label class="form-check-label-pront"
-                                           for="medico{{ profissional.id }}">{{ profissional.nome }} <span
-                                            style="color: #bbbbbb"> - {{ profissional.area }}</span></label>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                
-                    <div class="buttons">
-                        <button id="exibir-todos-btn" class="btn btn-primary">Exibir todos</button>
-                        <button id="filtrar-btn" class="btn btn-primary">
-                            Filtrar&nbsp;&nbsp;<i class="fa fa-filter" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                
+  <h3 class="text-center text-black">Prontuário Médico</h3>
+
+  <h4 class="text-center mb-4 text-black">
+    {{ paciente.nome }}
+    <span style="font-size: smaller; font-weight:lighter ;">({{ paciente.tipo_paciente }})</span>
+  </h4>
+
+  <div class="d-flex justify-content-between pb-3 mb-4 pt-" id="glass">
+    <a class="btn btn-primary" href="{% url 'pacienteListagem' %}" style="height: fit-content;">Lista de Pacientes</a>
+
+    <form id="filtro-form" class="col-md-6">
+      <input type="hidden" name="paciente_id" value="{{ paciente.id }}" />
+      <div class="row align-items-end">
+        <div class="col-md-12" style="">
+          <div class="dropdown">
+            <label class="dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="display: flex; justify-content: center; align-items: center; background-color: #fff;">Selecionar médicos</label>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" onclick="event.stopPropagation();">
+              {% for profissional in profissionais_saude %}
+                <div class="form-check" id="form-check-pront">
+                  <input class="form-check-input" type="checkbox" id="medico{{ profissional.id }}" name="medicos" value="{{ profissional.id }}" />
+                  <label class="form-check-label-pront" for="medico{{ profissional.id }}">{{ profissional.nome }} <span style="color: #bbbbbb">- {{ profissional.area }}</span></label>
                 </div>
+              {% endfor %}
             </div>
-        </form>
+          </div>
 
-        <a href="{% url 'pdf_prontuario_medico' paciente.id %}?medicos={{ medicos_ids|join:',' }}" target="_blank"
-           class="print-btn" style="border: none; text-decoration: none">
-            <button class="print-btn">
-                Print&nbsp;<i class="fa fa-print" aria-hidden="true"></i>
-            </button>
-        </a>
-    </div>
+          <div class="buttons">
+            <button id="exibir-todos-btn" class="btn btn-primary">Exibir todos</button>
+            <button id="filtrar-btn" class="btn btn-primary">Filtrar&nbsp;&nbsp;<i class="fa fa-filter" aria-hidden="true"></i></button>
+          </div>
+        </div>
+      </div>
+    </form>
 
-    <dl id="patient-info" style="background-color: #f8f9fa;">
-        {% for dados in prontuario_dados %}
-        {% if dados.privado %}
+    <a href="{% url 'pdf_prontuario_medico' paciente.id %}?medicos={{ medicos_ids|join:',' }}" target="_blank" class="print-btn" style="border: none; text-decoration: none"><button class="print-btn">Print&nbsp;<i class="fa fa-print" aria-hidden="true"></i></button></a>
+  </div>
 
-            <div class="content">
-                <img src="{% static 'imagens/cadeado.png' %}" alt="Cadeado" class="icon">
-                <h1 class="title">Informação Privada</h1>
-                <p class="description">Caso necessário, solicite o acesso com o responsável.</p>
-            </div>
-        {% else %}
-
-            <div id="" class="flex d-flex justify-content-evenly">
-                <input type="checkbox" class="select-atendimento" value="{{ dados.atendimento.id }}">
-                <p><strong>Atendido por Dr(a) </strong><span>{{ dados.atendimento.profissional_saude.nome }}</span></p>
-                <p><strong>Área: </strong><span>{{ dados.atendimento.profissional_saude.area }}</span></p>
-                <p><strong>Data do Atendimento: </strong><span>{{ dados.atendimento.data_atendimento }}</span></p>
-            </div>
-        
-            <dd id="diag">
-                <p><strong>Anamnese:</strong> {{ dados.atendimento.anamnese }}<br/></p>
-                <p><strong>Exame Físico:</strong> {{ dados.atendimento.exame_fisico }}<br/></p>
-                <p><strong>Exames Complementares:</strong> {{ dados.atendimento.exames_complementares }}<br/></p>
-                <p><strong>Diagnóstico:</strong> {{ dados.atendimento.diagnostico }}<br/></p>
-                <p><strong>Conduta:</strong> {{ dados.atendimento.conduta }}<br/></p>
-    
-                {% if dados.receita_simples %}
-                    <div class="receita-medica">
-                        <p><strong>Receita Simples</strong><br/></p>
-                        <p><strong>Prescrição:</strong> {{ dados.receita_simples.prescricao }}<br/></p>
-                        <p><strong>Dosagem:</strong> {{ dados.receita_simples.dosagem }}<br/></p>
-                        <p><strong>Via Administrativa:</strong> {{ dados.receita_simples.via_administrativa }}<br/></p>
-                        <p><strong>Modo de Uso:</strong> {{ dados.receita_simples.modo_uso }}<br/></p>
-                    </div>
-                {% endif %}
-    
-                {% if dados.receita_controle_especial %}
-                    <div class="receita-medica">
-                        <p><strong>Receita de Controle Especial</strong><br/></p>
-                        <p><strong>Prescrição:</strong> {{ dados.receita_controle_especial.prescricao }}<br/></p>
-                        <p><strong>Dosagem:</strong> {{ dados.receita_controle_especial.dosagem }}<br/></p>
-                        <p><strong>Via Administrativa:</strong> {{ dados.receita_controle_especial.via_administrativa }}<br/></p>
-                        <p><strong>Modo de Uso:</strong> {{ dados.receita_controle_especial.modo_uso }}<br/></p>
-                    </div>
-                {% endif %}
-            </dd>
-        {% endif %}
-    {% empty %}
-        <dt>Nenhum atendimento registrado para este paciente.</dt>
-    {% endfor %}
-    
-
-        
-    </dl>
-
-    
-
-        <div>
-            <button id="print-selected" class="btn btn-primary">Imprimir Selecionados</button>
-
+  <dl id="patient-info" style="background-color: #f8f9fa;">
+    {% for dados in prontuario_dados %}
+      {% if dados.privado %}
+        <div class="content">
+          <img src="{% static 'imagens/cadeado.png' %}" alt="Cadeado" class="icon" />
+          <h1 class="title">Informação Privada</h1>
+          <p class="description">Caso necessário, solicite o acesso com o responsável.</p>
+        </div>
+      {% else %}
+        <div id="" class="flex d-flex justify-content-evenly">
+          <input type="checkbox" class="select-atendimento" value="{{ dados.atendimento.id }}" />
+          <p>
+            <strong>Atendido por Dr(a)</strong><span>{{ dados.atendimento.profissional_saude.nome }}</span>
+          </p>
+          <p>
+            <strong>Área:</strong><span>{{ dados.atendimento.profissional_saude.area }}</span>
+          </p>
+          <p>
+            <strong>Data do Atendimento:</strong><span>{{ dados.atendimento.data_atendimento }}</span>
+          </p>
         </div>
 
-        
+        <dd id="diag">
+          <p>
+            <strong>Anamnese:</strong> {{ dados.atendimento.anamnese }}<br />
+          </p>
+          <p>
+            <strong>Exame Físico:</strong> {{ dados.atendimento.exame_fisico }}<br />
+          </p>
+          <p>
+            <strong>Exames Complementares:</strong> {{ dados.atendimento.exames_complementares }}<br />
+          </p>
+          <p>
+            <strong>Diagnóstico:</strong> {{ dados.atendimento.diagnostico }}<br />
+          </p>
+          <p>
+            <strong>Conduta:</strong> {{ dados.atendimento.conduta }}<br />
+          </p>
+
+          {% if dados.receita_simples %}
+            <div class="receita-medica">
+              <p>
+                <strong>Receita Simples</strong><br />
+              </p>
+              <p>
+                <strong>Prescrição:</strong> {{ dados.receita_simples.prescricao }}<br />
+              </p>
+            </div>
+          {% endif %}
+
+          {% if dados.receita_controle_especial %}
+            <div class="receita-medica">
+              <p>
+                <strong>Receita de Controle Especial</strong><br />
+              </p>
+              <p>
+                <strong>Prescrição:</strong> {{ dados.receita_controle_especial.prescricao }}<br />
+              </p>
+            </div>
+          {% endif %}
+
+          {% if dados.laudos %}
+            <div class="laudos-medicos">
+              {% for laudo in dados.laudos %}
+                <p>
+                  <strong>Laudo Médico:</strong> {{ laudo.descricao }}
+                </p>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p>
+              <strong>Laudos Médicos:</strong> Não há laudos disponíveis para este atendimento.
+            </p>
+          {% endif %}
+        </dd>
+      {% endif %}
+    {% empty %}
+      <dt>Nenhum atendimento registrado para este paciente.</dt>
+    {% endfor %}
+  </dl>
+
+  <div>
+    <button id="print-selected" class="btn btn-primary">Imprimir Selecionados</button>
+  </div>
+
+  <script>
+    var dropdown = document.querySelector('.dropdown')
+    var dropdownMenu = document.querySelector('.dropdown-menu')
     
-    <script>
-        var dropdown = document.querySelector('.dropdown')
-        var dropdownMenu = document.querySelector('.dropdown-menu')
-
-        dropdown.addEventListener('click', function (event) {
-            event.stopPropagation()
-            if (dropdownMenu.style.display === 'none' || dropdownMenu.style.display === '') {
-                dropdownMenu.style.display = 'block'
-            } else {
-                dropdownMenu.style.display = 'none'
-            }
-        })
-
-        document.querySelector('body').addEventListener('click', function (event) {
-            dropdownMenu.style.display = 'none'
-        })
-    </script>
-
-
-    <script>
-        //captura o prontuario selecionado
-        document.getElementById('print-selected').addEventListener('click', function (e) {
-            e.preventDefault();
-            var selectedAtendimentos = Array.from(document.querySelectorAll('.select-atendimento:checked')).map(function (input) {
-                return input.value;
-            });
-            var url = "{% url 'pdf_prontuario_medico' paciente.id %}?medicos={{ medicos_ids|join:',' }}&atendimentos=" + selectedAtendimentos.join(',');
-            window.open(url, '_blank');
-        });
-
-        // capturara id do medico
-        document.getElementById('filtro-form').addEventListener('submit', function (e) {
-            e.preventDefault()
-            var medicos = Array.from(document.querySelectorAll('input[name="medicos"]:checked')).map(function (input) {
-                return input.value
-            })
-            var url = "{% url 'pdf_prontuario_medico' paciente.id %}?medicos=" + medicos.join(',')
-            document.querySelector('.print-btn').href = url
-        })
-    </script>
-
-    <script>
-        document.querySelectorAll('.select-atendimento').forEach(function (checkbox) {
-            checkbox.addEventListener('change', function () {
-                var selectedAtendimentos = document.querySelectorAll('.select-atendimento:checked');
-                var printButton = document.getElementById('print-selected');
-    
-                if (selectedAtendimentos.length > 0) {
-                    printButton.style.display = 'block'; // Exibe o botão
-                } else {
-                    printButton.style.display = 'none'; // Oculta o botão
-                }
-            });
-        });
-    
-        document.getElementById('print-selected').addEventListener('click', function (e) {
-            e.preventDefault();
-            var selectedAtendimentos = Array.from(document.querySelectorAll('.select-atendimento:checked')).map(function (input) {
-                return input.value;
-            });
-            var url = "{% url 'pdf_prontuario_medico' paciente.id %}?medicos={{ medicos_ids|join:',' }}&atendimentos=" + selectedAtendimentos.join(',');
-            window.open(url, '_blank');
-        });
-    </script>
-
-    {% comment %} filtragem por medicos {% endcomment %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#filtro-form').on('submit', function (e) {
-                e.preventDefault()
-                $.ajax({
-                    url: "{% url 'filtrar_prontuarios' %}",
-                    data: $(this).serialize(),
-                    success: function (data) {
-                        console.log(data)
-                        $('#patient-info').empty()
-
-                        data.forEach(function (atendimento) {
-                            console.log('Atendimento:', atendimento)
-                            if (atendimento) {
-                                $('#patient-info').append(`
-                                <div class="flex d-flex justify-content-evenly">
-                                  <p><strong>Atendido por Dr(a)</strong><span> ${atendimento.profissional_saude}</span></p>
-                                  <p><strong>Area:</strong><span> ${atendimento.area}</span></p>
-                                  <p><strong>Data do Atendimento:</strong><span> ${atendimento.data_atendimento}</span></p>
-                                </div>
-                                <dd id="diag">
-                                  <p><strong>Anamnese:</strong> ${atendimento.anamnese}<br /></p>
-                                  <p><strong>Exame Físico:</strong> ${atendimento.exame_fisico}<br /></p>
-                                  <p><strong>Exames Complementares:</strong> ${atendimento.exames_complementares}<br /></p>
-                                  <p><strong>Diagnóstico:</strong> ${atendimento.diagnostico}<br /></p>
-                                  <p><strong>Conduta:</strong> ${atendimento.conduta}<br /></p>
-                                </dd>
-                              `)
-                            }
-                        })
-                    }
-                })
-            })
-        })
-    </script>
-
-    <script>// botão exibir todos 
-    document.getElementById('exibir-todos-btn').addEventListener('click', function (e) {
-        e.preventDefault()
-        // Limpar os checkboxes selecionados dentro do dropdown
-        var checkboxes = document.querySelectorAll('.dropdown-menu input[type="checkbox"]')
-        checkboxes.forEach(function (checkbox) {
-            checkbox.checked = false
-        })
-        // Submeter o formulário para exibir todos os prontuários novamente
-        document.getElementById('filtro-form').submit()
+    dropdown.addEventListener('click', function (event) {
+      event.stopPropagation()
+      if (dropdownMenu.style.display === 'none' || dropdownMenu.style.display === '') {
+        dropdownMenu.style.display = 'block'
+      } else {
+        dropdownMenu.style.display = 'none'
+      }
     })
-    </script>
     
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            document.getElementById('filtrar-btn').addEventListener('click', function (event) {
-                const checkboxes = document.querySelectorAll('input[name="medicos"]:checked');
-                // Caso nenhum checkbox esteja selecionado, retorna um aviso para o usuário
-                if (checkboxes.length === 0) {
-                    event.preventDefault(); 
-                    alert('Por favor, selecione pelo menos um médico.');
-                }
-            });
-        });
-    </script>
+    document.querySelector('body').addEventListener('click', function (event) {
+      dropdownMenu.style.display = 'none'
+    })
+  </script>
 
-    <style>
-        #print-selected {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            display: none;
-            z-index: 1000; 
+  <script>
+    //captura o prontuario selecionado
+    document.getElementById('print-selected').addEventListener('click', function (e) {
+      e.preventDefault()
+      var selectedAtendimentos = Array.from(document.querySelectorAll('.select-atendimento:checked')).map(function (input) {
+        return input.value
+      })
+      var url = "{% url 'pdf_prontuario_medico' paciente.id %}?medicos={{ medicos_ids|join:',' }}&atendimentos=" + selectedAtendimentos.join(',')
+      window.open(url, '_blank')
+    })
+    
+    // capturara id do medico
+    document.getElementById('filtro-form').addEventListener('submit', function (e) {
+      e.preventDefault()
+      var medicos = Array.from(document.querySelectorAll('input[name="medicos"]:checked')).map(function (input) {
+        return input.value
+      })
+      var url = "{% url 'pdf_prontuario_medico' paciente.id %}?medicos=" + medicos.join(',')
+      document.querySelector('.print-btn').href = url
+    })
+  </script>
+
+  <script>
+    document.querySelectorAll('.select-atendimento').forEach(function (checkbox) {
+      checkbox.addEventListener('change', function () {
+        var selectedAtendimentos = document.querySelectorAll('.select-atendimento:checked')
+        var printButton = document.getElementById('print-selected')
+    
+        if (selectedAtendimentos.length > 0) {
+          printButton.style.display = 'block' // Exibe o botão
+        } else {
+          printButton.style.display = 'none' // Oculta o botão
         }
+      })
+    })
+    
+    document.getElementById('print-selected').addEventListener('click', function (e) {
+      e.preventDefault()
+      var selectedAtendimentos = Array.from(document.querySelectorAll('.select-atendimento:checked')).map(function (input) {
+        return input.value
+      })
+      var url = "{% url 'pdf_prontuario_medico' paciente.id %}?medicos={{ medicos_ids|join:',' }}&atendimentos=" + selectedAtendimentos.join(',')
+      window.open(url, '_blank')
+    })
+  </script>
 
-            .content {
-                width: 100%;
-                text-align: center; 
-                background-color: #ffffff; 
-                padding: 30px; 
-                border-radius: 8px; 
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-                margin-bottom: 30px;
-            }
-            
-            .icon {
-                height: 48px; 
-                width: 48px;
-                margin: 0 auto; 
-                display: block;
-                color: #0d6efd; 
-            }
-            
-            .title {
-                margin-top: 16px; 
-                font-size: 2em; 
-                font-weight: bold; 
-                color: #333333; 
-            }
-            
-            .description {
-                margin-top: 16px; 
-                color: #6c757d; 
-                text-align: center;
-            }
+  {% comment %}filtragem por medicos{% endcomment %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#filtro-form').on('submit', function (e) {
+        e.preventDefault()
+        $.ajax({
+          url: "{% url 'filtrar_prontuarios' %}",
+          data: $(this).serialize(),
+          success: function (data) {
+            console.log(data)
+            $('#patient-info').empty()
+    
+            data.forEach(function (atendimento) {
+              console.log('Atendimento:', atendimento)
+              if (atendimento) {
+                $('#patient-info').append(`
+                                    <div class="flex d-flex justify-content-evenly">
+                                      <p><strong>Atendido por Dr(a)</strong><span> ${atendimento.profissional_saude}</span></p>
+                                      <p><strong>Area:</strong><span> ${atendimento.area}</span></p>
+                                      <p><strong>Data do Atendimento:</strong><span> ${atendimento.data_atendimento}</span></p>
+                                    </div>
+                                    <dd id="diag">
+                                      <p><strong>Anamnese:</strong> ${atendimento.anamnese}<br /></p>
+                                      <p><strong>Exame Físico:</strong> ${atendimento.exame_fisico}<br /></p>
+                                      <p><strong>Exames Complementares:</strong> ${atendimento.exames_complementares}<br /></p>
+                                      <p><strong>Diagnóstico:</strong> ${atendimento.diagnostico}<br /></p>
+                                      <p><strong>Conduta:</strong> ${atendimento.conduta}<br /></p>
+                                    </dd>
+                                  `)
+              }
+            })
+          }
+        })
+      })
+    })
+  </script>
 
-    </style>
+  <script>
+    // botão exibir todos
+    document.getElementById('exibir-todos-btn').addEventListener('click', function (e) {
+      e.preventDefault()
+      // Limpar os checkboxes selecionados dentro do dropdown
+      var checkboxes = document.querySelectorAll('.dropdown-menu input[type="checkbox"]')
+      checkboxes.forEach(function (checkbox) {
+        checkbox.checked = false
+      })
+      // Submeter o formulário para exibir todos os prontuários novamente
+      document.getElementById('filtro-form').submit()
+    })
+  </script>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('filtrar-btn').addEventListener('click', function (event) {
+        const checkboxes = document.querySelectorAll('input[name="medicos"]:checked')
+        // Caso nenhum checkbox esteja selecionado, retorna um aviso para o usuário
+        if (checkboxes.length === 0) {
+          event.preventDefault()
+          alert('Por favor, selecione pelo menos um médico.')
+        }
+      })
+    })
+  </script>
+
+  <style>
+    #print-selected {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: none;
+      z-index: 1000;
+    }
+    
+    .content {
+      width: 100%;
+      text-align: center;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+    
+    .icon {
+      height: 48px;
+      width: 48px;
+      margin: 0 auto;
+      display: block;
+      color: #0d6efd;
+    }
+    
+    .title {
+      margin-top: 16px;
+      font-size: 2em;
+      font-weight: bold;
+      color: #333333;
+    }
+    
+    .description {
+      margin-top: 16px;
+      color: #6c757d;
+      text-align: center;
+    }
+  </style>
 {% endblock %}

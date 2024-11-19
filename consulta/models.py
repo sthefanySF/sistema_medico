@@ -264,8 +264,12 @@ class Atendimento(models.Model):
     @property
     def duracao_atendimento(self):
         if self.inicio_atendimento and self.fim_atendimento:
-            return self.fim_atendimento - self.inicio_atendimento
-        return None
+            duracao = self.fim_atendimento - self.inicio_atendimento
+            total_seconds = int(duracao.total_seconds())
+            horas = total_seconds // 3600
+            minutos = (total_seconds % 3600) // 60
+            return f"{horas}h {minutos}min"
+        return "Não calculada"
 
     class Meta:
         ordering = ['agendamento']
