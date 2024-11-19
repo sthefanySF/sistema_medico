@@ -1132,18 +1132,15 @@ def visualizar_comprovante_atendimento(request, atendimento_id):
 
 
 def prontuario_medico(request, paciente_id):
-    
+    # Verifica se o usuário pertence ao grupo 'administrativo' (sem acesso)
     if request.user.groups.filter(name='administrativo').exists():
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             return JsonResponse({'error': 'access_denied'}, status=403)
         else:
             return redirect('restricao_de_acesso')  # Página ou modal de restrição de acesso
-        
+
     # Verifica se o usuário pertence ao grupo 'administradores' (acesso total)
-    if request.user.groups.filter(name='administradores').exists():
-        tem_acesso_total = True
-    else:
-        tem_acesso_total = False
+    tem_acesso_total = request.user.groups.filter(name='administradores').exists()
 
     paciente = Paciente.objects.get(pk=paciente_id)
     atendimentos = Atendimento.objects.filter(agendamento__paciente=paciente)
@@ -1154,6 +1151,7 @@ def prontuario_medico(request, paciente_id):
         agendamento = atendimento.agendamento
         receita_simples = ReceitaMedica.objects.filter(agendamento=agendamento, tipo='simples').first()
         receita_controle_especial = ReceitaMedica.objects.filter(agendamento=agendamento, tipo='controle_especial').first()
+        laudos = Laudo.objects.filter(agendamento=agendamento).order_by('-data_laudo')  # Buscar os laudos
 
         mostrar_receita_simples = receita_simples and (
             receita_simples.prescricao or receita_simples.dosagem or receita_simples.via_administrativa or receita_simples.modo_uso
@@ -1163,19 +1161,26 @@ def prontuario_medico(request, paciente_id):
         )
 
         # Verifica se o atendimento é privado e se o usuário tem acesso
-        if atendimento.privado and not tem_acesso_total and atendimento.medico_responsavel != request.user:
-            # Usuário não tem acesso a este atendimento privado
-            prontuario_dados.append({
-                'privado': True,  # Marcar como privado para exibir a mensagem de restrição
-                'atendimento': atendimento,
-            })
-        else:
-            prontuario_dados.append({
-                'privado': False,
-                'atendimento': atendimento,
-                'receita_simples': receita_simples if mostrar_receita_simples else None,
-                'receita_controle_especial': receita_controle_especial if mostrar_receita_controle_especial else None,
-            })
+        if atendimento.privado:
+            medico_responsavel = atendimento.medico_responsavel
+            medico_logado = atendimento.medico_logado.usuario if atendimento.medico_logado else None
+
+            # Verifica se o usuário tem permissão para acessar o atendimento privado
+            if not tem_acesso_total and request.user != medico_responsavel and request.user != medico_logado:
+                prontuario_dados.append({
+                    'privado': True,  # Marcar como privado para exibir a mensagem de restrição
+                    'atendimento': atendimento,
+                })
+                continue
+
+        # Adiciona os dados do atendimento ao prontuário se o usuário tem acesso
+        prontuario_dados.append({
+            'privado': False,
+            'atendimento': atendimento,
+            'receita_simples': receita_simples if mostrar_receita_simples else None,
+            'receita_controle_especial': receita_controle_especial if mostrar_receita_controle_especial else None,
+            'laudos': laudos,
+        })
 
     return render(request, 'consultas/prontuario_medico.html', {
         'paciente': paciente,

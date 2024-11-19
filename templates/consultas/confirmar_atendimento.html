@@ -17,54 +17,42 @@
                 <p><strong>Paciente:</strong> {{ atendimento.agendamento.paciente.get_display_name }}</p>
                 <p><strong>Profissional de Saúde:</strong> {{ atendimento.agendamento.profissional_saude.get_display_name }}</p>
                 <p><strong>Data do Atendimento:</strong> {{ atendimento.data_atendimento|date:'d/m/Y' }}</p>
-                <p>Início do Atendimento: {{ atendimento.inicio_atendimento|date:"d de F Y \à\s H:i" }}</p>
-                <p>Fim do Atendimento: {{ atendimento.fim_atendimento|date:"d de F Y \à\s H:i" }}</p>
-                <p>Duração do Atendimento: {{ atendimento.duracao_atendimento|slice:":-7" }}</p>
-
-                {% comment %} <p><strong>Descrição:</strong> {{ atendimento.descricao }}</p> {% endcomment %}
-
-            </div>
+                <p><strong>Início do Atendimento:</strong> {{ atendimento.inicio_atendimento|date:"d/m/Y às H:i" }}</p>
+                <p><strong>Fim do Atendimento:</strong> {{ atendimento.fim_atendimento|date:"d/m/Y às H:i" }}</p>
+                <p><strong>Duração do Atendimento:</strong> {{ atendimento.duracao_atendimento }}</p>
+            </div> 
 
             <div class="d-flex justify-content-between mt-2">
-                <a type="submit" class="btn btn-primary btn-sm" style="margin-bottom: 2px;" methods="POST" href="{% url 'download_comprovante_atendimento' atendimento_id=atendimento.pk %}">
-                    Baixar Comprovante &nbsp;<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                <a type="submit" class="btn btn-primary btn-sm" href="{% url 'download_comprovante_atendimento' atendimento_id=atendimento.pk %}">
+                    Baixar Comprovante &nbsp;<i class="fa fa-file-pdf-o"></i>
                 </a>
 
                 {% if receita_simples %}
-                <a href="{% url 'pdf_receita_medica' atendimento.id %}" target="_blank" class="print-btn" style="border: none; text-decoration: none;">
-                    <button class="print-btn">
-                        Imprimir Receita Simples
-                    </button>
+                <a href="{% url 'pdf_receita_medica' atendimento.id %}" target="_blank" class="print-btn text-decoration-none">
+                    <button class="print-btn">Imprimir Receita Simples</button>
                 </a>
                 {% endif %}
 
                 {% if receita_controle_especial %}
-                <a href="{% url 'pdf_receita_medica_controle' atendimento.id 'controle_especial' %}" target="_blank" class="print-btn" style="border: none; text-decoration: none;">
-                    <button class="print-btn">
-                        Imprimir Receita de Controle Especial
-                    </button>
+                <a href="{% url 'pdf_receita_medica_controle' atendimento.id 'controle_especial' %}" target="_blank" class="print-btn text-decoration-none">
+                    <button class="print-btn">Imprimir Receita de Controle Especial</button>
                 </a>
                 {% endif %}
 
                 {% if receita_simples or receita_controle_especial %}
-                <a href="{% url 'pdf_atestado_medico' atendimento.id %}" target="_blank" class="print-btn" style="border: none; text-decoration: none;">
-                    <button class="print-btn">
-                        Imprimir Atestado
-                    </button>
+                <a href="{% url 'pdf_atestado_medico' atendimento.id %}" target="_blank" class="print-btn text-decoration-none">
+                    <button class="print-btn">Imprimir Atestado</button>
                 </a>
                 {% endif %}
 
                 {% if laudos %}
-                <a href="{% url 'pdf_laudo_medico' atendimento.id %}" target="_blank" class="print-btn" style="border: none; text-decoration: none;">
-                    <button class="print-btn">
-                        Imprimir Laudo
-                    </button>
+                <a href="{% url 'pdf_laudo_medico' atendimento.id %}" target="_blank" class="print-btn text-decoration-none">
+                    <button class="print-btn">Imprimir Laudo</button>
                 </a>
                 {% endif %}
 
-                
-                <a style="justify-content: right; margin-bottom: 2px" class="btn btn-warning" href="{% url 'agendamentoListagem' %}">
-                    <i class="fa fa-arrow-circle-left" aria-hidden="true"></i>&nbsp;Voltar para agendamento
+                <a class="btn btn-warning" href="{% url 'agendamentoListagem' %}">
+                    <i class="fa fa-arrow-circle-left text-decoration-none"></i>&nbsp;Voltar para agendamento
                 </a>
             </div>
         </div>
