@@ -1151,7 +1151,7 @@ def prontuario_medico(request, paciente_id):
         agendamento = atendimento.agendamento
         receita_simples = ReceitaMedica.objects.filter(agendamento=agendamento, tipo='simples').first()
         receita_controle_especial = ReceitaMedica.objects.filter(agendamento=agendamento, tipo='controle_especial').first()
-        laudos = Laudo.objects.filter(agendamento=agendamento).order_by('-data_laudo')  # Buscar os laudos
+        laudos = Laudo.objects.filter(agendamento=agendamento).order_by('-data_laudo')
 
         mostrar_receita_simples = receita_simples and (
             receita_simples.prescricao or receita_simples.dosagem or receita_simples.via_administrativa or receita_simples.modo_uso
@@ -1165,18 +1165,19 @@ def prontuario_medico(request, paciente_id):
             medico_responsavel = atendimento.medico_responsavel
             medico_logado = atendimento.medico_logado.usuario if atendimento.medico_logado else None
 
-            # Verifica se o usuário tem permissão para acessar o atendimento privado
             if not tem_acesso_total and request.user != medico_responsavel and request.user != medico_logado:
                 prontuario_dados.append({
-                    'privado': True,  # Marcar como privado para exibir a mensagem de restrição
+                    'privado': True,
                     'atendimento': atendimento,
                 })
                 continue
 
-        # Adiciona os dados do atendimento ao prontuário se o usuário tem acesso
+        # Adiciona os dados do atendimento ao prontuário
         prontuario_dados.append({
             'privado': False,
             'atendimento': atendimento,
+            'medico_responsavel': atendimento.medico_responsavel,
+            'medico_logado': atendimento.medico_logado.nome if atendimento.medico_logado else None,
             'receita_simples': receita_simples if mostrar_receita_simples else None,
             'receita_controle_especial': receita_controle_especial if mostrar_receita_controle_especial else None,
             'laudos': laudos,
@@ -1196,15 +1197,32 @@ def filtrar_prontuarios(request):
     paciente = get_object_or_404(Paciente, pk=paciente_id)
     ids_agendamentos = paciente.agendamento_set.all().values_list('id', flat=True)
 
+    tem_acesso_total = request.user.groups.filter(name='administradores').exists()
+
     if not medicos_ids:  # Se nenhum médico foi selecionado, retornar todos os atendimentos
         atendimentos = Atendimento.objects.filter(agendamento__paciente=paciente)
     else:
-        atendimentos = Atendimento.objects.filter(agendamento__id__in=ids_agendamentos, agendamento__profissional_saude__id__in=medicos_ids)
+        atendimentos = Atendimento.objects.filter(
+            agendamento__id__in=ids_agendamentos, 
+            agendamento__profissional_saude__id__in=medicos_ids
+        )
 
-    # Construindo a lista de dicionários para cada atendimento
     atendimentos_list = []
     for atendimento in atendimentos:
+        # Lógica para atender a restrição de atendimentos privados
+        if atendimento.privado:
+            medico_responsavel = atendimento.medico_responsavel
+            medico_logado = atendimento.medico_logado.usuario if atendimento.medico_logado else None
+
+            if not tem_acesso_total and request.user != medico_responsavel and request.user != medico_logado:
+                atendimentos_list.append({
+                    'privado': True,  # Indica que este atendimento é privado
+                })
+                continue
+
+        # Adiciona os dados do atendimento acessível
         atendimento_dict = {
+            'privado': False,  # Indica que este atendimento não é privado
             'profissional_saude': atendimento.agendamento.profissional_saude.nome,
             'area': atendimento.agendamento.profissional_saude.area,
             'paciente': atendimento.agendamento.paciente.nome,
@@ -1213,14 +1231,11 @@ def filtrar_prontuarios(request):
             'exame_fisico': atendimento.exame_fisico,
             'exames_complementares': atendimento.exames_complementares,
             'diagnostico': atendimento.diagnostico,
-            'conduta': atendimento.conduta
+            'conduta': atendimento.conduta,
         }
         atendimentos_list.append(atendimento_dict)
 
-    # Convertendo a lista de dicionários para JSON
-    data = json.dumps(atendimentos_list)
-
-    return HttpResponse(data, content_type='application/json')
+    return JsonResponse(atendimentos_list, safe=False)
 
 # def pdf_prontuario_medico(request, paciente_id):
 #     paciente = Paciente.objects.get(pk=paciente_id)
