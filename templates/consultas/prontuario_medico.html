@@ -60,13 +60,23 @@
         <div id="" class="flex d-flex justify-content-evenly">
           <input type="checkbox" class="select-atendimento" value="{{ dados.atendimento.id }}" />
           <p>
-            <strong>Atendido por Dr(a)</strong><span>{{ dados.atendimento.profissional_saude.nome }}</span>
+            <strong>Profissional de Saúde:</strong> <span>{{ dados.atendimento.profissional_saude.nome }}</span>
           </p>
           <p>
-            <strong>Área:</strong><span>{{ dados.atendimento.profissional_saude.area }}</span>
+            <strong>Atendimento Realizado por:</strong>
+            <span>
+              {% if dados.medico_logado %}
+                {{ dados.medico_logado }}
+              {% else %}
+                Não informado
+              {% endif %}
+            </span>
           </p>
           <p>
-            <strong>Data do Atendimento:</strong><span>{{ dados.atendimento.data_atendimento }}</span>
+            <strong>Área:</strong> <span>{{ dados.atendimento.profissional_saude.area }}</span>
+          </p>
+          <p>
+            <strong>Data do Atendimento:</strong> <span>{{ dados.atendimento.data_atendimento }}</span>
           </p>
         </div>
 
@@ -211,22 +221,29 @@
             $('#patient-info').empty()
     
             data.forEach(function (atendimento) {
-              console.log('Atendimento:', atendimento)
-              if (atendimento) {
+              if (atendimento.privado) {
                 $('#patient-info').append(`
-                                    <div class="flex d-flex justify-content-evenly">
-                                      <p><strong>Atendido por Dr(a)</strong><span> ${atendimento.profissional_saude}</span></p>
-                                      <p><strong>Area:</strong><span> ${atendimento.area}</span></p>
-                                      <p><strong>Data do Atendimento:</strong><span> ${atendimento.data_atendimento}</span></p>
-                                    </div>
-                                    <dd id="diag">
-                                      <p><strong>Anamnese:</strong> ${atendimento.anamnese}<br /></p>
-                                      <p><strong>Exame Físico:</strong> ${atendimento.exame_fisico}<br /></p>
-                                      <p><strong>Exames Complementares:</strong> ${atendimento.exames_complementares}<br /></p>
-                                      <p><strong>Diagnóstico:</strong> ${atendimento.diagnostico}<br /></p>
-                                      <p><strong>Conduta:</strong> ${atendimento.conduta}<br /></p>
-                                    </dd>
-                                  `)
+                                <div class="content">
+                                    <img src="{% static 'imagens/cadeado.png' %}" alt="Cadeado" class="icon" />
+                                    <h1 class="title">Informação Privada</h1>
+                                    <p class="description">Caso necessário, solicite o acesso com o responsável.</p>
+                                </div>
+                            `)
+              } else {
+                $('#patient-info').append(`
+                                <div class="flex d-flex justify-content-evenly">
+                                    <p><strong>Atendido por Dr(a)</strong><span> ${atendimento.profissional_saude}</span></p>
+                                    <p><strong>Área:</strong><span> ${atendimento.area}</span></p>
+                                    <p><strong>Data do Atendimento:</strong><span> ${atendimento.data_atendimento}</span></p>
+                                </div>
+                                <dd id="diag">
+                                    <p><strong>Anamnese:</strong> ${atendimento.anamnese}<br /></p>
+                                    <p><strong>Exame Físico:</strong> ${atendimento.exame_fisico}<br /></p>
+                                    <p><strong>Exames Complementares:</strong> ${atendimento.exames_complementares}<br /></p>
+                                    <p><strong>Diagnóstico:</strong> ${atendimento.diagnostico}<br /></p>
+                                    <p><strong>Conduta:</strong> ${atendimento.conduta}<br /></p>
+                                </dd>
+                            `)
               }
             })
           }
