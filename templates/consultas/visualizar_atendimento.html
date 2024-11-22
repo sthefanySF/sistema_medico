@@ -82,7 +82,7 @@
                         <dt class="col-sm-2">Início do Atendimento:</dt>
                         <dd class="col-sm-10">
                             {% if atendimento.inicio_atendimento %}
-                                {{ atendimento.inicio_atendimento|date:"d/m/Y H:i:s" }}
+                                {{ atendimento.inicio_atendimento|date:"H:i" }}
                             {% else %}
                                 Não iniciado
                             {% endif %}
@@ -94,7 +94,7 @@
                         <dt class="col-sm-2">Fim do Atendimento:</dt>
                         <dd class="col-sm-10">
                             {% if atendimento.fim_atendimento %}
-                                {{ atendimento.fim_atendimento|date:"d/m/Y H:i:s" }}
+                                {{ atendimento.fim_atendimento|date:"H:i" }}
                             {% else %}
                                 Não finalizado
                             {% endif %}

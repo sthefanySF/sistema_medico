@@ -47,11 +47,11 @@
 
     <h2 style="text-align: center; padding-bottom: 20px;">COMPROVANTE DE ATENDIMENTO</h2>
 
-    <div class="info" style=" padding-top: 10px;">
-      <p>Declaro, para os devidos fins, que o Sr(a). <strong>{{ atendimento.paciente.get_display_name }}</strong>, inscrito no CPF sob o nº <strong>{{ atendimento.paciente.cpf }}</strong>, esteve presente em consulta médica no dia <strong>{{ atendimento.agendamento.data_agendamento}}</strong>, tendo sido atendido pelo profissional de saúde <strong>{{ atendimento.agendamento.profissional_saude }}</strong>.</p>
+    <div class="info" style="padding-top: 10px;">
+      <p>Declaro, para os devidos fins, que o Sr(a). <strong>{{ atendimento.paciente.get_display_name }}</strong>, inscrito no CPF sob o nº <strong>{{ atendimento.paciente.cpf }}</strong>, esteve presente em consulta médica no dia <strong>{{ atendimento.agendamento.data_agendamento }}</strong>, no turno da <strong>{{ atendimento.agendamento.get_turno_display }}</strong> com início às <strong>{{ atendimento.inicio_atendimento|date:"H:i" }}</strong> e fim às <strong>{{ atendimento.fim_atendimento|date:"H:i" }}</strong>, tendo sido atendido pelo profissional de saúde <strong>{{ atendimento.agendamento.profissional_saude }}</strong>.</p>
     </div>
 
-     <!-- Adicionando os nomes ao final do documento se existir nome social -->
+    <!-- Adicionando os nomes ao final do documento se existir nome social -->
     {% if atendimento.paciente.nome_social or atendimento.profissional_saude.nome_social %}
     <div style="position: absolute; bottom: 20px; width: 100%; text-align: center; font-size: large;">
       {% if atendimento.paciente.nome_social %}
