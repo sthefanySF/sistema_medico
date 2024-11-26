@@ -30,7 +30,7 @@
                 <dl class="row border p-3">
                     <!-- Profissional de Saúde -->
                     <div class="col-12 d-flex border-bottom py-2">
-                        <dt class="col-sm-2">Profissional de Saúde:</dt>
+                        <dt class="col-sm-2">Consulta agendada para:</dt>
                         <dd class="col-sm-10">{{ atendimento.agendamento.profissional_saude.nome }}</dd>
                     </div>
 
@@ -314,9 +314,9 @@
                 <br>
                 
                 <div class="form-group">
-                    <label>Profissional de Saúde: {{ atestado.profissional }}</label>
+                    <label>Profissional de Saúde: {{ atendimento.medico_logado.nome }}</label>
                     <br>
-                    <label>Conselho/CMR: {{ atestado.profissional.conselho }}</label>
+                    <label>Conselho/CMR: {{ atendimento.medico_logado.conselho }}</label>
                 </div>
 
                 <p style="text-align: center;">Rio Branco - Acre {{ atestado.data_criacao|date:'d/m/Y' }}</p>
@@ -376,7 +376,7 @@
                     <br>
                     
                     <div class="form-group">
-                        <label><b>Profissional de Saúde:</b> {{ laudo.profissional.nome }}</label>
+                        <label><b>Profissional de Saúde:</b> {{ atendimento.medico_logado.nome }}</label>
                     </div>
                     
                     <br>
