@@ -1,0 +1,61 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Comprovante de Agendamento</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=B612+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Fragment+Mono:ital@0;1&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        font-family: 'Poppins', sans-serif;
+        padding: 20px;
+      }
+      
+      header {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid #afafaf;
+        flex-direction: column;
+      }
+      
+      .infoufac {
+        font-weight: bold;
+        text-align: center;
+        flex: 1;
+      }
+      
+      #logoufac {
+        width: 50px;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img id="logoufac" src="http://localhost:8000/static/imagens/logo_ufac_2.png" alt="Logo UFAC" />
+      <div class="infoufac">
+        <p>UNIVERSIDADE FEDERAL DO ACRE</p>
+        <p>DIRETORIA DE SAÚDE E QUALIDADE DE VIDA</p>
+        <p>COORDENADORIA DE VIGILÂNCIA À SAÚDE DO SERVIDOR</p>
+        <p>SETOR MÉDICO PERICIAL</p>
+      </div>
+    </header>
+
+    <h2 style="text-align: center; padding-bottom: 20px;">COMPROVANTE DE COMPARECIMENTO</h2>
+
+    <p><strong>Paciente:</strong> {{ objeto.paciente.nome }}</p>
+    <p><strong>Data do Agendamento:</strong> {{ objeto.data_atendimento }}</p>
+    
+    {% if horario_confirmacao %}
+        <p><strong>Horário de Chegada:</strong> {{ horario_confirmacao|date:"H:i" }}</p>
+    {% endif %}
+    
+    {% if horario_cancelamento %}
+        <p><strong>Horário de Saída:</strong> {{ horario_cancelamento|date:"H:i" }}</p>
+    {% endif %}
+    
+    <p><strong>Justificativa:</strong> {{ justificativa }}</p>
+  </body>
+</html>

@@ -378,7 +378,7 @@ def listar_agendamentos(request):
     else:
         agendamentos = Agendamento.objects.all()
 
-    tolerancia = timedelta(seconds=30)
+    tolerancia = timedelta(seconds=10)
     now = timezone.now()
 
     for agendamento in agendamentos:
@@ -406,17 +406,16 @@ def confirm_agendamento(request, pk):
 def agendamento_confirmar(request, pk):
     agendamento = get_object_or_404(Agendamento, pk=pk)
 
-    # Verifica se data_agendamento não é None
     if agendamento.data_agendamento is None:
         messages.error(request, 'Data de agendamento não definida.')
         return redirect('agendamentoListagem')
 
-    # Verifica se a data do agendamento é igual à data atual
     if agendamento.data_agendamento != timezone.now().date():
         messages.error(request, 'O agendamento só pode ser confirmado na data prevista.')
         return redirect('agendamentoListagem')
 
     agendamento.status_atendimento = 'confirmado'
+    agendamento.horario_confirmacao = now()  # Registra o horário de confirmação
     agendamento.save()
     messages.success(request, 'Agendamento confirmado!')
     return redirect('agendamentoListagem')
@@ -448,24 +447,21 @@ def reagendar_agendamento(request, pk):
         return JsonResponse({'success': False, 'errors': 'Método de requisição inválido.'})
 
 
-@require_POST  # Certifica que a função aceita apenas requisições POST
+@require_POST
 def cancelar_agendamento(request, agendamento_id):
     agendamento = get_object_or_404(Agendamento, pk=agendamento_id)
-    
-    if agendamento.status_atendimento != 'pendente':
-        return JsonResponse({'success': False, 'errors': 'Não é possível cancelar um agendamento que não está pendente.'})
 
-    form = JustificativaCancelamentoForm(request.POST)
+    if agendamento.status_atendimento not in ['pendente', 'confirmado']:
+        return JsonResponse({'success': False, 'errors': 'Não é possível cancelar um agendamento nesse status.'})
 
-    if form.is_valid():
-        justificativa = form.cleaned_data['justificativa']
-        agendamento.justificativa_cancelamento = justificativa
-        agendamento.status_atendimento = 'cancelado'
-        agendamento.save()
+    justificativa = request.POST.get('justificativa', '').strip()
 
+    if justificativa:
+        agendamento.cancelar(justificativa)
         return JsonResponse({'success': True})
     else:
-        return JsonResponse({'success': False, 'errors': form.errors})
+        return JsonResponse({'success': False, 'errors': 'A justificativa é obrigatória.'})
+
         
 
 class VisualizarAtendimentoView(DetailView):
@@ -1045,14 +1041,24 @@ def confirmar_atendimento(request, agendamento_id):
         'laudos': laudos,
     })
     
+@require_POST
 def cancelar_atendimento(request, agendamento_id):
-    if request.method == "POST":
-        agendamento = get_object_or_404(Agendamento, id=agendamento_id)
-        agendamento.status_atendimento = 'cancelado'
-        agendamento.save()
-        messages.success(request, 'O atendimento foi cancelado com sucesso.')
-        return redirect('agendamentoListagem')  # Substitua pela URL correta para listar agendamentos
-    return redirect('atendimento', agendamento_id=agendamento_id)  # Volta ao atendimento se não for POST
+    agendamento = get_object_or_404(Agendamento, id=agendamento_id)
+
+    if agendamento.status_atendimento not in ['confirmado', 'em_andamento']:
+        return JsonResponse({'success': False, 'errors': 'Este atendimento não pode ser cancelado.'})
+
+    justificativa = request.POST.get('justificativa', '').strip()
+
+    if not justificativa:
+        return JsonResponse({'success': False, 'errors': 'A justificativa é obrigatória.'})
+
+    agendamento.status_atendimento = 'cancelado'
+    agendamento.justificativa_cancelamento = justificativa
+    agendamento.horario_cancelamento = timezone.now()
+    agendamento.save()
+
+    return JsonResponse({'success': True})
 
 
 def download_comprovante_atendimento(request, atendimento_id):
@@ -1429,6 +1435,38 @@ def pdf_laudo_medico(request, atendimento_id):
 
     response = HttpResponse(pdf_content, content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename="laudo_{paciente_nome}.pdf"'
+    return response
+
+def pdf_comprovante_cancelamento(request, agendamento_id):
+    agendamento = get_object_or_404(Agendamento, id=agendamento_id)
+    justificativa = request.GET.get('justificativa', 'Não informada')
+
+    # Registra o horário de cancelamento se ainda não estiver registrado
+    if not agendamento.horario_cancelamento:
+        agendamento.horario_cancelamento = timezone.now()
+        agendamento.save()
+
+    context = {
+        'agendamento': agendamento,
+        'justificativa': justificativa,
+        'horario_cancelamento': agendamento.horario_cancelamento,
+        'horario_confirmacao': agendamento.horario_confirmacao,
+    }
+
+    # Renderiza o HTML com o contexto
+    html = render_to_string('pdfs/comprovantePdf_cancelamento.html', context)
+
+    # Gera o PDF usando Playwright
+    with sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page()
+        page.set_content(html)
+        page.wait_for_load_state('networkidle')  # Espera o carregamento completo
+        pdf_content = page.pdf(format='A4', print_background=True)
+        browser.close()
+
+    response = HttpResponse(pdf_content, content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="comprovante_cancelamento_{agendamento_id}.pdf"'
     return response
 
 # def pdf_atestado_medico(request, atendimento_id):
