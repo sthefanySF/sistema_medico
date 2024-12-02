@@ -82,7 +82,9 @@ class Paciente(models.Model):
         return self.get_display_name()
     
     def get_display_name(self):
-        return self.nome_social if self.nome_social else self.nome
+        if self.nome_social:
+            return f"{self.nome} ({self.nome_social})"
+        return self.nome
     
     def idade(self):
         today = date.today()
@@ -173,7 +175,9 @@ class Profissionaldasaude(models.Model):
         return self.get_display_name()
     
     def get_display_name(self):
-        return self.nome_social if self.nome_social else self.nome
+        if self.nome_social:
+            return f"{self.nome} ({self.nome_social})"
+        return self.nome
     
     def idade(self):
         today = date.today()

@@ -373,6 +373,14 @@ def listar_agendamentos(request):
     form = AgendamentoForm()
     profissionais_saude = Profissionaldasaude.objects.all()
 
+     # Gera a lista de profissionais com nome completo
+    profissionais_saude = Profissionaldasaude.objects.all()
+    profissionais_saude_display = [
+        {"id": profissional.id, "nome": profissional.get_display_name()}  
+        for profissional in profissionais_saude
+    ]
+
+    # Filtro de agendamentos
     if profissional_id and profissional_id != 'todos':
         agendamentos = Agendamento.objects.filter(profissional_saude_id=profissional_id)
     else:
@@ -395,7 +403,7 @@ def listar_agendamentos(request):
     return render(request, 'consultas/listagem_agendamentos.html', {
         'agendamentos': agendamentos,
         'agendamentos_cancelados': agendamentos_cancelados,
-        'profissionais_saude': profissionais_saude,
+        'profissionais_saude': profissionais_saude_display,
         'form': form
     })
 
@@ -853,8 +861,8 @@ class AgendamentoCreate(CreateView):
     def form_valid(self, form):
         self.object = form.save()
         agendamento_data = {
-            'paciente': self.object.paciente.get_display_name(),
-            'profissional_saude': self.object.profissional_saude.get_display_name(),
+            'paciente': self.object.paciente.get_full_display_name(),
+            'profissional_saude': self.object.profissional_saude.get_full_display_name(),
             'data_agendamento': self.object.data_agendamento.strftime('%d/%m/%Y'),
             'turno': self.object.get_turno_display(),
             'prioridade_atendimento': 'Sim' if self.object.prioridade_atendimento else 'Não',
