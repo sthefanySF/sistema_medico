@@ -10,6 +10,7 @@ from validate_docbr import CPF
 from django.core.exceptions import ValidationError
 from django.core.validators import MinLengthValidator
 from django.utils import timezone
+from django.utils.timezone import now
 
 
 def validate_cpf(value):
@@ -206,6 +207,8 @@ class Agendamento(models.Model):
     prioridade_atendimento = models.BooleanField(default=False)
     justificativa_cancelamento = models.TextField(blank=True, null=True)
     inicio_atendimento = models.DateTimeField(null=True, blank=True)
+    horario_confirmacao = models.DateTimeField(null=True, blank=True)
+    horario_cancelamento = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"Agendamento para {self.paciente.nome}"
@@ -218,6 +221,22 @@ class Agendamento(models.Model):
             if self.status_atendimento not in ['atendido', 'confirmado']:
                 self.status_atendimento = 'ausente'
             self.save()
+    
+    def cancelar_pend_confir(self):
+        return self.status_atendimento in ['pendente', 'confirmado']
+    
+    def confirmar(self):
+        """Confirma o agendamento e registra o horário."""
+        self.status_atendimento = 'confirmado'
+        self.horario_confirmacao = now()
+        self.save()
+
+    def cancelar(self, justificativa):
+        """Cancela o agendamento/atendimento e registra o horário e justificativa."""
+        self.status_atendimento = 'cancelado'
+        self.justificativa_cancelamento = justificativa
+        self.horario_cancelamento = now()
+        self.save()
 
     class Meta:
         ordering = ['-data_agendamento', 'paciente__nome']
@@ -238,6 +257,8 @@ class Atendimento(models.Model):
     medico_responsavel = models.ForeignKey(User, on_delete=models.CASCADE, related_name='atendimentos', null=True, blank=True)
     privado = models.BooleanField(default=False)  # Campo para marcar se a consulta é privada
     medico_logado = models.ForeignKey(Profissionaldasaude, related_name='atendimentos_realizados', on_delete=models.SET_NULL, null=True)
+    justificativa_cancelamento = models.TextField(blank=True, null=True)
+    horario_cancelamento = models.DateTimeField(null=True, blank=True)
 
     def is_private_for_user(self, user):
         if not self.privado:

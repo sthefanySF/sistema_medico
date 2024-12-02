@@ -139,12 +139,11 @@
                             </button>
 
                             <button type="button"
-                                    class="btn btn-danger ms-1 btn-lg custom-btn {% if agendamento.status_atendimento != 'pendente' %}disabled{% endif %}"
-                                    data-status="{{ agendamento.status_atendimento }}" data-bs-toggle="modal"
-                                    data-bs-target="#cancelarModal{{ agendamento.id }}" title="Cancelar">
+                                class="btn btn-danger ms-1 btn-lg custom-btn {% if not agendamento.cancelar_pend_confir %}disabled{% endif %}"
+                                data-status="{{ agendamento.status_atendimento }}" data-bs-toggle="modal"
+                                data-bs-target="#cancelarModal{{ agendamento.id }}" title="Cancelar">
                                 <i class="fa fa-times" aria-hidden="true"></i>
                             </button>
-
                             {% if agendamento.status_atendimento == 'confirmado' %}
                             <button type="button"
                                     class="btn btn-success ms-1 btn-lg custom-btn"
@@ -167,20 +166,17 @@
 
                         <!-- Modal para cancelar agendamento -->
                         <div class="modal fade" id="cancelarModal{{ agendamento.id }}" tabindex="-1" 
-                             aria-labelledby="cancelarModalLabel{{ agendamento.id }}" aria-hidden="true">
-                            
+                                aria-labelledby="cancelarModalLabel{{ agendamento.id }}" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="cancelarModalLabel{{ agendamento.id }}">Cancelar Agendamento</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                    
                                     <div class="modal-body">
                                         <p>Ao cancelar esse agendamento ele não poderá mais ser atendido. Informe a justificativa para o cancelamento:</p>
                                         <textarea id="justificativa_cancelamento_{{ agendamento.id }}" class="form-control" rows="4" placeholder="Digite a justificativa aqui"></textarea>
                                     </div>
-                                    
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                                         <button type="button" class="btn btn-danger" 
@@ -190,15 +186,16 @@
                                     </div>
                                 </div>
                             </div>
-                            
-                            
                             <!-- Área de Confirmação -->
                             <div id="confirmationArea{{ agendamento.id }}" class="confirmation-area d-none mt-4">
                                 <div class="card mx-auto" style="width: 800px;">
                                     <div class="card-body text-center">
                                         <h4>Agendamento Cancelado com Sucesso</h4>
                                         <div class="d-flex justify-content-between mt-2">
-                                            <a class="btn btn-primary btn-sm" href="#" target="_blank">
+                                            <a class="btn btn-primary btn-sm"
+                                                href="{% url 'comprovante_cancelamento' agendamento.id %}?justificativa=" 
+                                                onclick="this.href += encodeURIComponent(document.getElementById('justificativa_cancelamento_{{ agendamento.id }}').value)"
+                                                target="_blank">
                                                 Baixar Comprovante &nbsp;<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
                                             </a>
                                             <button class="btn btn-warning" id="voltarParaAgendamento{{ agendamento.id }}" 
@@ -211,6 +208,7 @@
                                 </div>
                             </div>
                         </div>
+
 
                         <!-- Modal de Restrição de Acesso -->
                         <div class="modal fade" id="restricaoModal" tabindex="-1" 
@@ -504,11 +502,6 @@
           function cancelarAgendamento(agendamentoId) {
             var button = document.querySelector('[data-bs-target="#cancelarModal' + agendamentoId + '"]');
             var status = button.getAttribute('data-status');
-        
-            if (status !== 'pendente') {
-                alert('Não é possível cancelar um agendamento que não está pendente.');
-                return;
-            }
         
             var justificativa = document.getElementById('justificativa_cancelamento_' + agendamentoId).value;
         
