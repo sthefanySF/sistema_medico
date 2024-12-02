@@ -378,14 +378,14 @@ def listar_agendamentos(request):
     else:
         agendamentos = Agendamento.objects.all()
 
+    agendamentos_cancelados = agendamentos.filter(status_atendimento='cancelado')
+
     tolerancia = timedelta(seconds=10)
     now = timezone.now()
 
     for agendamento in agendamentos:
         if agendamento.status_atendimento == 'em_andamento' and not Atendimento.objects.filter(agendamento=agendamento).exists():
-            print(f"Verificando agendamento {agendamento.id} para redefinição")
             if agendamento.inicio_atendimento and now - agendamento.inicio_atendimento > tolerancia:
-                print(f"Redefinindo status do agendamento {agendamento.id} para 'confirmado'")
                 agendamento.status_atendimento = 'confirmado'
                 agendamento.inicio_atendimento = None
                 agendamento.save(update_fields=['status_atendimento', 'inicio_atendimento'])
@@ -394,9 +394,24 @@ def listar_agendamentos(request):
 
     return render(request, 'consultas/listagem_agendamentos.html', {
         'agendamentos': agendamentos,
+        'agendamentos_cancelados': agendamentos_cancelados,
         'profissionais_saude': profissionais_saude,
         'form': form
     })
+
+def listar_agendamentos_cancelados(request):
+    agendamentos_cancelados = Agendamento.objects.filter(status_atendimento='cancelado')
+    data = [
+        {
+            'id': agendamento.id,
+            'paciente': agendamento.paciente.nome,
+            'data_agendamento': agendamento.data_agendamento.strftime('%d/%m/%Y'),
+            'justificativa': agendamento.justificativa_cancelamento,
+        }
+        for agendamento in agendamentos_cancelados
+    ]
+    return JsonResponse({'cancelados': data})
+
     
 def confirm_agendamento(request, pk):
     agendamento = get_object_or_404(Agendamento, pk=pk)
@@ -1439,7 +1454,6 @@ def pdf_laudo_medico(request, atendimento_id):
 
 def pdf_comprovante_cancelamento(request, agendamento_id):
     agendamento = get_object_or_404(Agendamento, id=agendamento_id)
-    justificativa = request.GET.get('justificativa', 'Não informada')
 
     # Registra o horário de cancelamento se ainda não estiver registrado
     if not agendamento.horario_cancelamento:
@@ -1448,7 +1462,7 @@ def pdf_comprovante_cancelamento(request, agendamento_id):
 
     context = {
         'agendamento': agendamento,
-        'justificativa': justificativa,
+        'justificativa': agendamento.justificativa_cancelamento or 'Não informada',
         'horario_cancelamento': agendamento.horario_cancelamento,
         'horario_confirmacao': agendamento.horario_confirmacao,
     }
