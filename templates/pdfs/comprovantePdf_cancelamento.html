@@ -45,17 +45,17 @@
 
     <h2 style="text-align: center; padding-bottom: 20px;">COMPROVANTE DE COMPARECIMENTO</h2>
 
-    <p><strong>Paciente:</strong> {{ objeto.paciente.nome }}</p>
-    <p><strong>Data do Agendamento:</strong> {{ objeto.data_atendimento }}</p>
-    
+    <p><strong>Paciente:</strong> {{ agendamento.paciente.nome }}</p>
+    <p><strong>Data do Agendamento:</strong> {{ agendamento.data_agendamento }}</p>
+
     {% if horario_confirmacao %}
         <p><strong>Horário de Chegada:</strong> {{ horario_confirmacao|date:"H:i" }}</p>
     {% endif %}
-    
+
     {% if horario_cancelamento %}
         <p><strong>Horário de Saída:</strong> {{ horario_cancelamento|date:"H:i" }}</p>
     {% endif %}
-    
+
     <p><strong>Justificativa:</strong> {{ justificativa }}</p>
   </body>
 </html>

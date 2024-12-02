@@ -16,6 +16,9 @@
             Voltar
         </a>
 
+        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalCancelados">Ver Cancelados</button>
+
+
         <div class="mb-4 d-flex align-items-center" id="" style="margin-left: 60px;">
             <form method="get" class="mx-auto" style="max-width: 600px; min-width: 410px;">
                 <div class="row">
@@ -464,6 +467,49 @@
         </div>
     </div>
 
+<!-- Modal para exibir agendamentos cancelados -->
+<div class="modal fade" id="modalCancelados" tabindex="-1" aria-labelledby="modalCanceladosLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCanceladosLabel">Agendamentos Cancelados</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Paciente</th>
+                            <th>Data</th>
+                            <th>Justificativa</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for agendamento in agendamentos_cancelados %}
+                            <tr>
+                                <td>{{ agendamento.paciente.nome }}</td>
+                                <td>{{ agendamento.data_agendamento|date:"d/m/Y" }}</td>
+                                <td>{{ agendamento.justificativa_cancelamento }}</td>
+                                <td>
+                                    <a class="btn btn-primary btn-sm"
+                                    href="{% url 'comprovante_cancelamento' agendamento.id %}"
+                                    target="_blank">
+                                    Baixar Comprovante &nbsp;<i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+                                </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
     <button onclick="voltarTopo()" id="btnTopo">
         <i id="arrow" class="fa fa-arrow-up"></i>
@@ -538,7 +584,7 @@
         }
         
         
-        // Adicionar evento para recarregar a página quando o botão "Voltar para agendamento" for clicado
+        {% comment %} // Adicionar evento para recarregar a página quando o botão "Voltar para agendamento" for clicado
         document.querySelectorAll('.btn-warning').forEach(function(button) {
             button.addEventListener('click', function() {
                 location.reload();
@@ -550,7 +596,7 @@
             modal.addEventListener('hidden.bs.modal', function () {
                 location.reload();
             });
-        });
+        }); {% endcomment %}
 
           function reagendarAgendamento(agendamentoId) {
             console.log("Reagendando agendamento com ID:", agendamentoId);
