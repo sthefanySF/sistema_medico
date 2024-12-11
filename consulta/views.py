@@ -972,32 +972,30 @@ class AtendimentoCreate(CreateView):
     def form_valid(self, atendimento_form, atestado_medico_form, receita_medica_form, laudo_form, agendamento):
         atendimento = atendimento_form.save(commit=False)
         atendimento.agendamento = agendamento
-        atendimento.inicio_atendimento = agendamento.inicio_atendimento  # Usa o horário de início registrado
+        atendimento.inicio_atendimento = agendamento.inicio_atendimento
 
-        # Configura o médico responsável
-        atendimento.medico_responsavel = agendamento.profissional_saude.usuario  # Médico originalmente agendado
+        atendimento.medico_responsavel = agendamento.profissional_saude.usuario
         atendimento.medico_logado = Profissionaldasaude.objects.get(usuario=self.request.user)
-        
-        atendimento.fim_atendimento = timezone.now()  # Define o fim do atendimento
-        atendimento.privado = 'privado' in self.request.POST  # Define se o atendimento é privado
+        atendimento.fim_atendimento = timezone.now()
+        atendimento.privado = 'privado' in self.request.POST
         atendimento.save()
 
-        # Atualiza o status do agendamento
         agendamento.status_atendimento = 'atendido'
         agendamento.save()
 
-        # Salva os formulários adicionais
         if atestado_medico_form.is_valid():
             atestado_medico = atestado_medico_form.save(commit=False)
             dias_afastamento = atestado_medico_form.cleaned_data.get('dias_afastamento')
-            atestado_medico.texto_padrao = atestado_medico.texto_padrao.replace('[[DIAS]]', str(dias_afastamento))
+            texto_padrao = atestado_medico_form.cleaned_data.get('texto_padrao')
+            if texto_padrao:
+                atestado_medico.texto_padrao = texto_padrao.replace('[[DIAS]]', str(dias_afastamento))
             atestado_medico.agendamento = agendamento
             atestado_medico.save()
 
-        if receita_medica_form.is_valid():
-            receita_medica = receita_medica_form.save(commit=False)
-            receita_medica.agendamento = agendamento
-            receita_medica.save()
+            if receita_medica_form.is_valid():
+                receita_medica = receita_medica_form.save(commit=False)
+                receita_medica.agendamento = agendamento
+                receita_medica.save()
 
         if laudo_form.is_valid():
             laudo = laudo_form.save(commit=False)

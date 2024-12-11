@@ -130,23 +130,50 @@
         <h6 class="d-flex justify-content-center py-3">ATESTADO MÉDICO</h6>
 
         <div class="atestado">
-          <button type="button" class="edit-btn" id="edit-btn" style=" float: right;">Editar</button>
-
+          <button type="button" class="edit-btn" id="edit-btn" style="float: right;">Editar</button>
+          <button type="button" class="cancel-btn" id="cancel-btn" style="float: right; display: none; margin-right: 5px;">Cancelar</button>
+        
+          <!-- Atestado padrão -->
           <div id="form-atestado">
             <div class="form-group">
               <label for="dias_afastamento" style="width: 100%;">
-                <span id="texto-atestado">Atesto que o(a) paciente <span id="paciente">{{ agendamento.paciente.get_display_name }}</span> esteve em consulta no dia <span id="data">{{ agendamento.data_agendamento|date:'d/m/Y' }}</span>, e necessita de <span id="dias"><input class="input" name="dias_afastamento" type="number" placeholder="Dias" value="{{ atestado_medico_form.dias_afastamento.value|default_if_none:'' }}" /></span> dias de afastamento de suas atividades normais, para sua convalescença.</span>
-                <textarea id="edit-textarea" name="texto_padrao" style="display: none;">Atesto que o(a) paciente {{ agendamento.paciente.get_display_name }} esteve em consulta no dia {{ agendamento.data_agendamento|date:'d/m/Y' }}, e necessita de [[DIAS]] dias de afastamento de suas atividades normais, para sua convalescença.</textarea>
+                <span id="texto-atestado">
+                  Atesto que o(a) paciente <span id="paciente">{{ agendamento.paciente.get_display_name }}</span> esteve em consulta no dia <span id="data">{{ agendamento.data_agendamento|date:'d/m/Y' }}</span>, e necessita de <span id="dias"><input class="input" name="dias_afastamento" type="number" placeholder="Dias" value="{{ atestado_medico_form.dias_afastamento.value|default_if_none:'' }}" /></span> dias de afastamento de suas atividades normais, para sua convalescença.
+                </span>
               </label>
             </div>
-
+        
             <div class="form-group">
               <label for="cid">CID:</label>
               <input class="input" type="text" name="cid" placeholder="CID" value="{{ atestado_medico_form.cid.value|default_if_none:'' }}" style="margin-top: 20px;" />
             </div>
-
+        
             <p style="text-align: center;">Rio Branco - Acre {{ agendamento.data_agendamento|date:'d/m/Y' }}</p>
+        
+            <div class="form-group">
+              <label>Profissional de Saúde:</label>
+              <p>{{ agendamento.profissional_saude.get_display_name }}</p>
+            </div>
+          </div>
+        
+          <!-- Atestado editável -->
+          <div id="form-atestado-editavel" style="display: none;">
+            <div class="form-group">
+              <textarea id="edit-textarea" name="texto_padrao" style="width: 100%; height: 100px;">Atesto que o(a) paciente {{ agendamento.paciente.get_display_name }} esteve em consulta no dia {{ agendamento.data_agendamento|date:'d/m/Y' }}, e necessita de [[DIAS]] dias de afastamento de suas atividades normais, para sua convalescença.</textarea>
+            </div>
 
+            <div class="form-group">
+              <label for="dias-editavel">Informe os dias que foram colocados no atestado:</label>
+              <input id="dias-editavel" class="input" name="dias_afastamento" type="number" placeholder="Dias" value="{{ atestado_medico_form.dias_afastamento.value|default_if_none:'' }}" />
+            </div>
+        
+            <div class="form-group">
+              <label for="cid-editavel">CID:</label>
+              <input id="cid-editavel" class="input" type="text" name="cid" placeholder="CID" value="{{ atestado_medico_form.cid.value|default_if_none:'' }}" style="margin-top: 20px;" />
+            </div>
+        
+            <p style="text-align: center;">Rio Branco - Acre {{ agendamento.data_agendamento|date:'d/m/Y' }}</p>
+        
             <div class="form-group">
               <label>Profissional de Saúde:</label>
               <p>{{ agendamento.profissional_saude.get_display_name }}</p>
@@ -302,6 +329,26 @@
     function redirecionarParaAgendamentos() {
       window.location.href = "{% url 'agendamentoListagem' %}";
     }
+
+    document.getElementById('edit-btn').addEventListener('click', function () {
+      // Esconde formulário padrão e exibe formulário editável
+      document.getElementById('form-atestado').style.display = 'none';
+      document.getElementById('form-atestado-editavel').style.display = 'block';
+    
+      // Exibe o botão "Cancelar" e esconde o botão "Editar"
+      document.getElementById('cancel-btn').style.display = 'inline';
+      this.style.display = 'none';
+    });
+    
+    document.getElementById('cancel-btn').addEventListener('click', function () {
+      // Restaura o formulário padrão e esconde o formulário editável
+      document.getElementById('form-atestado').style.display = 'block';
+      document.getElementById('form-atestado-editavel').style.display = 'none';
+    
+      // Restaura o botão "Editar" e esconde o botão "Cancelar"
+      document.getElementById('edit-btn').style.display = 'inline';
+      this.style.display = 'none';
+    });
     
   </script>
 
