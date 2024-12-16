@@ -108,6 +108,8 @@ urlpatterns = [
     
     path('search_paciente/', views.search_paciente, name='search_paciente'),
     path('search_profissional/', views.search_profissional, name='search_profissional'),
+    
+    path('relatorios/', views.obter_relatorios, name='relatorios'),
 
     # Home
     # path('', views.home, name='home'),
