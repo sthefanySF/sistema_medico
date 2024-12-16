@@ -9,6 +9,8 @@ from django.views.generic import DetailView
 from django.utils import timezone
 from datetime import timedelta
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Count, Q
+from django.shortcuts import render
 
 # from consulta.forms import AdministrativoForm, AgendamentoForm, AgendamentoReagendarForm, AtendimentoForm,
 # JustificativaCancelamentoForm, PacienteForm, PesquisaAgendamentoForm, ProfissionaldasaudeForm
@@ -1104,7 +1106,28 @@ def download_comprovante_atendimento(request, atendimento_id):
     
     return response
 
+def obter_relatorios(request):
+    # Dados principais do relatório
+    total_atendimentos = Agendamento.objects.filter(status_atendimento='atendido').count()
+    total_cancelados = Agendamento.objects.filter(status_atendimento='cancelado').count()
+    pacientes_atendidos = Paciente.objects.filter(
+        agendamento__status_atendimento='atendido'
+    ).distinct()
+    atendimentos_por_turno = Agendamento.objects.values('turno').annotate(total=Count('id'))
+    
+    # Dados organizados para retorno
+    relatorio_dados = {
+        'total_atendimentos': total_atendimentos,
+        'total_cancelados': total_cancelados,
+        'pacientes_atendidos': [paciente.nome for paciente in pacientes_atendidos],
+        'atendimentos_por_turno': {item['turno']: item['total'] for item in atendimentos_por_turno},
+    }
 
+    # Se for um pedido AJAX, retornar JSON
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse(relatorio_dados)
+    
+    return render(request, 'relatorio.html', {'relatorio_dados': relatorio_dados})
 
 def visualizar_pdf_exames(request, atendimento_id):
     atendimento = get_object_or_404(Atendimento, id=atendimento_id)
