@@ -89,6 +89,7 @@
                 <th scope="col" class="text-center">Turno</th>
                 <th scope="col" class="text-center">Status</th>
                 <th scope="col" class="text-center">Ações</th>
+                <th scope="col" class="text-center d-none">Prioridade</th>
             </tr>
             </thead>
 
@@ -337,6 +338,21 @@
                             </div>
                         </div>
                     </td>
+                    <td class="d-none">
+                        {% if agendamento.status_atendimento == 'pendente' %}
+                            1
+                        {% elif agendamento.status_atendimento == 'confirmado' %}
+                            2
+                        {% elif agendamento.status_atendimento == 'em_andamento' %}
+                            3
+                        {% elif agendamento.status_atendimento == 'ausente' %}
+                            4
+                        {% elif agendamento.status_atendimento == 'atendido' %}
+                            5
+                        {% else %}
+                            6
+                        {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -552,6 +568,13 @@
                 language: {
                     url: '//cdn.datatables.net/plug-ins/2.0.3/i18n/pt-PT.json',
                 },
+                columnDefs: [
+                    { targets: 8, visible: false } // Esconde a coluna de prioridade
+                ],
+                order: [
+                    [8, 'asc'], // Ordena pela coluna de prioridade de forma crescente
+                    [3, 'desc'] // Ordena pela quarta coluna (Data do Agendamento) de forma decrescente
+                ],
             });
         });
 
